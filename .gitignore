@@ -73,3 +73,38 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# ================= Unity =================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+MemoryCaptures/
+
+# ================= IDE =================
+.vscode/
+.vs/
+.idea/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.booproj
+
+# ================= OS =================
+.DS_Store
+Thumbs.db
+
+# ================= Android =================
+.gradle/
+Android/
+
+# ================= Cache =================
+Assets/**/OculusCache/
+Assets/**/MetaCache/
+
+# ================= Addressables =================
+Assets/AddressableAssetsData/*/*.bin*
