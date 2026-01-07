@@ -1,52 +1,55 @@
 using UnityEngine;
 
-/// <summary>
-/// Rigidbody(칼 물리 프록시)가 목표 Transform(OVRCameraRig의 KnifeGrip_R)을 따라가도록 MovePosition/MoveRotation.
-/// 충돌 시에는 물리가 막아주므로 "월드 관통 방지" 효과가 생김.
-/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class KnifePhysicsFollowerOVR : MonoBehaviour
 {
     public Transform target;
     public Rigidbody rb;
 
-    [Range(0.01f, 1f)] public float positionLerp = 0.6f;
-    [Range(0.01f, 1f)] public float rotationLerp = 0.5f;
-    public float maxMoveSpeed = 18f;   // m/s
-    public float maxTurnSpeed = 720f;  // deg/s
+    [Range(0.01f, 1f)] public float positionLerp = 0.5f;
+    [Range(0.01f, 1f)] public float rotationLerp = 0.35f;
+    public float maxMoveSpeed = 12f;
+    public float maxTurnSpeed = 480f;
+
+    Vector3 _targetPos;
+    Quaternion _targetRot;
+    bool _hasTargetPose;
 
     void Awake()
     {
         if (!rb) rb = GetComponent<Rigidbody>();
     }
 
+    void Update()
+    {
+        if (!target) return;
+        _targetPos = target.position;
+        _targetRot = target.rotation;
+        _hasTargetPose = true;
+    }
+
     void FixedUpdate()
     {
-        if (!target || !rb) return;
+        if (!rb || !_hasTargetPose) return;
 
-        // Position follow (clamped)
-        Vector3 desiredPos = target.position;
-        Vector3 delta = desiredPos - rb.position;
-
+        // --- Position ---
+        Vector3 delta = _targetPos - rb.position;
         float maxStep = maxMoveSpeed * Time.fixedDeltaTime;
         Vector3 step = Vector3.ClampMagnitude(delta, maxStep);
         Vector3 nextPos = rb.position + step;
-
-        // Smooth
         nextPos = Vector3.Lerp(rb.position, nextPos, positionLerp);
         rb.MovePosition(nextPos);
 
-        // Rotation follow (clamped)
-        Quaternion desiredRot = target.rotation;
-        float angle;
-        Vector3 axis;
+        // --- Rotation ---
+        Quaternion desiredRot = _targetRot;
+
         Quaternion dq = desiredRot * Quaternion.Inverse(rb.rotation);
-        dq.ToAngleAxis(out angle, out axis);
+        dq.ToAngleAxis(out float angle, out Vector3 axis);
         if (angle > 180f) angle -= 360f;
 
         float maxAngleStep = maxTurnSpeed * Time.fixedDeltaTime;
-        float clampedAngle = Mathf.Clamp(angle, -maxAngleStep, maxAngleStep);
-        Quaternion stepRot = Quaternion.AngleAxis(clampedAngle, axis);
+        float clamped = Mathf.Clamp(angle, -maxAngleStep, maxAngleStep);
+        Quaternion stepRot = Quaternion.AngleAxis(clamped, axis);
 
         Quaternion nextRot = stepRot * rb.rotation;
         nextRot = Quaternion.Slerp(rb.rotation, nextRot, rotationLerp);

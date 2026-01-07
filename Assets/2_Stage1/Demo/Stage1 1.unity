@@ -218,10 +218,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 564053389}
   rb: {fileID: 166628893}
-  positionLerp: 0.6
-  rotationLerp: 0.5
-  maxMoveSpeed: 18
-  maxTurnSpeed: 720
+  positionLerp: 0.512
+  rotationLerp: 0.45
+  maxMoveSpeed: 14
+  maxTurnSpeed: 540
 --- !u!65 &166628892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -252,8 +252,8 @@ Rigidbody:
   m_GameObject: {fileID: 166628886}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 2
+  m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -317,7 +317,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -413,7 +413,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: ca315076f894cbe4381e22befe62231e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f36ef4dc6c3a4e478ef04f6a1f002a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
+  data: {fileID: 11400000, guid: 21b267b5c4d7a7240b496a7345f46d97, type: 2}
   bgmSource: {fileID: 259698206}
   sfxSource: {fileID: 259698205}
   spawner: {fileID: 1082726356}
