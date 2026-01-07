@@ -32,13 +32,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - World
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - KnifePhysical
+  - KnifeSlice
+  - KimbapSliceable
+  - KimbapBlocked
   - 
   - 
   - 
