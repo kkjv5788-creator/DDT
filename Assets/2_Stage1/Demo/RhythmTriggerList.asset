@@ -31,11 +31,35 @@ MonoBehaviour:
       m_RotationOrder: 0
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
-    hapticHitBase: 0.077
+    hapticHitBase: 0.639
     hapticHitMax: 0.319
-    hapticDurationMs: 0
+    hapticDurationMs: 1
     impactSound: {fileID: 0}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 0}
     visualResistanceStrength: 0.8
-    visualResistanceMs: 0
+    visualResistanceMs: 1
+  - triggerTime: 10
+    guideDuration: 1
+    judgeDuration: 5
+    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    requiredSliceCount: 5
+    minKnifeSpeed: 0.5
+    minContactMs: 5
+    thinSliceThicknessNorm: 0.08
+    thinThicknessCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    minThinThicknessWorld: 0.01
+    maxActiveThinPieces: 1
+    hapticHitBase: 0.639
+    hapticHitMax: 0.319
+    hapticDurationMs: 1
+    impactSound: {fileID: 0}
+    swishSound: {fileID: 0}
+    cutVfxPrefab: {fileID: 0}
+    visualResistanceStrength: 0.8
+    visualResistanceMs: 1

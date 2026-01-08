@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3790402421963814870, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -3364713597344239170, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.3279
@@ -124,9 +128,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -2941998220632069379, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
       propertyPath: m_Name
       value: Kitchen_Creation
+      objectReference: {fileID: 0}
+    - target: {fileID: -136737747431834187, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 339878542706329369, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5749164249670010453, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8448335749420078752, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -160,5 +180,64 @@ PrefabInstance:
     - {fileID: -2787046440198201849, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
     - {fileID: 8231367962385410981, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2851324285325439012}
+    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7356218950029978687}
   m_SourcePrefab: {fileID: 100100000, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+--- !u!1 &8177478790690452871 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+  m_PrefabInstance: {fileID: 170521833016814734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2851324285325439012
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177478790690452871}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7356218950029978687
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177478790690452871}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
