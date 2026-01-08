@@ -33,10 +33,10 @@ MonoBehaviour:
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
     hapticHitMax: 0.319
-    hapticDurationMs: 1
-    impactSound: {fileID: 0}
-    swishSound: {fileID: 0}
-    cutVfxPrefab: {fileID: 0}
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: 180f35aef2ea2654086bcbb52d58ec0b, type: 3}
+    swishSound: {fileID: 8300000, guid: c2dade153431323449798d5d5fd92ee4, type: 3}
+    cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.8
     visualResistanceMs: 1
   - triggerTime: 10
@@ -57,9 +57,9 @@ MonoBehaviour:
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
     hapticHitMax: 0.319
-    hapticDurationMs: 1
-    impactSound: {fileID: 0}
-    swishSound: {fileID: 0}
-    cutVfxPrefab: {fileID: 0}
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: 180f35aef2ea2654086bcbb52d58ec0b, type: 3}
+    swishSound: {fileID: 8300000, guid: c2dade153431323449798d5d5fd92ee4, type: 3}
+    cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.8
     visualResistanceMs: 1
