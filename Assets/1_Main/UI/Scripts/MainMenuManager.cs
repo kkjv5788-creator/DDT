@@ -37,4 +37,10 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void GoToStage1()
+    {
+        Debug.Log("게임 시작! Stage1으로 이동합니다.");
+        SceneManager.LoadScene("Stage1");
+    }
 }
