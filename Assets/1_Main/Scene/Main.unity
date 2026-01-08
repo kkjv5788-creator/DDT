@@ -3963,8 +3963,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0994b9b4947b6a4ab3f076cf68542f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 1632258030}
-  interactionDistance: 5
   activeMaterial: {fileID: 2100000, guid: 6bf5ccb6a60a87f4ebdf74ccce475b6d, type: 2}
 --- !u!114 &764827517
 MonoBehaviour:
@@ -7800,7 +7798,7 @@ MonoBehaviour:
   m_modelMetaTouchPlusLeftController: {fileID: 786641858}
   m_modelMetaTouchPlusRightController: {fileID: 352984827}
   m_controller: 2
-  m_showState: 1
+  m_showState: 4
   showWhenHandsArePoweredByNaturalControllerPoses: 0
   RayHelper: {fileID: 0}
 --- !u!114 &1448403801
@@ -8774,9 +8772,6 @@ PrefabInstance:
       addedObject: {fileID: 1990749230}
     - targetCorrespondingSourceObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1990749229}
-    - targetCorrespondingSourceObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1990749228}
     - targetCorrespondingSourceObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
@@ -8947,11 +8942,6 @@ MonoBehaviour:
   fadeColor: {r: 0.01, g: 0.01, b: 0.01, a: 1}
   fadeOnStart: 1
   renderQueue: 5000
---- !u!4 &1632258030 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
-  m_PrefabInstance: {fileID: 1621522100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1635184578
 GameObject:
   m_ObjectHideFlags: 0
@@ -10120,7 +10110,7 @@ MonoBehaviour:
   m_modelMetaTouchPlusLeftController: {fileID: 939375882}
   m_modelMetaTouchPlusRightController: {fileID: 639047394}
   m_controller: 1
-  m_showState: 1
+  m_showState: 4
   showWhenHandsArePoweredByNaturalControllerPoses: 0
   RayHelper: {fileID: 0}
 --- !u!114 &1839625689
@@ -11174,22 +11164,6 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &1990749229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1990749225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_MaxRayIntersections: 0
 --- !u!20 &1990749230
 Camera:
   m_ObjectHideFlags: 0

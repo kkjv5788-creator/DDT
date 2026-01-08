@@ -1,77 +1,69 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems; // 필수: 마우스/레이저 감지 인터페이스
+using UnityEngine.SceneManagement; // 필수: 씬 이동
 
 public class DoorTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [Header("설정")]
-    public Transform playerTransform; // 꼭 CenterEyeAnchor를 넣으세요
-    public float interactionDistance = 5.0f; // 인식 거리
-
-    [Header("머티리얼")]
+    [Header("Material Settings")]
+    [Tooltip("레이저가 닿았을 때 변경될 밝은 머티리얼")]
     public Material activeMaterial;
     
-    private Material defaultMaterial;
+    // 내부 변수
+    private Material defaultMaterial; // 원래 입혀져 있던 머티리얼
     private Renderer myRenderer;
-    private Outline myOutline;
+    private Outline myOutline; 
 
     void Start()
     {
-        myRenderer = GetComponent<Renderer>();
+        // 1. 컴포넌트 가져오기
         myOutline = GetComponent<Outline>();
+        myRenderer = GetComponent<Renderer>();
 
-        // 1. 시작할 때 렌더러가 가지고 있는 재질을 '기본'으로 저장함
-        // (주의: 인스펙터에서 미리 '어두운 재질'을 넣어놔야 함!)
+        // 2. 렌더러가 있다면 원래 머티리얼을 기억해둡니다 (나중에 되돌리기 위해)
         if (myRenderer != null)
         {
             defaultMaterial = myRenderer.material;
         }
 
-        // 플레이어 없으면 메인카메라 자동 찾기
-        if (playerTransform == null && Camera.main != null)
+        // 3. 아웃라인 초기화
+        // (요청하신 대로 '항상 켜져있게' 하려면 아래 if문을 지우거나 enabled = true로 두세요)
+        // 현재 코드는 제공해주신 로직(평소엔 꺼짐)을 따릅니다.
+        if (myOutline != null)
         {
-            playerTransform = Camera.main.transform;
+            myOutline.enabled = true; // "아웃라인은 항상 켜져있고" 요청 반영 시 true, 아니면 false
         }
     }
 
-    void Update()
-    {
-        if (playerTransform == null) return;
-
-        // 실시간 거리 디버깅 (콘솔창을 확인하세요!)
-        float dist = Vector3.Distance(transform.position, playerTransform.position);
-        
-        // 거리가 가까우면 아웃라인 켜기
-        if (dist <= interactionDistance)
-        {
-            if (myOutline != null) myOutline.enabled = true;
-        }
-        else
-        {
-            if (myOutline != null) myOutline.enabled = false;
-            // 멀어지면 머티리얼도 강제로 끄기
-            if (myRenderer != null) myRenderer.material = defaultMaterial;
-        }
-    }
-
+    // 👉 레이저가 문에 닿았을 때 (Hover)
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // 가까울 때만 반응
-        float dist = Vector3.Distance(transform.position, playerTransform.position);
-        if (dist > interactionDistance) return;
+        // 아웃라인 켜기 (필요 시)
+        // if (myOutline != null) myOutline.enabled = true; 
 
-        if (myRenderer != null) myRenderer.material = activeMaterial;
+        // 머티리얼 교체 -> Active
+        if (myRenderer != null && activeMaterial != null)
+        {
+            myRenderer.material = activeMaterial;
+        }
     }
 
+    // 👉 레이저가 문에서 벗어났을 때 (Exit)
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (myRenderer != null) myRenderer.material = defaultMaterial;
+        // 아웃라인 끄기 (필요 시)
+        // if (myOutline != null) myOutline.enabled = false;
+
+        // 머티리얼 복구 -> Default
+        if (myRenderer != null && defaultMaterial != null)
+        {
+            myRenderer.material = defaultMaterial;
+        }
     }
 
+    // 👉 문을 클릭했을 때 (Click)
     public void OnPointerClick(PointerEventData eventData)
     {
-        // 디버깅을 위해 거리 제한 없이 무조건 클릭되면 로그 뜨게 함
-        Debug.Log("클릭 감지됨! 씬 이동 시도..."); 
+        Debug.Log("문 클릭! Stage1으로 이동합니다.");
         SceneManager.LoadScene("Stage1");
     }
 }
