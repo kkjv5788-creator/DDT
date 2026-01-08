@@ -1,43 +1,48 @@
+using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "KimbapRhythm/Rhythm Trigger List", fileName = "RhythmTriggerList")]
+[CreateAssetMenu(menuName = "KimbapRhythm/Rhythm Trigger List", fileName = "RhythmTriggerListSO")]
 public class RhythmTriggerListSO : ScriptableObject
 {
     public AudioClip bgm;
-    public float timingOffsetMs = 0f;
+    public bool loopBgm = false;                 // Tutorial에서 true 권장
+    public float loopLengthOverride = 0f;        // 0이면 clip.length 사용
+    public int timingOffsetMs = 0;
 
     public Trigger[] triggers;
 
-    [System.Serializable]
+    [Serializable]
     public class Trigger
     {
-        [Header("Time")]
-        public float triggerTime;      // seconds on BGM timeline
-        public float guideDuration = 0.4f;
-        public float judgeDuration = 0.6f;
+        public float triggerTime = 1.0f;
+        public int requiredSliceCount = 3;
+
+        [Header("Guide / Judge")]
         public AudioClip guideBeatSound;
+        public float guideDuration = 0.35f;
+        public float judgeDuration = 2.5f;
 
-        [Header("Counts")]
-        public int requiredSliceCount = 5;
-
-        [Header("Judgement (simple)")]
-        public float minKnifeSpeed = 1.0f; // m/s-ish (depends on scale)
-        public float minContactMs = 10f;
-
-        [Header("RightThin Slice (fixed)")]
-        public float thinSliceThicknessNorm = 0.08f;
-        public AnimationCurve thinThicknessCurve; // optional
+        [Header("EzySlice Thin params")]
+        public float thinSliceThicknessNorm = 0.12f;
+        public AnimationCurve thinThicknessCurve;
         public float minThinThicknessWorld = 0.01f;
-        public int maxActiveThinPieces = 6;
+        public int maxActiveThinPieces = 8;
 
-        [Header("Feedback")]
-        [Range(0f, 1f)] public float hapticHitBase = 0.25f;
-        [Range(0f, 1f)] public float hapticHitMax = 0.75f;
-        public int hapticDurationMs = 25;
-        public AudioClip impactSound;
-        public AudioClip swishSound;
+        [Header("Feedback (Optional)")]
+        public AudioClip hitSfx;
+        public AudioClip wrongCutSfx;
+        public AudioClip successSfx;
+        public AudioClip failSfx;
+
         public GameObject cutVfxPrefab;
-        [Range(0f, 1f)] public float visualResistanceStrength = 0.6f;
-        public int visualResistanceMs = 80;
+        public GameObject wrongCutVfxPrefab;
+        public GameObject successVfxPrefab;
+        public GameObject failVfxPrefab;
+    }
+
+    public float GetLoopLength()
+    {
+        if (loopLengthOverride > 0f) return loopLengthOverride;
+        return bgm ? bgm.length : 0f;
     }
 }

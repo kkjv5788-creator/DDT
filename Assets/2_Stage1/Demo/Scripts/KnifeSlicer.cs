@@ -4,129 +4,70 @@ public class KnifeSlicer : MonoBehaviour
 {
     [Header("Refs")]
     public RhythmConductor conductor;
-    public KnifeVelocityEstimator velocityEstimator;
-    public KnifeVisualResistance visualResistance;
 
-    [Header("Hand")]
-    public bool rightHand = true;
+    [Header("Knife")]
+    public Collider knifeTrigger;         // 칼날 트리거 콜라이더(자기 자신이어도 됨)
 
-    [Header("Audio")]
-    public AudioSource sfxSource;
+    [Header("Filter")]
+    public string kimbapTag = "Kimbap";   // 필요하면 사용
+    public LayerMask sliceableLayer;      // KimbapSliceable
+    public LayerMask blockedLayer;        // KimbapBlocked (WrongCut용, 별도 Collision이면 다른 스크립트로)
 
-    // attempt lock
-    bool _canSlice = true;
-    float _contactMs;
-
-    KimbapController _currentKimbap;
-    int _sliceIndexThisTrigger;
+    [Header("Rearm")]
+    public bool canSlice = true;
 
     void Awake()
     {
-        if (!sfxSource) sfxSource = gameObject.AddComponent<AudioSource>();
-    }
-
-    void Update()
-    {
-        // Reset per-trigger index when trigger changes
-        if (!conductor) return;
-
-        // If not judging, allow slice again but don't keep old target
-        if (!conductor.IsJudgingWindow())
-        {
-            _canSlice = true;
-            _contactMs = 0f;
-            _currentKimbap = null;
-            _sliceIndexThisTrigger = 0;
-            return;
-        }
+        if (!knifeTrigger) knifeTrigger = GetComponent<Collider>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        var target = other.GetComponentInParent<KimbapSliceTarget>();
-        if (!target || !target.controller) return;
+        // SliceTrigger에 들어왔을 때만 처리(1회)
+        if (!canSlice) return;
+        if (!IsInLayerMask(other.gameObject.layer, sliceableLayer)) return;
 
-        _currentKimbap = target.controller;
-        _contactMs = 0f;
-    }
+        var trig = conductor ? conductor.GetCurrentTriggerOrNull() : null;
+        if (conductor == null || trig == null) return;
 
-    void OnTriggerStay(Collider other)
-    {
-        if (!conductor || !conductor.IsJudgingWindow()) return;
-        if (!_canSlice) return;
-
-        var trigger = conductor.GetCurrentTrigger();
-        if (trigger == null) return;
-
-        var target = other.GetComponentInParent<KimbapSliceTarget>();
-        if (!target || !target.controller) return;
-
-        // Must be sliceable state
-        if (!target.controller.sliceable) return;
-
-        // Contact time
-        _contactMs += Time.deltaTime * 1000f;
-        if (_contactMs < trigger.minContactMs) return;
-
-        // Speed check
-        float speed = velocityEstimator ? velocityEstimator.speed : 0f;
-        if (speed < trigger.minKnifeSpeed)
+        // Judging 아니면 WrongCut(시간 외)
+        if (!conductor.IsJudging)
         {
-            // Optional: very soft negative feedback (no penalty)
+            conductor.RegisterWrongCut(trig, other.ClosestPoint(transform.position));
             return;
         }
 
-        // VALID SLICE!
-        _canSlice = false;
+        // 현재 활성 KimbapController 찾기
+        var kc = other.GetComponentInParent<KimbapController>();
+        if (!kc || !kc.sliceable) return;
 
-        // 1) register count
-        conductor.RegisterValidSlice();
+        // EzySlice 실행
+        int sliceIndex0 = Mathf.Max(0, conductor.sliceCount);
+        bool ok = kc.ExecuteRightThinSlice(sliceIndex0);
 
-        // 2) feedback
-        float amp = Mathf.Lerp(trigger.hapticHitBase, trigger.hapticHitMax, Mathf.Clamp01(speed / (trigger.minKnifeSpeed * 2f)));
-        XRHaptics.SendHaptic(rightHand, amp, trigger.hapticDurationMs / 1000f);
-        // second tap
-        XRHaptics.SendHaptic(rightHand, amp * 0.85f, Mathf.Max(0.01f, trigger.hapticDurationMs / 1600f));
-
-        if (trigger.impactSound) sfxSource.PlayOneShot(trigger.impactSound);
-
-        if (visualResistance)
-            visualResistance.Play(trigger.visualResistanceMs, trigger.visualResistanceStrength);
-
-        if (trigger.cutVfxPrefab)
+        if (ok)
         {
-            // spawn at contact approx (knife trigger position)
-            var vfx = GameObject.Instantiate(trigger.cutVfxPrefab, transform.position, Quaternion.identity);
-            GameObject.Destroy(vfx, 1.5f);
+            conductor.RegisterValidSlice(trig);
+            canSlice = false; // Exit 하기 전까진 추가 카운트 금지
         }
-
-        // 3) RightThin slice (EzySlice)
-        if (_currentKimbap)
+        else
         {
-            int idx0 = _sliceIndexThisTrigger;
-            _sliceIndexThisTrigger++;
-            _currentKimbap.ExecuteRightThinSlice(idx0);
+            // Judging 내 슬라이스 실패도 피드백(원하면 별도 SFX/VFX 추가)
+            conductor.RegisterWrongCut(trig, other.ClosestPoint(transform.position));
         }
-
-        // Unlock after short cooldown (prevents multi-count in same swing)
-        Invoke(nameof(UnlockSlice), 0.12f);
     }
 
     void OnTriggerExit(Collider other)
     {
-        var target = other.GetComponentInParent<KimbapSliceTarget>();
-        if (!target) return;
-
-        _contactMs = 0f;
-
-        // exit allows next slice sooner
-        if (conductor && conductor.IsJudgingWindow())
-            _canSlice = true;
+        // SliceTrigger를 빠져나오면 재무장
+        if (IsInLayerMask(other.gameObject.layer, sliceableLayer))
+        {
+            canSlice = true;
+        }
     }
 
-    void UnlockSlice()
+    static bool IsInLayerMask(int layer, LayerMask mask)
     {
-        _contactMs = 0f;
-        _canSlice = true;
+        return (mask.value & (1 << layer)) != 0;
     }
 }

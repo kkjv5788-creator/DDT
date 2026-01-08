@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6897567499567288790}
   m_Layer: 9
   m_Name: BlockCollider
-  m_TagString: Untagged
+  m_TagString: Kimbap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 8600538504009095616}
   m_Layer: 8
   m_Name: Kimbap.010
-  m_TagString: Untagged
+  m_TagString: Kimbap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 9129003271893564976}
   m_Layer: 8
   m_Name: MainMesh
-  m_TagString: Untagged
+  m_TagString: Kimbap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 1916617940357665672}
   m_Layer: 8
   m_Name: SliceTrigger
-  m_TagString: Untagged
+  m_TagString: Kimbap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -320,7 +320,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

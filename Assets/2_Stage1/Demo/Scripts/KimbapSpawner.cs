@@ -1,30 +1,73 @@
+﻿using System;
 using System.Diagnostics;
 using UnityEngine;
 
 public class KimbapSpawner : MonoBehaviour
 {
-    public KimbapController kimbapPrefab;
+    [Header("Spawn")]
     public Transform spawnPoint;
+    public GameObject[] kimbapPrefabs;
 
-    public KimbapController CurrentKimbap { get; private set; }
+    [Header("Runtime")]
+    public GameObject currentKimbap;
+    public GameObject preparedKimbap;
 
-    public void EnsureKimbapExists()
+    public void CleanupCurrent()
     {
-        if (CurrentKimbap) return;
-        SpawnNew();
+        if (currentKimbap) Destroy(currentKimbap);
+        currentKimbap = null;
     }
 
-    public void SpawnNew()
+    public void CleanupPrepared()
     {
-        if (!kimbapPrefab)
+        if (preparedKimbap) Destroy(preparedKimbap);
+        preparedKimbap = null;
+    }
+
+    /// <summary>
+    /// preparedKimbap이 비어있을 때만 Prepare 수행(중복 생성 방지)
+    /// </summary>
+    public void EnsurePreparedKimbap()
+    {
+        if (preparedKimbap != null) return;
+        PrepareNextKimbap();
+    }
+
+    public void PrepareNextKimbap()
+    {
+        // ✅ 중복 생성 방지
+        if (preparedKimbap != null) return;
+
+        if (!spawnPoint || kimbapPrefabs == null || kimbapPrefabs.Length == 0)
         {
-            UnityEngine.Debug.LogError("[KimbapSpawner] Missing kimbapPrefab.");
+            UnityEngine.Debug.LogWarning("[KimbapSpawner] Missing spawnPoint or kimbapPrefabs.");
             return;
         }
 
-        Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
-        Quaternion rot = spawnPoint ? spawnPoint.rotation : transform.rotation;
+        var prefab = kimbapPrefabs[UnityEngine.Random.Range(0, kimbapPrefabs.Length)];
+        preparedKimbap = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+        preparedKimbap.SetActive(false);
+    }
 
-        CurrentKimbap = Instantiate(kimbapPrefab, pos, rot);
+    public void ActivatePreparedKimbap()
+    {
+        if (!preparedKimbap)
+        {
+            UnityEngine.Debug.LogWarning("[KimbapSpawner] No prepared kimbap to activate.");
+            return;
+        }
+
+        CleanupCurrent();
+
+        currentKimbap = preparedKimbap;
+        preparedKimbap = null;
+
+        currentKimbap.SetActive(true);
+    }
+
+    public KimbapController GetCurrentKimbapController()
+    {
+        if (!currentKimbap) return null;
+        return currentKimbap.GetComponentInChildren<KimbapController>(true);
     }
 }

@@ -47,4 +47,12 @@ public class DebugHUD : MonoBehaviour
             GUI.Label(new Rect(x, y + 8, w, h), $"LOG: {_logLine}", s);
         }
     }
+
+    [SerializeField] RhythmConductor conductor;
+
+    void Awake()
+    {
+        if (conductor) _conductor = conductor;
+    }
+
 }
