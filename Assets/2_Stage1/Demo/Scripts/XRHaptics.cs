@@ -1,30 +1,55 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
-public static class XRHaptics
+namespace Project.Gameplay
 {
-    public static void SendHaptic(bool rightHand, float amplitude01, float durationSeconds)
+    public class XRHaptics : MonoBehaviour
     {
-        amplitude01 = Mathf.Clamp01(amplitude01);
-        durationSeconds = Mathf.Clamp(durationSeconds, 0.01f, 0.25f);
+        [Header("Right hand haptics (Quest)")]
+        public float minAmp = 0.15f;
+        public float maxAmp = 0.8f;
 
-        var desired = rightHand ? InputDeviceCharacteristics.Right : InputDeviceCharacteristics.Left;
-        desired |= InputDeviceCharacteristics.Controller;
-
-        var devices = new List<InputDevice>();
-        InputDevices.GetDevicesWithCharacteristics(desired, devices);
-
-        foreach (var d in devices)
+        public void PlayTwoStepImpact(float knifeSpeed)
         {
-            if (!d.isValid) continue;
-            if (d.TryGetHapticCapabilities(out var caps) && caps.supportsImpulse)
-            {
-                // channel 0 is common
-                d.SendHapticImpulse(0u, amplitude01, durationSeconds);
-                return;
-            }
+            float a = Mathf.InverseLerp(0.5f, 2.5f, knifeSpeed);
+            float amp = Mathf.Lerp(minAmp, maxAmp, a);
+
+#if UNITY_ANDROID || UNITY_EDITOR
+            // ¡°Å¹¡±
+            OVRInput.SetControllerVibration(0.05f, amp, OVRInput.Controller.RTouch);
+            // stop then ¡°¶Ç°¢¡±
+            Invoke(nameof(SecondTap), 0.06f);
+#endif
         }
-        // Simulator/Editor may not support haptics; that's okay.
+
+        void SecondTap()
+        {
+#if UNITY_ANDROID || UNITY_EDITOR
+            OVRInput.SetControllerVibration(0.08f, 0.35f, OVRInput.Controller.RTouch);
+            Invoke(nameof(StopAll), 0.10f);
+#endif
+        }
+
+        public void PlayWeakBuzz()
+        {
+#if UNITY_ANDROID || UNITY_EDITOR
+            OVRInput.SetControllerVibration(0.04f, 0.15f, OVRInput.Controller.RTouch);
+            Invoke(nameof(StopAll), 0.06f);
+#endif
+        }
+
+        public void PlayWarningTap()
+        {
+#if UNITY_ANDROID || UNITY_EDITOR
+            OVRInput.SetControllerVibration(0.06f, 0.25f, OVRInput.Controller.RTouch);
+            Invoke(nameof(StopAll), 0.08f);
+#endif
+        }
+
+        void StopAll()
+        {
+#if UNITY_ANDROID || UNITY_EDITOR
+            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
+#endif
+        }
     }
 }

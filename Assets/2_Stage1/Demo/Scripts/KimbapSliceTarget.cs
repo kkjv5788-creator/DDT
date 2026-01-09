@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class KimbapSliceTarget : MonoBehaviour
+namespace Project.Gameplay.Kimbap
 {
-    public KimbapController controller;
-
-    void Awake()
+    public class KimbapSliceTarget : MonoBehaviour
     {
-        if (!controller) controller = GetComponentInParent<KimbapController>();
+        public KimbapController Controller;
+
+        void Awake()
+        {
+            if (!Controller) Controller = GetComponentInParent<KimbapController>();
+        }
     }
 }

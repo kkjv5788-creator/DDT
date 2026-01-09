@@ -1,73 +1,128 @@
 using UnityEngine;
+using Project.Core;
+using Project.Gameplay.Kimbap;
 
-public class KnifeSlicer : MonoBehaviour
+namespace Project.Gameplay.Knife
 {
-    [Header("Refs")]
-    public RhythmConductor conductor;
-
-    [Header("Knife")]
-    public Collider knifeTrigger;         // 칼날 트리거 콜라이더(자기 자신이어도 됨)
-
-    [Header("Filter")]
-    public string kimbapTag = "Kimbap";   // 필요하면 사용
-    public LayerMask sliceableLayer;      // KimbapSliceable
-    public LayerMask blockedLayer;        // KimbapBlocked (WrongCut용, 별도 Collision이면 다른 스크립트로)
-
-    [Header("Rearm")]
-    public bool canSlice = true;
-
-    void Awake()
+    [RequireComponent(typeof(Collider))]
+    public class KnifeSlicer : MonoBehaviour
     {
-        if (!knifeTrigger) knifeTrigger = GetComponent<Collider>();
-    }
+        [Header("Refs")]
+        public KnifeVelocityEstimator velocityEstimator;
 
-    void OnTriggerEnter(Collider other)
-    {
-        // SliceTrigger에 들어왔을 때만 처리(1회)
-        if (!canSlice) return;
-        if (!IsInLayerMask(other.gameObject.layer, sliceableLayer)) return;
+        [Header("Fail spam control")]
+        public float failCooldownOverride = -1f; // if <0 uses FeedbackSetSO default via FeedbackRouter
 
-        var trig = conductor ? conductor.GetCurrentTriggerOrNull() : null;
-        if (conductor == null || trig == null) return;
+        // Attempt state
+        bool attemptActive;
+        bool canSlice = true;
+        float lastSliceTime = -999f;
+        float contactStartTime;
+        float lastFailTime = -999f;
 
-        // Judging 아니면 WrongCut(시간 외)
-        if (!conductor.IsJudging)
+        KimbapSliceTarget currentTarget;
+        Collider currentTrigger;
+
+        void Awake()
         {
-            conductor.RegisterWrongCut(trig, other.ClosestPoint(transform.position));
-            return;
+            var col = GetComponent<Collider>();
+            col.isTrigger = true;
+            if (!velocityEstimator) velocityEstimator = GetComponentInChildren<KnifeVelocityEstimator>();
         }
 
-        // 현재 활성 KimbapController 찾기
-        var kc = other.GetComponentInParent<KimbapController>();
-        if (!kc || !kc.sliceable) return;
-
-        // EzySlice 실행
-        int sliceIndex0 = Mathf.Max(0, conductor.sliceCount);
-        bool ok = kc.ExecuteRightThinSlice(sliceIndex0);
-
-        if (ok)
+        void Update()
         {
-            conductor.RegisterValidSlice(trig);
-            canSlice = false; // Exit 하기 전까진 추가 카운트 금지
+            // auto unlock via cooldown (Exit 없어도 가능)
+            if (!canSlice)
+            {
+                if (Time.time - lastSliceTime >= KnifeSlicerRuntime.SliceCooldownSeconds)
+                    canSlice = true;
+            }
+
+            // If we are inside trigger, we can evaluate in Update too (safer than relying on Stay)
+            if (attemptActive && currentTarget && currentTrigger)
+            {
+                TryEvaluate(currentTrigger);
+            }
         }
-        else
-        {
-            // Judging 내 슬라이스 실패도 피드백(원하면 별도 SFX/VFX 추가)
-            conductor.RegisterWrongCut(trig, other.ClosestPoint(transform.position));
-        }
-    }
 
-    void OnTriggerExit(Collider other)
-    {
-        // SliceTrigger를 빠져나오면 재무장
-        if (IsInLayerMask(other.gameObject.layer, sliceableLayer))
+        void OnTriggerEnter(Collider other)
         {
+            if (!other) return;
+
+            var target = other.GetComponentInParent<KimbapSliceTarget>();
+            if (!target) return;
+
+            attemptActive = true;
+            currentTarget = target;
+            currentTrigger = other;
+            contactStartTime = Time.time;
+
+            GameEvents.RaiseSliceAttemptStarted(target);
+
+            // Attempt starts; do not reset canSlice here (keeps cooldown rule consistent)
+            TryEvaluate(other);
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other != currentTrigger) return;
+
+            attemptActive = false;
+            currentTarget = null;
+            currentTrigger = null;
+
+            // Option A: Exit unlock (allowed)
             canSlice = true;
         }
-    }
 
-    static bool IsInLayerMask(int layer, LayerMask mask)
-    {
-        return (mask.value & (1 << layer)) != 0;
+        void TryEvaluate(Collider trigger)
+        {
+            if (!currentTarget) { Fail(trigger, SliceFailReason.NoTarget); return; }
+
+            if (!KnifeSlicerRuntime.IsJudging) { Fail(trigger, SliceFailReason.NotJudging); return; }
+
+            if (!canSlice) return;
+
+            float speed = velocityEstimator ? velocityEstimator.CurrentSpeed : 0f;
+            if (speed < KnifeSlicerRuntime.MinKnifeSpeed)
+            {
+                Fail(trigger, SliceFailReason.SpeedTooLow);
+                return;
+            }
+
+            if (KnifeSlicerRuntime.UseContactTime)
+            {
+                int ms = Mathf.RoundToInt((Time.time - contactStartTime) * 1000f);
+                if (ms < KnifeSlicerRuntime.MinContactMs)
+                {
+                    Fail(trigger, SliceFailReason.ContactTooShort);
+                    return;
+                }
+            }
+
+            // SUCCESS (Attempt 동안 첫 1회만)
+            canSlice = false;
+            lastSliceTime = Time.time;
+
+            // Hit position/normal
+            Vector3 hitPos = trigger.ClosestPoint(transform.position);
+            Vector3 hitNormal = (transform.position - hitPos).normalized;
+
+            // Execute slice only on success
+            currentTarget.Controller.TrySliceRightThin(hitPos, hitNormal);
+
+            GameEvents.RaiseSliceSuccess(hitPos, hitNormal, speed);
+        }
+
+        void Fail(Collider trigger, SliceFailReason reason)
+        {
+            float failCooldown = (failCooldownOverride > 0f) ? failCooldownOverride : 0.2f;
+            if (Time.time - lastFailTime < failCooldown) return;
+            lastFailTime = Time.time;
+
+            Vector3 pos = trigger ? trigger.ClosestPoint(transform.position) : transform.position;
+            GameEvents.RaiseSliceFail(pos, reason);
+        }
     }
 }

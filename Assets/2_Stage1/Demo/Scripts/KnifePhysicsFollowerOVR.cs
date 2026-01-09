@@ -1,59 +1,78 @@
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class KnifePhysicsFollowerOVR : MonoBehaviour
+namespace Project.Gameplay.Knife
 {
-    [Header("Refs")]
-    public Transform target;
-    public Rigidbody rb;
-
-    [Header("Tuning")]
-    [Range(0f, 1f)] public float positionLerp = 0.512f;
-    [Range(0f, 1f)] public float rotationLerp = 0.45f;
-    public float maxMoveSpeed = 14f;
-    public float maxTurnSpeed = 540f;
-
-    void Reset()
+    public class KnifePhysicsFollowerOVR : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-    }
+        [Header("Target")]
+        public Transform followTarget; // RightControllerAnchor 추천
 
-    void Awake()
-    {
-        if (!rb) rb = GetComponent<Rigidbody>();
-    }
+        [Header("Follow")]
+        public float followSharpness = 140f;
+        public bool followTargetRotation = true;
+        public Vector3 rotationOffsetEuler = Vector3.zero;
 
-    void FixedUpdate()
-    {
-        if (!target || !rb) return;
+        [Header("Collision Blocking")]
+        public LayerMask blockMask = ~0;              // 막힘 레이어
+        public float skin = 0.0025f;                  // 표면에 살짝 띄우기
+        public bool ignoreTriggers = true;
 
-        float dt = Time.fixedDeltaTime;
-        if (dt <= 0f) return;
+        Rigidbody rb;
+        Collider solidCol;
 
-        // Position follow
-        Vector3 toTarget = (target.position - rb.position);
-        Vector3 desiredVel = toTarget / dt;
-        desiredVel = Vector3.ClampMagnitude(desiredVel, maxMoveSpeed);
+        void Awake()
+        {
+            rb = GetComponent<Rigidbody>();
+            if (!rb) rb = gameObject.AddComponent<Rigidbody>();
 
-        // Blend velocity
-        Vector3 vel = Vector3.Lerp(rb.velocity, desiredVel, positionLerp);
-        rb.velocity = vel;
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        // Rotation follow
-        Quaternion current = rb.rotation;
-        Quaternion desired = target.rotation;
+            solidCol = GetComponent<Collider>();
+            if (!solidCol)
+                Debug.LogWarning("KnifeRoot에 Solid Collider(Trigger OFF)가 필요합니다.");
+        }
 
-        Quaternion delta = desired * Quaternion.Inverse(current);
-        delta.ToAngleAxis(out float angle, out Vector3 axis);
-        if (float.IsNaN(axis.x)) axis = Vector3.up;
+        void FixedUpdate()
+        {
+            if (!followTarget) return;
 
-        if (angle > 180f) angle -= 360f;
+            Vector3 cur = rb.position;
+            Vector3 target = followTarget.position;
 
-        float desiredAngVelDeg = angle / dt;
-        desiredAngVelDeg = Mathf.Clamp(desiredAngVelDeg, -maxTurnSpeed, maxTurnSpeed);
+            // 부드러운 추종 목표점
+            Vector3 desired = Vector3.Lerp(cur, target, 1f - Mathf.Exp(-followSharpness * Time.fixedDeltaTime));
+            Vector3 delta = desired - cur;
 
-        Vector3 desiredAngVel = axis.normalized * desiredAngVelDeg * Mathf.Deg2Rad;
-        Vector3 angVel = Vector3.Lerp(rb.angularVelocity, desiredAngVel, rotationLerp);
-        rb.angularVelocity = angVel;
+            // 충돌 차단: 이동 방향으로 SweepTest 후 거리 제한
+            if (solidCol && delta.sqrMagnitude > 0.0000001f)
+            {
+                Vector3 dir = delta.normalized;
+                float dist = delta.magnitude;
+
+                RaycastHit hit;
+                var qti = ignoreTriggers ? QueryTriggerInteraction.Ignore : QueryTriggerInteraction.Collide;
+
+                // Rigidbody.SweepTest는 붙어있는 Collider 기준으로 스윕해줌
+                if (rb.SweepTest(dir, out hit, dist + skin, qti))
+                {
+                    // blockMask 필터
+                    if (((1 << hit.collider.gameObject.layer) & blockMask) != 0)
+                    {
+                        float allowed = Mathf.Max(0f, hit.distance - skin);
+                        desired = cur + dir * allowed;
+                    }
+                }
+            }
+
+            rb.MovePosition(desired);
+
+            if (followTargetRotation)
+            {
+                Quaternion targetRot = followTarget.rotation * Quaternion.Euler(rotationOffsetEuler);
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, 1f - Mathf.Exp(-followSharpness * Time.fixedDeltaTime)));
+            }
+        }
     }
 }

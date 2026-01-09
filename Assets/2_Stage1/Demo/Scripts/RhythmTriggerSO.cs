@@ -1,48 +1,29 @@
-using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "KimbapRhythm/Rhythm Trigger List", fileName = "RhythmTriggerListSO")]
-public class RhythmTriggerListSO : ScriptableObject
+namespace Project.Data
 {
-    public AudioClip bgm;
-    public bool loopBgm = false;                 // Tutorial에서 true 권장
-    public float loopLengthOverride = 0f;        // 0이면 clip.length 사용
-    public int timingOffsetMs = 0;
-
-    public Trigger[] triggers;
-
-    [Serializable]
-    public class Trigger
+    [CreateAssetMenu(menuName = "Project/Rhythm/RhythmTriggerSO")]
+    public class RhythmTriggerSO : ScriptableObject
     {
-        public float triggerTime = 1.0f;
-        public int requiredSliceCount = 3;
+        public string id = "T01";
 
-        [Header("Guide / Judge")]
-        public AudioClip guideBeatSound;
-        public float guideDuration = 0.35f;
-        public float judgeDuration = 2.5f;
+        [Header("Guide")]
+        public AudioClip guideSfx;
+        public float guideLeadTime = 0.45f;
 
-        [Header("EzySlice Thin params")]
-        public float thinSliceThicknessNorm = 0.12f;
-        public AnimationCurve thinThicknessCurve;
-        public float minThinThicknessWorld = 0.01f;
-        public int maxActiveThinPieces = 8;
+        [Header("Judging")]
+        public int targetSlices = 3;
+        public float judgeTimeSeconds = 2.0f;
 
-        [Header("Feedback (Optional)")]
-        public AudioClip hitSfx;
-        public AudioClip wrongCutSfx;
-        public AudioClip successSfx;
-        public AudioClip failSfx;
+        [Header("Speed / Attempt")]
+        public float minKnifeSpeed = 1.2f;
+        public float sliceCooldownSeconds = 0.12f;
 
-        public GameObject cutVfxPrefab;
-        public GameObject wrongCutVfxPrefab;
-        public GameObject successVfxPrefab;
-        public GameObject failVfxPrefab;
-    }
+        [Header("Optional Contact Time")]
+        public bool useContactTime = false;
+        public int minContactMs = 50;
 
-    public float GetLoopLength()
-    {
-        if (loopLengthOverride > 0f) return loopLengthOverride;
-        return bgm ? bgm.length : 0f;
+        [Header("Tutorial Assist")]
+        public bool allowAssistOverrides = true;
     }
 }

@@ -1,39 +1,23 @@
 using UnityEngine;
+using Project.Core;
 
-[DisallowMultipleComponent]
-public class BlockHitDetector : MonoBehaviour
+namespace Project.Gameplay
 {
-    public RhythmConductor conductor;
-    public DebugHUD hud;
-
-    TriggerProbe _probe;
-    KnifeVisualResistance _resist;
-
-    void Awake()
+    [RequireComponent(typeof(Collider))]
+    public class BlockHitDetector : MonoBehaviour
     {
-        _probe = GetComponent<TriggerProbe>();
-        if (!_probe) _probe = GetComponentInChildren<TriggerProbe>(true);
+        [Tooltip("Blocker layer mask")]
+        public LayerMask blockerMask;
 
-        _resist = GetComponent<KnifeVisualResistance>();
-        if (!_resist) _resist = GetComponentInChildren<KnifeVisualResistance>(true);
-    }
+        void OnCollisionEnter(Collision collision)
+        {
+            if (collision == null || collision.collider == null) return;
 
-    void OnEnable()
-    {
-        if (_probe != null) _probe.Blocked += OnBlocked;
-    }
-
-    void OnDisable()
-    {
-        if (_probe != null) _probe.Blocked -= OnBlocked;
-    }
-
-    void OnBlocked(Collider c)
-    {
-        // 비주얼 저항 연출
-        if (_resist) _resist.SetResistance01(1f);
-
-        if (conductor) conductor.ReportBlockedHit();
-        if (hud) hud.NotifyBlocked(c);
+            if (((1 << collision.collider.gameObject.layer) & blockerMask) != 0)
+            {
+                Vector3 p = collision.GetContact(0).point;
+                GameEvents.RaiseWrongCut(p);
+            }
+        }
     }
 }

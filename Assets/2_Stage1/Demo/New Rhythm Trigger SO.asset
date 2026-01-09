@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7448e3dd27b734eb4ebe43b0dc7a7e, type: 3}
+  m_Name: New Rhythm Trigger SO
+  m_EditorClassIdentifier: 
+  id: T01
+  guideSfx: {fileID: 0}
+  guideLeadTime: 0.45
+  targetSlices: 3
+  judgeTimeSeconds: 2
+  minKnifeSpeed: 1.2
+  sliceCooldownSeconds: 0.12
+  useContactTime: 0
+  minContactMs: 50
+  allowAssistOverrides: 1

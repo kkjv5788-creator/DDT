@@ -1,127 +1,263 @@
-﻿using UnityEngine;
+using Project.Data;
+using Project.Gameplay.Kimbap;
+using Project.Gameplay.Plate;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-[DisallowMultipleComponent]
-public class RhythmConductor : MonoBehaviour
+namespace Project.Core
 {
-    public RhythmChartData data;
-    public AudioSource bgmSource;
-    public KimbapSpawner spawner;
-    public PlateAssembler plate;
-    public float judgeDurationMultiplier = 1f;
-
-    // scene 직렬화 필드(유지)
-    public int state = 0;        // 0 Idle, 1 Playing, 2 Finished
-    public int triggerIndex = 0; // 현재 판정 트리거 인덱스
-    public int sliceCount = 0;   // 누적 성공 슬라이스 수
-
-    public float SongTime { get; private set; }
-
-    float _songStartDsp;
-    bool _playing;
-
-    void Start()
+    public class RhythmConductor : MonoBehaviour
     {
-        if (!bgmSource) bgmSource = GetComponent<AudioSource>();
-        // 자동 시작을 원하면 아래 호출
-        // StartGame();
-    }
+        [Header("Refs")]
+        public KimbapSpawner kimbapSpawner;
+        public PlateController plateController;
 
-    public void StartGame()
-    {
-        if (!data || !bgmSource)
+        [Header("Audio")]
+        public AudioSource bgmSource;
+        public AudioSource sfxSource; // guideSfx can use this
+
+        [Header("Timings")]
+        public float resultHoldSeconds = 1.2f;
+
+        RhythmTriggerListSO list;
+        int index;
+        bool isTutorial;
+
+        RhythmState state = RhythmState.Waiting;
+
+        // runtime trigger params (assist overrides apply here)
+        RhythmTriggerSO cur;
+        int targetSlices;
+        float judgeTimeLeft;
+        float minKnifeSpeed;
+        float sliceCooldownSeconds;
+        bool useContactTime;
+        int minContactMs;
+
+        int successCount;
+
+        // tutorial assist
+        int failCountThisStep;
+        bool assistAppliedThisStep;
+
+        bool running;
+
+        void OnEnable()
         {
-            Debug.LogWarning("[RhythmConductor] Missing data or bgmSource.");
-            return;
+            GameEvents.SliceSuccess += OnSliceSuccess;
+            GameEvents.TutorialSkipped += OnTutorialSkipStop;
         }
 
-        triggerIndex = 0;
-        sliceCount = 0;
-        state = 1;
-
-        if (spawner) spawner.SpawnOrPrepare();
-
-        _songStartDsp = (float)AudioSettings.dspTime;
-        bgmSource.time = 0f;
-        bgmSource.Play();
-        _playing = true;
-    }
-
-    public void StopGame()
-    {
-        _playing = false;
-        state = 2;
-        if (bgmSource && bgmSource.isPlaying) bgmSource.Stop();
-    }
-
-    void Update()
-    {
-        if (!_playing || !bgmSource) return;
-
-        SongTime = Mathf.Max(0f, (float)AudioSettings.dspTime - _songStartDsp);
-
-        // 곡 끝 처리(클립 길이 기반)
-        if (bgmSource.clip && SongTime >= bgmSource.clip.length)
+        void OnDisable()
         {
-            StopGame();
-        }
-    }
-
-    public bool CanSliceNow(float knifeSpeed, out RhythmWindow window)
-    {
-        window = default;
-
-        if (state != 1 || data == null || data.triggers == null || data.triggers.Count == 0)
-            return false;
-
-        // 다음 트리거 기준으로 판정
-        int idx = Mathf.Clamp(triggerIndex, 0, data.triggers.Count - 1);
-        var t = data.triggers[idx];
-
-        float now = SongTime;
-        float early = t.time - t.earlyWindow;
-        float late = t.time + t.lateWindow;
-
-        window = new RhythmWindow
-        {
-            targetTime = t.time,
-            early = early,
-            late = late,
-            minSpeed = t.minKnifeSpeed
-        };
-
-        if (knifeSpeed < t.minKnifeSpeed) return false;
-        if (now < early || now > late) return false;
-
-        return true;
-    }
-
-    public void RegisterSlice(SliceResult result)
-    {
-        sliceCount++;
-
-        // 판정 성공이면 다음 트리거로
-        if (data != null && data.triggers != null && data.triggers.Count > 0)
-        {
-            triggerIndex = Mathf.Min(triggerIndex + 1, data.triggers.Count - 1);
+            GameEvents.SliceSuccess -= OnSliceSuccess;
+            GameEvents.TutorialSkipped -= OnTutorialSkipStop;
         }
 
-        if (plate && result.spawnedPiece)
+        public void SetList(RhythmTriggerListSO triggerList, bool isTutorial)
         {
-            plate.TryAddPiece(result.spawnedPiece);
+            list = triggerList;
+            this.isTutorial = isTutorial;
+            index = 0;
+            failCountThisStep = 0;
+            assistAppliedThisStep = false;
         }
-    }
 
-    public void ReportBlockedHit()
-    {
-        // 막힘 이벤트를 난이도 보정 등에 활용 가능
-        // Debug.Log("[RhythmConductor] Blocked hit.");
-    }
-}
+        public void Begin()
+        {
+            if (list == null || list.triggers == null || list.triggers.Count == 0) return;
+            running = true;
+            StopAllCoroutines();
+            StartCoroutine(MainLoop());
+        }
 
-public struct RhythmWindow
-{
-    public float targetTime;
-    public float early;
-    public float late;
-    public float minSpeed;
+        public void ForceIdleWaiting()
+        {
+            running = false;
+            SetState(RhythmState.Waiting);
+            // keep empty plate + fresh kimbap visible, but no judging
+            if (plateController) plateController.PrepareEmptyPlate();
+            if (kimbapSpawner) kimbapSpawner.SpawnFresh();
+        }
+
+        IEnumerator MainLoop()
+        {
+            // BGM
+            SetupBgm();
+
+            while (running)
+            {
+                if (index >= list.triggers.Count)
+                {
+                    if (isTutorial)
+                    {
+                        GameEvents.RaiseTutorialCompleted();
+                        yield break;
+                    }
+                    else
+                    {
+                        // loop main list by default
+                        index = 0;
+                    }
+                }
+
+                cur = list.triggers[index];
+
+                // Waiting
+                SetState(RhythmState.Waiting);
+                plateController?.PrepareEmptyPlate();
+                kimbapSpawner?.SpawnFresh();
+                yield return null; // one frame
+
+                // Guiding
+                SetState(RhythmState.Guiding);
+                GameEvents.RaiseTriggerStarted(cur);
+                PlayGuide(cur);
+                yield return new WaitForSeconds(cur.guideLeadTime);
+
+                // Judging
+                ApplyTriggerParams(cur);
+                successCount = 0;
+                SetState(RhythmState.Judging);
+
+                float t = judgeTimeLeft;
+                while (t > 0f && successCount < targetSlices)
+                {
+                    t -= Time.deltaTime;
+                    judgeTimeLeft = t;
+                    yield return null;
+                }
+
+                bool success = (successCount >= targetSlices);
+
+                // Result
+                SetState(RhythmState.Result);
+                GameEvents.RaiseRoundResult(success);
+
+                if (success) plateController?.ShowResultPlateSuccess();
+                else plateController?.ShowResultPlateFail();
+
+                yield return new WaitForSeconds(resultHoldSeconds);
+
+                // Cleanup
+                SetState(RhythmState.Cleanup);
+                kimbapSpawner?.Cleanup();
+                plateController?.CleanupLoosePieces(); // optional
+                yield return null;
+
+                // Update tutorial assist state
+                if (isTutorial)
+                {
+                    if (success)
+                    {
+                        // next step
+                        failCountThisStep = 0;
+                        assistAppliedThisStep = false;
+                        index++;
+                    }
+                    else
+                    {
+                        // repeat same trigger, maybe apply assist
+                        failCountThisStep++;
+                        if (!assistAppliedThisStep && cur.allowAssistOverrides && failCountThisStep >= 2)
+                        {
+                            assistAppliedThisStep = true; // will apply in ApplyTriggerParams
+                        }
+                        // index unchanged
+                    }
+                }
+                else
+                {
+                    index++;
+                }
+            }
+        }
+
+        void SetupBgm()
+        {
+            if (!bgmSource) return;
+            bgmSource.Stop();
+            bgmSource.clip = list ? list.bgm : null;
+            if (bgmSource.clip)
+            {
+                bgmSource.loop = list.loopBgm;
+                bgmSource.Play();
+            }
+        }
+
+        void PlayGuide(RhythmTriggerSO t)
+        {
+            if (!sfxSource || !t || !t.guideSfx) return;
+            sfxSource.PlayOneShot(t.guideSfx);
+        }
+
+        void ApplyTriggerParams(RhythmTriggerSO t)
+        {
+            // base
+            targetSlices = Mathf.Max(1, t.targetSlices);
+            judgeTimeLeft = Mathf.Max(0.1f, t.judgeTimeSeconds);
+            minKnifeSpeed = Mathf.Max(0f, t.minKnifeSpeed);
+            sliceCooldownSeconds = Mathf.Max(0.01f, t.sliceCooldownSeconds);
+            useContactTime = t.useContactTime;
+            minContactMs = Mathf.Max(0, t.minContactMs);
+
+            // assist overrides (tutorial only)
+            if (isTutorial && assistAppliedThisStep)
+            {
+                judgeTimeLeft *= 1.25f;
+                minKnifeSpeed *= 0.85f;
+                targetSlices = Mathf.Max(1, targetSlices - 1);
+                if (useContactTime) minContactMs = Mathf.Max(0, Mathf.RoundToInt(minContactMs * 0.7f));
+            }
+
+            // push params to KnifeSlicer via static
+            Gameplay.Knife.KnifeSlicerRuntime.SetRuntimeParams(
+                isJudging: true,
+                minKnifeSpeed: minKnifeSpeed,
+                sliceCooldownSeconds: sliceCooldownSeconds,
+                useContactTime: useContactTime,
+                minContactMs: minContactMs
+            );
+        }
+
+        void SetState(RhythmState s)
+        {
+            state = s;
+
+            // Knife runtime judgable flag
+            bool judging = (state == RhythmState.Judging);
+            if (!judging)
+            {
+                Gameplay.Knife.KnifeSlicerRuntime.SetRuntimeParams(
+                    isJudging: false,
+                    minKnifeSpeed: minKnifeSpeed,
+                    sliceCooldownSeconds: sliceCooldownSeconds,
+                    useContactTime: useContactTime,
+                    minContactMs: minContactMs
+                );
+            }
+
+            GameEvents.RaiseStateChanged(state);
+        }
+
+        void OnSliceSuccess(Vector3 hitPos, Vector3 hitNormal, float speed)
+        {
+            if (state != RhythmState.Judging) return;
+            successCount++;
+        }
+
+        void OnTutorialSkipStop()
+        {
+            // If tutorial skipped mid-loop, stop loop quickly.
+            running = false;
+            StopAllCoroutines();
+        }
+
+        // Optional: expose for DebugHUD
+        public RhythmState State => state;
+        public int SuccessCount => successCount;
+        public int TargetSlices => targetSlices;
+        public float JudgeTimeLeft => judgeTimeLeft;
+    }
 }

@@ -1,49 +1,23 @@
 using UnityEngine;
 
-public class ThinPieceAutoCleanup : MonoBehaviour
+namespace Project.Gameplay.Kimbap
 {
-    public KimbapController owner;
-    public Vector3 flyDirection = Vector3.right;
-
-    public float flySeconds = 0.2f;
-    public float lifeSeconds = 1.2f;
-
-    Vector3 _startPos;
-    Quaternion _startRot;
-    float _t;
-
-    void Start()
+    public class ThinPieceAutoCleanup : MonoBehaviour
     {
-        _startPos = transform.position;
-        _startRot = transform.rotation;
+        public float lifeSeconds = 2.5f;
+        float born;
 
-        // Remove heavy physics by default
-        var rb = GetComponent<Rigidbody>();
-        if (rb) Destroy(rb);
-
-        // You can add a light collider if you want, but prototype ok without.
-        // Disable colliders to avoid unexpected physics
-        foreach (var c in GetComponentsInChildren<Collider>())
-            c.enabled = false;
-    }
-
-    void Update()
-    {
-        _t += Time.deltaTime;
-
-        // Fly animation
-        if (_t <= flySeconds && flySeconds > 0f)
+        void OnEnable()
         {
-            float u = _t / flySeconds;
-            float ease = 1f - Mathf.Pow(1f - u, 3f);
-            transform.position = _startPos + flyDirection.normalized * (0.06f * ease) + Vector3.up * (0.02f * ease);
-            transform.rotation = _startRot * Quaternion.Euler(0f, 0f, 18f * ease);
+            born = Time.time;
         }
 
-        if (_t >= lifeSeconds)
+        void Update()
         {
-            if (owner) owner.NotifyThinPieceDespawned();
-            Destroy(gameObject);
+            if (Time.time - born >= lifeSeconds)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

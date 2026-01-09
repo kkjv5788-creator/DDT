@@ -1,39 +1,34 @@
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class KnifeVelocityEstimator : MonoBehaviour
+namespace Project.Gameplay.Knife
 {
-    public Transform samplePoint;
-
-    public Vector3 Velocity { get; private set; }
-    public float Speed => Velocity.magnitude;
-
-    Vector3 _prevPos;
-    bool _hasPrev;
-
-    void Start()
+    public class KnifeVelocityEstimator : MonoBehaviour
     {
-        if (!samplePoint) samplePoint = transform;
-        _prevPos = samplePoint.position;
-        _hasPrev = true;
-    }
+        public float speedSmoothing = 0.25f; // 0~1
 
-    void FixedUpdate()
-    {
-        if (!samplePoint) return;
-        float dt = Time.fixedDeltaTime;
-        if (dt <= 0f) return;
+        Vector3 lastPos;
+        float lastTime;
+        float smoothedSpeed;
 
-        Vector3 p = samplePoint.position;
-        if (!_hasPrev)
+        public float CurrentSpeed => smoothedSpeed;
+
+        void OnEnable()
         {
-            _prevPos = p;
-            _hasPrev = true;
-            Velocity = Vector3.zero;
-            return;
+            lastPos = transform.position;
+            lastTime = Time.time;
+            smoothedSpeed = 0f;
         }
 
-        Velocity = (p - _prevPos) / dt;
-        _prevPos = p;
+        void Update()
+        {
+            float t = Time.time;
+            float dt = Mathf.Max(0.0001f, t - lastTime);
+            float inst = Vector3.Distance(transform.position, lastPos) / dt;
+
+            smoothedSpeed = Mathf.Lerp(smoothedSpeed, inst, 1f - Mathf.Exp(-dt / Mathf.Max(0.0001f, speedSmoothing)));
+
+            lastPos = transform.position;
+            lastTime = t;
+        }
     }
 }

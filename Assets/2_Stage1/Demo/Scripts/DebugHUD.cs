@@ -1,30 +1,64 @@
 using UnityEngine;
+using Project.Core;
+using Project.Gameplay.Knife;
 
-[DisallowMultipleComponent]
-public class DebugHUD : MonoBehaviour
+namespace Project.UI
 {
-    public KnifeVelocityEstimator knifeSpeedSource;
-
-    float _lastBlockedTime;
-
-    void Update()
+    public class DebugHUD : MonoBehaviour
     {
-        if (knifeSpeedSource)
+        public RhythmConductor conductor;
+        public KnifeVelocityEstimator knifeVel;
+        public AudioSource bgmSource;
+
+        RhythmState state;
+        bool isTutorial;
+
+        void OnEnable()
         {
-            // 필요하면 여기에 TextMeshPro 연동해서 화면 표시하면 됨
-            // 지금은 최소 디버그 로그만 (너무 스팸 안 나게)
+            GameEvents.StateChanged += s => state = s;
+            GameEvents.ModeChanged += t => isTutorial = t;
         }
-    }
 
-    public void NotifyBlocked(Collider c)
-    {
-        if (Time.time - _lastBlockedTime < 0.2f) return;
-        _lastBlockedTime = Time.time;
-        Debug.Log($"[HUD] Blocked by: {c.name}");
-    }
+        void OnDisable()
+        {
+            GameEvents.StateChanged -= s => state = s; // (이벤트 람다는 해제가 안 되니 실제론 안 써도 됨)
+        }
 
-    public void NotifySlice(SliceResult r)
-    {
-        Debug.Log($"[HUD] Slice: quality={r.quality} speed={r.knifeSpeed:F2}");
+        void OnGUI()
+        {
+            GUILayout.BeginArea(new Rect(10, 10, 520, 320), GUI.skin.box);
+
+            GUILayout.Label($"Mode: {(isTutorial ? "Tutorial" : "Main/Idle")}");
+            GUILayout.Label($"State: {state}");
+
+            // Knife runtime params
+            GUILayout.Label($"Judging Runtime: {KnifeSlicerRuntime.IsJudging}");
+            GUILayout.Label($"minSpeed: {KnifeSlicerRuntime.MinKnifeSpeed:F2}");
+            GUILayout.Label($"cooldown: {KnifeSlicerRuntime.SliceCooldownSeconds:F2}");
+            GUILayout.Label($"contactTime: {(KnifeSlicerRuntime.UseContactTime ? $"ON ({KnifeSlicerRuntime.MinContactMs}ms)" : "OFF")}");
+
+            // Knife speed
+            float spd = knifeVel ? knifeVel.CurrentSpeed : -1f;
+            GUILayout.Label($"Knife Speed: {(spd < 0 ? "NOT SET" : spd.ToString("F2"))}");
+
+            // Conductor info
+            if (conductor)
+            {
+                GUILayout.Label($"Success: {conductor.SuccessCount} / {conductor.TargetSlices}");
+                GUILayout.Label($"JudgeTimeLeft: {conductor.JudgeTimeLeft:F2}s");
+            }
+            else GUILayout.Label("Conductor: NOT SET");
+
+            // BGM runtime
+            if (bgmSource && bgmSource.clip)
+            {
+                GUILayout.Label($"BGM: {bgmSource.clip.name}");
+                GUILayout.Label($"BGM Time: {bgmSource.time:F2} / {bgmSource.clip.length:F2}");
+                GUILayout.Label($"BGM Playing: {bgmSource.isPlaying}");
+            }
+            else GUILayout.Label("BGM: NOT SET");
+
+            GUILayout.EndArea();
+        }
     }
 }

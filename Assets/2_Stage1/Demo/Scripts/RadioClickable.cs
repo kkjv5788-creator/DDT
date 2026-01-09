@@ -1,45 +1,29 @@
 using UnityEngine;
-using UnityEngine.Events;
+using Project.Core;
 
-public class RadioClickable : MonoBehaviour
+namespace Project.Core
 {
-    public UnityEvent onSingleClick;
-    public UnityEvent onDoubleClick;
-
-    [Header("Double Click")]
-    public float doubleClickWindow = 0.45f;
-
-    float _lastClickTime = -999f;
-    bool _pendingSingle;
-
-    void Update()
+    public class RadioClickable : MonoBehaviour
     {
-        // 단일 클릭 확정(더블클릭 윈도우 지나면)
-        if (_pendingSingle && Time.time - _lastClickTime > doubleClickWindow)
+        [Tooltip("튜토리얼 종료/스킵 이후에만 메인 시작 클릭을 허용")]
+        [SerializeField] bool mainStartEnabled;
+
+        // Editor test
+        void OnMouseDown()
         {
-            _pendingSingle = false;
-            onSingleClick?.Invoke();
-        }
-    }
-
-    void OnMouseDown()
-    {
-        InvokeClick();
-    }
-
-    public void InvokeClick()
-    {
-        float now = Time.time;
-
-        if (now - _lastClickTime <= doubleClickWindow)
-        {
-            _pendingSingle = false;
-            _lastClickTime = -999f;
-            onDoubleClick?.Invoke();
-            return;
+            TryClick();
         }
 
-        _lastClickTime = now;
-        _pendingSingle = true;
+        // For VR pointer/interaction: hook this from UnityEvent (e.g., OVRInteractable)
+        public void TryClick()
+        {
+            if (!mainStartEnabled) return;
+            GameEvents.RaiseMainStartRequested();
+        }
+
+        public void SetMainStartEnabled(bool enabled)
+        {
+            mainStartEnabled = enabled;
+        }
     }
 }
