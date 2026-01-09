@@ -304,8 +304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53e5b580a223fd848a545475cc221954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conductor: {fileID: 259698208}
-  hud: {fileID: 1802716741}
+  blockerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &166628889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,9 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1071dd83b34d84d91e76ef1a9eb713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knifeVisual: {fileID: 426916339578421329}
-  localBackAxis: {x: 0, y: 0, z: -1}
-  maxOffset: 0.015
 --- !u!114 &166628890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,8 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6b6bd2b2f6d0d45a8ebe5115e3daf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prevPos: {x: 0, y: 0, z: 0}
-  <CurrentSpeed>k__BackingField: 0
+  speedSmoothing: 0.25
 --- !u!114 &166628891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,12 +344,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d885a2fd8051f842b23b51a44415c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 564053389}
-  rb: {fileID: 166628893}
-  positionLerp: 0.512
-  rotationLerp: 0.45
-  maxMoveSpeed: 14
-  maxTurnSpeed: 540
+  followTarget: {fileID: 1640439408}
+  followSharpness: 140
+  followTargetRotation: 1
+  rotationOffsetEuler: {x: 0, y: 0, z: 0}
+  blockMask:
+    serializedVersion: 2
+    m_Bits: 1073742591
+  skin: 0.0025
+  ignoreTriggers: 1
 --- !u!65 &166628892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -443,16 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5eb16e002c9d044db805bf51ad0868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conductor: {fileID: 259698208}
-  knifeTrigger: {fileID: 1440753006}
-  kimbapTag: Kimbap
-  sliceableLayer:
-    serializedVersion: 2
-    m_Bits: 1073742327
-  blockedLayer:
-    serializedVersion: 2
-    m_Bits: 520
-  canSlice: 1
+  velocityEstimator: {fileID: 0}
+  failCooldownOverride: -1
 --- !u!1 &179746999
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,13 +745,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f36ef4dc6c3a4e478ef04f6a1f002a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
-  bgm: {fileID: 0}
-  spawner: {fileID: 0}
-  <CurrentState>k__BackingField: 0
-  triggerIndex: 0
-  stateStartTime: 0
-  sliceCount: 0
+  kimbapSpawner: {fileID: 0}
+  plateController: {fileID: 0}
+  bgmSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  resultHoldSeconds: 1.2
 --- !u!4 &269035030 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
@@ -1143,34 +1133,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a716daf84679d664abc63e4c55e0be72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceSlots:
-  - {fileID: 1342538362}
-  - {fileID: 1964934129}
-  - {fileID: 49512334}
-  - {fileID: 691673187}
-  - {fileID: 385251596}
-  - {fileID: 292343494}
-  - {fileID: 769704009}
-  - {fileID: 179747000}
-  - {fileID: 1486610652}
-  - {fileID: 2137549579}
-  - {fileID: 125042850}
-  - {fileID: 534357188}
-  - {fileID: 450338941}
-  - {fileID: 236900187}
-  - {fileID: 912640524}
-  - {fileID: 1193825402}
-  - {fileID: 675779399}
-  - {fileID: 293943502}
-  - {fileID: 531485230}
-  - {fileID: 1892936310}
-  piecePrefab: {fileID: 8452999438402424253, guid: 4b074d1f80d7a364a8dfb8705d268d06, type: 3}
-  cleanPlatePrefab: {fileID: 0}
-  explodeVfxPrefab: {fileID: 0}
-  sfxSource: {fileID: 0}
-  addPieceSfx: {fileID: 0}
-  successPlateSfx: {fileID: 0}
-  failPlateSfx: {fileID: 0}
+  plateAnchor: {fileID: 0}
+  stackRootOverride: {fileID: 0}
+  pieceRadius: 0.03
+  pieceThickness: 0.015
+  posJitterMul: 0.08
+  yawJitterDeg: 10
+  tiltJitterDeg: 6
 --- !u!4 &455512909 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4776541970856471138, guid: 124ffb142e6ac23478336cb938d9e62c, type: 3}
@@ -1606,9 +1575,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bc88aa86b1edd34cb560d8b8da4895e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  spawnPoint: {fileID: 1082726357}
-  <Current>k__BackingField: {fileID: 0}
+  anchor: {fileID: 0}
+  kimbapPrefab: {fileID: 0}
 --- !u!4 &1082726357
 Transform:
   m_ObjectHideFlags: 0
@@ -2013,17 +1981,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1847811c16e174583151394fd6eb49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conductor: {fileID: 259698208}
-  radio: {fileID: 0}
-  tutorialData: {fileID: 11400000, guid: 166fa2b8a3ce9a046aff8b9e3a5c32d3, type: 2}
-  mainData: {fileID: 11400000, guid: 21b267b5c4d7a7240b496a7345f46d97, type: 2}
-  tutorialSuccessToAdvance: 3
-  failStreakToAssist: 3
-  assistJudgeMultiplier: 1.3
-  mode: 0
-  tutorialSuccessCount: 0
-  failStreak: 0
-  assistOn: 0
 --- !u!4 &1496062699
 Transform:
   m_ObjectHideFlags: 0
@@ -2225,8 +2182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33ba3beab90294d4c86ad0870b34da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knifeSpeedSource: {fileID: 166628890}
   conductor: {fileID: 259698208}
+  knifeVel: {fileID: 0}
+  bgmSource: {fileID: 0}
 --- !u!4 &1802716742
 Transform:
   m_ObjectHideFlags: 0
