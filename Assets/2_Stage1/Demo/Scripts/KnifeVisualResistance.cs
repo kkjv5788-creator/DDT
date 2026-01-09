@@ -1,42 +1,39 @@
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class KnifeVisualResistance : MonoBehaviour
 {
-    public Transform knifeVisual; // assign model root
-    public Vector3 localBackAxis = Vector3.back; // visual moves slightly backward on hit
+    public Transform knifeVisual;
+    public Vector3 localBackAxis = new Vector3(0, 0, -1);
     public float maxOffset = 0.015f;
 
-    float _timer;
-    float _dur;
-    float _strength;
-    Vector3 _baseLocalPos;
+    float _resistance01;
+    Vector3 _initialLocalPos;
+    bool _inited;
 
-    void Awake()
+    void Start()
     {
-        if (!knifeVisual) knifeVisual = transform;
-        _baseLocalPos = knifeVisual.localPosition;
+        if (knifeVisual)
+        {
+            _initialLocalPos = knifeVisual.localPosition;
+            _inited = true;
+        }
     }
 
-    public void Play(int milliseconds, float strength01)
+    public void SetResistance01(float value01)
     {
-        _dur = Mathf.Clamp(milliseconds / 1000f, 0.03f, 0.25f);
-        _timer = _dur;
-        _strength = Mathf.Clamp01(strength01);
+        _resistance01 = Mathf.Clamp01(value01);
     }
 
     void LateUpdate()
     {
-        if (_timer <= 0f)
-        {
-            knifeVisual.localPosition = Vector3.Lerp(knifeVisual.localPosition, _baseLocalPos, 0.35f);
-            return;
-        }
+        if (!knifeVisual || !_inited) return;
 
-        _timer -= Time.deltaTime;
-        float u = 1f - Mathf.Clamp01(_timer / _dur); // 0->1
-        // ease in/out
-        float k = Mathf.Sin(u * Mathf.PI);
-        Vector3 offset = localBackAxis.normalized * (maxOffset * _strength * k);
-        knifeVisual.localPosition = _baseLocalPos + offset;
+        Vector3 axis = localBackAxis.sqrMagnitude < 1e-6f ? Vector3.back : localBackAxis.normalized;
+        Vector3 offset = axis * (maxOffset * _resistance01);
+        knifeVisual.localPosition = _initialLocalPos + offset;
+
+        // 자연스럽게 풀리게
+        _resistance01 = Mathf.MoveTowards(_resistance01, 0f, Time.deltaTime * 6f);
     }
 }

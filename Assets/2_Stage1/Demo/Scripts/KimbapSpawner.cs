@@ -1,73 +1,51 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class KimbapSpawner : MonoBehaviour
 {
-    [Header("Spawn")]
     public Transform spawnPoint;
-    public GameObject[] kimbapPrefabs;
+    public List<GameObject> kimbapPrefabs = new List<GameObject>();
 
-    [Header("Runtime")]
     public GameObject currentKimbap;
     public GameObject preparedKimbap;
 
-    public void CleanupCurrent()
+    public void SpawnOrPrepare()
+    {
+        if (currentKimbap) return;
+
+        if (preparedKimbap)
+        {
+            currentKimbap = preparedKimbap;
+            preparedKimbap = null;
+            currentKimbap.SetActive(true);
+            return;
+        }
+
+        Spawn();
+    }
+
+    public GameObject Spawn(int index = 0)
+    {
+        if (!spawnPoint) spawnPoint = transform;
+        if (kimbapPrefabs == null || kimbapPrefabs.Count == 0)
+        {
+            Debug.LogWarning("[KimbapSpawner] No prefabs.");
+            return null;
+        }
+
+        index = Mathf.Clamp(index, 0, kimbapPrefabs.Count - 1);
+        var prefab = kimbapPrefabs[index];
+        if (!prefab) return null;
+
+        var go = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+        currentKimbap = go;
+        return go;
+    }
+
+    public void ClearCurrent()
     {
         if (currentKimbap) Destroy(currentKimbap);
         currentKimbap = null;
-    }
-
-    public void CleanupPrepared()
-    {
-        if (preparedKimbap) Destroy(preparedKimbap);
-        preparedKimbap = null;
-    }
-
-    /// <summary>
-    /// preparedKimbap이 비어있을 때만 Prepare 수행(중복 생성 방지)
-    /// </summary>
-    public void EnsurePreparedKimbap()
-    {
-        if (preparedKimbap != null) return;
-        PrepareNextKimbap();
-    }
-
-    public void PrepareNextKimbap()
-    {
-        // ✅ 중복 생성 방지
-        if (preparedKimbap != null) return;
-
-        if (!spawnPoint || kimbapPrefabs == null || kimbapPrefabs.Length == 0)
-        {
-            UnityEngine.Debug.LogWarning("[KimbapSpawner] Missing spawnPoint or kimbapPrefabs.");
-            return;
-        }
-
-        var prefab = kimbapPrefabs[UnityEngine.Random.Range(0, kimbapPrefabs.Length)];
-        preparedKimbap = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
-        preparedKimbap.SetActive(false);
-    }
-
-    public void ActivatePreparedKimbap()
-    {
-        if (!preparedKimbap)
-        {
-            UnityEngine.Debug.LogWarning("[KimbapSpawner] No prepared kimbap to activate.");
-            return;
-        }
-
-        CleanupCurrent();
-
-        currentKimbap = preparedKimbap;
-        preparedKimbap = null;
-
-        currentKimbap.SetActive(true);
-    }
-
-    public KimbapController GetCurrentKimbapController()
-    {
-        if (!currentKimbap) return null;
-        return currentKimbap.GetComponentInChildren<KimbapController>(true);
     }
 }

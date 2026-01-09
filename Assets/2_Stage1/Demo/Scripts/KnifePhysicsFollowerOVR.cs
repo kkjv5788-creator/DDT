@@ -1,58 +1,59 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[DisallowMultipleComponent]
 public class KnifePhysicsFollowerOVR : MonoBehaviour
 {
+    [Header("Refs")]
     public Transform target;
     public Rigidbody rb;
 
-    [Range(0.01f, 1f)] public float positionLerp = 0.5f;
-    [Range(0.01f, 1f)] public float rotationLerp = 0.35f;
-    public float maxMoveSpeed = 12f;
-    public float maxTurnSpeed = 480f;
+    [Header("Tuning")]
+    [Range(0f, 1f)] public float positionLerp = 0.512f;
+    [Range(0f, 1f)] public float rotationLerp = 0.45f;
+    public float maxMoveSpeed = 14f;
+    public float maxTurnSpeed = 540f;
 
-    Vector3 _targetPos;
-    Quaternion _targetRot;
-    bool _hasTargetPose;
+    void Reset()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Awake()
     {
         if (!rb) rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
-    {
-        if (!target) return;
-        _targetPos = target.position;
-        _targetRot = target.rotation;
-        _hasTargetPose = true;
-    }
-
     void FixedUpdate()
     {
-        if (!rb || !_hasTargetPose) return;
+        if (!target || !rb) return;
 
-        // --- Position ---
-        Vector3 delta = _targetPos - rb.position;
-        float maxStep = maxMoveSpeed * Time.fixedDeltaTime;
-        Vector3 step = Vector3.ClampMagnitude(delta, maxStep);
-        Vector3 nextPos = rb.position + step;
-        nextPos = Vector3.Lerp(rb.position, nextPos, positionLerp);
-        rb.MovePosition(nextPos);
+        float dt = Time.fixedDeltaTime;
+        if (dt <= 0f) return;
 
-        // --- Rotation ---
-        Quaternion desiredRot = _targetRot;
+        // Position follow
+        Vector3 toTarget = (target.position - rb.position);
+        Vector3 desiredVel = toTarget / dt;
+        desiredVel = Vector3.ClampMagnitude(desiredVel, maxMoveSpeed);
 
-        Quaternion dq = desiredRot * Quaternion.Inverse(rb.rotation);
-        dq.ToAngleAxis(out float angle, out Vector3 axis);
+        // Blend velocity
+        Vector3 vel = Vector3.Lerp(rb.velocity, desiredVel, positionLerp);
+        rb.velocity = vel;
+
+        // Rotation follow
+        Quaternion current = rb.rotation;
+        Quaternion desired = target.rotation;
+
+        Quaternion delta = desired * Quaternion.Inverse(current);
+        delta.ToAngleAxis(out float angle, out Vector3 axis);
+        if (float.IsNaN(axis.x)) axis = Vector3.up;
+
         if (angle > 180f) angle -= 360f;
 
-        float maxAngleStep = maxTurnSpeed * Time.fixedDeltaTime;
-        float clamped = Mathf.Clamp(angle, -maxAngleStep, maxAngleStep);
-        Quaternion stepRot = Quaternion.AngleAxis(clamped, axis);
+        float desiredAngVelDeg = angle / dt;
+        desiredAngVelDeg = Mathf.Clamp(desiredAngVelDeg, -maxTurnSpeed, maxTurnSpeed);
 
-        Quaternion nextRot = stepRot * rb.rotation;
-        nextRot = Quaternion.Slerp(rb.rotation, nextRot, rotationLerp);
-        rb.MoveRotation(nextRot);
+        Vector3 desiredAngVel = axis.normalized * desiredAngVelDeg * Mathf.Deg2Rad;
+        Vector3 angVel = Vector3.Lerp(rb.angularVelocity, desiredAngVel, rotationLerp);
+        rb.angularVelocity = angVel;
     }
 }

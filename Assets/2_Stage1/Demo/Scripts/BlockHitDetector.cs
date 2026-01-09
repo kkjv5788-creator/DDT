@@ -1,16 +1,39 @@
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class BlockHitDetector : MonoBehaviour
 {
     public RhythmConductor conductor;
     public DebugHUD hud;
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!conductor) return;
-        if (conductor.IsJudgingWindow()) return; // judging이면 block collider가 꺼져있는 구성이 일반적
+    TriggerProbe _probe;
+    KnifeVisualResistance _resist;
 
-        // WrongCut feedback (debug only)
-        if (hud) hud.Log("WrongCut: Hit blocked Kimbap (Non-Judging)");
+    void Awake()
+    {
+        _probe = GetComponent<TriggerProbe>();
+        if (!_probe) _probe = GetComponentInChildren<TriggerProbe>(true);
+
+        _resist = GetComponent<KnifeVisualResistance>();
+        if (!_resist) _resist = GetComponentInChildren<KnifeVisualResistance>(true);
+    }
+
+    void OnEnable()
+    {
+        if (_probe != null) _probe.Blocked += OnBlocked;
+    }
+
+    void OnDisable()
+    {
+        if (_probe != null) _probe.Blocked -= OnBlocked;
+    }
+
+    void OnBlocked(Collider c)
+    {
+        // 비주얼 저항 연출
+        if (_resist) _resist.SetResistance01(1f);
+
+        if (conductor) conductor.ReportBlockedHit();
+        if (hud) hud.NotifyBlocked(c);
     }
 }
