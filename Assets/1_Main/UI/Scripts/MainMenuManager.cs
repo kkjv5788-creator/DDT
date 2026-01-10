@@ -1,54 +1,56 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [Header("이동 설정")]
-    public Transform playerRig;     // 플레이어 (OVRCameraRig)
-    public Transform lobbyPos;      // 도착할 위치 (LobbyPosition)
+    [Header("연결할 것들")]
+    public Transform playerRig;       
+    public GameObject titleGroup;     
+    public OVRScreenFade screenFader; 
 
-    [Header("UI 그룹")]
-    public GameObject titleGroup;   // 타이틀 화면 (꺼질 녀석)
-    // public GameObject selectGroup; // 곡 선택 화면 (나중에 켤 녀석)
+    // [추가] 높이 관리자 연결 슬롯
+    public SmartHeightManager heightManager; 
 
-    void Start()
+    [Header("설정")]
+    public Vector3 lobbyPosition = new Vector3(0, 0, 0); 
+
+    public void OnClickStart()
     {
-        // 1. 시작하면 타이틀 UI 켜기
-        if (titleGroup != null) titleGroup.SetActive(true);
-
-        // 2. [추가됨] 플레이어 위치를 강제로 타이틀 공간(지하 500m)으로 이동
-        // (개발하다가 실수로 로비에 카메라를 둬도, 시작하면 무조건 타이틀로 옵니다)
-        if (playerRig != null)
-        {
-            playerRig.position = new Vector3(0, -500, 0);
-            playerRig.rotation = Quaternion.identity; // 정면 보기
-        }
+        StartCoroutine(TeleportSequence());
     }
 
-    // [시작하기] 버튼 누르면 실행될 함수
-    public void GoToLobby()
+    public void OnClickQuit()
     {
-        // 1. 플레이어 순간이동 (로비 위치로)
-        if (playerRig != null && lobbyPos != null)
-        {
-            playerRig.position = lobbyPos.position;
-            playerRig.rotation = lobbyPos.rotation;
-        }
-
-        // 2. 타이틀 화면 끄기
-        if (titleGroup != null) titleGroup.SetActive(false);
-        
-        Debug.Log("문방구 앞으로 이동 완료!");
-    }
-
-    public void QuitGame()
-    {
+        Debug.Log("게임 종료");
         Application.Quit();
     }
 
-    public void GoToStage1()
+IEnumerator TeleportSequence()
     {
-        Debug.Log("게임 시작! Stage1으로 이동합니다.");
-        SceneManager.LoadScene("Stage1");
+        if (screenFader != null) screenFader.FadeOut();
+        
+        float waitTime = screenFader != null ? screenFader.fadeTime : 2.0f;
+        yield return new WaitForSeconds(waitTime);
+
+        // --- 이동 시점 ---
+
+        playerRig.position = lobbyPosition;
+        playerRig.rotation = Quaternion.identity;
+
+        // [추가] 여기서 키를 1.7m로 변경하라고 명령!
+        if (heightManager != null)
+        {
+            heightManager.SwitchToGameHeight();
+        }
+        // 혹시 연결 안 했을까봐 비상용으로 직접 GetComponent 시도
+        else 
+        {
+            var manager = playerRig.GetComponent<SmartHeightManager>();
+            if(manager != null) manager.SwitchToGameHeight();
+        }
+
+        if (titleGroup != null) titleGroup.SetActive(false);
+
+        if (screenFader != null) screenFader.FadeIn();
     }
 }
