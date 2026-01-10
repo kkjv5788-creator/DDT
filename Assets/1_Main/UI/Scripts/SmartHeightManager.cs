@@ -3,34 +3,44 @@ using UnityEngine;
 public class SmartHeightManager : MonoBehaviour
 {
     [Header("상황별 눈높이 설정")]
-    public float titleEyeHeight = 0.0f; // 타이틀에서는 0 (또는 앉은 키)
+    public float titleEyeHeight = 0.0f; // 타이틀에서는 0
     public float gameEyeHeight = 1.7f;  // 게임에서는 1.7m
 
-    [Header("상태 모니터링")]
-    public bool isGameMode = false; // 체크되면 게임 높이 적용
+    [Header("설정")]
+    // [추가된 기능] 체크하면 이 씬이 시작될 때 강제로 게임 모드(1.7m)로 설정합니다.
+    public bool forceGameModeOnStart = false; 
+
+    // 전역 변수 (씬이 바뀌어도 값 유지)
+    public static bool isGameMode = false; 
 
     private Transform trackingSpace;
+
+    void Awake()
+    {
+        // 스테이지1처럼 바로 게임이 시작되는 씬에서는 이 옵션을 켜두면 됩니다.
+        if (forceGameModeOnStart)
+        {
+            isGameMode = true;
+        }
+    }
 
     void Start()
     {
         trackingSpace = transform.Find("TrackingSpace");
-        
-        // [핵심] OVR이 제멋대로 바닥 모드(Floor Level)로 바꾸는 걸 막고
-        // '눈 높이(Eye Level)' 모드로 강제 고정합니다.
-        // 그래야 우리가 스크립트로 Y값을 마음대로 조작할 수 있습니다.
+
         if (OVRManager.instance != null)
         {
             OVRManager.instance.trackingOriginType = OVRManager.TrackingOrigin.EyeLevel;
         }
 
-        // 시작은 타이틀 높이로
-        ApplyHeight(titleEyeHeight);
+        // 현재 모드에 맞춰 높이 적용
+        float currentTargetHeight = isGameMode ? gameEyeHeight : titleEyeHeight;
+        ApplyHeight(currentTargetHeight);
     }
 
     void LateUpdate()
     {
 #if UNITY_EDITOR
-        // 에디터 테스트용: 모드에 따라 높이 계속 갱신
         if (trackingSpace != null)
         {
             float targetHeight = isGameMode ? gameEyeHeight : titleEyeHeight;
@@ -43,15 +53,18 @@ public class SmartHeightManager : MonoBehaviour
     {
         if (trackingSpace != null)
         {
+            // 미세한 떨림 방지
+            if (Mathf.Abs(trackingSpace.localPosition.y - yHeight) < 0.001f) return;
+
             Vector3 pos = trackingSpace.localPosition;
             pos.y = yHeight;
             trackingSpace.localPosition = pos;
         }
     }
 
-    // 버튼에서 호출할 함수
     public void SwitchToGameHeight()
     {
         isGameMode = true;
+        ApplyHeight(gameEyeHeight);
     }
 }
