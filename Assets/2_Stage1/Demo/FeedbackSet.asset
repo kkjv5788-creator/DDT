@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e48a82a3f1299f749b7ae3fc2353a936, type: 3}
+  m_Name: FeedbackSet
+  m_EditorClassIdentifier: 
+  sfxSliceSuccess: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
+  sfxSliceFail: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+  sfxResultSuccess: {fileID: 8300000, guid: 2829a5212f9da134e88443a1f91d0e48, type: 3}
+  sfxResultFail: {fileID: 8300000, guid: bf685e2b67465c64c8f5efdc5b241fd1, type: 3}
+  sfxWrongCut: {fileID: 8300000, guid: 6eb72c75e0fcdc04b905b225912096e7, type: 3}
+  vfxSliceSuccessPrefab: {fileID: 0}
+  vfxSliceFailPrefab: {fileID: 0}
+  vfxResultSuccessPrefab: {fileID: 0}
+  vfxResultFailPrefab: {fileID: 0}
+  vfxWrongCutPrefab: {fileID: 0}
+  platePrefabEmptyStack: {fileID: 7785160717035425652, guid: fd886e0faf5867b42aca3897e2b2afe5, type: 3}
+  platePrefabSuccessNeat: {fileID: 8544070824460493395, guid: 3e8cecd1a95b02c43bb05cc178b89c80, type: 3}
+  platePrefabFailExplode: {fileID: 5502874210720452518, guid: bd10a877a89e2744f931bffb4fec3ede, type: 3}
+  platingPiecePrefab: {fileID: 4484708323004652961, guid: 3e6addb5484539640a0f7fdc9bc539e2, type: 3}
+  maxPlatingPiecesPerRound: 12
+  failCooldown: 0.2
+  sliceCooldownSecondsDefault: 0.12
+  skipInputCooldown: 0.5

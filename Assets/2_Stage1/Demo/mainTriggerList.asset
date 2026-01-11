@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7448e3dd27b734eb4ebe43b0dc7a7e, type: 3}
-  m_Name: RhythmTriggerList
+  m_Name: mainTriggerList
   m_EditorClassIdentifier: 
   bgm: {fileID: 8300000, guid: ca315076f894cbe4381e22befe62231e, type: 3}
   timingOffsetMs: 0
@@ -20,8 +20,8 @@ MonoBehaviour:
     judgeDuration: 5
     guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 1
+    minContactMs: 500
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
@@ -33,10 +33,10 @@ MonoBehaviour:
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
     hapticHitMax: 0.319
-    hapticDurationMs: 1
-    impactSound: {fileID: 0}
-    swishSound: {fileID: 0}
-    cutVfxPrefab: {fileID: 0}
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: 180f35aef2ea2654086bcbb52d58ec0b, type: 3}
+    swishSound: {fileID: 8300000, guid: c2dade153431323449798d5d5fd92ee4, type: 3}
+    cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.8
     visualResistanceMs: 1
   - triggerTime: 10
@@ -57,9 +57,9 @@ MonoBehaviour:
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
     hapticHitMax: 0.319
-    hapticDurationMs: 1
-    impactSound: {fileID: 0}
-    swishSound: {fileID: 0}
-    cutVfxPrefab: {fileID: 0}
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: 180f35aef2ea2654086bcbb52d58ec0b, type: 3}
+    swishSound: {fileID: 8300000, guid: c2dade153431323449798d5d5fd92ee4, type: 3}
+    cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.8
     visualResistanceMs: 1
