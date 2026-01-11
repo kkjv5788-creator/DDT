@@ -7,12 +7,16 @@ public class MainMenuManager : MonoBehaviour
     public Transform playerRig;       
     public GameObject titleGroup;     
     public OVRScreenFade screenFader; 
-
+    
     // [추가] 높이 관리자 연결 슬롯
     public SmartHeightManager heightManager; 
 
+    [Header("BGM 설정")]
+    public AudioSource bgmAudioSource; // BGM용 AudioSource 연결 (Inspector에서 설정)
+    public AudioClip newBGMClip;       // "Dudungtak! Neo Street-2.mp3" 연결
+
     [Header("설정")]
-    public Vector3 lobbyPosition = new Vector3(0, 0, 0); 
+    public Vector3 lobbyPosition = new Vector3(0, 0, 0);
 
     public void OnClickStart()
     {
@@ -23,6 +27,30 @@ public class MainMenuManager : MonoBehaviour
     {
         Debug.Log("게임 종료");
         Application.Quit();
+    }
+
+    /// <summary>
+    /// BGM을 변경하는 메서드 (play_btn의 On Click에서 호출)
+    /// </summary>
+    public void ChangeBGM()
+    {
+        if (bgmAudioSource != null && newBGMClip != null)
+        {
+            // 현재 재생 중인 BGM 정지
+            bgmAudioSource.Stop();
+            
+            // 새 BGM 클립으로 변경
+            bgmAudioSource.clip = newBGMClip;
+            
+            // 재생
+            bgmAudioSource.Play();
+            
+            Debug.Log($"BGM 변경: {newBGMClip.name}");
+        }
+        else
+        {
+            Debug.LogWarning("BGM AudioSource 또는 새 클립이 설정되지 않았습니다. Inspector에서 확인하세요.");
+        }
     }
 
 IEnumerator TeleportSequence()
