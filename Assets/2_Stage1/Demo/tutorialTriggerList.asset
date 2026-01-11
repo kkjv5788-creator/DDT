@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7448e3dd27b734eb4ebe43b0dc7a7e, type: 3}
+  m_Name: tutorialTriggerList
+  m_EditorClassIdentifier: 
+  bgm: {fileID: 8300000, guid: 7a12bca8ae3b6e2439b6c55ca820e9c0, type: 3}
+  timingOffsetMs: 0
+  triggers:
+  - triggerTime: 0
+    guideDuration: 1
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    requiredSliceCount: 5
+    minKnifeSpeed: 1
+    minContactMs: 200
+    thinSliceThicknessNorm: 0.08
+    thinThicknessCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    minThinThicknessWorld: 0.01
+    maxActiveThinPieces: 0
+    hapticHitBase: 0.665
+    hapticHitMax: 0.335
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
+    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
+    visualResistanceStrength: 0
+    visualResistanceMs: 1
+  - triggerTime: 0
+    guideDuration: 1
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    requiredSliceCount: 5
+    minKnifeSpeed: 1
+    minContactMs: 200
+    thinSliceThicknessNorm: 0.08
+    thinThicknessCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    minThinThicknessWorld: 0.01
+    maxActiveThinPieces: 0
+    hapticHitBase: 0.665
+    hapticHitMax: 0.335
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
+    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
+    visualResistanceStrength: 0
+    visualResistanceMs: 1
+  - triggerTime: 0
+    guideDuration: 1
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    requiredSliceCount: 5
+    minKnifeSpeed: 1
+    minContactMs: 200
+    thinSliceThicknessNorm: 0.08
+    thinThicknessCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    minThinThicknessWorld: 0.01
+    maxActiveThinPieces: 0
+    hapticHitBase: 0.665
+    hapticHitMax: 0.335
+    hapticDurationMs: 80
+    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
+    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
+    visualResistanceStrength: 0
+    visualResistanceMs: 1
