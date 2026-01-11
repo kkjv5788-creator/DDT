@@ -21,7 +21,7 @@ MonoBehaviour:
     guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 1
-    minContactMs: 200
+    minContactMs: 100
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
@@ -45,7 +45,7 @@ MonoBehaviour:
     guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 1
-    minContactMs: 200
+    minContactMs: 100
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
@@ -69,7 +69,7 @@ MonoBehaviour:
     guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 1
-    minContactMs: 200
+    minContactMs: 100
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
