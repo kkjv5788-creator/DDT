@@ -1953,13 +1953,11 @@ public class TutorialController : MonoBehaviour
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
     public RadioClickable radio;
+    public TutorialUIController tutorialUI; // 🔥 UI 컨트롤러 연결
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
     public int requiredSuccessCount = 3; // 각 단계 3번 성공 필요
-
-    [Header("UI Display (Optional)")]
-    public UnityEngine.UI.Text progressText; // "Progress: 2/3" 표시용
 
     int _currentStepIndex = 0;
     int _successCountThisStep = 0; // 현재 단계에서 성공한 횟수
@@ -1981,9 +1979,6 @@ public class TutorialController : MonoBehaviour
                 SkipTutorial();
             }
         }
-
-        // UI 업데이트
-        UpdateProgressUI();
     }
 
     void OnEnable()
@@ -2022,6 +2017,12 @@ public class TutorialController : MonoBehaviour
 
         UnityEngine.Debug.Log("[TutorialController] Tutorial started - Need 3 successes per step");
 
+        // 🔥 UI 초기화
+        if (tutorialUI)
+        {
+            tutorialUI.OnTutorialStart();
+        }
+
         // 첫 번째 트리거 수동 시작 (시간 기반 진행 차단되므로)
         Invoke(nameof(StartFirstTrigger), 1.0f);
     }
@@ -2032,6 +2033,13 @@ public class TutorialController : MonoBehaviour
         {
             UnityEngine.Debug.Log("[TutorialController] Starting first trigger manually");
             conductor.AdvanceToNextTrigger();
+
+            // 🔥 UI에 현재 단계 정보 전달
+            if (tutorialUI && tutorialTriggerList.triggers.Length > 0)
+            {
+                var trigger = tutorialTriggerList.triggers[0];
+                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
+            }
         }
     }
 
@@ -2046,6 +2054,12 @@ public class TutorialController : MonoBehaviour
         {
             _successCountThisStep++;
             UnityEngine.Debug.Log($"[TutorialController] Step {_currentStepIndex} SUCCESS! ({_successCountThisStep}/{requiredSuccessCount})");
+
+            // 🔥 UI 업데이트 - 성공 카운트 갱신
+            if (tutorialUI)
+            {
+                tutorialUI.UpdateSuccessCount(_currentStepIndex, _successCountThisStep, requiredSuccessCount);
+            }
 
             if (_successCountThisStep >= requiredSuccessCount)
             {
@@ -2062,19 +2076,19 @@ public class TutorialController : MonoBehaviour
                 }
 
                 // 다음 단계로 이동
-                Invoke(nameof(MoveToNextStep), 1.0f);
+                Invoke(nameof(MoveToNextStep), 1.5f);
             }
             else
             {
                 // 같은 단계 재시도 (성공 카운트 유지)
-                Invoke(nameof(RetryCurrentStep), 1.0f);
+                Invoke(nameof(RetryCurrentStep), 1.5f);
             }
         }
         else
         {
             // 실패 시 같은 단계 재시도 (성공 카운트 유지)
             UnityEngine.Debug.Log($"[TutorialController] Step {_currentStepIndex} FAILED (current: {_successCountThisStep}/{requiredSuccessCount})");
-            Invoke(nameof(RetryCurrentStep), 1.0f);
+            Invoke(nameof(RetryCurrentStep), 1.5f);
         }
     }
 
@@ -2084,6 +2098,13 @@ public class TutorialController : MonoBehaviour
         {
             UnityEngine.Debug.Log($"[TutorialController] Moving to step {_currentStepIndex}...");
             conductor.AdvanceToNextTrigger();
+
+            // 🔥 UI에 새 단계 정보 전달
+            if (tutorialUI && _currentStepIndex < tutorialTriggerList.triggers.Length)
+            {
+                var trigger = tutorialTriggerList.triggers[_currentStepIndex];
+                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
+            }
         }
 
         _isProcessingResult = false; // 처리 완료
@@ -2095,6 +2116,13 @@ public class TutorialController : MonoBehaviour
         {
             UnityEngine.Debug.Log($"[TutorialController] Retrying step {_currentStepIndex}...");
             conductor.RetryCurrentTrigger();
+
+            // 🔥 UI에 재시도 정보 전달
+            if (tutorialUI && _currentStepIndex < tutorialTriggerList.triggers.Length)
+            {
+                var trigger = tutorialTriggerList.triggers[_currentStepIndex];
+                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
+            }
         }
 
         _isProcessingResult = false; // 처리 완료
@@ -2117,11 +2145,17 @@ public class TutorialController : MonoBehaviour
             }
         }
 
-        // 🔥 라디오 활성화 + 클릭 가능하도록 설정
+        // 🔥 UI 숨김
+        if (tutorialUI)
+        {
+            tutorialUI.Hide();
+        }
+
+        // 라디오 활성화 + 클릭 가능하도록 설정
         if (radio)
         {
             radio.SetTutorialCompleted(true);
-            radio.SetClickable(true); // 클릭 가능하게 설정
+            radio.SetClickable(true);
             UnityEngine.Debug.Log("[TutorialController] Radio unlocked and clickable after skip");
         }
 
@@ -2147,11 +2181,18 @@ public class TutorialController : MonoBehaviour
             }
         }
 
-        // 🔥 라디오 활성화 + 클릭 가능하도록 설정
+        // 🔥 UI 완료 표시
+        if (tutorialUI)
+        {
+            tutorialUI.ShowCompletionMessage();
+            Invoke(nameof(HideTutorialUI), 3.0f);
+        }
+
+        // 라디오 활성화 + 클릭 가능하도록 설정
         if (radio)
         {
             radio.SetTutorialCompleted(true);
-            radio.SetClickable(true); // 클릭 가능하게 설정
+            radio.SetClickable(true);
             UnityEngine.Debug.Log("[TutorialController] Radio unlocked and clickable after completion");
         }
 
@@ -2160,12 +2201,18 @@ public class TutorialController : MonoBehaviour
             conductor.OnTutorialCompleted.Invoke();
     }
 
-    void UpdateProgressUI()
+    void HideTutorialUI()
     {
-        if (!progressText || _tutorialCompleted) return;
-
-        progressText.text = $"Step {_currentStepIndex + 1}/{tutorialTriggerList.triggers.Length}\nProgress: {_successCountThisStep}/{requiredSuccessCount}";
+        if (tutorialUI)
+        {
+            tutorialUI.Hide();
+        }
     }
+
+    // 🔥 외부에서 현재 진행 상황 조회
+    public int GetCurrentStepIndex() => _currentStepIndex;
+    public int GetSuccessCount() => _successCountThisStep;
+    public int GetTotalSteps() => tutorialTriggerList ? tutorialTriggerList.triggers.Length : 0;
 }
 
 
@@ -2182,11 +2229,13 @@ public class TutorialUIController : MonoBehaviour
     [Header("Refs")]
     public RhythmConductor conductor;
     public Canvas tutorialCanvas; // World Space Canvas
+    public TutorialController tutorialController; // 🔥 TutorialController 참조
 
     [Header("UI Elements")]
     public UnityEngine.UI.Text instructionText;      // "가이드 음이 들리면 3초 안에 3번 자르세요!"
     public UnityEngine.UI.Text progressText;         // "진행: 2/3"
     public UnityEngine.UI.Text stateText;            // "준비..." / "자르세요!" / "성공!" / "실패!"
+    public UnityEngine.UI.Text stepCountText;        // "단계: 1/3"
     public UnityEngine.UI.Image progressBarFill;     // 시간 바 (선택사항)
 
     [Header("Colors")]
@@ -2194,6 +2243,7 @@ public class TutorialUIController : MonoBehaviour
     public Color judgingColor = Color.green;
     public Color successColor = Color.cyan;
     public Color failColor = Color.red;
+    public Color completionColor = new Color(1f, 0.8f, 0f); // 금색
 
     [Header("Animation")]
     public float fadeInDuration = 0.3f;
@@ -2253,6 +2303,9 @@ public class TutorialUIController : MonoBehaviour
 
         // 시간 바 업데이트 (선택사항)
         UpdateProgressBar();
+
+        // 🔥 단계 카운트 업데이트
+        UpdateStepCount();
     }
 
     void HandleFade()
@@ -2292,12 +2345,6 @@ public class TutorialUIController : MonoBehaviour
 
         var trigger = conductor.GetCurrentTrigger();
         if (trigger == null) return;
-
-        // 진행 상황 텍스트
-        if (progressText)
-        {
-            progressText.text = $"진행: {conductor.SliceCount} / {conductor.RequiredSliceCount}";
-        }
 
         // 상태별 텍스트 & 색상
         switch (conductor.State)
@@ -2356,7 +2403,8 @@ public class TutorialUIController : MonoBehaviour
         // 자르는 중
         if (instructionText)
         {
-            instructionText.text = $"빠르게 자르세요!\n남은 횟수: {conductor.RequiredSliceCount - conductor.SliceCount}";
+            int remaining = conductor.RequiredSliceCount - conductor.SliceCount;
+            instructionText.text = $"빠르게 자르세요!\n남은 횟수: {remaining}";
             instructionText.color = judgingColor;
         }
 
@@ -2364,6 +2412,12 @@ public class TutorialUIController : MonoBehaviour
         {
             stateText.text = "자르세요!";
             stateText.color = judgingColor;
+        }
+
+        // 🔥 진행 상황 실시간 업데이트
+        if (progressText)
+        {
+            progressText.text = $"진행: {conductor.SliceCount} / {conductor.RequiredSliceCount}";
         }
     }
 
@@ -2400,8 +2454,7 @@ public class TutorialUIController : MonoBehaviour
             }
         }
 
-        // 잠시 후 페이드 아웃
-        Invoke(nameof(FadeOut), 1.5f);
+        // 잠시 후 페이드 아웃은 TutorialController에서 관리
     }
 
     void UpdateProgressBar()
@@ -2417,6 +2470,80 @@ public class TutorialUIController : MonoBehaviour
         float progress = Mathf.Clamp01(elapsed / trigger.judgeDuration);
 
         progressBarFill.fillAmount = 1f - progress;
+    }
+
+    void UpdateStepCount()
+    {
+        if (!stepCountText || !tutorialController) return;
+
+        int currentStep = tutorialController.GetCurrentStepIndex() + 1;
+        int totalSteps = tutorialController.GetTotalSteps();
+
+        stepCountText.text = $"단계: {currentStep} / {totalSteps}";
+    }
+
+    // 🔥 TutorialController에서 호출할 공개 메서드들
+
+    public void OnTutorialStart()
+    {
+        UnityEngine.Debug.Log("[TutorialUIController] Tutorial UI started");
+        FadeIn();
+    }
+
+    public void ShowStepInstruction(int stepIndex, int requiredCount, float judgeDuration)
+    {
+        FadeIn();
+
+        if (instructionText)
+        {
+            instructionText.text = $"단계 {stepIndex + 1}\n가이드 음이 들리면 {judgeDuration:F1}초 안에 {requiredCount}번 자르세요!";
+            instructionText.color = guidingColor;
+        }
+
+        if (stateText)
+        {
+            stateText.text = "준비...";
+            stateText.color = guidingColor;
+        }
+
+        if (progressText)
+        {
+            progressText.text = $"진행: 0 / {requiredCount}";
+        }
+    }
+
+    public void UpdateSuccessCount(int stepIndex, int successCount, int requiredCount)
+    {
+        if (progressText)
+        {
+            progressText.text = $"성공: {successCount} / {requiredCount}";
+        }
+
+        UnityEngine.Debug.Log($"[TutorialUIController] Step {stepIndex} - Success count: {successCount}/{requiredCount}");
+    }
+
+    public void ShowCompletionMessage()
+    {
+        FadeIn();
+
+        if (instructionText)
+        {
+            instructionText.text = "튜토리얼 완료!\n라디오를 클릭해서\n메인 게임을 시작하세요!";
+            instructionText.color = completionColor;
+        }
+
+        if (stateText)
+        {
+            stateText.text = "완료!";
+            stateText.color = completionColor;
+        }
+
+        if (progressText)
+        {
+            progressText.text = "";
+        }
+
+        UnityEngine.Debug.Log("[TutorialUIController] Tutorial completion message shown");
     }
 
     public void FadeIn()
@@ -2436,24 +2563,6 @@ public class TutorialUIController : MonoBehaviour
         _targetVisible = false;
         _isFading = true;
         _fadeTimer = 0f;
-    }
-
-    // TutorialController에서 호출
-    public void ShowStepInstruction(int stepIndex, int requiredCount, float judgeDuration)
-    {
-        FadeIn();
-
-        if (instructionText)
-        {
-            instructionText.text = $"단계 {stepIndex + 1}\n가이드 음이 들리면 {judgeDuration:F1}초 안에 {requiredCount}번 자르세요!";
-            instructionText.color = guidingColor;
-        }
-
-        if (stateText)
-        {
-            stateText.text = "준비...";
-            stateText.color = guidingColor;
-        }
     }
 
     public void Hide()
