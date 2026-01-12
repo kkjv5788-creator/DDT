@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// [변경점] 이제 이동 기능은 없고, 현실의 몸 움직임(충돌체)만 따라갑니다.
 [RequireComponent(typeof(CharacterController))]
 public class VRHeadSteeringMove : MonoBehaviour
 {
@@ -15,17 +14,14 @@ public class VRHeadSteeringMove : MonoBehaviour
 
         if (cameraTransform == null)
         {
-            // OVRCameraRig가 있다면 자동으로 찾기
-            var rig = GetComponent<OVRCameraRig>();
-            if (rig != null)
-                cameraTransform = rig.centerEyeAnchor;
+            // 메인 카메라(눈)를 자동으로 찾음
+            if (Camera.main != null)
+                cameraTransform = Camera.main.transform;
         }
     }
 
     void Update()
     {
-        // 핵심: 조이스틱 이동 코드(Move)를 모두 삭제했습니다.
-        // 오직 현실 몸 위치 동기화만 수행합니다.
         SyncCharacterController();
     }
 
@@ -33,7 +29,7 @@ public class VRHeadSteeringMove : MonoBehaviour
     {
         if (cameraTransform == null) return;
 
-        // 현실의 내 머리 위치에 맞춰 충돌체(몸통)만 따라오게 함 (벽 뚫기 방지용)
+        // 내 머리 위치(x, z)에 맞춰 몸통(Collider)을 이동시킴
         Vector3 centerEyeLocalPos = cameraTransform.localPosition;
         characterController.center = new Vector3(centerEyeLocalPos.x, characterController.center.y, centerEyeLocalPos.z);
     }
