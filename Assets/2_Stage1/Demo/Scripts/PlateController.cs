@@ -1,4 +1,4 @@
-﻿// PlateController.cs (조각 정리 수정)
+// PlateController.cs (조각 정리 수정)
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
