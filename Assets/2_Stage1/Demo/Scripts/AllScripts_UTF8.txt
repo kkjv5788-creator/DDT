@@ -277,11 +277,57 @@ public class FeedbackSetSO : ScriptableObject
 
 
 /* =====================================================================
+   FILE: FinalResultInputHandler.cs
+   ===================================================================== */
+
+using UnityEngine;
+
+public class FinalResultInputHandler : MonoBehaviour
+{
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+
+    [Header("Settings")]
+    public float inputCooldown = 0.5f;
+
+    float _lastInputTime = -999f;
+
+    void Update()
+    {
+        // FinalResult 상태가 아니면 무시
+        if (!gameFlowManager || gameFlowManager.CurrentState != GameState.FinalResult)
+            return;
+
+        // A 버튼만 허용
+        if (OVRInput.GetDown(OVRInput.Button.One)) // A 버튼
+        {
+            if (Time.time - _lastInputTime > inputCooldown)
+            {
+                _lastInputTime = Time.time;
+                OnAButtonPressed();
+            }
+        }
+    }
+
+    void OnAButtonPressed()
+    {
+        Debug.Log("[FinalResultInput] A button pressed - Going to main menu");
+
+        if (gameFlowManager)
+        {
+            gameFlowManager.GoToMainMenu();
+        }
+    }
+}
+
+
+
+/* =====================================================================
    FILE: GameFlowManager.cs
    ===================================================================== */
 
-using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -291,94 +337,193 @@ public class GameFlowManager : MonoBehaviour
     public RadioClickable radio;
     public PlateController plateController;
     public KimbapSpawner spawner;
+    public ResultManager resultManager;
+    public PauseManager pauseManager;
+    public ProgressGaugeUI progressGaugeUI;
 
     [Header("Data")]
     public RhythmTriggerListSO mainTriggerList;
 
-    bool _mainGameStarted = false; // 🔥 메인 게임 시작 플래그
+    [Header("Settings")]
+    public string mainMenuSceneName = "MainMenu"; // 메인 메뉴 씬 이름
+
+    // 상태 관리
+    public GameState CurrentState { get; private set; } = GameState.Tutorial;
+    GameState _stateBeforePause; // Pause 이전 상태 저장
+
+    bool _mainGameStarted = false;
 
     void Start()
     {
-        // PlateController를 RhythmConductor에 연결
+        // 컴포넌트 연결
         if (conductor && plateController)
-        {
             conductor.plateController = plateController;
-        }
 
-        // Spawner도 연결
         if (conductor && spawner)
-        {
             conductor.spawner = spawner;
-        }
 
-        // TutorialController에 Radio 연결
         if (tutorialController && radio)
-        {
             tutorialController.radio = radio;
+
+        // ResultManager 이벤트 연결
+        if (resultManager && progressGaugeUI)
+        {
+            resultManager.OnProgressUpdate.AddListener(progressGaugeUI.UpdateProgress);
         }
 
-        // 튜토리얼부터 시작
+        // 튜토리얼 시작
+        CurrentState = GameState.Tutorial;
         if (tutorialController)
         {
             tutorialController.StartTutorial();
         }
 
-        // 라디오 클릭 이벤트 구독
+        // 라디오 클릭 이벤트
         if (radio)
         {
             radio.OnRadioClicked.AddListener(StartMainGame);
+        }
+
+        // 튜토리얼 완료 이벤트
+        if (conductor)
+        {
+            conductor.OnTutorialCompleted.AddListener(OnTutorialCompleted);
+            conductor.OnTutorialSkipped.AddListener(OnTutorialCompleted);
+        }
+    }
+
+    void OnTutorialCompleted()
+    {
+        Debug.Log("[GameFlowManager] Tutorial completed - Entering WaitForRadio state");
+        CurrentState = GameState.WaitForRadio;
+
+        if (radio)
+        {
+            radio.SetClickable(true);
         }
     }
 
     void StartMainGame()
     {
-        // 🔥 이미 메인 게임이 시작되었으면 무시
         if (_mainGameStarted)
         {
-            UnityEngine.Debug.Log("[GameFlowManager] Main game already started. Ignoring radio click.");
+            Debug.Log("[GameFlowManager] Main game already started.");
             return;
         }
 
-        UnityEngine.Debug.Log("[GameFlowManager] Starting main game...");
+        Debug.Log("[GameFlowManager] Starting main game...");
 
-        if (!conductor || !mainTriggerList)
-        {
-            UnityEngine.Debug.LogError("[GameFlowManager] Missing conductor or mainTriggerList.");
-            return;
-        }
-
-        // 🔥 메인 게임 시작 플래그 설정
         _mainGameStarted = true;
+        CurrentState = GameState.PlayingMain;
 
-        // 🔥 라디오 비활성화 (더 이상 클릭 불가)
+        // 라디오 비활성화
         if (radio)
         {
             radio.SetClickable(false);
         }
 
-        // 🔥 1. 기존 김밥 완전히 제거
+        // 초기화
         if (spawner)
-        {
             spawner.DestroyCurrentKimbap();
-            UnityEngine.Debug.Log("[GameFlowManager] Destroyed tutorial kimbap");
-        }
 
-        // 🔥 2. 접시 초기화 (빈 접시로)
         if (plateController)
-        {
             plateController.ResetToEmptyPlate();
-            UnityEngine.Debug.Log("[GameFlowManager] Reset plate to empty");
-        }
 
-        // 🔥 3. 메인 게임 데이터 설정
+        // 메인 게임 시작
         conductor.isTutorialMode = false;
         conductor.data = mainTriggerList;
-
-        // 🔥 4. 메인 게임 시작 (새 김밥 자동 생성됨)
         conductor.StartGame();
 
-        UnityEngine.Debug.Log("[GameFlowManager] Main game started successfully!");
+        // 결과 추적 시작
+        if (resultManager && mainTriggerList)
+        {
+            resultManager.StartTracking(mainTriggerList.triggers.Length);
+        }
+
+        Debug.Log("[GameFlowManager] Main game started!");
     }
+
+    // Pause 진입
+    public void EnterPaused()
+    {
+        _stateBeforePause = CurrentState;
+        CurrentState = GameState.Paused;
+        Debug.Log($"[GameFlowManager] Entered Paused (from {_stateBeforePause})");
+    }
+
+    // Pause 해제
+    public void ExitPaused()
+    {
+        CurrentState = _stateBeforePause;
+        Debug.Log($"[GameFlowManager] Exited Paused (back to {CurrentState})");
+    }
+
+    // 최종 결과창 진입
+    public void EnterFinalResult(float successRate)
+    {
+        CurrentState = GameState.FinalResult;
+        Debug.Log($"[GameFlowManager] Entered FinalResult (Success Rate: {successRate:F1}%)");
+
+        // TODO: 스테이지 해금 로직 (5장)
+        if (successRate >= 50f)
+        {
+            Debug.Log("[GameFlowManager] Next stage unlocked!");
+            // PlayerPrefs.SetInt("Stage2Unlocked", 1);
+        }
+    }
+
+    // 재시작 (7.5장 규칙)
+    public void Restart()
+    {
+        Debug.Log("[GameFlowManager] Restarting...");
+
+        if (CurrentState == GameState.Tutorial)
+        {
+            // 튜토리얼 중: 튜토리얼 재시작
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // 튜토리얼 이후: 메인 게임만 재시작
+            _mainGameStarted = false;
+            CurrentState = GameState.WaitForRadio;
+
+            // BGM 정지
+            if (conductor && conductor.bgmSource)
+                conductor.bgmSource.Stop();
+
+            // 라디오 활성화
+            if (radio)
+                radio.SetClickable(true);
+
+            Debug.Log("[GameFlowManager] Restarting from WaitForRadio");
+        }
+    }
+
+    // 메인 메뉴로 이동
+    public void GoToMainMenu()
+    {
+        Debug.Log("[GameFlowManager] Going to main menu...");
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+}
+
+
+
+/* =====================================================================
+   FILE: GameState.cs
+   ===================================================================== */
+
+using UnityEngine;
+
+public enum GameState
+{
+    Tutorial,        // 튜토리얼 진행 중
+    WaitForRadio,    // 튜토리얼 완료 후 라디오 대기
+    PlayingMain,     // 메인 게임 진행 중
+    Paused,          // 일시정지
+    EndingDelay,     // 마지막 트리거 완료 후 대기
+    FinalResult      // 최종 결과창
 }
 
 
@@ -1146,6 +1291,146 @@ public class KnifeVisualResistance : MonoBehaviour
 
 
 /* =====================================================================
+   FILE: PauseManager.cs
+   ===================================================================== */
+
+using UnityEngine;
+
+public class PauseManager : MonoBehaviour
+{
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+    public RhythmConductor conductor;
+    public GameObject pauseMenuPanel;
+
+    [Header("Audio")]
+    public AudioSource[] allAudioSources; // 모든 AudioSource 할당
+
+    [Header("Settings")]
+    public float inputCooldown = 0.5f;
+
+    bool _isPaused;
+    float _lastInputTime = -999f;
+
+    void Update()
+    {
+        // FinalResult 상태에서는 Pause 불가
+        if (gameFlowManager && gameFlowManager.CurrentState == GameState.FinalResult)
+            return;
+
+        // Paused 상태에서는 추가 입력 무시
+        if (_isPaused)
+            return;
+
+        // 왼손 인덱스 트리거 입력 (1회)
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch))
+        {
+            if (Time.time - _lastInputTime > inputCooldown)
+            {
+                _lastInputTime = Time.time;
+                Pause();
+            }
+        }
+    }
+
+    public void Pause()
+    {
+        if (_isPaused) return;
+
+        _isPaused = true;
+        Debug.Log("[PauseManager] Game paused");
+
+        // 시간 정지
+        Time.timeScale = 0f;
+
+        // 오디오 정지
+        PauseAllAudio();
+
+        // 패널 활성화
+        if (pauseMenuPanel)
+            pauseMenuPanel.SetActive(true);
+
+        // 상태 전환
+        if (gameFlowManager)
+            gameFlowManager.EnterPaused();
+    }
+
+    public void Resume()
+    {
+        if (!_isPaused) return;
+
+        _isPaused = false;
+        Debug.Log("[PauseManager] Game resumed");
+
+        // 시간 재개
+        Time.timeScale = 1f;
+
+        // 오디오 재개
+        ResumeAllAudio();
+
+        // 패널 비활성화
+        if (pauseMenuPanel)
+            pauseMenuPanel.SetActive(false);
+
+        // 상태 복귀
+        if (gameFlowManager)
+            gameFlowManager.ExitPaused();
+    }
+
+    public void Restart()
+    {
+        Debug.Log("[PauseManager] Restart requested");
+
+        // 시간 재개 (씬 로드 전에 필수)
+        Time.timeScale = 1f;
+
+        if (gameFlowManager)
+        {
+            gameFlowManager.Restart();
+        }
+    }
+
+    public void GoToMainMenu()
+    {
+        Debug.Log("[PauseManager] Going to main menu");
+
+        // 시간 재개
+        Time.timeScale = 1f;
+
+        if (gameFlowManager)
+        {
+            gameFlowManager.GoToMainMenu();
+        }
+    }
+
+    void PauseAllAudio()
+    {
+        foreach (var source in allAudioSources)
+        {
+            if (source && source.isPlaying)
+            {
+                source.Pause();
+            }
+        }
+    }
+
+    void ResumeAllAudio()
+    {
+        foreach (var source in allAudioSources)
+        {
+            if (source)
+            {
+                source.UnPause();
+            }
+        }
+    }
+
+    public bool IsPaused => _isPaused;
+}
+
+
+
+/* =====================================================================
    FILE: PlateController.cs
    ===================================================================== */
 
@@ -1331,10 +1616,58 @@ public class PlateController : MonoBehaviour
 
 
 /* =====================================================================
+   FILE: ProgressGaugeUI.cs
+   ===================================================================== */
+
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ProgressGaugeUI : MonoBehaviour
+{
+    [Header("UI Elements")]
+    public Slider progressSlider;        // 0 ~ 100
+    public Image fillImage;              // Slider의 Fill
+    public Text percentageText;          // "75%"
+    public Text countText;               // "15 / 20"
+
+    [Header("Colors")]
+    public Gradient colorGradient;       // 0% ~ 100% 색상 변화
+
+    public void UpdateProgress(int successCount, int totalTriggers, float percentage)
+    {
+        percentage = Mathf.Clamp(percentage, 0f, 100f);
+
+        // Slider 업데이트
+        if (progressSlider)
+        {
+            progressSlider.value = percentage;
+        }
+
+        // Fill 색상 변경
+        if (fillImage && colorGradient != null)
+        {
+            fillImage.color = colorGradient.Evaluate(percentage / 100f);
+        }
+
+        // 퍼센트 텍스트
+        if (percentageText)
+        {
+            percentageText.text = $"{percentage:F0}%";
+        }
+
+        // 카운트 텍스트
+        if (countText)
+        {
+            countText.text = $"{successCount} / {totalTriggers}";
+        }
+    }
+}
+
+
+/* =====================================================================
    FILE: RadioClickable.cs
    ===================================================================== */
 
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -1343,133 +1676,403 @@ public class RadioClickable : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnRadioClicked;
 
-    [Header("VR Setup")]
-    public Transform rightHandAnchor; // OVRCameraRig의 RightHandAnchor 할당
+    [Header("Pointer Settings")]
+    public Transform knifePointerSource; // 칼 Transform (RightHandAnchor 또는 칼 오브젝트)
+    public float pointerMaxDistance = 3f; // 최대 감지 거리
+    public LayerMask radioLayer; // Radio 레이어만 감지
 
-    [Header("Visual Feedback (Optional)")]
+    [Header("Visual Feedback")]
     public Renderer radioRenderer;
-    public Material activeMaterial;   // 클릭 가능할 때 머티리얼
-    public Material inactiveMaterial; // 클릭 불가능할 때 머티리얼
+    public Material normalMaterial;      // 기본 머티리얼
+    public Material outlineMaterial;     // 아웃라인 머티리얼 (클릭 전)
+    public Color highlightEmission = new Color(1f, 0.9f, 0.5f); // 포인터 겨냥 시
+    public float highlightIntensity = 2f;
 
-    bool _tutorialCompleted = false;
-    bool _clickable = false; // 🔥 클릭 가능 여부
+    [Header("Pointer Visual (Optional)")]
+    public LineRenderer pointerLine;     // 레이저 라인 (선택)
+    public Color pointerColorNormal = Color.white;
+    public Color pointerColorOnTarget = Color.green;
+
+    [Header("Audio (Optional)")]
+    public AudioSource hoverSound;       // 포인터 겨냥 시 사운드
+
+    bool _clickable = false;
+    bool _isPointing = false;            // 현재 포인터가 라디오를 가리키는지
+    bool _wasPointing = false;           // 이전 프레임
+    Material _runtimeMaterial;
 
     void Start()
     {
-        // 초기 상태: 클릭 불가
-        UpdateVisuals();
-    }
-
-    public void SetTutorialCompleted(bool completed)
-    {
-        _tutorialCompleted = completed;
-
-        if (completed)
+        // 런타임 머티리얼 생성
+        if (radioRenderer)
         {
-            UnityEngine.Debug.Log("[RadioClickable] Tutorial completed - Radio can now be enabled");
+            if (normalMaterial)
+            {
+                _runtimeMaterial = new Material(normalMaterial);
+                radioRenderer.material = _runtimeMaterial;
+            }
+        }
+
+        // 초기 상태: 아웃라인 없음
+        UpdateVisuals(false, false);
+
+        // 포인터 라인 초기화
+        if (pointerLine)
+        {
+            pointerLine.enabled = false;
         }
     }
 
-    // 🔥 클릭 가능 여부 설정
-    public void SetClickable(bool clickable)
+    void Update()
     {
-        _clickable = clickable;
-        UnityEngine.Debug.Log($"[RadioClickable] Clickable set to: {clickable}");
-        UpdateVisuals();
-    }
-
-    void UpdateVisuals()
-    {
-        // 비주얼 피드백 (선택사항)
-        if (radioRenderer && activeMaterial && inactiveMaterial)
-        {
-            radioRenderer.material = _clickable ? activeMaterial : inactiveMaterial;
-        }
-    }
-
-    void OnMouseDown()
-    {
-        // 🔥 클릭 가능 상태가 아니면 무시
         if (!_clickable)
         {
-            UnityEngine.Debug.Log("[RadioClickable] Radio not clickable yet.");
+            // 클릭 불가 상태
+            _isPointing = false;
+            UpdateVisuals(false, false);
+
+            if (pointerLine)
+                pointerLine.enabled = false;
+
             return;
         }
 
-        UnityEngine.Debug.Log("[RadioClickable] Radio clicked! Starting main game...");
+        // 클릭 가능 상태: 포인터 감지
+        CheckPointer();
 
-        // 🔥 클릭 후 즉시 비활성화 (1회만 클릭)
+        // A 버튼 입력 (포인터가 라디오를 가리킬 때만)
+        if (_isPointing && OVRInput.GetDown(OVRInput.Button.One))
+        {
+            OnRadioClick();
+        }
+    }
+
+    void CheckPointer()
+    {
+        _isPointing = false;
+
+        if (!knifePointerSource) return;
+
+        // 칼 방향으로 레이캐스트
+        Ray ray = new Ray(knifePointerSource.position, knifePointerSource.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, pointerMaxDistance, radioLayer))
+        {
+            // 라디오에 맞았는지 확인
+            if (hit.collider.gameObject == gameObject)
+            {
+                _isPointing = true;
+
+                // 포인터 라인 표시
+                if (pointerLine)
+                {
+                    pointerLine.enabled = true;
+                    pointerLine.SetPosition(0, knifePointerSource.position);
+                    pointerLine.SetPosition(1, hit.point);
+                    pointerLine.startColor = pointerColorOnTarget;
+                    pointerLine.endColor = pointerColorOnTarget;
+                }
+
+                // 처음 겨냥했을 때 사운드
+                if (!_wasPointing && hoverSound)
+                {
+                    hoverSound.PlayOneShot(hoverSound.clip);
+                }
+            }
+        }
+
+        // 포인터 라인 (빗나갔을 때)
+        if (!_isPointing && pointerLine && _clickable)
+        {
+            pointerLine.enabled = true;
+            pointerLine.SetPosition(0, knifePointerSource.position);
+            pointerLine.SetPosition(1, knifePointerSource.position + knifePointerSource.forward * pointerMaxDistance);
+            pointerLine.startColor = pointerColorNormal;
+            pointerLine.endColor = pointerColorNormal;
+        }
+        else if (!_isPointing && pointerLine)
+        {
+            pointerLine.enabled = false;
+        }
+
+        // 비주얼 업데이트
+        UpdateVisuals(_clickable, _isPointing);
+
+        _wasPointing = _isPointing;
+    }
+
+    void UpdateVisuals(bool clickable, bool pointing)
+    {
+        if (!radioRenderer) return;
+
+        if (!clickable)
+        {
+            // 클릭 불가: 기본 머티리얼, Emission OFF
+            if (normalMaterial && radioRenderer.sharedMaterial != normalMaterial)
+            {
+                radioRenderer.material = normalMaterial;
+            }
+
+            if (_runtimeMaterial)
+            {
+                _runtimeMaterial.DisableKeyword("_EMISSION");
+                _runtimeMaterial.SetColor("_EmissionColor", Color.black);
+            }
+        }
+        else if (clickable && !pointing)
+        {
+            // 클릭 가능하지만 포인터 안 맞음: 아웃라인만
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = outlineMaterial;
+            }
+
+            if (_runtimeMaterial)
+            {
+                _runtimeMaterial.DisableKeyword("_EMISSION");
+            }
+        }
+        else if (clickable && pointing)
+        {
+            // 포인터 맞음: 아웃라인 + 하이라이트
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = outlineMaterial;
+            }
+
+            if (_runtimeMaterial)
+            {
+                _runtimeMaterial.EnableKeyword("_EMISSION");
+                _runtimeMaterial.SetColor("_EmissionColor", highlightEmission * highlightIntensity);
+            }
+        }
+    }
+
+    void OnRadioClick()
+    {
+        Debug.Log("[RadioClickable] Radio clicked via pointer!");
+
+        // 클릭 후 비활성화
         _clickable = false;
-        UpdateVisuals();
+        _isPointing = false;
+
+        if (pointerLine)
+            pointerLine.enabled = false;
+
+        UpdateVisuals(false, false);
 
         OnRadioClicked?.Invoke();
     }
 
-    // VR용 레이캐스트 처리
-    void Update()
+    // 외부에서 호출
+    public void SetClickable(bool clickable)
     {
-        // 🔥 클릭 가능 상태가 아니면 무시
-        if (!_clickable) return;
+        _clickable = clickable;
+        Debug.Log($"[RadioClickable] Clickable set to: {clickable}");
 
-        // A 버튼 (Primary Index Trigger) 눌렀을 때
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
+        if (!clickable)
         {
-            // 🔥 방법 1: RightHandAnchor 사용 (권장)
-            if (rightHandAnchor)
-            {
-                Ray ray = new Ray(rightHandAnchor.position, rightHandAnchor.forward);
+            _isPointing = false;
+            UpdateVisuals(false, false);
 
-                if (Physics.Raycast(ray, out RaycastHit hit, 2f))
-                {
-                    UnityEngine.Debug.Log($"[RadioClickable] VR Raycast hit: {hit.collider.gameObject.name}");
-
-                    if (hit.collider.gameObject == gameObject)
-                    {
-                        UnityEngine.Debug.Log("[RadioClickable] Radio clicked via VR!");
-
-                        // 🔥 클릭 후 즉시 비활성화 (1회만 클릭)
-                        _clickable = false;
-                        UpdateVisuals();
-
-                        OnRadioClicked?.Invoke();
-                    }
-                }
-            }
-            // 🔥 방법 2: OVRInput 사용 (fallback)
-            else
-            {
-                Vector3 pos = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-                Quaternion rot = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch);
-
-                // ⚠️ 로컬 좌표를 월드 좌표로 변환 필요
-                // OVRCameraRig의 TrackingSpace를 찾아서 변환
-                Transform trackingSpace = FindObjectOfType<OVRCameraRig>()?.trackingSpace;
-                if (trackingSpace)
-                {
-                    pos = trackingSpace.TransformPoint(pos);
-                    rot = trackingSpace.rotation * rot;
-
-                    Ray ray = new Ray(pos, rot * Vector3.forward);
-
-                    if (Physics.Raycast(ray, out RaycastHit hit, 2f))
-                    {
-                        UnityEngine.Debug.Log($"[RadioClickable] VR Raycast hit: {hit.collider.gameObject.name}");
-
-                        if (hit.collider.gameObject == gameObject)
-                        {
-                            UnityEngine.Debug.Log("[RadioClickable] Radio clicked via VR!");
-
-                            // 🔥 클릭 후 즉시 비활성화 (1회만 클릭)
-                            _clickable = false;
-                            UpdateVisuals();
-
-                            OnRadioClicked?.Invoke();
-                        }
-                    }
-                }
-            }
+            if (pointerLine)
+                pointerLine.enabled = false;
         }
     }
+
+    public void SetTutorialCompleted(bool completed)
+    {
+        // 튜토리얼 완료 플래그 (필요 시 사용)
+    }
+
+    void OnDestroy()
+    {
+        if (_runtimeMaterial)
+        {
+            Destroy(_runtimeMaterial);
+        }
+    }
+
+    // 디버그용 레이 그리기
+    void OnDrawGizmos()
+    {
+        if (!knifePointerSource || !_clickable) return;
+
+        Gizmos.color = _isPointing ? Color.green : Color.yellow;
+        Gizmos.DrawRay(knifePointerSource.position, knifePointerSource.forward * pointerMaxDistance);
+    }
+}
+
+
+
+/* =====================================================================
+   FILE: RadioOutlineController.cs
+   ===================================================================== */
+
+using UnityEngine;
+
+public class RadioOutlineController : MonoBehaviour
+{
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+    public RadioClickable radioClickable;
+
+    void Update()
+    {
+        if (!gameFlowManager || !radioClickable) return;
+
+        // WaitForRadio 상태가 되면 클릭 가능하게
+        if (gameFlowManager.CurrentState == GameState.WaitForRadio)
+        {
+            radioClickable.SetClickable(true);
+        }
+        else
+        {
+            radioClickable.SetClickable(false);
+        }
+    }
+}
+
+
+/* =====================================================================
+   FILE: ResultManager.cs
+   ===================================================================== */
+
+using UnityEngine;
+using UnityEngine.Events;
+
+public class ResultManager : MonoBehaviour
+{
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public GameFlowManager gameFlowManager;
+
+    [Header("Result Panels (3개 중 1개만 활성화)")]
+    public GameObject panel100k; // 100% ~ 80%
+    public GameObject panel50k;  // 80% ~ 50%
+    public GameObject panel0;    // 50% ~ 0%
+
+    [Header("Settings")]
+    public float endDelaySeconds = 3f; // 마지막 트리거 완료 후 대기 시간
+
+    [Header("Events")]
+    public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
+
+    // 런타임 데이터
+    int _totalTriggers;
+    int _successCount;
+    bool _gameEnded;
+
+    void OnEnable()
+    {
+        if (conductor)
+        {
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
+        }
+    }
+
+    void OnDisable()
+    {
+        if (conductor)
+        {
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
+        }
+    }
+
+    public void StartTracking(int totalTriggers)
+    {
+        _totalTriggers = totalTriggers;
+        _successCount = 0;
+        _gameEnded = false;
+
+        Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
+
+        // 초기 게이지 업데이트
+        OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
+    }
+
+    void HandleRoundResult(bool success)
+    {
+        if (_gameEnded) return;
+        if (!gameFlowManager || gameFlowManager.CurrentState != GameState.PlayingMain) return;
+
+        if (success)
+        {
+            _successCount++;
+            Debug.Log($"[ResultManager] Success! ({_successCount}/{_totalTriggers})");
+        }
+        else
+        {
+            Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
+        }
+
+        // 진행률 계산
+        float percentage = (_successCount / (float)_totalTriggers) * 100f;
+        OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
+
+        // 마지막 트리거 완료 확인
+        if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
+        {
+            Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
+            Invoke(nameof(EndGame), endDelaySeconds);
+        }
+    }
+
+    void EndGame()
+    {
+        if (_gameEnded) return;
+        _gameEnded = true;
+
+        Debug.Log("[ResultManager] Game ended. Showing result panel...");
+
+        // 성공률 계산
+        float successRate = (_successCount / (float)_totalTriggers) * 100f;
+
+        // BGM 정지
+        if (conductor && conductor.bgmSource)
+        {
+            conductor.bgmSource.Stop();
+        }
+
+        // 상태 전환
+        if (gameFlowManager)
+        {
+            gameFlowManager.EnterFinalResult(successRate);
+        }
+
+        // 패널 활성화
+        ShowResultPanel(successRate);
+    }
+
+    void ShowResultPanel(float successRate)
+    {
+        // 모든 패널 비활성화
+        if (panel100k) panel100k.SetActive(false);
+        if (panel50k) panel50k.SetActive(false);
+        if (panel0) panel0.SetActive(false);
+
+        // 조건에 맞는 패널만 활성화
+        if (successRate >= 80f)
+        {
+            if (panel100k) panel100k.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 100k (Success Rate: {successRate:F1}%)");
+        }
+        else if (successRate >= 50f)
+        {
+            if (panel50k) panel50k.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 50k (Success Rate: {successRate:F1}%)");
+        }
+        else
+        {
+            if (panel0) panel0.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 0 (Success Rate: {successRate:F1}%)");
+        }
+    }
+
+    // 외부에서 호출 가능
+    public int GetSuccessCount() => _successCount;
+    public int GetTotalTriggers() => _totalTriggers;
+    public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
 }
 
 

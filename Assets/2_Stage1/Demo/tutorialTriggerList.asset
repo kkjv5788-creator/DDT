@@ -37,8 +37,8 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
     swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
     cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
-    visualResistanceStrength: 0
-    visualResistanceMs: 1
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 100
   - triggerTime: 0
     guideDuration: 1
     judgeDuration: 3.75
