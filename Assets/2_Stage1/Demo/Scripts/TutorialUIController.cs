@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
+using TMPro;
 
 public class TutorialUIController : MonoBehaviour
 {
@@ -10,10 +10,10 @@ public class TutorialUIController : MonoBehaviour
     public TutorialController tutorialController; // 🔥 TutorialController 참조
 
     [Header("UI Elements")]
-    public UnityEngine.UI.Text instructionText;      // "가이드 음이 들리면 3초 안에 3번 자르세요!"
-    public UnityEngine.UI.Text progressText;         // "진행: 2/3"
-    public UnityEngine.UI.Text stateText;            // "준비..." / "자르세요!" / "성공!" / "실패!"
-    public UnityEngine.UI.Text stepCountText;        // "단계: 1/3"
+    public TextMeshProUGUI instructionText;      // "가이드 음이 들리면 3초 안에 3번 자르세요!"
+    public TextMeshProUGUI progressText;         // "진행: 2/3"
+    public TextMeshProUGUI stateText;            // "준비..." / "자르세요!" / "성공!" / "실패!"
+    public TextMeshProUGUI stepCountText;        // "단계: 1/3"
     public UnityEngine.UI.Image progressBarFill;     // 시간 바 (선택사항)
 
     [Header("Colors")]

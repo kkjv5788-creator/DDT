@@ -767,6 +767,9 @@ GameObject:
   - component: {fileID: 463253581}
   - component: {fileID: 463253580}
   - component: {fileID: 463253579}
+  - component: {fileID: 463253591}
+  - component: {fileID: 463253590}
+  - component: {fileID: 463253589}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1035,7 +1038,11 @@ MonoBehaviour:
   radio: {fileID: 1105228972}
   plateController: {fileID: 463253582}
   spawner: {fileID: 463253586}
+  resultManager: {fileID: 463253591}
+  pauseManager: {fileID: 463253590}
+  progressGaugeUI: {fileID: 0}
   mainTriggerList: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
+  mainMenuSceneName: Main_1.3
 --- !u!114 &463253585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1123,6 +1130,58 @@ Transform:
   - {fileID: 1957891271}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &463253589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463253578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 204dc2092632f6f4daeb76093a848a09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameFlowManager: {fileID: 463253584}
+  inputCooldown: 0.5
+--- !u!114 &463253590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463253578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4765f0bf18a6f141a84678530fce403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameFlowManager: {fileID: 463253584}
+  conductor: {fileID: 463253587}
+  pauseMenuPanel: {fileID: 0}
+  allAudioSources: []
+  inputCooldown: 0.5
+--- !u!114 &463253591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463253578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2167f728eb91e0498ee92bf23d840d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  conductor: {fileID: 463253587}
+  gameFlowManager: {fileID: 463253584}
+  panel100k: {fileID: 0}
+  panel50k: {fileID: 0}
+  panel0: {fileID: 0}
+  endDelaySeconds: 3
+  OnProgressUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &564053388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,7 +1534,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1490,6 +1549,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1105228976}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1105228980}
   m_SourcePrefab: {fileID: 100100000, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
 --- !u!1 &1105228970 stripped
 GameObject:
@@ -1532,10 +1594,25 @@ MonoBehaviour:
   OnRadioClicked:
     m_PersistentCalls:
       m_Calls: []
-  rightHandAnchor: {fileID: 0}
-  radioRenderer: {fileID: 0}
-  activeMaterial: {fileID: 0}
-  inactiveMaterial: {fileID: 0}
+  knifePointerSource: {fileID: 564053389}
+  pointerMaxDistance: 3
+  radioLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  useSphereCast: 1
+  sphereRadius: 0.04
+  originForwardOffset: 0.02
+  radioRenderer: {fileID: 1105228977}
+  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  outlineMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
+  highlightIntensity: 2
+  glowWhenClickable: 1
+  clickableGlowMultiplier: 0.35
+  pointerLine: {fileID: 0}
+  pointerColorNormal: {r: 1, g: 1, b: 1, a: 1}
+  pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
+  hoverSound: {fileID: 0}
 --- !u!65 &1105228976
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1557,6 +1634,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.26493835, y: 0.99890137, z: 0.4618683}
   m_Center: {x: 0.0024795535, y: -0.00018310553, z: -0.030479431}
+--- !u!23 &1105228977 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
+  m_PrefabInstance: {fileID: 1105228969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1105228980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105228970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf157401904e4e543adb80d5b2adca38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameFlowManager: {fileID: 463253584}
+  radioClickable: {fileID: 1105228972}
 --- !u!65 &1155826825
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2354,11 +2450,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conductor: {fileID: 463253587}
   tutorialCanvas: {fileID: 1880957103}
-  tutorialController: {fileID: 0}
+  tutorialController: {fileID: 463253585}
   instructionText: {fileID: 245971124}
   progressText: {fileID: 1780637664}
   stateText: {fileID: 1073605788}
-  stepCountText: {fileID: 0}
+  stepCountText: {fileID: 1321685171}
   progressBarFill: {fileID: 0}
   guidingColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   judgingColor: {r: 0, g: 1, b: 0, a: 1}
@@ -2595,7 +2691,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.473
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalRotation.w

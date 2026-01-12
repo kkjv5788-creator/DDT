@@ -21,7 +21,6 @@ fi
 
 if [[ ! -d "$SRC" ]]; then
   echo "Folder not found: $SRC"
-  echo "Tip: try path like /d/git\\ hub/DDT/Assets/2_Stage1/Demo/Scripts"
   exit 1
 fi
 
