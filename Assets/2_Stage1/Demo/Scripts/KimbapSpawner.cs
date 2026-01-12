@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using UnityEngine;
 
 public class KimbapSpawner : MonoBehaviour
@@ -26,5 +26,15 @@ public class KimbapSpawner : MonoBehaviour
         Quaternion rot = spawnPoint ? spawnPoint.rotation : transform.rotation;
 
         CurrentKimbap = Instantiate(kimbapPrefab, pos, rot);
+    }
+
+    // 🔥 새로 추가: 기존 김밥 제거
+    public void DestroyCurrentKimbap()
+    {
+        if (CurrentKimbap)
+        {
+            Destroy(CurrentKimbap.gameObject);
+            CurrentKimbap = null;
+        }
     }
 }
