@@ -767,6 +767,18 @@ MonoBehaviour:
   posJitter: 0.0032
   yawJitter: 10
   tiltJitter: 6
+  pieceFlatEulerOffset: {x: 90, y: 180, z: 0}
+  usePilePlacementForSlicingPieces: 0
+  platingAnchorName: PlatingAnchor
+  pileMaxRadius: 0.12
+  pileTightness: 0.035
+  pilePosJitter: 0.006
+  pileYStep: 0.001
+  pileYJitter: 0.001
+  pileBottomOffsetY: 0
+  pileYawJitter: 180
+  pileTiltJitter: 5
+  pileBaseRotationOffsetEuler: {x: 0, y: 0, z: 0}
 --- !u!114 &463253583
 MonoBehaviour:
   m_ObjectHideFlags: 0
