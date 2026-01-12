@@ -2271,6 +2271,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1105228976}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1105228980}
   m_SourcePrefab: {fileID: 100100000, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
 --- !u!1 &1105228970 stripped
 GameObject:
@@ -2321,15 +2324,18 @@ MonoBehaviour:
   useSphereCast: 1
   sphereRadius: 0.04
   originForwardOffset: 0.02
-  radioRenderer: {fileID: 1105228977}
-  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
-  outlineMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  outline: {fileID: 1105228980}
+  outlineColorNormal: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineColorClickable: {r: 1, g: 0.009995015, b: 0, a: 1}
+  outlineColorPointing: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  radioRenderer: {fileID: 0}
   highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
   highlightIntensity: 2
   glowWhenClickable: 1
   clickableGlowMultiplier: 0.35
-  pointerLine: {fileID: 0}
-  pointerColorNormal: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  pointerLine: {fileID: 1640439409}
+  pointerColorNormal: {r: 0.015686274, g: 1, b: 0.909801, a: 1}
   pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
   hoverSound: {fileID: 0}
 --- !u!65 &1105228976
@@ -2353,11 +2359,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.26493835, y: 0.99890137, z: 0.4618683}
   m_Center: {x: 0.0024795535, y: -0.00018310553, z: -0.030479431}
---- !u!23 &1105228977 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
-  m_PrefabInstance: {fileID: 1105228969}
+--- !u!114 &1105228980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105228970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0.3517036, g: 0.8679245, b: 0.27429688, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!65 &1155826825
 BoxCollider:
   m_ObjectHideFlags: 0
