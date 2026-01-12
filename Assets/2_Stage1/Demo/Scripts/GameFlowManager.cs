@@ -17,17 +17,15 @@ public class GameFlowManager : MonoBehaviour
     public RhythmTriggerListSO mainTriggerList;
 
     [Header("Settings")]
-    public string mainMenuSceneName = "MainMenu"; // 메인 메뉴 씬 이름
+    public string mainMenuSceneName = "MainMenu";
 
-    // 상태 관리
     public GameState CurrentState { get; private set; } = GameState.Tutorial;
-    GameState _stateBeforePause; // Pause 이전 상태 저장
+    GameState _stateBeforePause;
 
     bool _mainGameStarted = false;
 
     void Start()
     {
-        // 컴포넌트 연결
         if (conductor && plateController)
             conductor.plateController = plateController;
 
@@ -37,26 +35,22 @@ public class GameFlowManager : MonoBehaviour
         if (tutorialController && radio)
             tutorialController.radio = radio;
 
-        // ResultManager 이벤트 연결
         if (resultManager && progressGaugeUI)
         {
             resultManager.OnProgressUpdate.AddListener(progressGaugeUI.UpdateProgress);
         }
 
-        // 튜토리얼 시작
         CurrentState = GameState.Tutorial;
         if (tutorialController)
         {
             tutorialController.StartTutorial();
         }
 
-        // 라디오 클릭 이벤트
         if (radio)
         {
             radio.OnRadioClicked.AddListener(StartMainGame);
         }
 
-        // 튜토리얼 완료 이벤트
         if (conductor)
         {
             conductor.OnTutorialCompleted.AddListener(OnTutorialCompleted);
@@ -88,25 +82,21 @@ public class GameFlowManager : MonoBehaviour
         _mainGameStarted = true;
         CurrentState = GameState.PlayingMain;
 
-        // 라디오 비활성화
         if (radio)
         {
             radio.SetClickable(false);
         }
 
-        // 초기화
         if (spawner)
             spawner.DestroyCurrentKimbap();
 
         if (plateController)
             plateController.ResetToEmptyPlate();
 
-        // 메인 게임 시작
         conductor.isTutorialMode = false;
         conductor.data = mainTriggerList;
         conductor.StartGame();
 
-        // 결과 추적 시작
         if (resultManager && mainTriggerList)
         {
             resultManager.StartTracking(mainTriggerList.triggers.Length);
@@ -115,7 +105,6 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("[GameFlowManager] Main game started!");
     }
 
-    // Pause 진입
     public void EnterPaused()
     {
         _stateBeforePause = CurrentState;
@@ -123,56 +112,83 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log($"[GameFlowManager] Entered Paused (from {_stateBeforePause})");
     }
 
-    // Pause 해제
     public void ExitPaused()
     {
         CurrentState = _stateBeforePause;
         Debug.Log($"[GameFlowManager] Exited Paused (back to {CurrentState})");
     }
 
-    // 최종 결과창 진입
     public void EnterFinalResult(float successRate)
     {
         CurrentState = GameState.FinalResult;
         Debug.Log($"[GameFlowManager] Entered FinalResult (Success Rate: {successRate:F1}%)");
 
-        // TODO: 스테이지 해금 로직 (5장)
         if (successRate >= 50f)
         {
             Debug.Log("[GameFlowManager] Next stage unlocked!");
-            // PlayerPrefs.SetInt("Stage2Unlocked", 1);
         }
     }
 
-    // 재시작 (7.5장 규칙)
-    public void Restart()
+    // 🔥 메인 게임만 재시작 (튜토리얼 스킵)
+    public void RestartMainGameOnly()
     {
-        Debug.Log("[GameFlowManager] Restarting...");
+        Debug.Log("[GameFlowManager] Restarting main game only");
 
-        if (CurrentState == GameState.Tutorial)
+        // 상태 초기화
+        _mainGameStarted = false;
+        CurrentState = GameState.PlayingMain;
+
+        // BGM 정지
+        if (conductor && conductor.bgmSource)
         {
-            // 튜토리얼 중: 튜토리얼 재시작
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            conductor.bgmSource.Stop();
         }
-        else
+
+        // 김밥 제거
+        if (spawner)
+            spawner.DestroyCurrentKimbap();
+
+        // 접시 초기화
+        if (plateController)
+            plateController.ResetToEmptyPlate();
+
+        // 결과 패널 숨기기
+        if (resultManager)
         {
-            // 튜토리얼 이후: 메인 게임만 재시작
-            _mainGameStarted = false;
-            CurrentState = GameState.WaitForRadio;
-
-            // BGM 정지
-            if (conductor && conductor.bgmSource)
-                conductor.bgmSource.Stop();
-
-            // 라디오 활성화
-            if (radio)
-                radio.SetClickable(true);
-
-            Debug.Log("[GameFlowManager] Restarting from WaitForRadio");
+            if (resultManager.panel100k) resultManager.panel100k.SetActive(false);
+            if (resultManager.panel50k) resultManager.panel50k.SetActive(false);
+            if (resultManager.panel0) resultManager.panel0.SetActive(false);
         }
+
+        // 게이지 초기화
+        if (progressGaugeUI)
+        {
+            progressGaugeUI.UpdateProgress(0, 1, 0f);
+        }
+
+        // 라디오 비활성화 (자동 시작)
+        if (radio)
+        {
+            radio.SetClickable(false);
+        }
+
+        // 🔥 메인 게임 즉시 시작 (BGM 포함)
+        if (conductor && mainTriggerList)
+        {
+            conductor.isTutorialMode = false;
+            conductor.data = mainTriggerList;
+            conductor.StartGame(); // 이 안에서 BGM이 처음부터 재생됨
+        }
+
+        // 결과 추적 시작
+        if (resultManager && mainTriggerList)
+        {
+            resultManager.StartTracking(mainTriggerList.triggers.Length);
+        }
+
+        Debug.Log("[GameFlowManager] Main game restarted with BGM!");
     }
 
-    // 메인 메뉴로 이동
     public void GoToMainMenu()
     {
         Debug.Log("[GameFlowManager] Going to main menu...");

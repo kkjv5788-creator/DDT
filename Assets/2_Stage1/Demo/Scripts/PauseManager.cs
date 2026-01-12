@@ -1,40 +1,164 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
     public RhythmConductor conductor;
+    public TutorialController tutorialController;
     public GameObject pauseMenuPanel;
 
+    [Header("Buttons")]
+    public Button resumeButton;
+    public Button restartButton;
+    public Button mainMenuButton;
+
+    [Header("VR Pointer")]
+    public Transform rightHandAnchor;
+    public float pointerMaxDistance = 10f;
+    public LineRenderer pointerLine;
+    public LayerMask uiLayer;
+
     [Header("Audio")]
-    public AudioSource[] allAudioSources; // ¸ğµç AudioSource ÇÒ´ç
+    public AudioSource[] allAudioSources;
 
     [Header("Settings")]
     public float inputCooldown = 0.5f;
 
     bool _isPaused;
-    float _lastInputTime = -999f;
+    float _lastPauseInputTime = -999f;
+    float _lastClickInputTime = -999f;
+    Button _currentHoveredButton;
+
+    void Start()
+    {
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
+        if (resumeButton)
+            resumeButton.onClick.AddListener(Resume);
+
+        if (restartButton)
+            restartButton.onClick.AddListener(Restart);
+
+        if (mainMenuButton)
+            mainMenuButton.onClick.AddListener(GoToMainMenu);
+
+        if (pauseMenuPanel)
+            pauseMenuPanel.SetActive(false);
+
+        if (pointerLine)
+            pointerLine.enabled = false;
+    }
 
     void Update()
     {
-        // FinalResult »óÅÂ¿¡¼­´Â Pause ºÒ°¡
+        // FinalResult ìƒíƒœì—ì„œëŠ” Pause ë¶ˆê°€
         if (gameFlowManager && gameFlowManager.CurrentState == GameState.FinalResult)
             return;
 
-        // Paused »óÅÂ¿¡¼­´Â Ãß°¡ ÀÔ·Â ¹«½Ã
         if (_isPaused)
-            return;
-
-        // ¿Ş¼Õ ÀÎµ¦½º Æ®¸®°Å ÀÔ·Â (1È¸)
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch))
         {
-            if (Time.time - _lastInputTime > inputCooldown)
+            // Pause ì¤‘: VR í¬ì¸í„°ë¡œ ë²„íŠ¼ ì¡°ì‘
+            HandleVRPointer();
+        }
+        else
+        {
+            // ì™¼ì† ì¸ë±ìŠ¤ íŠ¸ë¦¬ê±°ë¡œ Pause ì§„ì…
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch))
             {
-                _lastInputTime = Time.time;
-                Pause();
+                if (Time.unscaledTime - _lastPauseInputTime > inputCooldown)
+                {
+                    _lastPauseInputTime = Time.unscaledTime;
+                    Pause();
+                }
             }
         }
+    }
+
+    void HandleVRPointer()
+    {
+        if (!rightHandAnchor) return;
+
+        Ray ray = new Ray(rightHandAnchor.position, rightHandAnchor.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, pointerMaxDistance, uiLayer))
+        {
+            if (pointerLine)
+            {
+                pointerLine.enabled = true;
+                pointerLine.SetPosition(0, rightHandAnchor.position);
+                pointerLine.SetPosition(1, hit.point);
+            }
+
+            Button hitButton = hit.collider.GetComponent<Button>();
+            if (!hitButton)
+                hitButton = hit.collider.GetComponentInParent<Button>();
+
+            if (hitButton)
+            {
+                if (_currentHoveredButton != hitButton)
+                {
+                    if (_currentHoveredButton)
+                        ResetButtonColor(_currentHoveredButton);
+
+                    _currentHoveredButton = hitButton;
+                    HighlightButton(_currentHoveredButton);
+                }
+
+                // ğŸ”¥ ì˜¤ë¥¸ì† ì¸ë±ìŠ¤ íŠ¸ë¦¬ê±°ë¡œ í´ë¦­
+                if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+                {
+                    if (Time.unscaledTime - _lastClickInputTime > 0.3f)
+                    {
+                        _lastClickInputTime = Time.unscaledTime;
+                        Debug.Log($"[PauseManager] Button clicked: {hitButton.name}");
+                        hitButton.onClick.Invoke();
+                    }
+                }
+            }
+            else
+            {
+                if (_currentHoveredButton)
+                {
+                    ResetButtonColor(_currentHoveredButton);
+                    _currentHoveredButton = null;
+                }
+            }
+        }
+        else
+        {
+            if (pointerLine)
+            {
+                pointerLine.enabled = true;
+                pointerLine.SetPosition(0, rightHandAnchor.position);
+                pointerLine.SetPosition(1, rightHandAnchor.position + rightHandAnchor.forward * pointerMaxDistance);
+            }
+
+            if (_currentHoveredButton)
+            {
+                ResetButtonColor(_currentHoveredButton);
+                _currentHoveredButton = null;
+            }
+        }
+    }
+
+    void HighlightButton(Button button)
+    {
+        if (!button) return;
+
+        var colors = button.colors;
+        colors.normalColor = Color.yellow;
+        button.colors = colors;
+    }
+
+    void ResetButtonColor(Button button)
+    {
+        if (!button) return;
+
+        var colors = button.colors;
+        colors.normalColor = Color.white;
+        button.colors = colors;
     }
 
     public void Pause()
@@ -44,17 +168,15 @@ public class PauseManager : MonoBehaviour
         _isPaused = true;
         Debug.Log("[PauseManager] Game paused");
 
-        // ½Ã°£ Á¤Áö
         Time.timeScale = 0f;
-
-        // ¿Àµğ¿À Á¤Áö
         PauseAllAudio();
 
-        // ÆĞ³Î È°¼ºÈ­
         if (pauseMenuPanel)
             pauseMenuPanel.SetActive(true);
 
-        // »óÅÂ ÀüÈ¯
+        if (pointerLine)
+            pointerLine.enabled = true;
+
         if (gameFlowManager)
             gameFlowManager.EnterPaused();
     }
@@ -66,31 +188,66 @@ public class PauseManager : MonoBehaviour
         _isPaused = false;
         Debug.Log("[PauseManager] Game resumed");
 
-        // ½Ã°£ Àç°³
+        // ğŸ”¥ ì‹œê°„ ì¬ê°œ
         Time.timeScale = 1f;
 
-        // ¿Àµğ¿À Àç°³
+        // ğŸ”¥ ì˜¤ë””ì˜¤ ì¬ê°œ
         ResumeAllAudio();
 
-        // ÆĞ³Î ºñÈ°¼ºÈ­
+        // íŒ¨ë„ ë¹„í™œì„±í™”
         if (pauseMenuPanel)
             pauseMenuPanel.SetActive(false);
 
-        // »óÅÂ º¹±Í
+        if (pointerLine)
+            pointerLine.enabled = false;
+
+        if (_currentHoveredButton)
+        {
+            ResetButtonColor(_currentHoveredButton);
+            _currentHoveredButton = null;
+        }
+
         if (gameFlowManager)
             gameFlowManager.ExitPaused();
     }
 
     public void Restart()
     {
-        Debug.Log("[PauseManager] Restart requested");
+        Debug.Log($"[PauseManager] Restart requested from state: {gameFlowManager.CurrentState}");
 
-        // ½Ã°£ Àç°³ (¾À ·Îµå Àü¿¡ ÇÊ¼ö)
+        // ğŸ”¥ ì‹œê°„ ì¬ê°œ (í•„ìˆ˜)
         Time.timeScale = 1f;
 
-        if (gameFlowManager)
+        // ğŸ”¥ íŒ¨ë„ ë¹„í™œì„±í™”
+        _isPaused = false;
+        if (pauseMenuPanel)
+            pauseMenuPanel.SetActive(false);
+
+        if (pointerLine)
+            pointerLine.enabled = false;
+
+        if (_currentHoveredButton)
         {
-            gameFlowManager.Restart();
+            ResetButtonColor(_currentHoveredButton);
+            _currentHoveredButton = null;
+        }
+
+        // ğŸ”¥ ìƒíƒœë³„ ì¬ì‹œì‘
+        if (gameFlowManager.CurrentState == GameState.Tutorial)
+        {
+            // íŠœí† ë¦¬ì–¼ ì¤‘: ì”¬ ì¬ì‹œì‘
+            Debug.Log("[PauseManager] Restarting tutorial (reloading scene)");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // ë©”ì¸ ê²Œì„: ë©”ì¸ ê²Œì„ë§Œ ì¬ì‹œì‘
+            Debug.Log("[PauseManager] Restarting main game");
+
+            if (gameFlowManager)
+            {
+                gameFlowManager.RestartMainGameOnly();
+            }
         }
     }
 
@@ -98,8 +255,10 @@ public class PauseManager : MonoBehaviour
     {
         Debug.Log("[PauseManager] Going to main menu");
 
-        // ½Ã°£ Àç°³
         Time.timeScale = 1f;
+
+        if (pointerLine)
+            pointerLine.enabled = false;
 
         if (gameFlowManager)
         {
@@ -109,22 +268,28 @@ public class PauseManager : MonoBehaviour
 
     void PauseAllAudio()
     {
+        Debug.Log($"[PauseManager] Pausing {allAudioSources.Length} audio sources");
+
         foreach (var source in allAudioSources)
         {
             if (source && source.isPlaying)
             {
                 source.Pause();
+                Debug.Log($"[PauseManager] Paused: {source.gameObject.name}");
             }
         }
     }
 
     void ResumeAllAudio()
     {
+        Debug.Log($"[PauseManager] Resuming {allAudioSources.Length} audio sources");
+
         foreach (var source in allAudioSources)
         {
             if (source)
             {
                 source.UnPause();
+                Debug.Log($"[PauseManager] Resumed: {source.gameObject.name}");
             }
         }
     }
