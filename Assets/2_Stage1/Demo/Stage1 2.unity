@@ -1534,7 +1534,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1594,10 +1594,25 @@ MonoBehaviour:
   OnRadioClicked:
     m_PersistentCalls:
       m_Calls: []
-  rightHandAnchor: {fileID: 1640439408}
+  knifePointerSource: {fileID: 564053389}
+  pointerMaxDistance: 3
+  radioLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  useSphereCast: 1
+  sphereRadius: 0.04
+  originForwardOffset: 0.02
   radioRenderer: {fileID: 1105228977}
-  activeMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
-  inactiveMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  outlineMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
+  highlightIntensity: 2
+  glowWhenClickable: 1
+  clickableGlowMultiplier: 0.35
+  pointerLine: {fileID: 0}
+  pointerColorNormal: {r: 1, g: 1, b: 1, a: 1}
+  pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
+  hoverSound: {fileID: 0}
 --- !u!65 &1105228976
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1637,11 +1652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameFlowManager: {fileID: 463253584}
-  radioRenderer: {fileID: 1105228977}
-  outlineMaterial: {fileID: 0}
-  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
-  emissionColor: {r: 0.9528302, g: 0.93241704, b: 0.6966447, a: 1}
-  emissionIntensity: 2
+  radioClickable: {fileID: 1105228972}
 --- !u!65 &1155826825
 BoxCollider:
   m_ObjectHideFlags: 0
