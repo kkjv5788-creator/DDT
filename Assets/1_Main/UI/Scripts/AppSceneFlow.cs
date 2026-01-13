@@ -45,8 +45,11 @@ public class AppSceneFlow : MonoBehaviour
     [Tooltip("3D Physics Ray(스테이지/로비에서 사용). 타이틀에선 OFF")]
     public VRRayInteractor rightRay;
 
-    [Tooltip("타이틀 UI 레이저 시각 전용(=UILaserHoverFeedback). 타이틀에선 ON")]
-    public UIRayLaserFeedback uiLaserHover;
+    [Tooltip("왼손 타이틀 UI 레이저. 타이틀에선 ON")]
+    public UIRayLaserFeedback leftUILaser;
+
+    [Tooltip("오른손 타이틀 UI 레이저. 타이틀에선 ON")]
+    public UIRayLaserFeedback rightUILaser;
 
     private bool _busy;
 
@@ -167,6 +170,7 @@ public class AppSceneFlow : MonoBehaviour
         if (leftRay != null) leftRay.enabled = !isTitle;
         if (rightRay != null) rightRay.enabled = !isTitle;
 
-        if (uiLaserHover != null) uiLaserHover.enabled = isTitle;
+        if (leftUILaser != null) leftUILaser.enabled = isTitle;
+        if (rightUILaser != null) rightUILaser.enabled = isTitle;
     }
 }
