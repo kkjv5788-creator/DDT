@@ -750,7 +750,7 @@ Transform:
   m_GameObject: {fileID: 1155919315}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1133,6 +1133,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 726829724242641645, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: outlineWidth
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 726829724242641645, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: outlineColor.g
+      value: 0.71237
+      objectReference: {fileID: 0}
     - target: {fileID: 2601512103348686236, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1174,6 +1182,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3244910225450534534, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: hoverMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 04654855fe9bc6a4cb9b2e2bb1a0ef7d, type: 2}
+    - target: {fileID: 3244910225450534534, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8294662172733095788}
@@ -1182,7 +1194,8 @@ PrefabInstance:
       value: Environment
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1143528440572693696, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
