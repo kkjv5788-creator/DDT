@@ -18,7 +18,7 @@ MonoBehaviour:
   - triggerTime: 0
     guideDuration: 1
     judgeDuration: 3.75
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 0.6
     minContactMs: 115
