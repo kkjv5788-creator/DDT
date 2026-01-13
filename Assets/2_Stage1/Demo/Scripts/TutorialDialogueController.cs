@@ -38,15 +38,18 @@ public class TutorialDialogue
 /// 씬 시작 시 바로 대사를 표시하고, 기존 튜토리얼/메인 기능은 비활성화
 /// 마지막 대사 후 기존 TutorialController.StartTutorial() 호출
 /// </summary>
+[DefaultExecutionOrder(-100)] // 다른 스크립트보다 먼저 실행
 public class TutorialDialogueController : MonoBehaviour
 {
     [Header("References")]
-    public TutorialUIController tutorialUI;
-    public TutorialController tutorialController;
-    public RhythmConductor conductor;
+    public TutorialDialogueUIController dialogueUI;  // 대사 전용 UI
+    public TutorialUIController tutorialUI;  // 기존 UI (비활성화용)
+    public TutorialController tutorialController;  // 기존 튜토리얼 (비활성화용)
+    public RhythmConductor conductor;  // 기존 컨덕터 (비활성화용)
     
     [Header("Target Objects")]
     public GameObject kimbapPrefab;  // 시선 감지 대상 (kimbap 프리팹)
+    public GameObject kimbap010Prefab;  // Dialogues[6] 후 비활성화할 Kimbap.010 Prefab
     
     [Header("Dialogue Data")]
     [Tooltip("튜토리얼 시작 전 대사들 (3회 성공 연습 직전까지)")]
@@ -72,19 +75,29 @@ public class TutorialDialogueController : MonoBehaviour
     private bool _lastRoundResult = false;
     private bool _roundResultProcessed = false;
     private Vector3 _lastControllerPosition;
+    private Vector3 _previousControllerPosition; // 이전 프레임 위치 저장
     private bool _hasDetectedHandMovement = false;
     private bool _hasDetectedGaze = false;
+    private bool _controllerPositionInitialized = false;
     
     // 기존 시스템 비활성화 플래그
     private bool _originalTutorialMode = false;
     
+    // 비활성화된 GameObject들 저장 (재활성화용)
+    private GameObject _tutorialUIGameObject;
+    private GameObject _tutorialControllerGameObject;
+    private GameObject _conductorGameObject;
+    
+    void Awake()
+    {
+        // Awake에서 즉시 비활성화 (다른 스크립트의 Start/Awake보다 먼저 실행)
+        DisableExistingSystems();
+    }
+    
     void Start()
     {
-        // 기존 튜토리얼/메인 기능 비활성화
-        DisableExistingSystems();
-        
         // 초기 컨트롤러 위치 저장
-        UpdateControllerPosition();
+        InitializeControllerPosition();
         
         // 첫 대사 표시
         if (dialogues != null && dialogues.Length > 0)
@@ -145,11 +158,10 @@ public class TutorialDialogueController : MonoBehaviour
         
         var dialogue = dialogues[index];
         
-        // UI에 대사 표시
-        if (tutorialUI && tutorialUI.instructionText)
+        // 전용 UI에 대사 표시
+        if (dialogueUI != null)
         {
-            tutorialUI.instructionText.text = dialogue.dialogueText;
-            tutorialUI.FadeIn();
+            dialogueUI.ShowDialogue(dialogue.dialogueText);
         }
         
         // 상태 초기화
@@ -197,13 +209,13 @@ public class TutorialDialogueController : MonoBehaviour
                 break;
                 
             case DialogueConditionType.HandMovement:
-                // 손 움직임 감지 (한 번만)
+                // 컨트롤러 움직임 감지 (한 번만)
                 if (!_hasDetectedHandMovement)
                 {
-                    if (CheckHandMovement())
+                    if (CheckControllerMovement())
                     {
                         _hasDetectedHandMovement = true;
-                        Debug.Log("[TutorialDialogueController] Hand movement detected");
+                        Debug.Log("[TutorialDialogueController] Controller movement detected");
                         return true;
                     }
                 }
@@ -286,38 +298,82 @@ public class TutorialDialogueController : MonoBehaviour
         return false;
     }
     
-    bool CheckHandMovement()
+    void InitializeControllerPosition()
     {
-        UpdateControllerPosition();
-        
-        Vector3 currentPos = _lastControllerPosition;
-        float movement = Vector3.Distance(currentPos, _lastControllerPosition);
-        
-        return movement > handMovementThreshold;
+        GameObject controller = GetControllerObject();
+        if (controller != null)
+        {
+            _lastControllerPosition = controller.transform.position;
+            _previousControllerPosition = _lastControllerPosition;
+            _controllerPositionInitialized = true;
+            Debug.Log($"[TutorialDialogueController] Controller position initialized: {_lastControllerPosition}");
+        }
+        else
+        {
+            Debug.LogWarning("[TutorialDialogueController] Controller not found for movement detection!");
+        }
     }
     
-    void UpdateControllerPosition()
+    bool CheckControllerMovement()
     {
-        GameObject rightController = GameObject.Find("RightControllerAnchor");
-        if (rightController == null)
+        if (!_controllerPositionInitialized)
         {
-            rightController = GameObject.Find("RightHandAnchor");
+            InitializeControllerPosition();
+            return false;
         }
         
-        if (rightController != null)
+        GameObject controller = GetControllerObject();
+        if (controller == null)
         {
-            Vector3 currentPos = rightController.transform.position;
-            float movement = Vector3.Distance(currentPos, _lastControllerPosition);
-            
-            if (movement > handMovementThreshold)
-            {
-                _lastControllerPosition = currentPos;
-            }
+            return false;
         }
+        
+        Vector3 currentPos = controller.transform.position;
+        
+        // 이전 프레임 위치와 현재 위치 비교
+        float movement = Vector3.Distance(currentPos, _previousControllerPosition);
+        
+        // 현재 위치를 이전 위치로 업데이트 (다음 프레임을 위해)
+        _previousControllerPosition = currentPos;
+        
+        if (movement > handMovementThreshold)
+        {
+            Debug.Log($"[TutorialDialogueController] Controller moved: {movement:F4}m (threshold: {handMovementThreshold})");
+            return true;
+        }
+        
+        return false;
+    }
+    
+    GameObject GetControllerObject()
+    {
+        // 오른손 컨트롤러 찾기 (여러 가능한 경로 시도)
+        GameObject controller = GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
+        if (controller == null)
+        {
+            controller = GameObject.Find("RightControllerAnchor");
+        }
+        if (controller == null)
+        {
+            controller = GameObject.Find("RightHandAnchor");
+        }
+        if (controller == null)
+        {
+            controller = GameObject.Find("RightController");
+        }
+        
+        return controller;
     }
     
     void AdvanceToNextDialogue()
     {
+        // Dialogues[6] 완료 후 Kimbap.010 Prefab 비활성화
+        if (_currentDialogueIndex == 6 && kimbap010Prefab != null)
+        {
+            kimbap010Prefab.SetActive(false);
+            Debug.Log("[TutorialDialogueController] Kimbap.010 Prefab disabled after Dialogues[6]");
+        }
+        
         _currentDialogueIndex++;
         _roundResultProcessed = false; // 라운드 결과 플래그 리셋
         
@@ -335,17 +391,32 @@ public class TutorialDialogueController : MonoBehaviour
     
     void DisableExistingSystems()
     {
-        // 기존 튜토리얼 시스템 비활성화
-        if (tutorialController != null)
+        // 기존 튜토리얼 UI 비활성화 (스크립트 + GameObject)
+        if (tutorialUI != null)
         {
-            tutorialController.enabled = false;
+            _tutorialUIGameObject = tutorialUI.gameObject;
+            tutorialUI.enabled = false;
+            _tutorialUIGameObject.SetActive(false); // GameObject 자체 비활성화
+            Debug.Log("[TutorialDialogueController] TutorialUIController disabled (script + GameObject)");
         }
         
-        // RhythmConductor 비활성화 (대사 진행 중에는 게임 로직 비활성화)
+        // 기존 튜토리얼 시스템 비활성화 (스크립트 + GameObject)
+        if (tutorialController != null)
+        {
+            _tutorialControllerGameObject = tutorialController.gameObject;
+            tutorialController.enabled = false;
+            _tutorialControllerGameObject.SetActive(false); // GameObject 자체 비활성화
+            Debug.Log("[TutorialDialogueController] TutorialController disabled (script + GameObject)");
+        }
+        
+        // RhythmConductor 비활성화 (스크립트 + GameObject)
         if (conductor != null)
         {
+            _conductorGameObject = conductor.gameObject;
             _originalTutorialMode = conductor.isTutorialMode;
             conductor.enabled = false;
+            _conductorGameObject.SetActive(false); // GameObject 자체 비활성화
+            Debug.Log("[TutorialDialogueController] RhythmConductor disabled (script + GameObject)");
         }
         
         Debug.Log("[TutorialDialogueController] Existing tutorial/main systems disabled");
@@ -353,15 +424,33 @@ public class TutorialDialogueController : MonoBehaviour
     
     void StartMainTutorial()
     {
-        // 기존 시스템 다시 활성화
-        if (conductor != null)
+        // 대사 UI 숨김
+        if (dialogueUI != null)
         {
-            conductor.enabled = true;
-            conductor.isTutorialMode = _originalTutorialMode;
+            dialogueUI.Hide();
         }
         
-        if (tutorialController != null)
+        // 기존 시스템 다시 활성화 (GameObject 먼저 활성화)
+        if (_conductorGameObject != null && conductor != null)
         {
+            _conductorGameObject.SetActive(true);
+            conductor.enabled = true;
+            conductor.isTutorialMode = _originalTutorialMode;
+            // 이벤트 구독 (활성화 후)
+            conductor.OnRoundResult.AddListener(OnRoundResult);
+            Debug.Log("[TutorialDialogueController] RhythmConductor enabled (script + GameObject)");
+        }
+        
+        if (_tutorialUIGameObject != null && tutorialUI != null)
+        {
+            _tutorialUIGameObject.SetActive(true);
+            tutorialUI.enabled = true;
+            Debug.Log("[TutorialDialogueController] TutorialUIController enabled (script + GameObject)");
+        }
+        
+        if (_tutorialControllerGameObject != null && tutorialController != null)
+        {
+            _tutorialControllerGameObject.SetActive(true);
             tutorialController.enabled = true;
             // 기존 TutorialController의 StartTutorial 호출
             Debug.Log("[TutorialDialogueController] Calling TutorialController.StartTutorial()");
@@ -377,17 +466,18 @@ public class TutorialDialogueController : MonoBehaviour
     }
     
     // RhythmConductor의 OnRoundResult 이벤트 구독
+    // Note: conductor가 비활성화되어 있으면 이벤트가 발생하지 않으므로,
+    // 대사 진행 중에는 이벤트를 구독하지 않음 (대사 완료 후 활성화됨)
     void OnEnable()
     {
-        if (conductor != null)
-        {
-            conductor.OnRoundResult.AddListener(OnRoundResult);
-        }
+        // conductor가 활성화되어 있을 때만 구독
+        // 대사 진행 중에는 conductor가 비활성화되어 있으므로 구독하지 않음
     }
     
     void OnDisable()
     {
-        if (conductor != null)
+        // conductor가 비활성화되어 있으므로 제거할 필요 없음
+        if (conductor != null && conductor.gameObject.activeInHierarchy)
         {
             conductor.OnRoundResult.RemoveListener(OnRoundResult);
         }
