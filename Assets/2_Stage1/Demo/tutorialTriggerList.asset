@@ -21,21 +21,21 @@ MonoBehaviour:
     guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 0.6
-    minContactMs: 100
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 0
     hapticHitBase: 0.665
     hapticHitMax: 0.335
     hapticDurationMs: 80
-    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
-    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
+    swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 100
@@ -58,8 +58,8 @@ MonoBehaviour:
     hapticHitBase: 0.665
     hapticHitMax: 0.335
     hapticDurationMs: 80
-    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
-    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
+    swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
     visualResistanceStrength: 0
     visualResistanceMs: 1
@@ -82,8 +82,8 @@ MonoBehaviour:
     hapticHitBase: 0.665
     hapticHitMax: 0.335
     hapticDurationMs: 80
-    impactSound: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
-    swishSound: {fileID: 8300000, guid: edb6eaaf36222f9429a9b2214ec69ad0, type: 3}
+    impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
+    swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
     visualResistanceStrength: 0
     visualResistanceMs: 1

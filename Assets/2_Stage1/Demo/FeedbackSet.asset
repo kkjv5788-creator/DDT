@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e48a82a3f1299f749b7ae3fc2353a936, type: 3}
   m_Name: FeedbackSet
   m_EditorClassIdentifier: 
-  sfxSliceSuccess: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
-  sfxSliceFail: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
-  sfxResultSuccess: {fileID: 8300000, guid: 2829a5212f9da134e88443a1f91d0e48, type: 3}
-  sfxResultFail: {fileID: 8300000, guid: bf685e2b67465c64c8f5efdc5b241fd1, type: 3}
-  sfxWrongCut: {fileID: 8300000, guid: 6eb72c75e0fcdc04b905b225912096e7, type: 3}
+  sfxSliceSuccess: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
+  sfxSliceFail: {fileID: 0}
+  sfxResultSuccess: {fileID: 8300000, guid: da9da6c6d94bb6b48acb7dd8f0784f6e, type: 3}
+  sfxResultFail: {fileID: 8300000, guid: dd2f2baaeaf84834591745a7ba49b1b4, type: 3}
+  sfxWrongCut: {fileID: 0}
   vfxSliceSuccessPrefab: {fileID: 0}
   vfxSliceFailPrefab: {fileID: 0}
   vfxResultSuccessPrefab: {fileID: 0}
