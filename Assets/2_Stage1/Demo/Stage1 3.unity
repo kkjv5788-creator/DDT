@@ -3057,7 +3057,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   knifePointerSource: {fileID: 1640439408}
-  pointerMaxDistance: 3
+  pointerMaxDistance: 10
   radioLayer:
     serializedVersion: 2
     m_Bits: 1024
