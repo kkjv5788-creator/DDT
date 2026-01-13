@@ -46,6 +46,8 @@ public class TutorialDialogueController : MonoBehaviour
     public TutorialUIController tutorialUI;  // 기존 UI (비활성화용)
     public TutorialController tutorialController;  // 기존 튜토리얼 (비활성화용)
     public RhythmConductor conductor;  // 기존 컨덕터 (비활성화용)
+    public FeedbackSetSO feedbackSet;  // 스킵 쿨타임 설정용 (선택사항)
+    public RadioClickable radio;  // 라디오 (스킵 시 활성화용)
     
     [Header("Target Objects")]
     public GameObject kimbapPrefab;  // 시선 감지 대상 (kimbap 프리팹)
@@ -65,11 +67,15 @@ public class TutorialDialogueController : MonoBehaviour
     [Tooltip("시선 감지 각도 (도)")]
     public float gazeAngleThreshold = 30f;
     
+    [Tooltip("Right Trigger Button Click 안내 문구")]
+    public string triggerButtonHintText = "오른손 트리거 버튼을 눌러주세요";
+    
     private int _currentDialogueIndex = 0;
     private bool _isWaitingForCondition = false;
     private bool _conditionMet = false;
     private float _conditionMetTime = 0f;
     private float _autoAdvanceTimer = 0f;
+    private float _lastSkipInput = -999f;
     
     // 상태 추적
     private bool _lastRoundResult = false;
@@ -116,6 +122,17 @@ public class TutorialDialogueController : MonoBehaviour
     {
         if (_currentDialogueIndex >= dialogues.Length) return;
         
+        // A 버튼으로 전체 대사 스킵 (TutorialController와 동일한 방식)
+        if (OVRInput.GetDown(OVRInput.Button.One))
+        {
+            if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
+            {
+                _lastSkipInput = Time.time;
+                SkipAllDialogues();
+                return;
+            }
+        }
+        
         var currentDialogue = dialogues[_currentDialogueIndex];
         
         // 조건 체크
@@ -158,10 +175,17 @@ public class TutorialDialogueController : MonoBehaviour
         
         var dialogue = dialogues[index];
         
+        // 안내 문구 결정 (Right Trigger Button Click 조건일 때만)
+        string hint = "";
+        if (dialogue.conditionType == DialogueConditionType.RightTriggerButtonClick)
+        {
+            hint = triggerButtonHintText;
+        }
+        
         // 전용 UI에 대사 표시
         if (dialogueUI != null)
         {
-            dialogueUI.ShowDialogue(dialogue.dialogueText);
+            dialogueUI.ShowDialogue(dialogue.dialogueText, hint);
         }
         
         // 상태 초기화
@@ -180,6 +204,53 @@ public class TutorialDialogueController : MonoBehaviour
         }
         
         Debug.Log($"[TutorialDialogueController] Dialogue {index}: {dialogue.dialogueText} (Condition: {dialogue.conditionType})");
+    }
+    
+    void SkipAllDialogues()
+    {
+        Debug.Log("[TutorialDialogueController] All dialogues skipped by A button!");
+        
+        // 대사 UI 숨김
+        if (dialogueUI != null)
+        {
+            dialogueUI.Hide();
+        }
+        
+        // TutorialController의 SkipTutorial()과 동일한 로직 적용
+        if (conductor != null)
+        {
+            conductor.isTutorialMode = false;
+            
+            // BGM 정지
+            if (conductor.bgmSource != null)
+            {
+                conductor.bgmSource.Stop();
+                Debug.Log("[TutorialDialogueController] Tutorial BGM stopped");
+            }
+        }
+        
+        // 기존 UI 숨김
+        if (tutorialUI != null)
+        {
+            tutorialUI.Hide();
+        }
+        
+        // 라디오 활성화 + 클릭 가능하도록 설정
+        if (radio != null)
+        {
+            radio.SetTutorialCompleted(true);
+            radio.SetClickable(true);
+            Debug.Log("[TutorialDialogueController] Radio unlocked and clickable after skip");
+        }
+        
+        // 스킵 이벤트 발행
+        if (conductor != null && conductor.OnTutorialSkipped != null)
+        {
+            conductor.OnTutorialSkipped.Invoke();
+        }
+        
+        // 이 스크립트는 비활성화 (대사 시스템 종료)
+        this.enabled = false;
     }
     
     bool CheckCondition(DialogueConditionType conditionType)

@@ -12,9 +12,11 @@ public class TutorialDialogueUIController : MonoBehaviour
 
     [Header("UI Elements")]
     public TextMeshProUGUI dialogueText;  // 대사 텍스트
+    public TextMeshProUGUI hintText;  // 안내 문구 (예: "오른손 트리거 버튼을 눌러주세요")
 
     [Header("Colors")]
     public Color dialogueColor = Color.white;
+    public Color hintColor = Color.yellow;
 
     [Header("Animation")]
     public float fadeInDuration = 0.3f;
@@ -85,12 +87,27 @@ public class TutorialDialogueUIController : MonoBehaviour
     /// <summary>
     /// 대사 표시
     /// </summary>
-    public void ShowDialogue(string text)
+    public void ShowDialogue(string text, string hint = "")
     {
         if (dialogueText != null)
         {
             dialogueText.text = text;
             dialogueText.color = dialogueColor;
+        }
+
+        // 안내 문구 표시/숨김
+        if (hintText != null)
+        {
+            if (!string.IsNullOrEmpty(hint))
+            {
+                hintText.text = hint;
+                hintText.color = hintColor;
+                hintText.gameObject.SetActive(true);
+            }
+            else
+            {
+                hintText.gameObject.SetActive(false);
+            }
         }
 
         FadeIn();
@@ -130,6 +147,12 @@ public class TutorialDialogueUIController : MonoBehaviour
     /// </summary>
     public void Hide()
     {
+        // 안내 문구도 숨김
+        if (hintText != null)
+        {
+            hintText.gameObject.SetActive(false);
+        }
+        
         FadeOut();
     }
 }
