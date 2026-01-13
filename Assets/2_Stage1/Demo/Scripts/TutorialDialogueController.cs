@@ -47,7 +47,6 @@ public class TutorialDialogueController : MonoBehaviour
     public TutorialController tutorialController;  // 기존 튜토리얼 (비활성화용)
     public RhythmConductor conductor;  // 기존 컨덕터 (비활성화용)
     public FeedbackSetSO feedbackSet;  // 스킵 쿨타임 설정용 (선택사항)
-    public RadioClickable radio;  // 라디오 (스킵 시 활성화용)
     
     [Header("Target Objects")]
     public GameObject kimbapPrefab;  // 시선 감지 대상 (kimbap 프리팹)
@@ -216,41 +215,8 @@ public class TutorialDialogueController : MonoBehaviour
             dialogueUI.Hide();
         }
         
-        // TutorialController의 SkipTutorial()과 동일한 로직 적용
-        if (conductor != null)
-        {
-            conductor.isTutorialMode = false;
-            
-            // BGM 정지
-            if (conductor.bgmSource != null)
-            {
-                conductor.bgmSource.Stop();
-                Debug.Log("[TutorialDialogueController] Tutorial BGM stopped");
-            }
-        }
-        
-        // 기존 UI 숨김
-        if (tutorialUI != null)
-        {
-            tutorialUI.Hide();
-        }
-        
-        // 라디오 활성화 + 클릭 가능하도록 설정
-        if (radio != null)
-        {
-            radio.SetTutorialCompleted(true);
-            radio.SetClickable(true);
-            Debug.Log("[TutorialDialogueController] Radio unlocked and clickable after skip");
-        }
-        
-        // 스킵 이벤트 발행
-        if (conductor != null && conductor.OnTutorialSkipped != null)
-        {
-            conductor.OnTutorialSkipped.Invoke();
-        }
-        
-        // 이 스크립트는 비활성화 (대사 시스템 종료)
-        this.enabled = false;
+        // 바로 기존 튜토리얼 시작
+        StartMainTutorial();
     }
     
     bool CheckCondition(DialogueConditionType conditionType)
