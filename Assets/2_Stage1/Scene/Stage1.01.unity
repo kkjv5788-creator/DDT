@@ -799,7 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conductor: {fileID: 463253587}
   tutorialController: {fileID: 463253585}
-  radio: {fileID: 1105228972}
+  radio: {fileID: 0}
   plateController: {fileID: 463253582}
   spawner: {fileID: 463253586}
   resultManager: {fileID: 463253591}
@@ -821,7 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conductor: {fileID: 463253587}
   feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
-  radio: {fileID: 1105228972}
+  radio: {fileID: 0}
   tutorialUI: {fileID: 1880957100}
   tutorialTriggerList: {fileID: 11400000, guid: bb284507081f9254bbd999aa76b11e47, type: 2}
   requiredSuccessCount: 3
@@ -2130,13 +2130,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1105228972}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1105228971}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1105228976}
+      addedObject: {fileID: 1105228979}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1105228978}
   m_SourcePrefab: {fileID: 100100000, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
 --- !u!1 &1105228970 stripped
 GameObject:
@@ -2164,7 +2164,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.26493835, y: 0.99890137, z: 0.4618683}
   m_Center: {x: 0.0024795535, y: -0.00018310553, z: -0.030479431}
---- !u!114 &1105228972
+--- !u!114 &1105228978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2173,57 +2173,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 1105228970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a90b2dd9cfe1fb5428ed7708ff9191f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 14eec3782e5e6c041bc99b5fea023b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnRadioClicked:
+  onRadioClick:
     m_PersistentCalls:
-      m_Calls: []
-  knifePointerSource: {fileID: 1640439408}
-  pointerMaxDistance: 3
-  radioLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  useSphereCast: 1
-  sphereRadius: 0.04
-  originForwardOffset: 0.02
-  radioRenderer: {fileID: 1105228977}
-  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
-  outlineMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
-  highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
-  highlightIntensity: 2
-  glowWhenClickable: 1
-  clickableGlowMultiplier: 0.35
-  pointerLine: {fileID: 0}
-  pointerColorNormal: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
-  hoverSound: {fileID: 0}
---- !u!65 &1105228976
-BoxCollider:
+      m_Calls:
+      - m_Target: {fileID: 1105228978}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1105228979
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105228970}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.26493835, y: 0.99890137, z: 0.4618683}
-  m_Center: {x: 0.0024795535, y: -0.00018310553, z: -0.030479431}
---- !u!23 &1105228977 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 7d88393c5f071b949b128d0538e3446a, type: 3}
-  m_PrefabInstance: {fileID: 1105228969}
-  m_PrefabAsset: {fileID: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee03aa7816f6be4baad353cff4dfce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: 1
+  hoverMaterial: {fileID: 0}
+  outlineBehaviour: {fileID: 0}
+  onHoverEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &1155826825
 BoxCollider:
   m_ObjectHideFlags: 0

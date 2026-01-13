@@ -1,94 +1,92 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
+[RequireComponent(typeof(LineRenderer))]
 public class LaserLineDriver : MonoBehaviour
 {
-    [Header("Ray Origin (추천: *_laser_begin)")]
-    [SerializeField] private Transform rayOrigin;
+    public enum VisualState { Idle, Hover }
 
-    [Header("Raycast")]
-    [SerializeField] private float maxDistance = 20f;
-    [SerializeField] private LayerMask hitMask = ~0;
-    [SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
-
-    [Header("Visual Target")]
+    [Header("Line")]
     [SerializeField] private LineRenderer line;
+    [SerializeField] private bool useWorldSpace = true;
 
     [Header("Style - Idle")]
-    [SerializeField] private Color idleColor = new Color(1f, 1f, 1f, 0.8f);
-    [SerializeField] private float idleWidth = 0.005f;
+    public Color idleColor = new Color(1f, 1f, 1f, 0.8f);
+    public float idleWidth = 0.005f;
 
-    [Header("Style - Hit")]
-    [SerializeField] private Color hitColor = new Color(1f, 0.6f, 0.2f, 1f);
-    [SerializeField] private float hitWidth = 0.008f;
+    [Header("Style - Hover/Hit")]
+    public Color hoverColor = new Color(1f, 0.75f, 0.2f, 1f);
+    public float hoverWidth = 0.008f;
 
     [Header("Smoothing")]
-    [Tooltip("0이면 즉시 반영. 0.05~0.1 권장")]
-    [SerializeField] private float smoothTime = 0.06f;
+    [Tooltip("0이면 즉시. 0.03~0.08 권장")]
+    public float smoothTime = 0.06f;
 
-    private float _currentDistance;
-    private float _distanceVel;
-    private float _currentWidth;
+    private float _curLen;
+    private float _lenVel;
+    private float _curWidth;
     private float _widthVel;
-    private Color _currentColor;
+    private Color _curColor;
 
     private void Awake()
     {
-        if (!line) line = GetComponentInChildren<LineRenderer>(true);
+        if (!line) line = GetComponent<LineRenderer>();
+        line.positionCount = 2;
+        line.useWorldSpace = useWorldSpace;
 
-        if (line)
-        {
-            line.positionCount = 2;
-            line.useWorldSpace = true;
-        }
-
-        _currentDistance = maxDistance;
-        _currentWidth = idleWidth;
-        _currentColor = idleColor;
-
-        ApplyVisual(idleColor, idleWidth);
+        _curLen = 5f;
+        _curWidth = idleWidth;
+        _curColor = idleColor;
+        ApplyStyle(idleColor, idleWidth);
     }
 
-    private void LateUpdate()
+    /// <summary>
+    /// rayOrigin 기준으로 "start->end"를 갱신한다.
+    /// </summary>
+    public void Apply(Transform rayOrigin, float targetLength, VisualState state)
     {
         if (!line || !rayOrigin) return;
 
+        // length smoothing
+        if (smoothTime <= 0f) _curLen = targetLength;
+        else _curLen = Mathf.SmoothDamp(_curLen, targetLength, ref _lenVel, smoothTime);
+
         Vector3 start = rayOrigin.position;
-        Vector3 dir = rayOrigin.forward;
+        Vector3 end = start + rayOrigin.forward * _curLen;
 
-        bool hitSomething = Physics.Raycast(start, dir, out RaycastHit hit, maxDistance, hitMask, triggerInteraction);
-        float targetDistance = hitSomething ? hit.distance : maxDistance;
-
-        // distance smoothing
-        if (smoothTime <= 0f) _currentDistance = targetDistance;
-        else _currentDistance = Mathf.SmoothDamp(_currentDistance, targetDistance, ref _distanceVel, smoothTime);
-
-        Vector3 end = start + dir * _currentDistance;
-
-        line.SetPosition(0, start);
-        line.SetPosition(1, end);
-
-        // hit feedback (color/width)
-        Color targetColor = hitSomething ? hitColor : idleColor;
-        float targetWidth = hitSomething ? hitWidth : idleWidth;
-
-        if (smoothTime <= 0f)
+        if (line.useWorldSpace)
         {
-            _currentColor = targetColor;
-            _currentWidth = targetWidth;
+            line.SetPosition(0, start);
+            line.SetPosition(1, end);
         }
         else
         {
-            _currentColor = Color.Lerp(_currentColor, targetColor, Time.deltaTime / smoothTime);
-            _currentWidth = Mathf.SmoothDamp(_currentWidth, targetWidth, ref _widthVel, smoothTime);
+            // 로컬을 쓰려면 LaserVisual이 rayOrigin과 같은 좌표계여야 함
+            // (지금은 worldSpace 권장)
+            line.SetPosition(0, Vector3.zero);
+            line.SetPosition(1, Vector3.forward * _curLen);
         }
 
-        ApplyVisual(_currentColor, _currentWidth);
+        // style smoothing
+        Color targetColor = (state == VisualState.Hover) ? hoverColor : idleColor;
+        float targetWidth = (state == VisualState.Hover) ? hoverWidth : idleWidth;
+
+        if (smoothTime <= 0f)
+        {
+            _curColor = targetColor;
+            _curWidth = targetWidth;
+        }
+        else
+        {
+            _curColor = Color.Lerp(_curColor, targetColor, Time.deltaTime / smoothTime);
+            _curWidth = Mathf.SmoothDamp(_curWidth, targetWidth, ref _widthVel, smoothTime);
+        }
+
+        ApplyStyle(_curColor, _curWidth);
     }
 
-    private void ApplyVisual(Color c, float w)
+    private void ApplyStyle(Color c, float w)
     {
-        if (!line) return;
         line.startColor = c;
         line.endColor = c;
         line.startWidth = w;

@@ -34,6 +34,18 @@ public class AppSceneFlow : MonoBehaviour
     [Tooltip("옵션 A: 에디터/시뮬레이터에서만 의미 있는 높이 전환 매니저. 빌드에서는 무효로 만들 예정.")]
     public SmartHeightManager heightManager;
 
+    [Header("Title Start (optional)")]
+    public Transform titlePoint;
+    public bool moveToTitleOnStart = true;
+
+    private void Start()
+    {
+        if (moveToTitleOnStart && playerRigRoot != null && titlePoint != null)
+        {
+            playerRigRoot.SetPositionAndRotation(titlePoint.position, titlePoint.rotation);
+        }
+    }
+
     private bool _busy;
 
     private void Awake()
