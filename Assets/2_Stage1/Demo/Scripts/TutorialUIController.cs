@@ -31,6 +31,7 @@ public class TutorialUIController : MonoBehaviour
     float _fadeTimer;
     bool _isFading;
     bool _targetVisible;
+    int _lastTriggerIndex = -1; // 🔥 트리거 인덱스 변경 감지용
 
     void Awake()
     {
@@ -73,6 +74,13 @@ public class TutorialUIController : MonoBehaviour
             return;
         }
 
+        // 🔥 트리거 인덱스 변경 감지 및 단계 업데이트
+        if (conductor.CurrentTriggerIndex != _lastTriggerIndex)
+        {
+            _lastTriggerIndex = conductor.CurrentTriggerIndex;
+            UpdateStepCount();
+        }
+
         // 페이드 처리
         HandleFade();
 
@@ -81,9 +89,6 @@ public class TutorialUIController : MonoBehaviour
 
         // 시간 바 업데이트 (선택사항)
         UpdateProgressBar();
-
-        // 🔥 단계 카운트 업데이트
-        UpdateStepCount();
     }
 
     void HandleFade()
@@ -252,10 +257,27 @@ public class TutorialUIController : MonoBehaviour
 
     void UpdateStepCount()
     {
-        if (!stepCountText || !tutorialController) return;
+        if (!stepCountText) return;
 
-        int currentStep = tutorialController.GetCurrentStepIndex() + 1;
-        int totalSteps = tutorialController.GetTotalSteps();
+        // 🔥 conductor의 CurrentTriggerIndex를 직접 사용하여 실시간 업데이트
+        int currentStep = conductor.CurrentTriggerIndex + 1;
+        int totalSteps = 0;
+
+        // data에서 총 단계 수 가져오기
+        if (conductor.data && conductor.data.triggers != null)
+        {
+            totalSteps = conductor.data.triggers.Length;
+        }
+
+        // tutorialController가 있으면 그것의 정보도 활용 (옵션)
+        if (tutorialController)
+        {
+            int controllerTotalSteps = tutorialController.GetTotalSteps();
+            if (controllerTotalSteps > 0)
+            {
+                totalSteps = controllerTotalSteps;
+            }
+        }
 
         stepCountText.text = $"단계: {currentStep} / {totalSteps}";
     }
@@ -265,7 +287,9 @@ public class TutorialUIController : MonoBehaviour
     public void OnTutorialStart()
     {
         UnityEngine.Debug.Log("[TutorialUIController] Tutorial UI started");
+        _lastTriggerIndex = -1; // 🔥 초기화
         FadeIn();
+        UpdateStepCount(); // 🔥 시작 시 즉시 업데이트
     }
 
     public void ShowStepInstruction(int stepIndex, int requiredCount, float judgeDuration)
@@ -288,6 +312,9 @@ public class TutorialUIController : MonoBehaviour
         {
             progressText.text = $"진행: 0 / {requiredCount}";
         }
+
+        // 🔥 단계 표시도 즉시 업데이트
+        UpdateStepCount();
     }
 
     public void UpdateSuccessCount(int stepIndex, int successCount, int requiredCount)
@@ -319,6 +346,12 @@ public class TutorialUIController : MonoBehaviour
         if (progressText)
         {
             progressText.text = "";
+        }
+
+        // 🔥 완료 시에는 단계 표시 숨기기 (선택사항)
+        if (stepCountText)
+        {
+            stepCountText.text = "";
         }
 
         UnityEngine.Debug.Log("[TutorialUIController] Tutorial completion message shown");
