@@ -18,7 +18,7 @@ MonoBehaviour:
   - triggerTime: 10
     guideDuration: 1
     judgeDuration: 3.75
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
     minKnifeSpeed: 0.6
     minContactMs: 115
@@ -28,7 +28,7 @@ MonoBehaviour:
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -39,20 +39,20 @@ MonoBehaviour:
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 5000
-  - triggerTime: 20
+  - triggerTime: 17
     guideDuration: 1
-    judgeDuration: 5
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 0.6
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -61,22 +61,22 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
-    visualResistanceStrength: 0.8
-    visualResistanceMs: 1
-  - triggerTime: 30
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 5000
+  - triggerTime: 24
     guideDuration: 1
-    judgeDuration: 5
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 0.6
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -85,22 +85,22 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
-    visualResistanceStrength: 0.8
-    visualResistanceMs: 1
-  - triggerTime: 40
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 5000
+  - triggerTime: 31
     guideDuration: 1
-    judgeDuration: 5
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 0.6
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -109,22 +109,22 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
-    visualResistanceStrength: 0.8
-    visualResistanceMs: 1
-  - triggerTime: 50
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 5000
+  - triggerTime: 38
     guideDuration: 1
-    judgeDuration: 5
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 0.6
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -133,22 +133,22 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
-    visualResistanceStrength: 0.8
-    visualResistanceMs: 1
-  - triggerTime: 60
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 5000
+  - triggerTime: 45
     guideDuration: 1
-    judgeDuration: 5
-    guideBeatSound: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+    judgeDuration: 3.75
+    guideBeatSound: {fileID: 8300000, guid: 206520655f04f93438256ecda4d97773, type: 3}
     requiredSliceCount: 5
-    minKnifeSpeed: 0.5
-    minContactMs: 5
+    minKnifeSpeed: 0.6
+    minContactMs: 115
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_RotationOrder: 4
     minThinThicknessWorld: 0.01
     maxActiveThinPieces: 1
     hapticHitBase: 0.639
@@ -157,5 +157,5 @@ MonoBehaviour:
     impactSound: {fileID: 8300000, guid: d3ac9503e907ced4da384404c3f69836, type: 3}
     swishSound: {fileID: 0}
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
-    visualResistanceStrength: 0.8
-    visualResistanceMs: 1
+    visualResistanceStrength: 0.225
+    visualResistanceMs: 5000
