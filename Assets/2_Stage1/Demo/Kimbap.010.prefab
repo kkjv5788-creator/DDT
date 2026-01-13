@@ -119,7 +119,7 @@ MonoBehaviour:
   sliceTrigger: {fileID: 1916617940357665672}
   blockCollider: {fileID: 6897567499567288790}
   mainMeshRoot: {fileID: 8801279662019636624}
-  crossSectionMaterial: {fileID: 2100000, guid: 707b184df3d52024191ae7b3b31f8191, type: 2}
+  crossSectionMaterial: {fileID: 2100000, guid: c4c73d162a5536d49a7b4111e03e3832, type: 2}
   axisMode: 0
   axisReference: {fileID: 0}
   invertAxis: 0

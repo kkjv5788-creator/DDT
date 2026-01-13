@@ -2,33 +2,28 @@
 using UnityEngine.Events;
 
 public class RadioClickable : MonoBehaviour
-
 {
     [Header("Events")]
     public UnityEvent OnRadioClicked;
 
     [Header("Pointer Settings")]
-    public Transform knifePointerSource; // 실제로는 RightHandAnchor 아래 'RadioPointer' 추천
+    public Transform knifePointerSource;
     public float pointerMaxDistance = 3f;
     public LayerMask radioLayer;
 
-    [Tooltip("VR에서 클릭 안정성을 위해 Ray 대신 SphereCast 사용(추천)")]
+    [Tooltip("VR에서 클릭 안정성을 위해 Ray 대신 SphereCast 사용")]
     public bool useSphereCast = true;
-    public float sphereRadius = 0.04f;         // 4cm 정도(필요시 0.03~0.06 조절)
-    public float originForwardOffset = 0.02f;   // 시작점이 손/칼 콜라이더에 묻히는 것 방지
+    public float sphereRadius = 0.04f;
+    public float originForwardOffset = 0.02f;
 
     [Header("Visual Feedback")]
     public Renderer radioRenderer;
-    public Material normalMaterial;
-    public Material outlineMaterial;
+    public Material normalMaterial;      // 클릭 불가 상태 (튜토리얼 중)
+    public Material outlineMaterial;     // 클릭 가능 상태 기본 (아웃라인만)
 
-    [Header("Highlight")]
+    [Header("Highlight (포인터 겨냥 시)")]
     public Color highlightEmission = new Color(1f, 0.9f, 0.5f);
     public float highlightIntensity = 2f;
-
-    [Tooltip("클릭 가능 상태일 때(포인터 안 맞아도) 은은하게 빛나게 할지")]
-    public bool glowWhenClickable = true;
-    public float clickableGlowMultiplier = 0.35f; // 0이면 '클릭 가능해도 아웃라인만'
 
     [Header("Pointer Line")]
     public LineRenderer pointerLine;
@@ -43,20 +38,15 @@ public class RadioClickable : MonoBehaviour
     bool _wasPointing = false;
     bool _tutorialCompleted = false;
 
-    Material _runtimeNormal;
-    Material _runtimeOutline;
+    Material _runtimeMaterial;
 
     void Start()
     {
-        // 런타임 인스턴스 생성(머티리얼 누수/하이라이트 적용 문제 해결)
-        if (radioRenderer)
+        // 런타임 머티리얼 생성
+        if (radioRenderer && normalMaterial)
         {
-            if (normalMaterial) _runtimeNormal = new Material(normalMaterial);
-            if (outlineMaterial) _runtimeOutline = new Material(outlineMaterial);
-
-            // "클릭 전엔 아웃라인만"이므로 초기엔 아웃라인 적용
-            if (_runtimeOutline) radioRenderer.material = _runtimeOutline;
-            else if (_runtimeNormal) radioRenderer.material = _runtimeNormal;
+            _runtimeMaterial = new Material(normalMaterial);
+            radioRenderer.material = _runtimeMaterial;
         }
 
         UpdateVisuals(false, false);
@@ -77,7 +67,7 @@ public class RadioClickable : MonoBehaviour
 
         CheckPointer();
 
-        // 포인터가 라디오를 가리킬 때만 A 버튼으로 클릭
+        // 포인터가 라디오를 가리킬 때만 인덱스 트리거로 클릭
         if (_isPointing && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
         {
             OnRadioClick();
@@ -114,7 +104,6 @@ public class RadioClickable : MonoBehaviour
 
         if (hitSomething)
         {
-            // ⭐ 핵심: 자식 콜라이더여도 "이 라디오"면 인정
             var rc = hit.collider.GetComponentInParent<RadioClickable>();
             if (rc == this)
             {
@@ -134,14 +123,18 @@ public class RadioClickable : MonoBehaviour
             }
         }
 
-        // 빗나갔을 때 라인 표시(원하면 유지, 싫으면 else에서 꺼도 됨)
-        if (!_isPointing && pointerLine)
+        // 빗나갔을 때 라인 표시
+        if (!_isPointing && pointerLine && _clickable)
         {
             pointerLine.enabled = true;
             pointerLine.SetPosition(0, origin);
             pointerLine.SetPosition(1, origin + dir * pointerMaxDistance);
             pointerLine.startColor = pointerColorNormal;
             pointerLine.endColor = pointerColorNormal;
+        }
+        else if (!_isPointing && pointerLine)
+        {
+            pointerLine.enabled = false;
         }
 
         UpdateVisuals(_clickable, _isPointing);
@@ -150,42 +143,44 @@ public class RadioClickable : MonoBehaviour
 
     void UpdateVisuals(bool clickable, bool pointing)
     {
-        if (!radioRenderer) return;
-
-        // "클릭 전엔 아웃라인만": clickable 여부와 무관하게 기본은 아웃라인 사용
-        Material targetMat = _runtimeOutline ? _runtimeOutline : (_runtimeNormal ? _runtimeNormal : radioRenderer.material);
-        if (radioRenderer.material != targetMat)
-            radioRenderer.material = targetMat;
-
-        // emission 제어는 "현재 renderer.material"에 직접 적용 (머티리얼 스왑해도 OK)
-        Material mat = radioRenderer.material;
-        if (!mat) return;
-
-        // 기본: emission off
-        mat.DisableKeyword("_EMISSION");
-        mat.SetColor("_EmissionColor", Color.black);
+        if (!radioRenderer || !_runtimeMaterial) return;
 
         if (!clickable)
         {
-            // 클릭 불가: 아웃라인만 (하이라이트 없음)
-            return;
-        }
-
-        // 클릭 가능
-        if (!pointing)
-        {
-            // 클릭 가능하지만 겨냥 안 함
-            if (glowWhenClickable && clickableGlowMultiplier > 0f)
+            // 🔴 클릭 불가 (튜토리얼 중): normalMaterial, Emission OFF
+            if (normalMaterial && radioRenderer.sharedMaterial != normalMaterial)
             {
-                mat.EnableKeyword("_EMISSION");
-                mat.SetColor("_EmissionColor", highlightEmission * (highlightIntensity * clickableGlowMultiplier));
+                radioRenderer.material = new Material(normalMaterial);
+                _runtimeMaterial = radioRenderer.material;
             }
-            return;
-        }
 
-        // 클릭 가능 + 겨냥함: 강한 하이라이트
-        mat.EnableKeyword("_EMISSION");
-        mat.SetColor("_EmissionColor", highlightEmission * highlightIntensity);
+            _runtimeMaterial.DisableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", Color.black);
+        }
+        else if (clickable && !pointing)
+        {
+            // 🟡 클릭 가능 + 포인터 안 맞음: outlineMaterial, Emission OFF
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = new Material(outlineMaterial);
+                _runtimeMaterial = radioRenderer.material;
+            }
+
+            _runtimeMaterial.DisableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", Color.black);
+        }
+        else if (clickable && pointing)
+        {
+            // 🟢 클릭 가능 + 포인터 맞음: outlineMaterial + Emission ON
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = new Material(outlineMaterial);
+                _runtimeMaterial = radioRenderer.material;
+            }
+
+            _runtimeMaterial.EnableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", highlightEmission * highlightIntensity);
+        }
     }
 
     void OnRadioClick()
@@ -203,28 +198,41 @@ public class RadioClickable : MonoBehaviour
 
     public void SetClickable(bool clickable)
     {
-        // ⭐ RadioOutlineController가 매 프레임 호출하더라도 중복 처리 방지
         if (_clickable == clickable) return;
 
         _clickable = clickable;
+        Debug.Log($"[RadioClickable] Clickable: {clickable}");
 
         if (!clickable)
         {
             _isPointing = false;
             if (pointerLine) pointerLine.enabled = false;
-            UpdateVisuals(false, false);
         }
-        else
+
+        UpdateVisuals(_clickable, false);
+    }
+
+    public void SetTutorialCompleted(bool completed)
+    {
+        _tutorialCompleted = completed;
+        Debug.Log($"[RadioClickable] Tutorial Completed: {completed}");
+
+        if (!_tutorialCompleted)
         {
-            // 클릭 가능이 된 순간에도 "클릭 가능 하이라이트"를 보여주고 싶다면 여기서 갱신
-            UpdateVisuals(true, false);
+            _isPointing = false;
+            _wasPointing = false;
+            if (pointerLine) pointerLine.enabled = false;
         }
+
+        UpdateVisuals(_clickable, false);
     }
 
     void OnDestroy()
     {
-        if (_runtimeNormal) Destroy(_runtimeNormal);
-        if (_runtimeOutline) Destroy(_runtimeOutline);
+        if (_runtimeMaterial)
+        {
+            Destroy(_runtimeMaterial);
+        }
     }
 
     void OnDrawGizmos()
@@ -240,21 +248,4 @@ public class RadioClickable : MonoBehaviour
             Gizmos.DrawWireSphere(origin + knifePointerSource.forward * 0.15f, sphereRadius);
         }
     }
-    public void SetTutorialCompleted(bool completed)
-    {
-        _tutorialCompleted = completed;
-
-        if (!_tutorialCompleted)
-        {
-            _isPointing = false;
-            _wasPointing = false;
-            if (pointerLine) pointerLine.enabled = false;
-            UpdateVisuals(false, false);
-        }
-        else
-        {
-            UpdateVisuals(_clickable, false);
-        }
-    }
-
 }
