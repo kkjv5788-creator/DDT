@@ -38,13 +38,15 @@ public class AppSceneFlow : MonoBehaviour
     public Transform titlePoint;
     public bool moveToTitleOnStart = true;
 
-    private void Start()
-    {
-        if (moveToTitleOnStart && playerRigRoot != null && titlePoint != null)
-        {
-            playerRigRoot.SetPositionAndRotation(titlePoint.position, titlePoint.rotation);
-        }
-    }
+    [Header("Ray Mode Toggle")]
+    [Tooltip("3D Physics Ray(스테이지/로비에서 사용). 타이틀에선 OFF")]
+    public VRRayInteractor leftRay;
+
+    [Tooltip("3D Physics Ray(스테이지/로비에서 사용). 타이틀에선 OFF")]
+    public VRRayInteractor rightRay;
+
+    [Tooltip("타이틀 UI 레이저 시각 전용(=UILaserHoverFeedback). 타이틀에선 ON")]
+    public UIRayLaserFeedback uiLaserHover;
 
     private bool _busy;
 
@@ -53,6 +55,20 @@ public class AppSceneFlow : MonoBehaviour
         // 인스펙터 연결이 최우선. 누락 시 안전장치로 1회 탐색.
         if (fader == null)
             fader = FindObjectOfType<OVRScreenFade>(true);
+    }
+
+    private void Start()
+    {
+        if (moveToTitleOnStart && playerRigRoot != null && titlePoint != null)
+        {
+            playerRigRoot.SetPositionAndRotation(titlePoint.position, titlePoint.rotation);
+            SetTitleMode(true);
+        }
+        else
+        {
+            // 타이틀로 시작하지 않는 경우는 기본 게임 모드가 안전
+            SetTitleMode(false);
+        }
     }
 
     // ===== Public API =====
@@ -109,6 +125,9 @@ public class AppSceneFlow : MonoBehaviour
             heightManager.SwitchToGameHeight();
         }
 
+        // 로비/게임 모드: 3D Ray ON, UI Hover OFF
+        SetTitleMode(false);
+
         FadeIn();
         _busy = false;
     }
@@ -116,6 +135,9 @@ public class AppSceneFlow : MonoBehaviour
     private IEnumerator Co_LoadScene(int buildIndex)
     {
         _busy = true;
+
+        // 씬 전환 직전: 타이틀 UI Hover는 무조건 OFF(다음 씬에서 다시 세팅)
+        SetTitleMode(false);
 
         FadeOut();
         yield return new WaitForSeconds(fadeWaitSeconds);
@@ -132,5 +154,19 @@ public class AppSceneFlow : MonoBehaviour
     private void FadeIn()
     {
         if (fader != null) fader.FadeIn();
+    }
+
+    // ===== Mode Toggle =====
+
+    /// <summary>
+    /// true(타이틀): UI Hover ON, 3D Ray OFF
+    /// false(로비/스테이지): UI Hover OFF, 3D Ray ON
+    /// </summary>
+    private void SetTitleMode(bool isTitle)
+    {
+        if (leftRay != null) leftRay.enabled = !isTitle;
+        if (rightRay != null) rightRay.enabled = !isTitle;
+
+        if (uiLaserHover != null) uiLaserHover.enabled = isTitle;
     }
 }

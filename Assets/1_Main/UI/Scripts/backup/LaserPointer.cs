@@ -1,74 +1,64 @@
-// using UnityEngine;
-// using UnityEngine.EventSystems; // PointerEventData를 쓰기 위해 필요
+using UnityEngine;
 
-// public class LaserPointer : MonoBehaviour
-// {
-//     [Header("설정")]
-//     public float rayDistance = 100f; // 레이저 길이
-//     public LayerMask interactableLayer; // 상호작용할 레이어 (설정 안하면 모든 물체 감지)
+[RequireComponent(typeof(LineRenderer))]
+public class LaserPointer : MonoBehaviour
+{
+    [Header("Ray")]
+    public float rayDistance = 20f;
+    public LayerMask interactableLayer = ~0; // 기본: Everything
 
-//     private LineRenderer line;
-//     private DoorTrigger currentTrigger = null; // 현재 가리키고 있는 문
+    [Header("Input")]
+    public OVRInput.Controller controller = OVRInput.Controller.RTouch;
+    public OVRInput.Button clickButton = OVRInput.Button.PrimaryIndexTrigger;
 
-//     void Start()
-//     {
-//         line = GetComponent<LineRenderer>();
-//         // 기본적으로 레이어 설정이 없으면 Everything으로 설정
-//         if (interactableLayer == 0) interactableLayer = -1;
-//     }
+    private LineRenderer line;
+    private DoorTrigger currentTrigger;
 
-//     void Update()
-//     {
-//         line.SetPosition(0, transform.position); // 시작점: 컨트롤러
+    void Awake()
+    {
+        line = GetComponent<LineRenderer>();
+    }
 
-//         RaycastHit hit;
-//         // 컨트롤러 정면으로 레이저 발사
-//         if (Physics.Raycast(transform.position, transform.forward, out hit, rayDistance, interactableLayer))
-//         {
-//             // 1. 레이저 끝점 그리기
-//             line.SetPosition(1, hit.point);
+    void Update()
+    {
+        Vector3 start = transform.position;
+        Vector3 dir   = transform.forward;
 
-//             // 2. 닿은 물체가 DoorTrigger를 가지고 있는지 확인
-//             DoorTrigger hitTrigger = hit.collider.GetComponent<DoorTrigger>();
+        line.SetPosition(0, start);
 
-//             if (hitTrigger != null)
-//             {
-//                 // A. 새로운 문을 가리키기 시작했으면 -> Enter 효과 실행
-//                 if (currentTrigger != hitTrigger)
-//                 {
-//                     if (currentTrigger != null) currentTrigger.OnPointerExit(null); // 기존꺼 끄기
-//                     currentTrigger = hitTrigger;
-//                     currentTrigger.OnPointerEnter(null); // 새거 켜기
-//                 }
+        if (Physics.Raycast(start, dir, out RaycastHit hit, rayDistance, interactableLayer))
+        {
+            line.SetPosition(1, hit.point);
 
-//                 // B. 오른쪽 컨트롤러 트리거(검지)를 눌렀을 때 -> Click 실행
-//                 // (Oculus Quest 기준: SecondaryIndexTrigger)
-//                 if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
-//                 {
-//                     currentTrigger.OnPointerClick(null);
-//                 }
-//             }
-//             else
-//             {
-//                 // 문이 아닌 다른 벽을 보고 있을 때
-//                 ClearCurrentTrigger();
-//             }
-//         }
-//         else
-//         {
-//             // 허공을 볼 때
-//             line.SetPosition(1, transform.position + transform.forward * 3.0f);
-//             ClearCurrentTrigger();
-//         }
-//     }
+            DoorTrigger trigger = hit.collider.GetComponent<DoorTrigger>();
 
-//     // 포커스 해제 처리 함수
-//     private void ClearCurrentTrigger()
-//     {
-//         if (currentTrigger != null)
-//         {
-//             currentTrigger.OnPointerExit(null);
-//             currentTrigger = null;
-//         }
-//     }
-// }
+            if (trigger != currentTrigger)
+            {
+                ClearCurrent();
+                currentTrigger = trigger;
+                if (currentTrigger != null)
+                    currentTrigger.OnPointerEnter();
+            }
+
+            if (currentTrigger != null &&
+                OVRInput.GetDown(clickButton, controller))
+            {
+                currentTrigger.OnPointerClick();
+            }
+        }
+        else
+        {
+            line.SetPosition(1, start + dir * rayDistance);
+            ClearCurrent();
+        }
+    }
+
+    private void ClearCurrent()
+    {
+        if (currentTrigger != null)
+        {
+            currentTrigger.OnPointerExit();
+            currentTrigger = null;
+        }
+    }
+}
