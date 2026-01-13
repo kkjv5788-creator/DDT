@@ -2,69 +2,89 @@ using UnityEngine;
 
 public class SmartHeightManager : MonoBehaviour
 {
-    [Header("상황별 눈높이 설정")]
-    public float titleEyeHeight = 0.0f; // 타이틀에서는 0
-    public float gameEyeHeight = 1.7f;  // 게임에서는 1.7m
+    [Header("Editor/Simulator Test Offset Only")]
+    public bool enableEditorOffset = true;
 
-    [Header("설정")]
-    // [추가된 기능] 체크하면 이 씬이 시작될 때 강제로 게임 모드(1.7m)로 설정합니다.
-    public bool forceGameModeOnStart = false; 
+    [Tooltip("Title/Start simulated eye height (meters)")]
+    public float titleEyeHeight = 0.0f;
 
-    // 전역 변수 (씬이 바뀌어도 값 유지)
-    public static bool isGameMode = false; 
+    [Tooltip("Gameplay simulated eye height (meters)")]
+    public float gameEyeHeight = 1.7f;
 
-    private Transform trackingSpace;
+    [Tooltip("Apply once on Start")]
+    public bool applyOnStart = false;
 
-    void Awake()
-    {
-        // 스테이지1처럼 바로 게임이 시작되는 씬에서는 이 옵션을 켜두면 됩니다.
-        if (forceGameModeOnStart)
-        {
-            isGameMode = true;
-        }
-    }
+    [Tooltip("Start mode: true = game height, false = title height")]
+    public bool startAsGameHeight = false;
 
-    void Start()
-    {
-        trackingSpace = transform.Find("TrackingSpace");
-
-        if (OVRManager.instance != null)
-        {
-            OVRManager.instance.trackingOriginType = OVRManager.TrackingOrigin.EyeLevel;
-        }
-
-        // 현재 모드에 맞춰 높이 적용
-        float currentTargetHeight = isGameMode ? gameEyeHeight : titleEyeHeight;
-        ApplyHeight(currentTargetHeight);
-    }
-
-    void LateUpdate()
-    {
 #if UNITY_EDITOR
-        if (trackingSpace != null)
-        {
-            float targetHeight = isGameMode ? gameEyeHeight : titleEyeHeight;
-            ApplyHeight(targetHeight);
-        }
-#endif
+    private Transform _trackingSpace;
+
+    private void Awake()
+    {
+        _trackingSpace = FindTrackingSpace();
     }
 
-    private void ApplyHeight(float yHeight)
+    private void Start()
     {
-        if (trackingSpace != null)
-        {
-            // 미세한 떨림 방지
-            if (Mathf.Abs(trackingSpace.localPosition.y - yHeight) < 0.001f) return;
+        if (!enableEditorOffset) return;
 
-            Vector3 pos = trackingSpace.localPosition;
-            pos.y = yHeight;
-            trackingSpace.localPosition = pos;
+        if (applyOnStart)
+        {
+            if (startAsGameHeight) SwitchToGameHeight();
+            else SwitchToTitleHeight();
         }
+    }
+
+    // ===== 호환 API (AppSceneFlow가 호출하는 메서드) =====
+    public void SwitchToTitleHeight()
+    {
+        ApplyHeight(titleEyeHeight);
     }
 
     public void SwitchToGameHeight()
     {
-        isGameMode = true;
         ApplyHeight(gameEyeHeight);
     }
+
+    // 필요할 때 수동 적용(에디터 우클릭 메뉴)
+    [ContextMenu("Apply Title Height (Editor)")]
+    private void ApplyTitleHeightMenu() => SwitchToTitleHeight();
+
+    [ContextMenu("Apply Game Height (Editor)")]
+    private void ApplyGameHeightMenu() => SwitchToGameHeight();
+
+    private void ApplyHeight(float y)
+    {
+        if (!enableEditorOffset) return;
+
+        if (_trackingSpace == null)
+            _trackingSpace = FindTrackingSpace();
+
+        if (_trackingSpace == null)
+        {
+            Debug.LogWarning("[SmartHeightManager] TrackingSpace not found.");
+            return;
+        }
+
+        var p = _trackingSpace.localPosition;
+        p.y = y;
+        _trackingSpace.localPosition = p;
+    }
+
+    private Transform FindTrackingSpace()
+    {
+        // 씬 내 TrackingSpace를 1회 탐색(OVRCameraRig 아래)
+        var all = FindObjectsOfType<Transform>(true);
+        foreach (var t in all)
+        {
+            if (t.name == "TrackingSpace") return t;
+        }
+        return null;
+    }
+#else
+    // 빌드에서는 완전 무효 (옵션 A)
+    public void SwitchToTitleHeight() { }
+    public void SwitchToGameHeight() { }
+#endif
 }

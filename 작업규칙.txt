@@ -1,0 +1,206 @@
+좋아. **옵션 A(에디터/시뮬레이터에서만 테스트 오프셋 적용, 디바이스 빌드에서는 완전 무효)**로 고정하고, **전체 작업을 처음부터 다시 “단계별 체크리스트”**로 진행하자.
+(핵심: **표준 구성(OVR 최소 안정 세트)** + **스크립트로 하던 것 중 기본 기능으로 대체 가능하면 대체**)
+
+---
+
+# 0단계: 이번 작업의 규칙(고정)
+
+## 0-1. 표준 구성(반드시)
+
+**XR_PlayerRig(단일 프리팹)** 안에만 존재:
+
+* OVRCameraRig (+ OVRManager 포함 OK)
+* EventSystem + OVRInputModule
+
+  * RayTransform = **RightHandAnchor**
+  * Click = **PrimaryIndexTrigger**
+* OVRScreenFade (CenterEyeAnchor)
+* 컨트롤러 시각화: BuildingBlock_ControllerTracking_Left/Right (유지)
+* 레이저: **양손(LeftHandAnchor/RightHandAnchor)**
+
+**씬(Main/Stage)에는 절대 두지 않음:**
+
+* OVRManager 중복
+* EventSystem 중복
+* ScreenFade 중복
+* 레이저/컨트롤러 모델 중복
+
+## 0-2. UI 클릭 규칙(스크립트 클릭 금지)
+
+* UI는 무조건 **OVRInputModule + OVRRaycaster**로만
+* Physics.Raycast로 UI 누르는 코드(PauseManager 같은 방식) → 제거/축소 대상
+
+## 0-3. 높이(눈높이) 규칙(중요)
+
+* **실기기(빌드)**: 높이 강제 조작 금지 (TrackingOrigin만 사용)
+* **에디터/시뮬레이터**: 테스트 오프셋 허용 (옵션 A)
+
+---
+
+# 1단계: SmartHeightManager를 “에디터 전용 테스트 오프셋”으로 수정
+
+## 목표
+
+* 에디터에서는 눈높이 올려서 테스트 가능
+* 빌드에서는 SmartHeightManager가 **아예 아무 것도 안 함**
+
+## 1-1. SmartHeightManager.cs 패치
+
+아래처럼 바꿔. (중요: **Update에서 매 프레임 강제하지 말고 1회 적용**)
+
+```csharp
+using UnityEngine;
+
+public class SmartHeightManager : MonoBehaviour
+{
+    [Header("Editor/Simulator Test Only")]
+    public bool enableEditorOffset = true;
+
+    [Tooltip("Title/Start scene simulated eye height (meters)")]
+    public float titleEyeHeight = 0.0f;
+
+    [Tooltip("Gameplay simulated eye height (meters)")]
+    public float gameEyeHeight = 1.7f;
+
+    [Tooltip("True = use gameEyeHeight, False = use titleEyeHeight")]
+    public bool useGameHeight = false;
+
+    [Tooltip("Apply once on Start (recommended).")]
+    public bool applyOnStart = true;
+
+#if UNITY_EDITOR
+    private Transform trackingSpace;
+
+    private void Awake()
+    {
+        // OVR 구조상 TrackingSpace는 OVRCameraRig 아래에 있음
+        // 이 스크립트가 어디 붙든, 자식에서 TrackingSpace를 찾아온다.
+        trackingSpace = GetComponentInChildren<Transform>(includeInactive: true);
+    }
+
+    private void Start()
+    {
+        if (!enableEditorOffset) return;
+        if (applyOnStart) ApplyHeightOnce();
+    }
+
+    [ContextMenu("Apply Height Once (Editor)")]
+    public void ApplyHeightOnce()
+    {
+        if (!enableEditorOffset) return;
+
+        // TrackingSpace 찾기(안전하게)
+        var ts = FindTrackingSpace();
+        if (ts == null) return;
+
+        float y = useGameHeight ? gameEyeHeight : titleEyeHeight;
+
+        var p = ts.localPosition;
+        p.y = y;
+        ts.localPosition = p;
+    }
+
+    private Transform FindTrackingSpace()
+    {
+        // 흔히 "TrackingSpace" 이름으로 존재
+        var rigs = FindObjectsOfType<Transform>(true);
+        foreach (var t in rigs)
+        {
+            if (t.name == "TrackingSpace")
+                return t;
+        }
+        return null;
+    }
+#else
+    // Build에서는 완전 무효
+    private void Start() { }
+#endif
+}
+```
+
+### 이 패치의 핵심
+
+* `#if UNITY_EDITOR`로 **빌드에서 완전 무효**
+* `Update()` 제거 → **매 프레임 강제 삭제**
+* 에디터에서 필요할 때만 “한 번 적용” 가능 (`ContextMenu`)
+
+## 1-2. 인스펙터 설정(추천)
+
+SmartHeightManager 컴포넌트에서:
+
+* enableEditorOffset = **true**
+* applyOnStart = **true**
+* useGameHeight = 씬에 따라:
+
+  * Main(타이틀 테스트): false (0.0)
+  * Stage(플레이 테스트): true (1.7)
+
+✅ 완료 조건:
+에디터에서 플레이하면 높이가 올라가고, 빌드에서는 영향이 0.
+
+---
+
+# 2단계: XR_PlayerRig 프리팹 확정(표준 구성 적용)
+
+## 2-1. 구조 체크(너 현재 상태 기준)
+
+* OVRCameraRig 안에 OVRManager 있어도 OK
+* BuildingBlock_ControllerTracking_Left/Right는 유지
+* 레이저는 양손(LeftHandAnchor/RightHandAnchor) 각각:
+
+  * LineRenderer
+  * LaserPointer(비주얼용)
+
+## 2-2. EventSystem 설정 고정
+
+* XR_PlayerRig 내부 EventSystem 단 1개
+* OVRInputModule:
+
+  * RayTransform = RightHandAnchor
+  * Click = PrimaryIndexTrigger
+
+✅ 완료 조건:
+XR_PlayerRig.prefab 하나로 Main/Stage 모두 동일한 입력이 가능.
+
+---
+
+# 3단계: 씬 정리(중복 제거)
+
+## 3-1. Main_1.4
+
+* 씬 안에 EventSystem/OVRManager/ScreenFade가 “별도로” 있으면 제거(또는 PlayerRig로 이동)
+* UI Canvas는 씬에 남김(콘텐츠)
+
+## 3-2. Stage1.01
+
+* 동일: 씬 안에 EventSystem/OVRManager/ScreenFade 중복 제거
+* Canvas들에 OVRRaycaster 추가(pointer=RightHandAnchor)
+
+✅ 완료 조건:
+두 씬 모두 PlayerRig를 공유해도 중복/충돌 없이 동작.
+
+---
+
+# 4단계: 플레이 중만 컨트롤러/레이저 숨김 + 칼 붙임(상태 기반)
+
+* GameState.PlayingMain에서만:
+
+  * BuildingBlock_ControllerTracking_*의 **Renderer enabled = false**
+  * 양손 레이저 오브젝트 SetActive(false)
+  * 칼 비주얼 손에 부착
+
+그 외 상태는 전부 반대로.
+
+(이건 “구조 정리”가 끝난 다음에 들어가야 안정적임)
+
+---
+
+## 지금 바로 할 일(1단계부터)
+
+먼저 **SmartHeightManager 패치(1단계)**부터 끝내자.
+패치 후에 너는 이렇게만 보고해줘:
+
+1. “에디터에서 높이 오프셋 적용됨(OK/NO)”
+2. “Update 제거했고, ContextMenu로 1회 적용 가능(OK/NO)”
+
+그 다음 바로 **2단계(XR_PlayerRig 프리팹 확정)**로 이어갈게.
