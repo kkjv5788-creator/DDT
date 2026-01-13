@@ -174,6 +174,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 8600538504009095616, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
+      propertyPath: crossSectionMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c4c73d162a5536d49a7b4111e03e3832, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -412,7 +416,7 @@ MonoBehaviour:
   velocityEstimator: {fileID: 166628890}
   visualResistance: {fileID: 166628889}
   rightHand: 1
-  sfxSource: {fileID: 0}
+  sfxSource: {fileID: 463253580}
   sliceCooldown: 0.15
   sameKimbapCooldown: 0.1
 --- !u!114 &166628889
@@ -837,7 +841,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a7736c1763bd76c4eb0d52aaad581deb, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3021,16 +3025,11 @@ MonoBehaviour:
   useSphereCast: 1
   sphereRadius: 0.04
   originForwardOffset: 0.02
-  outline: {fileID: 1105228980}
-  outlineColorNormal: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  outlineColorClickable: {r: 1, g: 0.009995015, b: 0, a: 1}
-  outlineColorPointing: {r: 0, g: 1, b: 0, a: 1}
-  outlineWidth: 5
   radioRenderer: {fileID: 0}
+  normalMaterial: {fileID: 2100000, guid: 843f246cd206bfe4384a969059596208, type: 2}
+  outlineMaterial: {fileID: 0}
   highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
   highlightIntensity: 2
-  glowWhenClickable: 1
-  clickableGlowMultiplier: 0.35
   pointerLine: {fileID: 1640439409}
   pointerColorNormal: {r: 0.015686274, g: 1, b: 0.909801, a: 1}
   pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
