@@ -1223,6 +1223,11 @@ MonoBehaviour:
   sfxSource: {fileID: 463253580}
   feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
   plateController: {fileID: 463253582}
+  overrideSliceSuccessVfxSpawn: 1
+  sliceSuccessVfxSpawnPoint: {fileID: 1738143754}
+  overrideResultVfxSpawn: 1
+  resultSuccessVfxSpawnPoint: {fileID: 571141315}
+  resultFailVfxSpawnPoint: {fileID: 590716409}
 --- !u!114 &463253584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,6 +1319,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   resultDisplayDuration: 0.5
+  guideBeatInterval: 0.15
   isTutorialMode: 0
 --- !u!4 &463253588
 Transform:
@@ -1330,6 +1336,9 @@ Transform:
   m_Children:
   - {fileID: 1447421703}
   - {fileID: 1957891271}
+  - {fileID: 571141315}
+  - {fileID: 1738143754}
+  - {fileID: 590716409}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &463253589
@@ -1669,6 +1678,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 80, y: 40, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &571141314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571141315}
+  m_Layer: 3
+  m_Name: spawn point(dish) VFXwin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &571141315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571141314}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 1.953, y: -0.77100015, z: -3.94}
+  m_LocalScale: {x: 54.000034, y: 54.00004, z: 95.40002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 463253588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &577632426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1734,6 +1774,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6ddb8c471856d34ebc6b4c2666cf322, type: 3}
+--- !u!1 &590716408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 590716409}
+  m_Layer: 3
+  m_Name: spawn point(dish) VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &590716409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590716408}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 1.534, y: -0.77100015, z: -3.94}
+  m_LocalScale: {x: 54.00004, y: 54.000042, z: 95.40003}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 463253588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &603586101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5750,6 +5821,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3826442757592336444, guid: d7c68f74ac161724790a795154e0e5b1, type: 3}
   m_PrefabInstance: {fileID: 1081425283184744883}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1738143753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1738143754}
+  m_Layer: 3
+  m_Name: spawnpoint(kimbap) VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1738143754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738143753}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 0.8410001, y: -0.69000006, z: -3.82}
+  m_LocalScale: {x: 60, y: 60, z: 106}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 463253588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1745207514
 PrefabInstance:
   m_ObjectHideFlags: 0
