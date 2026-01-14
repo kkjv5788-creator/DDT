@@ -15,7 +15,7 @@ MonoBehaviour:
   bgm: {fileID: 8300000, guid: 86e26942ff6291749b66c45cb3196e66, type: 3}
   timingOffsetMs: 0
   triggers:
-  - triggerTime: 14
+  - triggerTime: 13.8
     guideDuration: 0.5
     judgeDuration: 1.5
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
@@ -39,7 +39,7 @@ MonoBehaviour:
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 5000
-  - triggerTime: 17.2
+  - triggerTime: 17
     guideDuration: 0.5
     judgeDuration: 1.5
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
@@ -63,7 +63,7 @@ MonoBehaviour:
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 5000
-  - triggerTime: 20.4
+  - triggerTime: 20.2
     guideDuration: 1
     judgeDuration: 4
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
@@ -87,7 +87,7 @@ MonoBehaviour:
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 5000
-  - triggerTime: 27
+  - triggerTime: 26.6
     guideDuration: 0.5
     judgeDuration: 1.5
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
@@ -159,7 +159,7 @@ MonoBehaviour:
     cutVfxPrefab: {fileID: 5700784828077083704, guid: ed962e35f7fa6f34f8d27aa6d19ea293, type: 3}
     visualResistanceStrength: 0.225
     visualResistanceMs: 5000
-  - triggerTime: 43.2
+  - triggerTime: 43
     guideDuration: 1
     judgeDuration: 4
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
