@@ -1392,7 +1392,7 @@ MonoBehaviour:
   panel100k: {fileID: 0}
   panel50k: {fileID: 0}
   panel0: {fileID: 0}
-  endDelaySeconds: 3
+  endDelaySeconds: 20
   OnProgressUpdate:
     m_PersistentCalls:
       m_Calls: []

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,6 +27,8 @@ public class RhythmConductor : MonoBehaviour
 
     [Header("Settings")]
     public float resultDisplayDuration = 0.5f;
+    [Tooltip("가이드 비트 사운드 재생 간격 (초)")]
+    public float guideBeatInterval = 0.15f;
 
     [Header("Tutorial Mode")]
     public bool isTutorialMode = false;
@@ -152,7 +155,11 @@ public class RhythmConductor : MonoBehaviour
         State = RhythmState.Guiding;
         _stateEndTime = BgmTime + Mathf.Max(0.01f, t.guideDuration);
 
-        if (t.guideBeatSound && sfxSource) sfxSource.PlayOneShot(t.guideBeatSound);
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
 
         if (hud) hud.Log($"Enter Trigger #{idx} (req={RequiredSliceCount}) - State: Guiding");
     }
@@ -264,7 +271,11 @@ public class RhythmConductor : MonoBehaviour
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
 
-        if (t.guideBeatSound && sfxSource) sfxSource.PlayOneShot(t.guideBeatSound);
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
 
         if (hud) hud.Log($"Retry Trigger #{CurrentTriggerIndex} - State: Guiding");
     }
@@ -312,7 +323,11 @@ public class RhythmConductor : MonoBehaviour
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
 
-        if (t.guideBeatSound && sfxSource) sfxSource.PlayOneShot(t.guideBeatSound);
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
 
         if (hud) hud.Log($"Enter Trigger #{nextIndex} (req={RequiredSliceCount}) - State: Guiding");
     }
@@ -351,5 +366,27 @@ public class RhythmConductor : MonoBehaviour
     public void NotifyWrongCut(Vector3 hitPos)
     {
         OnWrongCut?.Invoke(hitPos);
+    }
+
+    /// <summary>
+    /// 가이드 비트 사운드를 requiredSliceCount만큼 반복 재생하는 코루틴
+    /// </summary>
+    IEnumerator PlayGuideBeatSoundRepeatedly(AudioClip clip, int count)
+    {
+        if (clip == null || sfxSource == null || count <= 0)
+            yield break;
+
+        for (int i = 0; i < count; i++)
+        {
+            sfxSource.PlayOneShot(clip);
+            
+            // 마지막 재생이 아니면 간격 대기
+            if (i < count - 1)
+            {
+                yield return new WaitForSeconds(guideBeatInterval);
+            }
+        }
+
+        if (hud) hud.Log($"Guide beat sound played {count} times");
     }
 }
