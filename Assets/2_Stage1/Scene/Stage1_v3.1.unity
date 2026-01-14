@@ -848,7 +848,7 @@ MonoBehaviour:
   tutorialUI: {fileID: 2046033825}
   tutorialController: {fileID: 938214680}
   conductor: {fileID: 938214673}
-  feedbackSet: {fileID: 0}
+  feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
   kimbapPrefab: {fileID: 1613771638}
   kimbap010Prefab: {fileID: 1613771638}
   dialogues:
@@ -1165,7 +1165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d885a2fd8051f842b23b51a44415c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 564053389}
   rb: {fileID: 340976726}
   positionLerp: 0.512
   rotationLerp: 0.45
@@ -1219,6 +1219,37 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!1 &383479316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 383479317}
+  m_Layer: 3
+  m_Name: spawn point(dish) VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &383479317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383479316}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 1.534, y: -0.771, z: -3.94}
+  m_LocalScale: {x: 54.00001, y: 54.00002, z: 95.40001}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 938214675}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &502237947
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,7 +1444,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 558610917}
+  m_Father: {fileID: 1641705466}
   m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!1 &608429477
 GameObject:
@@ -1885,6 +1916,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6765442418767323548, guid: d158ef77fa20c1c4b9345519ef01cfa2, type: 3}
   m_PrefabInstance: {fileID: 815869726}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &817550740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 817550741}
+  m_Layer: 3
+  m_Name: spawnpoint(kimbap) VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &817550741
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817550740}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 0.841, y: -0.69, z: -3.82}
+  m_LocalScale: {x: 60, y: 60, z: 106}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 938214675}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &830722162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2137,6 +2199,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2348108194394435526, guid: 1584207e8549c26418549e284d52fc85, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.722
+      objectReference: {fileID: 0}
     - target: {fileID: 4428588121443427514, guid: 1584207e8549c26418549e284d52fc85, type: 3}
       propertyPath: m_Name
       value: XR_PlayerRig
@@ -2144,7 +2210,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1242557506740144190, guid: 1584207e8549c26418549e284d52fc85, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 2506989838668789432, guid: 1584207e8549c26418549e284d52fc85, type: 3}
       insertIndex: -1
       addedObject: {fileID: 564053389}
     m_AddedComponents: []
@@ -2263,7 +2329,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1645019723}
+  - {fileID: 817550741}
   - {fileID: 1122778683}
+  - {fileID: 383479317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &938214676
@@ -2536,9 +2604,9 @@ MonoBehaviour:
   resumeButton: {fileID: 1861531529}
   restartButton: {fileID: 1861531527}
   mainMenuButton: {fileID: 1861531525}
-  rightHandAnchor: {fileID: 0}
+  rightHandAnchor: {fileID: 558610917}
   pointerMaxDistance: 10
-  pointerLine: {fileID: 0}
+  pointerLine: {fileID: 1277908681}
   uiLayer:
     serializedVersion: 2
     m_Bits: 32
@@ -2584,6 +2652,11 @@ MonoBehaviour:
   sfxSource: {fileID: 938214679}
   feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
   plateController: {fileID: 938214674}
+  overrideSliceSuccessVfxSpawn: 1
+  sliceSuccessVfxSpawnPoint: {fileID: 817550741}
+  overrideResultVfxSpawn: 1
+  resultSuccessVfxSpawnPoint: {fileID: 383479317}
+  resultFailVfxSpawnPoint: {fileID: 383479317}
 --- !u!114 &938214685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2763,8 +2836,8 @@ MonoBehaviour:
   OnRadioClicked:
     m_PersistentCalls:
       m_Calls: []
-  knifePointerSource: {fileID: 0}
-  pointerMaxDistance: 3
+  knifePointerSource: {fileID: 558610917}
+  pointerMaxDistance: 15
   radioLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -2776,7 +2849,7 @@ MonoBehaviour:
   outlineMaterial: {fileID: 0}
   highlightEmission: {r: 1, g: 0.9, b: 0.5, a: 1}
   highlightIntensity: 2
-  pointerLine: {fileID: 0}
+  pointerLine: {fileID: 1277908681}
   pointerColorNormal: {r: 0.015686274, g: 1, b: 0.909801, a: 1}
   pointerColorOnTarget: {r: 0, g: 1, b: 0, a: 1}
   hoverSound: {fileID: 0}
@@ -3294,7 +3367,7 @@ Transform:
   m_GameObject: {fileID: 1122778682}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: 1.953, y: -0.771, z: -3.94}
+  m_LocalPosition: {x: 1.534, y: -0.771, z: -3.94}
   m_LocalScale: {x: 54.00001, y: 54.00002, z: 95.40001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3776,6 +3849,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!120 &1277908681 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 9105818449834373675, guid: 1584207e8549c26418549e284d52fc85, type: 3}
+  m_PrefabInstance: {fileID: 907427264}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1284864871
 GameObject:
   m_ObjectHideFlags: 0
@@ -4612,6 +4690,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615059534}
   m_CullTransparentMesh: 1
+--- !u!4 &1641705466 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2506989838668789432, guid: 1584207e8549c26418549e284d52fc85, type: 3}
+  m_PrefabInstance: {fileID: 907427264}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1645019722
 GameObject:
   m_ObjectHideFlags: 0

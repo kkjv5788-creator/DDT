@@ -4,16 +4,39 @@ public class FeedbackRouter : MonoBehaviour
 {
     [Header("Refs")]
     public RhythmConductor conductor;
-    public KnifeSlicer knifeSlicer;
+    public KnifeSlicer knifeSlicer; // (프로젝트에서 참조 걸려있을 수 있어 유지)
     public AudioSource sfxSource;
     public FeedbackSetSO feedbackSet;
     public PlateController plateController;
 
+    [Header("VFX Spawn Override")]
+    [Tooltip("체크하면, Slice 성공 VFX를 hitPos 대신 지정한 위치에서 스폰합니다.")]
+    public bool overrideSliceSuccessVfxSpawn = false;
+
+    [Tooltip("Slice 성공 VFX 스폰 위치(Transform). 비어있으면 이 오브젝트(transform)를 사용.")]
+    public Transform sliceSuccessVfxSpawnPoint;
+
+    [Tooltip("체크하면, Result(성공/실패) VFX를 transform.position 대신 지정한 위치에서 스폰합니다.")]
+    public bool overrideResultVfxSpawn = false;
+
+    [Tooltip("Result 성공 VFX 스폰 위치(Transform). 비어있으면 이 오브젝트(transform)를 사용.")]
+    public Transform resultSuccessVfxSpawnPoint;
+
+    [Tooltip("Result 실패 VFX 스폰 위치(Transform). 비어있으면 이 오브젝트(transform)를 사용.")]
+    public Transform resultFailVfxSpawnPoint;
+
     float _lastFailFeedbackTime = -999f;
+
+    void ResolveSpawn(Transform overridePoint, out Vector3 pos, out Quaternion rot)
+    {
+        Transform t = overridePoint ? overridePoint : transform;
+        pos = t.position;
+        rot = t.rotation;
+    }
 
     void OnEnable()
     {
-        // 이벤트 구독 (기존 스크립트에서 발행해야 함)
+        // RhythmConductor가 UnityEvent로 발행하는 이벤트를 구독
         if (conductor)
         {
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
@@ -38,14 +61,18 @@ public class FeedbackRouter : MonoBehaviour
     {
         if (!feedbackSet) return;
 
-        // SFX (기존 KnifeSlicer에서도 재생하지만 중복 방지 가능)
-        // if (feedbackSet.sfxSliceSuccess && sfxSource)
-        //     sfxSource.PlayOneShot(feedbackSet.sfxSliceSuccess);
-
         // VFX
         if (feedbackSet.vfxSliceSuccessPrefab)
         {
-            var vfx = Instantiate(feedbackSet.vfxSliceSuccessPrefab, hitPos, Quaternion.LookRotation(hitNormal));
+            Vector3 spawnPos = hitPos;
+            Quaternion spawnRot = Quaternion.LookRotation(hitNormal);
+
+            if (overrideSliceSuccessVfxSpawn)
+            {
+                ResolveSpawn(sliceSuccessVfxSpawnPoint, out spawnPos, out spawnRot);
+            }
+
+            var vfx = Instantiate(feedbackSet.vfxSliceSuccessPrefab, spawnPos, spawnRot);
             Destroy(vfx, 2f);
         }
 
@@ -58,7 +85,7 @@ public class FeedbackRouter : MonoBehaviour
     {
         if (!feedbackSet) return;
 
-        // Spam 방지
+        // Spam 방지 (FeedbackSetSO의 failCooldown 사용)
         if (Time.time - _lastFailFeedbackTime < feedbackSet.failCooldown)
             return;
         _lastFailFeedbackTime = Time.time;
@@ -67,15 +94,12 @@ public class FeedbackRouter : MonoBehaviour
         if (feedbackSet.sfxSliceFail && sfxSource)
             sfxSource.PlayOneShot(feedbackSet.sfxSliceFail);
 
-        // VFX
+        // VFX (실패는 기존처럼 hitPos에 유지)
         if (feedbackSet.vfxSliceFailPrefab)
         {
             var vfx = Instantiate(feedbackSet.vfxSliceFailPrefab, hitPos, Quaternion.identity);
-            Destroy(vfx, 1.5f);
+            Destroy(vfx, 2f);
         }
-
-        // 약한 햅틱 (선택)
-        XRHaptics.SendHaptic(true, 0.15f, 0.05f);
     }
 
     void HandleRoundResult(bool success)
@@ -84,13 +108,20 @@ public class FeedbackRouter : MonoBehaviour
 
         if (success)
         {
-            // Success SFX/VFX
+            // Success SFX
             if (feedbackSet.sfxResultSuccess && sfxSource)
                 sfxSource.PlayOneShot(feedbackSet.sfxResultSuccess);
 
+            // Success VFX
             if (feedbackSet.vfxResultSuccessPrefab)
             {
-                var vfx = Instantiate(feedbackSet.vfxResultSuccessPrefab, transform.position, Quaternion.identity);
+                Vector3 spawnPos = transform.position;
+                Quaternion spawnRot = Quaternion.identity;
+
+                if (overrideResultVfxSpawn)
+                    ResolveSpawn(resultSuccessVfxSpawnPoint, out spawnPos, out spawnRot);
+
+                var vfx = Instantiate(feedbackSet.vfxResultSuccessPrefab, spawnPos, spawnRot);
                 Destroy(vfx, 3f);
             }
 
@@ -100,13 +131,20 @@ public class FeedbackRouter : MonoBehaviour
         }
         else
         {
-            // Fail SFX/VFX
+            // Fail SFX
             if (feedbackSet.sfxResultFail && sfxSource)
                 sfxSource.PlayOneShot(feedbackSet.sfxResultFail);
 
+            // Fail VFX
             if (feedbackSet.vfxResultFailPrefab)
             {
-                var vfx = Instantiate(feedbackSet.vfxResultFailPrefab, transform.position, Quaternion.identity);
+                Vector3 spawnPos = transform.position;
+                Quaternion spawnRot = Quaternion.identity;
+
+                if (overrideResultVfxSpawn)
+                    ResolveSpawn(resultFailVfxSpawnPoint, out spawnPos, out spawnRot);
+
+                var vfx = Instantiate(feedbackSet.vfxResultFailPrefab, spawnPos, spawnRot);
                 Destroy(vfx, 3f);
             }
 
@@ -135,4 +173,3 @@ public class FeedbackRouter : MonoBehaviour
         XRHaptics.SendHaptic(true, 0.2f, 0.08f);
     }
 }
-
