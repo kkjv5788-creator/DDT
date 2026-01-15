@@ -173,4 +173,20 @@ public class AppSceneFlow : MonoBehaviour
         if (leftUILaser != null) leftUILaser.enabled = isTitle;
         if (rightUILaser != null) rightUILaser.enabled = isTitle;
     }
+
+    // ===== Game Quit =====
+
+    /// <summary>
+    /// 게임을 완전히 종료합니다. (빌드된 게임에서는 창이 닫히고, 에디터에서는 플레이 모드가 멈춥니다.)
+    /// </summary>
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            // 에디터에서 플레이 중일 때는 플레이 모드를 중지
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            // 실제 빌드된 앱에서는 어플리케이션 종료
+            Application.Quit();
+        #endif
+    }
 }

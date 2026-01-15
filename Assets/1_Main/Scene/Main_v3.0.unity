@@ -162,10 +162,14 @@ PrefabInstance:
     - target: {fileID: 665249758433498837, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 3788221266179358155}
+      objectReference: {fileID: 7315549901136747705}
     - target: {fileID: 665249758433498837, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: QuitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 665249758433498837, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: AppSceneFlow, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1053835050710229399, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_Layer
@@ -1152,11 +1156,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2967812482992442200, guid: 1584207e8549c26418549e284d52fc85, type: 3}
   m_PrefabInstance: {fileID: 6301373766303727105}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3788221266179358155 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4428588121443427514, guid: 1584207e8549c26418549e284d52fc85, type: 3}
-  m_PrefabInstance: {fileID: 6301373766303727105}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4180278494657859176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1314,7 +1313,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6866928331009021725, guid: 1584207e8549c26418549e284d52fc85, type: 3}
   m_PrefabInstance: {fileID: 6301373766303727105}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3788221266179358155}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c10e6caa4c7124d4abd9d041fec7bbc8, type: 3}
