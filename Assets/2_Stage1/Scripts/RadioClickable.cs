@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class RadioClickable : MonoBehaviour
@@ -67,9 +67,17 @@ public class RadioClickable : MonoBehaviour
 
         CheckPointer();
 
-        // 포인터가 라디오를 가리킬 때만 인덱스 트리거로 클릭
-        if (_isPointing && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
+        // 🔥 디버그: 오른손 인덱스 트리거 입력 확인
+        bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        if (triggerDown)
         {
+            Debug.Log($"[RadioClickable] Right trigger down. _isPointing={_isPointing}");
+        }
+
+        // 포인터가 라디오를 가리킬 때만 인덱스 트리거로 클릭
+        if (_isPointing && triggerDown)
+        {
+            Debug.Log("[RadioClickable] Trigger on radio target - calling OnRadioClick");
             OnRadioClick();
         }
     }
@@ -108,6 +116,10 @@ public class RadioClickable : MonoBehaviour
             if (rc == this)
             {
                 _isPointing = true;
+                if (!_wasPointing)
+                {
+                    Debug.Log("[RadioClickable] Pointer entered radio");
+                }
 
                 if (pointerLine)
                 {
@@ -120,6 +132,13 @@ public class RadioClickable : MonoBehaviour
 
                 if (!_wasPointing && hoverSound)
                     hoverSound.PlayOneShot(hoverSound.clip);
+            }
+        }
+        else
+        {
+            if (_wasPointing)
+            {
+                Debug.Log("[RadioClickable] Pointer left radio");
             }
         }
 

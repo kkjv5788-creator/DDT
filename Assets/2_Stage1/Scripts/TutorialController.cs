@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using UnityEngine;
 
 public class TutorialController : MonoBehaviour
@@ -197,6 +197,9 @@ public class TutorialController : MonoBehaviour
                 conductor.bgmSource.Stop();
                 UnityEngine.Debug.Log("[TutorialController] Tutorial BGM stopped");
             }
+
+            // 🔥 가이드 비트 코루틴 + SFX 정리
+            conductor.StopAllGuideBeats();
         }
 
         // 🔥 UI 숨김
@@ -233,6 +236,9 @@ public class TutorialController : MonoBehaviour
                 conductor.bgmSource.Stop();
                 UnityEngine.Debug.Log("[TutorialController] Tutorial BGM stopped");
             }
+
+            // 🔥 가이드 비트 코루틴 + SFX 정리
+            conductor.StopAllGuideBeats();
         }
 
         // 🔥 UI 완료 표시

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -388,5 +388,21 @@ public class RhythmConductor : MonoBehaviour
         }
 
         if (hud) hud.Log($"Guide beat sound played {count} times");
+    }
+
+    /// <summary>
+    /// 모든 가이드 비트 사운드 코루틴을 정지하고 SFX를 정리합니다.
+    /// 튜토리얼 스킵/완료 시 호출하여 중복 재생을 방지합니다.
+    /// </summary>
+    public void StopAllGuideBeats()
+    {
+        // 이 스크립트에서 돌리는 모든 코루틴(가이드 비트 포함) 정지
+        StopAllCoroutines();
+
+        // 남아 있는 SFX 한 번 정리
+        if (sfxSource)
+            sfxSource.Stop();
+
+        if (hud) hud.Log("All guide beat sounds stopped");
     }
 }

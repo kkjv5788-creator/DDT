@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
@@ -65,6 +65,8 @@ public class GameFlowManager : MonoBehaviour
 
         if (radio)
         {
+            // 튜토리얼 컨트롤러 쪽에서 못 세팅해도 여기서 한 번 더 보장
+            radio.SetTutorialCompleted(true);
             radio.SetClickable(true);
         }
     }
@@ -180,7 +182,7 @@ public class GameFlowManager : MonoBehaviour
             conductor.StartGame(); // 이 안에서 BGM이 처음부터 재생됨
         }
 
-        // 결과 추적 시작
+        // 결과 추적 시작 (이 안에서 _gameEnded 리셋 및 Invoke 취소)
         if (resultManager && mainTriggerList)
         {
             resultManager.StartTracking(mainTriggerList.triggers.Length);

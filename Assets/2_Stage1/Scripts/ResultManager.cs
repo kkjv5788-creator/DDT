@@ -7,18 +7,18 @@ public class ResultManager : MonoBehaviour
     public RhythmConductor conductor;
     public GameFlowManager gameFlowManager;
 
-    [Header("Result Panels (3°³ Áß 1°³¸¸ È°¼ºÈ­)")]
+    [Header("Result Panels (3ï¿½ï¿½ ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­)")]
     public GameObject panel100k; // 100% ~ 80%
     public GameObject panel50k;  // 80% ~ 50%
     public GameObject panel0;    // 50% ~ 0%
 
     [Header("Settings")]
-    public float endDelaySeconds = 3f; // ¸¶Áö¸· Æ®¸®°Å ¿Ï·á ÈÄ ´ë±â ½Ã°£
+    public float endDelaySeconds = 3f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
     [Header("Events")]
     public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
 
-    // ·±Å¸ÀÓ µ¥ÀÌÅÍ
+    // ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     int _totalTriggers;
     int _successCount;
     bool _gameEnded;
@@ -41,13 +41,16 @@ public class ResultManager : MonoBehaviour
 
     public void StartTracking(int totalTriggers)
     {
+        // ðŸ”¥ ì´ì „ì— ì˜ˆì•½ëœ Invoke ì·¨ì†Œ (ìž¬ì‹œìž‘ ì‹œ EndGameì´ ì¤‘ë³µ í˜¸ì¶œë˜ëŠ” ê²ƒ ë°©ì§€)
+        CancelInvoke(nameof(EndGame));
+
         _totalTriggers = totalTriggers;
         _successCount = 0;
         _gameEnded = false;
 
         Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
 
-        // ÃÊ±â °ÔÀÌÁö ¾÷µ¥ÀÌÆ®
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
     }
 
@@ -66,11 +69,11 @@ public class ResultManager : MonoBehaviour
             Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
         }
 
-        // ÁøÇà·ü °è»ê
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         float percentage = (_successCount / (float)_totalTriggers) * 100f;
         OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
 
-        // ¸¶Áö¸· Æ®¸®°Å ¿Ï·á È®ÀÎ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ È®ï¿½ï¿½
         if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
         {
             Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
@@ -85,33 +88,33 @@ public class ResultManager : MonoBehaviour
 
         Debug.Log("[ResultManager] Game ended. Showing result panel...");
 
-        // ¼º°ø·ü °è»ê
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         float successRate = (_successCount / (float)_totalTriggers) * 100f;
 
-        // BGM Á¤Áö
+        // BGM ï¿½ï¿½ï¿½ï¿½
         if (conductor && conductor.bgmSource)
         {
             conductor.bgmSource.Stop();
         }
 
-        // »óÅÂ ÀüÈ¯
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         if (gameFlowManager)
         {
             gameFlowManager.EnterFinalResult(successRate);
         }
 
-        // ÆÐ³Î È°¼ºÈ­
+        // ï¿½Ð³ï¿½ È°ï¿½ï¿½È­
         ShowResultPanel(successRate);
     }
 
     void ShowResultPanel(float successRate)
     {
-        // ¸ðµç ÆÐ³Î ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         if (panel100k) panel100k.SetActive(false);
         if (panel50k) panel50k.SetActive(false);
         if (panel0) panel0.SetActive(false);
 
-        // Á¶°Ç¿¡ ¸Â´Â ÆÐ³Î¸¸ È°¼ºÈ­
+        // ï¿½ï¿½ï¿½Ç¿ï¿½ ï¿½Â´ï¿½ ï¿½Ð³Î¸ï¿½ È°ï¿½ï¿½È­
         if (successRate >= 80f)
         {
             if (panel100k) panel100k.SetActive(true);
@@ -129,7 +132,7 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    // ¿ÜºÎ¿¡¼­ È£Ãâ °¡´É
+    // ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public int GetSuccessCount() => _successCount;
     public int GetTotalTriggers() => _totalTriggers;
     public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;

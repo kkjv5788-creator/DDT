@@ -1249,7 +1249,7 @@ MonoBehaviour:
   pauseManager: {fileID: 463253590}
   progressGaugeUI: {fileID: 0}
   mainTriggerList: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
-  mainMenuSceneName: Main_1.3
+  mainMenuSceneName: Main_v3.0
 --- !u!114 &463253585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3360,7 +3360,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   knifePointerSource: {fileID: 1640439408}
-  pointerMaxDistance: 3
+  pointerMaxDistance: 5
   radioLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -6742,6 +6742,7 @@ PrefabInstance:
     - {fileID: 7680902612966299599, guid: 81baa85ab9078114783dbf89781324fb, type: 3}
     - {fileID: 9168603174209797807, guid: 81baa85ab9078114783dbf89781324fb, type: 3}
     - {fileID: 8980035737591890842, guid: 81baa85ab9078114783dbf89781324fb, type: 3}
+    - {fileID: 7351028843465707019, guid: 81baa85ab9078114783dbf89781324fb, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 241305303253945989, guid: 81baa85ab9078114783dbf89781324fb, type: 3}
       insertIndex: -1
