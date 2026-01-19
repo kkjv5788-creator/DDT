@@ -11,8 +11,7 @@ public class SimpleLaserPointer : MonoBehaviour
     public float laserWidth = 0.005f;      
 
     [Header("2. 색상 알림")]
-    public Color normalColor = new Color(1, 1, 1, 0.5f); 
-    public Color hoverColor = Color.green;               
+    public Color hoverColor = Color.green; // 닿았을 때 색상
 
     [Header("3. 사운드 & 진동")]
     public AudioClip hoverSound;    
@@ -22,16 +21,20 @@ public class SimpleLaserPointer : MonoBehaviour
     private LineRenderer lr;
     private AudioSource audioSource;
     private OVRInput.Controller controllerType = OVRInput.Controller.None;
+    private GameFlowManager gameFlowManager; // [추가] 게임 상태 확인용
 
-    // --- 색상 및 클릭 대상 관리 ---
+    // --- 상태 관리 ---
     private GameObject currentHitObject;      
     private Renderer currentRenderer;         
-    private Color originalObjectColor;        
+    private Color originalObjectColor;
 
     void Start()
     {
         lr = GetComponent<LineRenderer>();
         audioSource = GetComponent<AudioSource>();
+
+        // GameFlowManager 찾기
+        gameFlowManager = FindObjectOfType<GameFlowManager>();
 
         lr.useWorldSpace = true;
         lr.positionCount = 2;
@@ -42,6 +45,9 @@ public class SimpleLaserPointer : MonoBehaviour
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0.5f; 
 
+        // 시작 시 끄기
+        DisableLaser();
+
         if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
             controllerType = OVRInput.Controller.LTouch;
         else
@@ -50,26 +56,46 @@ public class SimpleLaserPointer : MonoBehaviour
 
     private void OnDisable()
     {
-        ResetObjectColor();
+        DisableLaser();
     }
 
     void LateUpdate()
     {
         if (!lr) return;
 
-        lr.SetPosition(0, transform.position); 
+        // 🔥 [1] 게임 상태 체크 (핵심 기능)
+        // 튜토리얼 중이거나 메인 게임 중일 때는 레이저를 아예 꺼버립니다.
+        if (gameFlowManager != null)
+        {
+            bool isMenuState = 
+                gameFlowManager.CurrentState == GameState.WaitForRadio || // 튜토리얼 끝나고 라디오 켤 때
+                gameFlowManager.CurrentState == GameState.Paused ||       // 일시정지 메뉴
+                gameFlowManager.CurrentState == GameState.FinalResult;    // 결과 화면
+
+            if (!isMenuState)
+            {
+                DisableLaser();
+                return; // 여기서 코드 종료 (레이저 안 나감)
+            }
+        }
+
+        // --- 아래는 기존의 "스마트 레이저" 로직 (메뉴 상태일 때만 실행됨) ---
 
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
         
-        // 1. 레이저 충돌 감지
+        // 레이저 충돌 감지
         if (Physics.Raycast(ray, out hit, maxDistance))
         {
-            lr.SetPosition(1, hit.point); 
             GameObject hitObj = hit.collider.gameObject;
             
+            // 상호작용 가능한 물체일 때만 레이저 표시
             if (IsInteractable(hitObj))
             {
+                if (!lr.enabled) lr.enabled = true; // 레이저 켜기
+
+                lr.SetPosition(0, transform.position); 
+                lr.SetPosition(1, hit.point); 
                 SetLaserColor(hoverColor);
 
                 if (currentHitObject != hitObj)
@@ -82,46 +108,58 @@ public class SimpleLaserPointer : MonoBehaviour
             }
             else
             {
-                SetLaserColor(normalColor);
-                ResetObjectColor();
+                DisableLaser(); // 버튼/라디오 아니면 숨김
             }
         }
         else
         {
-            lr.SetPosition(1, transform.position + transform.forward * maxDistance);
-            SetLaserColor(normalColor);
-            ResetObjectColor();
+            DisableLaser(); // 허공이면 숨김
         }
 
-        // 2. 트리거 입력 (클릭 시도)
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
+        // 트리거 클릭 입력
+        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
         {
-            // 소리 재생
             if (clickSound) audioSource.PlayOneShot(clickSound);
 
-            // 🔥 [핵심 기능 추가] 보고 있는 물체에게 "너 클릭됐어!"라고 전달
             if (currentHitObject != null)
             {
-                // (1) 문, 라디오 같은 일반 물체 (IPointerClickHandler)
+                // UI 버튼 클릭
+                var button = currentHitObject.GetComponentInParent<Button>();
+                if (button != null) button.onClick.Invoke();
+
+                // 일반 물체 클릭
                 var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
                 if (clickHandler != null)
                 {
-                    // 가짜 클릭 데이터 생성 후 전달
                     PointerEventData data = new PointerEventData(EventSystem.current);
                     clickHandler.OnPointerClick(data);
                 }
-
-                // (2) UI 버튼 (Button)
-                var button = currentHitObject.GetComponentInParent<Button>();
-                if (button != null)
-                {
-                    button.onClick.Invoke();
-                }
+                
+                // 라디오 클릭 호환
+                var radio = currentHitObject.GetComponentInParent<RadioClickable>();
+                // (RadioClickable은 보통 IPointerClickHandler나 자체 로직으로 처리됨)
             }
         }
     }
 
+    void DisableLaser()
+    {
+        if (lr.enabled)
+        {
+            lr.enabled = false;
+            ResetObjectColor();
+        }
+    }
+
     // --- 기능 함수들 ---
+
+    bool IsInteractable(GameObject obj)
+    {
+        if (obj.GetComponentInParent<Button>() != null) return true;
+        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
+        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
+        return false;
+    }
 
     void ChangeObjectColor(GameObject obj, Color color)
     {
@@ -144,13 +182,6 @@ public class SimpleLaserPointer : MonoBehaviour
         }
         currentHitObject = null;
         currentRenderer = null;
-    }
-
-    bool IsInteractable(GameObject obj)
-    {
-        if (obj.GetComponentInParent<Button>() != null) return true;
-        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
-        return false;
     }
 
     void SetLaserColor(Color c)

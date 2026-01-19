@@ -2238,6 +2238,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8e1d778abf442e4bec449c360e9e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &595154084 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7473939764542390641, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+  m_PrefabInstance: {fileID: 1343686666}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &603586101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5168,7 +5173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8069926566675951335, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7553,7 +7558,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 595154084}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
