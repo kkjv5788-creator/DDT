@@ -122,16 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &18088428 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7137510372895783195, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-  m_PrefabInstance: {fileID: 1343686666}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &18088430 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5663747915654667302, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-  m_PrefabInstance: {fileID: 1343686666}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &62630536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -616,7 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d885a2fd8051f842b23b51a44415c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 18088430}
+  target: {fileID: 0}
   rb: {fileID: 166628893}
   positionLerp: 0.512
   rotationLerp: 0.45
@@ -1494,7 +1484,7 @@ MonoBehaviour:
   spawner: {fileID: 463253586}
   resultManager: {fileID: 463253591}
   pauseManager: {fileID: 463253590}
-  progressGaugeUI: {fileID: 0}
+  toolSwitcher: {fileID: 0}
   mainTriggerList: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
   mainMenuSceneName: Main_v3.0
 --- !u!114 &463253585
@@ -1621,7 +1611,7 @@ MonoBehaviour:
   resumeButton: {fileID: 1915616931677830106}
   restartButton: {fileID: 0}
   mainMenuButton: {fileID: 0}
-  rightHandAnchor: {fileID: 0}
+  rightHandAnchor: {fileID: 1794248788}
   pointerMaxDistance: 10
   pointerLine: {fileID: 0}
   uiLayer:
@@ -1664,9 +1654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e207f2c37e19a47ac3dbf46e4f9602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerModel: {fileID: 18088428}
+  controllerRoot: {fileID: 1794248787}
   knifeRoot: {fileID: 166628886}
-  showControllerOnStart: 1
 --- !u!1 &466971915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1893,6 +1882,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 80, y: 40, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &515384241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 515384242}
+  m_Layer: 0
+  m_Name: Point_Start
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &515384242
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515384241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.61, y: 0, z: 0.63}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &561036604
 GameObject:
   m_ObjectHideFlags: 0
@@ -5082,6 +5102,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 7663538221440949648, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8069926566675951335, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7612,6 +7640,16 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8267447936954307216, guid: ca926915ee32eff44b61abfc7c94cefd, type: 3}
   m_PrefabInstance: {fileID: 1745207514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1794248787 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+  m_PrefabInstance: {fileID: 1343686666}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1794248788 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7657345461084759438, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+  m_PrefabInstance: {fileID: 1343686666}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1803734476
 GameObject:
@@ -10467,3 +10505,4 @@ SceneRoots:
   - {fileID: 1274972514}
   - {fileID: 144806125}
   - {fileID: 1605435826}
+  - {fileID: 515384242}
