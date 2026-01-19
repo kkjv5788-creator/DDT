@@ -261,7 +261,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 164562051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62d383b2ca3534f4380a6d16306c8b6b, type: 3}
+  m_Script: {fileID: 11500000, guid: 447b9c80e2154aa49aab259d06fb51b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onClick:
@@ -279,10 +279,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  highlightDistance: 10
-  outlineWidth: 10
-  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 0.39215687}
-  proximityColor: {r: 1, g: 1, b: 1, a: 0.39215687}
 --- !u!1001 &262038824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1583,30 +1579,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2577612050874837982, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-      propertyPath: clickSound
-      value: 
-      objectReference: {fileID: 8300000, guid: d49ce35139b4fa646a32f06e29c6fa47, type: 3}
-    - target: {fileID: 2577612050874837982, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-      propertyPath: hoverSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 2a65aed99ecbdac4daa6bda7f7ce4088, type: 3}
-    - target: {fileID: 5237544692606583592, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8082177586089200692, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_Name
       value: Player_Core
       objectReference: {fileID: 0}
-    - target: {fileID: 8562946396845721922, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-      propertyPath: clickSound
-      value: 
-      objectReference: {fileID: 8300000, guid: d49ce35139b4fa646a32f06e29c6fa47, type: 3}
-    - target: {fileID: 8562946396845721922, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-      propertyPath: hoverSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 2a65aed99ecbdac4daa6bda7f7ce4088, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
