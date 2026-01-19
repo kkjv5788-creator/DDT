@@ -73,6 +73,9 @@ public class CatchInput_st2 : MonoBehaviour
     // ✅ 수정: result 매개변수 추가
     void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
     {
+        // ✅ Rigidbody 비활성화 (물리 중단)
+        fish.OnCaught();
+
         // 손으로 스냅
         fish.transform.position = handTransform.position;
         fish.transform.SetParent(handTransform);

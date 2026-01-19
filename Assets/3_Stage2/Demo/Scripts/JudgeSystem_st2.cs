@@ -33,40 +33,7 @@ public class JudgeSystem_st2 : MonoBehaviour
         activeFish.Remove(fish);
     }
 
-    void Update()
-    {
-        CheckTimeoutMiss();
-    }
-
-    void CheckTimeoutMiss()
-    {
-        double currentDsp = AudioSettings.dspTime;
-
-        // ✅ 수정: ToList()로 복사 후 순회 (순회 중 제거 안전)
-        var fishList = new List<FishCatchToken_st2>(activeFish);
-
-        foreach (var fish in fishList)
-        {
-            if (fish == null) // ✅ null 체크 추가
-            {
-                activeFish.Remove(fish);
-                continue;
-            }
-
-            if (fish.isResolved)
-            {
-                activeFish.Remove(fish);
-                continue;
-            }
-
-            double expireTime = fish.popTime + fishCatchableDuration;
-            if (currentDsp >= expireTime)
-            {
-                ProcessTimeoutMiss(fish);
-                activeFish.Remove(fish); // ✅ 타임아웃 처리 후 즉시 제거
-            }
-        }
-    }
+   
 
     public JudgeResult_st2 PerformJudge(FishCatchToken_st2 fish, double catchTime)
     {

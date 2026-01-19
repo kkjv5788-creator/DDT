@@ -16,42 +16,55 @@ public class MoldController_st2 : MonoBehaviour
     public AudioClip popClip;
 
     [Header("시각 효과")]
-    public Animator moldAnimator;
+    public Animator moldAnimator;  // ✅ Animator 컴포넌트
+
+    [Header("퐁 애니메이션 (뚜껑 열림)")]
+    public string popAnimationTrigger = "Pop";  // ✅ Pop 애니메이션 트리거 이름
+    public float popAnimationLeadTime = 0.2f;   // ✅ 퐁 소리보다 애니메이션을 먼저 시작할 시간
+
+    [Header("달그락 애니메이션 (코드 흔들림)")]
+    public bool useTelegraphShake = true;     // 달그락 흔들림 사용 여부
+    public float shakeIntensity = 0.02f;      // 흔들림 강도
+    public float shakeDuration = 0.3f;        // 흔들림 시간
+    public int shakeCount = 8;                // 흔들림 횟수
 
     private ObjectPool<FishCatchToken_st2> fishPool;
     private JudgeSystem_st2 judgeSystem;
 
-    // ✅ 추가: 이벤트
+    // 이벤트
     public event Action OnTelegraphPlayed;
     public event Action OnPopPlayed;
 
-    // ✅ 추가: 활성 fish 추적
+    // 활성 fish 추적
     private List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
 
-    // ✅ 추가: 예약된 코루틴 추적
+    // 예약된 코루틴 추적
     private List<Coroutine> scheduledSpawns = new List<Coroutine>();
+
+    // 틀 원본 위치 (흔들림 복원용)
+    private Vector3 originalMoldPosition;
 
     void Awake()
     {
-        // ✅ 수정: fish 풀 생성 (리셋 로직 추가)
+        // 원본 위치 저장
+        originalMoldPosition = transform.localPosition;
+
+        // fish 풀 생성
         fishPool = new ObjectPool<FishCatchToken_st2>(
             createFunc: () => {
                 var obj = Instantiate(fishPrefab, transform);
                 return obj.GetComponent<FishCatchToken_st2>();
             },
             actionOnGet: (fish) => {
-                // ✅ Get 시 활성화
                 fish.gameObject.SetActive(true);
             },
             actionOnRelease: (fish) => {
-                // ✅ Release 시 완전 리셋
-                fish.transform.SetParent(transform); // Mold로 복귀
+                fish.OnReturnToPool(); // ✅ Rigidbody 리셋
+                fish.transform.SetParent(transform);
                 fish.transform.localPosition = Vector3.zero;
                 fish.transform.localRotation = Quaternion.identity;
                 fish.transform.localScale = Vector3.one;
                 fish.gameObject.SetActive(false);
-
-                // ✅ 활성 리스트에서 제거
                 activeFish.Remove(fish);
             },
             actionOnDestroy: (fish) => Destroy(fish.gameObject),
@@ -64,10 +77,9 @@ public class MoldController_st2 : MonoBehaviour
         judgeSystem = judge;
     }
 
-    // ✅ 추가: Update에서 활성 fish 이동 처리
     void Update()
     {
-        // ✅ 모든 활성 fish의 움직임 업데이트
+        // 모든 활성 fish의 움직임 업데이트
         for (int i = 0; i < activeFish.Count; i++)
         {
             if (activeFish[i] != null && !activeFish[i].isResolved)
@@ -82,7 +94,6 @@ public class MoldController_st2 : MonoBehaviour
         telegraphSource.clip = telegraphClip;
         telegraphSource.PlayScheduled(dspTime);
 
-        // 시각 효과는 코루틴으로 처리
         double delay = dspTime - AudioSettings.dspTime;
         StartCoroutine(PlayTelegraphVisual((float)delay));
     }
@@ -92,11 +103,16 @@ public class MoldController_st2 : MonoBehaviour
         popSource.clip = popClip;
         popSource.PlayScheduled(dspTime);
 
-        // fish 생성 예약
-        double delay = dspTime - AudioSettings.dspTime;
-        var spawnRoutine = StartCoroutine(SpawnFishDelayed((float)delay, dspTime));
+        // ✅ 애니메이션은 퐁 소리보다 먼저 시작
+        double animationDelay = dspTime - AudioSettings.dspTime - popAnimationLeadTime;
+        if (animationDelay > 0)
+        {
+            StartCoroutine(PlayPopAnimation((float)animationDelay));
+        }
 
-        // ✅ 추가: 코루틴 추적
+        // ✅ fish 생성은 퐁 소리 타이밍에 맞춤
+        double fishDelay = dspTime - AudioSettings.dspTime;
+        var spawnRoutine = StartCoroutine(SpawnFishDelayed((float)fishDelay, dspTime));
         scheduledSpawns.Add(spawnRoutine);
     }
 
@@ -104,18 +120,45 @@ public class MoldController_st2 : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        if (moldAnimator != null)
+        // ✅ 달그락 애니메이션 (코드로 틀 흔들기)
+        if (useTelegraphShake)
         {
-            moldAnimator.SetTrigger("Telegraph");
+            StartCoroutine(ShakeMold());
         }
 
-        // ✅ 이벤트 발행
+        // 이벤트 발행
         OnTelegraphPlayed?.Invoke();
     }
 
-    IEnumerator SpawnFishDelayed(float delay, double popTime)
+    // ✅ 달그락 애니메이션 - 틀 흔들기 (Telegraph용 코드 효과)
+    IEnumerator ShakeMold()
     {
-        // ✅ 수정: unscaledTime 사용 (PAUSE 영향 최소화)
+        float elapsed = 0f;
+        int currentShake = 0;
+        float shakeInterval = shakeDuration / shakeCount;
+
+        while (currentShake < shakeCount)
+        {
+            // 랜덤 방향으로 흔들기
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
+                0,
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
+            );
+
+            transform.localPosition = originalMoldPosition + randomOffset;
+
+            yield return new WaitForSeconds(shakeInterval);
+            currentShake++;
+        }
+
+        // 원위치로 복원
+        transform.localPosition = originalMoldPosition;
+    }
+
+    // ✅ 퐁 애니메이션만 먼저 재생
+    IEnumerator PlayPopAnimation(float delay)
+    {
         float elapsed = 0f;
         while (elapsed < delay)
         {
@@ -123,25 +166,42 @@ public class MoldController_st2 : MonoBehaviour
             yield return null;
         }
 
-        // ✅ 추가: Ending/Result 체크
+        if (moldAnimator != null)
+        {
+            moldAnimator.SetTrigger(popAnimationTrigger);
+            Debug.Log($"Pop 애니메이션 트리거 발동 (퐁 소리보다 {popAnimationLeadTime}초 먼저)");
+        }
+    }
+
+    IEnumerator SpawnFishDelayed(float delay, double popTime)
+    {
+        // unscaledTime 사용 (PAUSE 영향 최소화)
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // Ending/Result 체크
         if (GameFlowController_st2.Instance.isEndingTriggered ||
             GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
         {
-            yield break; // 스폰 취소
-        }
-
-        // ✅ 추가: DSP 시간 재확인 (PAUSE로 인한 지연 감지)
-        double actualDsp = AudioSettings.dspTime;
-        if (actualDsp > popTime + 1.0f) // fishCatchableDuration
-        {
-            // 이미 timeout 지나서 스폰 취소
             yield break;
         }
 
-        var fish = fishPool.Get();
-        fish.Initialize(popTime, transform, this); // ✅ ownerMold 전달
+        // DSP 시간 재확인 (PAUSE로 인한 지연 감지)
+        double actualDsp = AudioSettings.dspTime;
+        if (actualDsp > popTime + 1.0f)
+        {
+            yield break;
+        }
 
-        // ✅ 추가: 활성 리스트에 등록
+        // ✅ fish 생성 (퐁 소리 타이밍에 맞춤)
+        var fish = fishPool.Get();
+        fish.Initialize(popTime, transform, this);
+
+        // 활성 리스트에 등록
         activeFish.Add(fish);
 
         if (judgeSystem != null)
@@ -149,15 +209,10 @@ public class MoldController_st2 : MonoBehaviour
             judgeSystem.RegisterFish(fish);
         }
 
-        if (moldAnimator != null)
-        {
-            moldAnimator.SetTrigger("Pop");
-        }
-
-        // ✅ 이벤트 발행
+        // 이벤트 발행
         OnPopPlayed?.Invoke();
 
-        // ✅ 추가: 코루틴 리스트에서 제거
+        // 코루틴 리스트에서 제거
         scheduledSpawns.Remove(scheduledSpawns.Find(c => c == null));
     }
 
@@ -169,7 +224,7 @@ public class MoldController_st2 : MonoBehaviour
         }
     }
 
-    // ✅ 추가: 예약된 스폰 취소
+    // 예약된 스폰 취소
     public void CancelAllScheduledSpawns()
     {
         foreach (var routine in scheduledSpawns)
@@ -181,7 +236,7 @@ public class MoldController_st2 : MonoBehaviour
         }
         scheduledSpawns.Clear();
 
-        // ✅ 모든 활성 fish 정리
+        // 모든 활성 fish 정리
         foreach (var fish in activeFish.ToList())
         {
             if (fish != null)

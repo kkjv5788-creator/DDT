@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6141777567646150931
+--- !u!1001 &1047701272307777351
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.2935711
+      value: 3.2105954
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.008535011
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.28
+      value: 2.2794216
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 447a1c82cf465314996c328b4dacc173, type: 2}
     - target: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_Name
-      value: FishShapeBun_Mold
+      value: FishShapeBun_Mold (1)
       objectReference: {fileID: 0}
     - target: {fileID: 5337622571509413732, guid: f323ad8797140174386cfc499804b995, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -74,34 +74,34 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5967767119279396130}
+      addedObject: {fileID: 5729279135218831447}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5753083967714005645}
+      addedObject: {fileID: 4788530216737212840}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7980164205200534368}
+      addedObject: {fileID: 6372222296650139928}
   m_SourcePrefab: {fileID: 100100000, guid: f323ad8797140174386cfc499804b995, type: 3}
---- !u!1 &6483657313978666050 stripped
+--- !u!1 &165303947298079254 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
-  m_PrefabInstance: {fileID: 6141777567646150931}
+  m_PrefabInstance: {fileID: 1047701272307777351}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5967767119279396130
+--- !u!114 &5729279135218831447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6483657313978666050}
+  m_GameObject: {fileID: 165303947298079254}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a7a798bf59e7ff4a906459292d6d590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishPrefab: {fileID: 5551336303472369171, guid: 13402f40ba5701a44aefaf6e52892174, type: 3}
-  telegraphSource: {fileID: 5753083967714005645}
-  popSource: {fileID: 7980164205200534368}
+  fishPrefab: {fileID: 5551336303472369171, guid: 9845a33cc239e1246b7a7ecd83e58c52, type: 3}
+  telegraphSource: {fileID: 4788530216737212840}
+  popSource: {fileID: 6372222296650139928}
   telegraphClip: {fileID: 8300000, guid: 16dfeb62544291d4aadd8432ebb61c78, type: 3}
   popClip: {fileID: 8300000, guid: 19a7f60544395b94395bd6819adbe39d, type: 3}
   moldAnimation: {fileID: 0}
@@ -110,18 +110,18 @@ MonoBehaviour:
   shakeIntensity: 0.02
   shakeDuration: 0.3
   shakeCount: 8
---- !u!82 &5753083967714005645
+--- !u!82 &4788530216737212840
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6483657313978666050}
+  m_GameObject: {fileID: 165303947298079254}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -206,18 +206,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!82 &7980164205200534368
+--- !u!82 &6372222296650139928
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6483657313978666050}
+  m_GameObject: {fileID: 165303947298079254}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

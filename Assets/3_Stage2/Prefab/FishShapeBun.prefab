@@ -91,7 +91,13 @@ MonoBehaviour:
   popTime: 1
   isResolved: 0
   isCaught: 0
-  ownerMold: {fileID: 5647749944587067499, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
+  jumpHeight: 3
+  forwardDistance: 1.5
+  gravity: 9.8
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8192
+  ownerMold: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
 --- !u!65 &4000376892967597529
 BoxCollider:
   m_ObjectHideFlags: 0
