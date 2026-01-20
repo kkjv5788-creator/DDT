@@ -621,6 +621,64 @@ MonoBehaviour:
   cueAudioSource: {fileID: 2043410957}
   sync2Cue: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
   run3Cue: {fileID: 8300000, guid: da9da6c6d94bb6b48acb7dd8f0784f6e, type: 3}
+--- !u!1 &718731416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 718731418}
+  - component: {fileID: 718731417}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &718731417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718731416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1cd3833a7b4d84f92da6c28a0a097f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysOn: 1
+  toggleKey: 282
+  gameFlow: {fileID: 1743630882}
+  judgeSystem: {fileID: 1635022718}
+  economySystem: {fileID: 91746712}
+  tutorialManager: {fileID: 1589833553}
+  leftSensor: {fileID: 2106725321}
+  rightSensor: {fileID: 769784242}
+  leftInput: {fileID: 2106725322}
+  rightInput: {fileID: 769784243}
+  molds:
+  - {fileID: 250065415}
+  - {fileID: 1516185866}
+  - {fileID: 1408144423}
+--- !u!4 &718731418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718731416}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &766061167
 GameObject:
   m_ObjectHideFlags: 0
@@ -3052,3 +3110,4 @@ SceneRoots:
   - {fileID: 1972097807}
   - {fileID: 417450421}
   - {fileID: 2068582835}
+  - {fileID: 718731418}
