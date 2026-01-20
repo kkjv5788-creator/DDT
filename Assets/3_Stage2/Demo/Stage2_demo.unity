@@ -435,6 +435,11 @@ LineRenderer:
   m_CorrespondingSourceObject: {fileID: 5014974499740813566, guid: 0196eeedc311552429a011a24996afd4, type: 3}
   m_PrefabInstance: {fileID: 2016669254}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &677845447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5486673962091296266, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+  m_PrefabInstance: {fileID: 2016669254}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &712720833
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,10 +537,10 @@ MonoBehaviour:
   judgeSystem: {fileID: 1635022718}
   economySystem: {fileID: 91746712}
   tutorialManager: {fileID: 1589833553}
-  leftSensor: {fileID: 2106725321}
-  rightSensor: {fileID: 769784242}
-  leftInput: {fileID: 2106725322}
-  rightInput: {fileID: 769784243}
+  leftSensor: {fileID: 0}
+  rightSensor: {fileID: 0}
+  leftInput: {fileID: 0}
+  rightInput: {fileID: 0}
   molds:
   - {fileID: 250065415}
   - {fileID: 1516185866}
@@ -564,8 +569,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 769784241}
-  - component: {fileID: 769784243}
-  - component: {fileID: 769784242}
   - component: {fileID: 769784244}
   m_Layer: 0
   m_Name: RightHand
@@ -589,74 +592,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1262060480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &769784242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769784240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c1d03796df0c841bccff347a3b2c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handController: 2
-  fishLayer:
-    serializedVersion: 2
-    m_Bits: 4096
-  raycastLength: 1
-  lineRenderer: {fileID: 1841902740}
-  showLineRenderer: 1
-  noTargetColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
-  hasTargetColor: {r: 0, g: 1, b: 0, a: 0.8}
-  resolvedTargetColor: {r: 1, g: 0, b: 0, a: 0.5}
-  lineWidth: 0.002
-  lineSegments: 20
-  lineWidthCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: -0.7
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: -0.7
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  currentTarget: {fileID: 0}
---- !u!114 &769784243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769784240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensor: {fileID: 769784242}
-  handController: 2
-  handTransform: {fileID: 769784241}
-  snapAudioSource: {fileID: 769784244}
-  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
-  lastJudgeResult: 0
-  lastHandName: 
 --- !u!82 &769784244
 AudioSource:
   m_ObjectHideFlags: 0
@@ -925,6 +860,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   feedbackTextPrefab: {fileID: 0}
+--- !u!1 &926189665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+  m_PrefabInstance: {fileID: 2016669254}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1235793995
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +904,74 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7657345461084759438, guid: 0196eeedc311552429a011a24996afd4, type: 3}
   m_PrefabInstance: {fileID: 2016669254}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1262060481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926189665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensor: {fileID: 1262060482}
+  handController: 2
+  handTransform: {fileID: 769784241}
+  snapAudioSource: {fileID: 769784244}
+  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
+  lastJudgeResult: 0
+  lastHandName: 
+--- !u!114 &1262060482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926189665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c1d03796df0c841bccff347a3b2c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handController: 2
+  fishLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  raycastLength: 5
+  lineRenderer: {fileID: 1841902740}
+  showLineRenderer: 1
+  noTargetColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
+  hasTargetColor: {r: 0, g: 1, b: 0, a: 0.8}
+  resolvedTargetColor: {r: 1, g: 0, b: 0, a: 0.5}
+  lineWidth: 0.002
+  lineSegments: 20
+  lineWidthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: -0.7
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.3
+      inSlope: -0.7
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  currentTarget: {fileID: 0}
 --- !u!1 &1381084019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,7 +1560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d0e1acee16b1dc4189bddffd1d046af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentState: 0
+  CurrentState: 2
   isEndingTriggered: 1
   bgmSource: {fileID: 1589062160}
   bgmClip: {fileID: 8300000, guid: 0356e2fc8a0579d4c913a69e5c654eef, type: 3}
@@ -1568,8 +1576,8 @@ MonoBehaviour:
   - {fileID: 1516185866}
   - {fileID: 1408144423}
   catchInputs:
-  - {fileID: 2106725322}
-  - {fileID: 769784243}
+  - {fileID: 1971678601}
+  - {fileID: 1262060481}
 --- !u!120 &1841902740 stripped
 LineRenderer:
   m_CorrespondingSourceObject: {fileID: 1159268281887662739, guid: 0196eeedc311552429a011a24996afd4, type: 3}
@@ -1792,74 +1800,74 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6191448945056875732, guid: 0196eeedc311552429a011a24996afd4, type: 3}
   m_PrefabInstance: {fileID: 2016669254}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1972097804
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1972097807}
-  - component: {fileID: 1972097806}
-  - component: {fileID: 1972097805}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1972097805
+--- !u!114 &1971678600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1972097804}
+  m_GameObject: {fileID: 677845447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: d1c1d03796df0c841bccff347a3b2c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &1972097806
+  handController: 1
+  fishLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  raycastLength: 5
+  lineRenderer: {fileID: 524391299}
+  showLineRenderer: 1
+  noTargetColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
+  hasTargetColor: {r: 0, g: 1, b: 0, a: 0.8}
+  resolvedTargetColor: {r: 1, g: 0, b: 0, a: 0.5}
+  lineWidth: 0.002
+  lineSegments: 20
+  lineWidthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: -0.7
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.3
+      inSlope: -0.7
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  currentTarget: {fileID: 0}
+--- !u!114 &1971678601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1972097804}
+  m_GameObject: {fileID: 677845447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &1972097807
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1972097804}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  sensor: {fileID: 1971678600}
+  handController: 1
+  handTransform: {fileID: 2106725320}
+  snapAudioSource: {fileID: 2106725323}
+  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
+  lastJudgeResult: 0
+  lastHandName: 
 --- !u!1001 &2016669254
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1921,7 +1929,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7657345461084759438, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 769784241}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5486673962091296266, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1971678601}
+    - targetCorrespondingSourceObject: {fileID: 5486673962091296266, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1971678600}
+    - targetCorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1262060482}
+    - targetCorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1262060481}
   m_SourcePrefab: {fileID: 100100000, guid: 0196eeedc311552429a011a24996afd4, type: 3}
 --- !u!1 &2043410955
 GameObject:
@@ -2299,8 +2319,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2106725320}
-  - component: {fileID: 2106725322}
-  - component: {fileID: 2106725321}
   - component: {fileID: 2106725323}
   m_Layer: 0
   m_Name: LeftHand
@@ -2324,74 +2342,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1971678599}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2106725321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2106725319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c1d03796df0c841bccff347a3b2c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handController: 1
-  fishLayer:
-    serializedVersion: 2
-    m_Bits: 4096
-  raycastLength: 1
-  lineRenderer: {fileID: 524391299}
-  showLineRenderer: 1
-  noTargetColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
-  hasTargetColor: {r: 0, g: 1, b: 0, a: 0.8}
-  resolvedTargetColor: {r: 1, g: 0, b: 0, a: 0.5}
-  lineWidth: 0.002
-  lineSegments: 20
-  lineWidthCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: -0.7
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: -0.7
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  currentTarget: {fileID: 0}
---- !u!114 &2106725322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2106725319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensor: {fileID: 2106725321}
-  handController: 1
-  handTransform: {fileID: 2106725320}
-  snapAudioSource: {fileID: 2106725323}
-  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
-  lastJudgeResult: 0
-  lastHandName: 
 --- !u!82 &2106725323
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2694,7 +2644,6 @@ SceneRoots:
   - {fileID: 1235793996}
   - {fileID: 1843560740}
   - {fileID: 1477217345}
-  - {fileID: 1972097807}
   - {fileID: 417450421}
   - {fileID: 2068582835}
   - {fileID: 718731418}

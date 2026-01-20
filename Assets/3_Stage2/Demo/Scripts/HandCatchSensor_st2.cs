@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Pool;
 using System;
 using System.Collections;
@@ -8,26 +8,26 @@ using TMPro;
 
 public class HandCatchSensor_st2 : MonoBehaviour
 {
-    [Header("¼³Á¤")]
+    [Header("ì„¤ì •")]
     public OVRInput.Controller handController;
     public LayerMask fishLayer;
     public float raycastLength = 0.15f;
 
-    [Header("LineRenderer ¼³Á¤")]
+    [Header("LineRenderer ì„¤ì •")]
     public LineRenderer lineRenderer;
     public bool showLineRenderer = true;
 
-    [Header("¶óÀÎ »ö»ó")]
-    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f); // È¸»ö ¹İÅõ¸í
-    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);      // ÃÊ·Ï»ö
-    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f); // »¡°£»ö (ÀÌ¹Ì Ã³¸®µÊ)
+    [Header("ë¼ì¸ ìƒ‰ìƒ")]
+    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f); // íšŒìƒ‰ ë°˜íˆ¬ëª…
+    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);      // ì´ˆë¡ìƒ‰
+    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f); // ë¹¨ê°„ìƒ‰ (ì´ë¯¸ ì²˜ë¦¬ë¨)
 
-    [Header("¶óÀÎ ½ºÅ¸ÀÏ")]
-    public float lineWidth = 0.002f; // ¶óÀÎ ±½±â (0.2cm)
-    public int lineSegments = 20;    // ¶óÀÎ ¼¼±×¸ÕÆ® ¼ö (ºÎµå·¯¿î °î¼±¿ë)
-    public AnimationCurve lineWidthCurve = AnimationCurve.Linear(0, 1, 1, 0.3f); // ½ÃÀÛ->³¡ ±½±â º¯È­
+    [Header("ë¼ì¸ ìŠ¤íƒ€ì¼")]
+    public float lineWidth = 0.002f; // ë¼ì¸ êµµê¸° (0.2cm)
+    public int lineSegments = 20;    // ë¼ì¸ ì„¸ê·¸ë¨¼íŠ¸ ìˆ˜ (ë¶€ë“œëŸ¬ìš´ ê³¡ì„ ìš©)
+    public AnimationCurve lineWidthCurve = AnimationCurve.Linear(0, 1, 1, 0.3f); // ì‹œì‘->ë êµµê¸° ë³€í™”
 
-    [Header("»óÅÂ")]
+    [Header("ìƒíƒœ")]
     public FishCatchToken_st2 currentTarget;
 
     private RaycastHit[] hits = new RaycastHit[10];
@@ -37,7 +37,7 @@ public class HandCatchSensor_st2 : MonoBehaviour
     {
         cachedTransform = transform;
 
-        // LineRenderer ÀÚµ¿ ¼³Á¤
+        // LineRenderer ìë™ ì„¤ì •
         SetupLineRenderer();
     }
 
@@ -59,30 +59,30 @@ public class HandCatchSensor_st2 : MonoBehaviour
     {
         if (lineRenderer == null)
         {
-            // LineRenderer°¡ ¾øÀ¸¸é ÀÚµ¿ »ı¼º
+            // LineRendererê°€ ì—†ìœ¼ë©´ ìë™ ìƒì„±
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
 
-        // ±âº» ¼³Á¤
+        // ê¸°ë³¸ ì„¤ì •
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
 
-        // Material ¼³Á¤ (Unlit/Color ¼ÎÀÌ´õ »ç¿ë)
+        // Material ì„¤ì • (Unlit/Color ì…°ì´ë” ì‚¬ìš©)
         if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
         {
             lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
         }
 
-        // ÃÊ±â »ö»ó
+        // ì´ˆê¸° ìƒ‰ìƒ
         lineRenderer.startColor = noTargetColor;
         lineRenderer.endColor = noTargetColor;
 
-        // ±½±â °î¼± Àû¿ë
+        // êµµê¸° ê³¡ì„  ì ìš©
         lineRenderer.widthCurve = lineWidthCurve;
 
-        // ±×¸²ÀÚ/¶óÀÌÆÃ ²ô±â (¼º´É ÃÖÀûÈ­)
+        // ê·¸ë¦¼ì/ë¼ì´íŒ… ë„ê¸° (ì„±ëŠ¥ ìµœì í™”)
         lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         lineRenderer.receiveShadows = false;
     }
@@ -92,29 +92,53 @@ public class HandCatchSensor_st2 : MonoBehaviour
         Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
         int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
 
+        // âœ… ë””ë²„ê·¸ ì¶”ê°€
+        Debug.Log($"[{handController}] Raycast Hit Count: {hitCount}");
+
+        if (hitCount == 0)
+        {
+            Debug.LogWarning($"[{handController}] ì•„ë¬´ê²ƒë„ ê°ì§€ ì•ˆ ë¨! Layer: {fishLayer.value}");
+        }
+
         FishCatchToken_st2 closestFish = null;
         float closestDistance = float.MaxValue;
 
         for (int i = 0; i < hitCount; i++)
         {
+            // âœ… ë””ë²„ê·¸ ì¶”ê°€
+            Debug.Log($"[{handController}] Hit [{i}]: {hits[i].collider.gameObject.name}, Layer: {hits[i].collider.gameObject.layer}");
+
             var fish = hits[i].collider.GetComponent<FishCatchToken_st2>();
-            if (fish == null || fish.isResolved) continue;
+
+            if (fish == null)
+            {
+                Debug.LogError($"[{handController}] FishCatchToken_st2 ì»´í¬ë„ŒíŠ¸ ì—†ìŒ: {hits[i].collider.gameObject.name}");
+                continue;
+            }
+
+            if (fish.isResolved)
+            {
+                Debug.Log($"[{handController}] ì´ë¯¸ ì²˜ë¦¬ëœ Fish: {fish.name}");
+                continue;
+            }
 
             float distance = hits[i].distance;
 
-            // È÷½ºÅ×¸®½Ã½º: ÇöÀç Å¸°Ù À¯Áö
+            // íˆìŠ¤í…Œë¦¬ì‹œìŠ¤: í˜„ì¬ íƒ€ê²Ÿ ìœ ì§€
             if (currentTarget != null)
             {
                 if (fish == currentTarget)
                 {
                     closestFish = fish;
+                    Debug.Log($"[{handController}] ê¸°ì¡´ íƒ€ê²Ÿ ìœ ì§€: {fish.name}");
                     break;
                 }
 
-                if (distance < closestDistance - 0.03f) // 3cm ÀÌ»ó Â÷ÀÌ³ª¾ß ±³Ã¼
+                if (distance < closestDistance - 0.03f)
                 {
                     closestDistance = distance;
                     closestFish = fish;
+                    Debug.Log($"[{handController}] ìƒˆ íƒ€ê²Ÿ ë°œê²¬: {fish.name}, ê±°ë¦¬: {distance:F3}m");
                 }
             }
             else
@@ -123,11 +147,22 @@ public class HandCatchSensor_st2 : MonoBehaviour
                 {
                     closestDistance = distance;
                     closestFish = fish;
+                    Debug.Log($"[{handController}] ì²« íƒ€ê²Ÿ ë°œê²¬: {fish.name}, ê±°ë¦¬: {distance:F3}m");
                 }
             }
         }
 
         currentTarget = closestFish;
+
+        // âœ… ìµœì¢… ê²°ê³¼ ë””ë²„ê·¸
+        if (currentTarget != null)
+        {
+            Debug.Log($"[{handController}] âœ“ í˜„ì¬ íƒ€ê²Ÿ: {currentTarget.name}");
+        }
+        else
+        {
+            Debug.Log($"[{handController}] âœ— íƒ€ê²Ÿ ì—†ìŒ");
+        }
     }
 
     void UpdateLineRenderer()
@@ -135,7 +170,7 @@ public class HandCatchSensor_st2 : MonoBehaviour
         if (lineRenderer == null || !showLineRenderer)
             return;
 
-        // °ÔÀÓ »óÅÂ Ã¼Å© (Playing »óÅÂ¿¡¼­¸¸ Ç¥½Ã)
+        // ê²Œì„ ìƒíƒœ ì²´í¬ (Playing ìƒíƒœì—ì„œë§Œ í‘œì‹œ)
         if (GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
         {
             lineRenderer.enabled = false;
@@ -144,23 +179,23 @@ public class HandCatchSensor_st2 : MonoBehaviour
 
         lineRenderer.enabled = true;
 
-        // ½ÃÀÛÁ¡: ¼Õ À§Ä¡
+        // ì‹œì‘ì : ì† ìœ„ì¹˜
         Vector3 startPos = cachedTransform.position;
 
-        // ³¡Á¡: Raycast ¹æÇâ
+        // ëì : Raycast ë°©í–¥
         Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
 
-        // Å¸°ÙÀÌ ÀÖÀ¸¸é Å¸°Ù±îÁö¸¸ ±×¸®±â
+        // íƒ€ê²Ÿì´ ìˆìœ¼ë©´ íƒ€ê²Ÿê¹Œì§€ë§Œ ê·¸ë¦¬ê¸°
         if (currentTarget != null)
         {
             endPos = currentTarget.transform.position;
         }
 
-        // LineRenderer À§Ä¡ ¼³Á¤
+        // LineRenderer ìœ„ì¹˜ ì„¤ì •
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
 
-        // »ö»ó ¼³Á¤
+        // ìƒ‰ìƒ ì„¤ì •
         Color lineColor = GetLineColor();
         lineRenderer.startColor = lineColor;
         lineRenderer.endColor = lineColor;
@@ -170,23 +205,23 @@ public class HandCatchSensor_st2 : MonoBehaviour
     {
         if (currentTarget == null)
         {
-            // Å¸°Ù ¾øÀ½: È¸»ö
+            // íƒ€ê²Ÿ ì—†ìŒ: íšŒìƒ‰
             return noTargetColor;
         }
         else if (currentTarget.isResolved)
         {
-            // ÀÌ¹Ì Ã³¸®µÈ Å¸°Ù: »¡°£»ö
+            // ì´ë¯¸ ì²˜ë¦¬ëœ íƒ€ê²Ÿ: ë¹¨ê°„ìƒ‰
             return resolvedTargetColor;
         }
         else
         {
-            // ÀâÀ» ¼ö ÀÖ´Â Å¸°Ù: ÃÊ·Ï»ö
+            // ì¡ì„ ìˆ˜ ìˆëŠ” íƒ€ê²Ÿ: ì´ˆë¡ìƒ‰
             return hasTargetColor;
         }
     }
 
     /// <summary>
-    /// ·±Å¸ÀÓ¿¡¼­ LineRenderer Ç¥½Ã/¼û±è Åä±Û
+    /// ëŸ°íƒ€ì„ì—ì„œ LineRenderer í‘œì‹œ/ìˆ¨ê¹€ í† ê¸€
     /// </summary>
     public void ToggleLineRenderer()
     {
@@ -199,7 +234,7 @@ public class HandCatchSensor_st2 : MonoBehaviour
     }
 
     /// <summary>
-    /// LineRenderer Ç¥½Ã ¼³Á¤
+    /// LineRenderer í‘œì‹œ ì„¤ì •
     /// </summary>
     public void SetLineRendererVisible(bool visible)
     {
