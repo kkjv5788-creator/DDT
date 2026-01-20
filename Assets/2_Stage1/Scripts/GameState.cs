@@ -2,10 +2,11 @@ using UnityEngine;
 
 public enum GameState
 {
-    Tutorial,        // Æ©Åä¸®¾ó ÁøÇà Áß
-    WaitForRadio,    // Æ©Åä¸®¾ó ¿Ï·á ÈÄ ¶óµğ¿À ´ë±â
-    PlayingMain,     // ¸ŞÀÎ °ÔÀÓ ÁøÇà Áß
-    Paused,          // ÀÏ½ÃÁ¤Áö
-    EndingDelay,     // ¸¶Áö¸· Æ®¸®°Å ¿Ï·á ÈÄ ´ë±â
-    FinalResult      // ÃÖÁ¾ °á°úÃ¢
+    Intro,           // â˜… [ì¶”ê°€í•„ìˆ˜] ì´ê±° ì—†ìœ¼ë©´ GameFlowManagerì—ì„œ ì—ëŸ¬ë‚¨
+    Tutorial,
+    WaitForRadio,
+    PlayingMain,
+    Paused,
+    EndingDelay,
+    FinalResult
 }

@@ -5,214 +5,71 @@ public class GameFlowManager : MonoBehaviour
 {
     [Header("Refs")]
     public RhythmConductor conductor;
-    public TutorialController tutorialController;
     public RadioClickable radio;
     public PlateController plateController;
     public KimbapSpawner spawner;
     public ResultManager resultManager;
     public PauseManager pauseManager;
 
-    [Header("New Managers")]
-    public HandToolSwitcher toolSwitcher; // [새로 추가] 칼/컨트롤러 교체
-    // public ProgressGaugeUI progressGaugeUI; // [삭제됨] StageUIManager가 대신함
+    [Header("UI System")]
+    public MissionBoardUI missionBoard;
+    public HandToolSwitcher toolSwitcher;
 
     [Header("Data")]
     public RhythmTriggerListSO mainTriggerList;
 
     [Header("Settings")]
-    public string mainMenuSceneName = "MainMenu";
+    public string mainMenuSceneName = "Main_v4.1";
 
-    public GameState CurrentState { get; private set; } = GameState.Tutorial;
+    // ❌ [삭제됨] 내부 enum 정의 삭제 -> GameState.cs를 따르게 됨
+    // public enum GameState { Intro, PlayingMain, Paused, FinalResult } 
+
+    public GameState CurrentState { get; private set; } = GameState.Intro;
+
     GameState _stateBeforePause;
 
-    bool _mainGameStarted = false;
-
-    void Start()
+    void OnEnable()
     {
-        // 1. 기본 연결
-        if (conductor && plateController)
-            conductor.plateController = plateController;
-
-        if (conductor && spawner)
-            conductor.spawner = spawner;
-
-        if (tutorialController && radio)
-            tutorialController.radio = radio;
-
-        // 2. [변경] 게이지 업데이트를 StageUIManager로 연결
-        if (resultManager)
-        {
-            // ResultManager 이벤트: (현재점수, 총점수, 퍼센트)
-            // StageUIManager 함수: (현재, 최대)
-            resultManager.OnProgressUpdate.AddListener((curr, total, pct) => 
-            {
-                if (StageUIManager.Instance) 
-                    StageUIManager.Instance.UpdateGauge(curr, total);
-            });
-        }
-
-        // 3. 초기 상태 설정
-        CurrentState = GameState.Tutorial;
+        Debug.Log("[GameFlowManager] 실전 모드 활성화됨");
         
-        // [추가] 시작할 땐 '칼' 들기 + 라디오 가이드 끄기 + 왼손 팁 켜기
-        if (toolSwitcher) toolSwitcher.SwitchToKnife();
-        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(false, true);
-
-        // 4. 튜토리얼 시작
-        if (tutorialController)
-        {
-            tutorialController.StartTutorial();
-        }
-
-        if (radio)
-        {
-            radio.OnRadioClicked.AddListener(StartMainGame);
-        }
-
-        if (conductor)
-        {
-            conductor.OnTutorialCompleted.AddListener(OnTutorialCompleted);
-            conductor.OnTutorialSkipped.AddListener(OnTutorialCompleted);
-        }
+        // GameState.cs에 Intro를 추가했으므로 정상 작동함
+        CurrentState = GameState.Intro; 
+        
+        Invoke(nameof(StartMainGame), 0.5f);
     }
 
-    void OnTutorialCompleted()
+    void OnDisable()
     {
-        Debug.Log("[GameFlowManager] Tutorial completed - Entering WaitForRadio state");
-        CurrentState = GameState.WaitForRadio;
-
-        if (radio)
-        {
-            radio.SetTutorialCompleted(true);
-            radio.SetClickable(true);
-        }
-
-        // [추가] 튜토리얼 끝났으니 라디오 쏘라고 가이드 화살표 띄우기
-        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(true, true);
+        Debug.Log("[GameFlowManager] 실전 모드 종료");
     }
 
-    void StartMainGame()
+    public void StartMainGame()
     {
-        if (_mainGameStarted)
-        {
-            Debug.Log("[GameFlowManager] Main game already started.");
-            return;
-        }
-
-        Debug.Log("[GameFlowManager] Starting main game...");
-
-        _mainGameStarted = true;
+        Debug.Log("[GameFlowManager] 실전 영업 개시!");
         CurrentState = GameState.PlayingMain;
 
-        // [추가] 게임 시작: 라디오 가이드 끄기 + 무조건 칼 들기
-        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(false, true);
+        // 1. 주문서 갱신
+        if (missionBoard)
+        {
+            missionBoard.InitializeUI();
+            missionBoard.UpdateHeader("< 점심 주문 >");
+            missionBoard.UpdateText("< 점심 주문 >", "주문이 폭주합니다!\n정신 바짝 차리세요!", "");
+            missionBoard.ShowSuccessStamp(false);
+        }
+
+        // 2. 하드웨어 세팅
+        if (radio) radio.SetClickable(false);
         if (toolSwitcher) toolSwitcher.SwitchToKnife();
+        if (plateController) plateController.ResetToEmptyPlate();
 
-        if (radio)
-        {
-            radio.SetClickable(false);
-        }
-
-        if (spawner)
-            spawner.DestroyCurrentKimbap();
-
-        if (plateController)
-            plateController.ResetToEmptyPlate();
-
-        conductor.isTutorialMode = false;
-        conductor.data = mainTriggerList;
-        conductor.StartGame();
-
-        if (resultManager && mainTriggerList)
-        {
-            resultManager.StartTracking(mainTriggerList.triggers.Length);
-        }
-
-        Debug.Log("[GameFlowManager] Main game started!");
-    }
-
-    public void EnterPaused()
-    {
-        _stateBeforePause = CurrentState;
-        CurrentState = GameState.Paused;
-        
-        // [추가] 일시정지 시 메뉴 눌러야 하니까 컨트롤러 꺼내기
-        if (toolSwitcher) toolSwitcher.SwitchToController(); 
-
-        Debug.Log($"[GameFlowManager] Entered Paused (from {_stateBeforePause})");
-    }
-
-    public void ExitPaused()
-    {
-        CurrentState = _stateBeforePause;
-        
-        // [추가] 일시정지 해제 시 다시 칼 들기
-        if (toolSwitcher) toolSwitcher.SwitchToKnife();
-
-        Debug.Log($"[GameFlowManager] Exited Paused (back to {CurrentState})");
-    }
-
-    public void EnterFinalResult(float successRate)
-    {
-        CurrentState = GameState.FinalResult;
-        Debug.Log($"[GameFlowManager] Entered FinalResult (Success Rate: {successRate:F1}%)");
-        
-        // [추가] 결과창에서는 버튼 눌러야 하니 컨트롤러 꺼내기
-        if (toolSwitcher) toolSwitcher.SwitchToController();
-
-        if (successRate >= 50f)
-        {
-            Debug.Log("[GameFlowManager] Next stage unlocked!");
-        }
-    }
-
-    // 🔥 메인 게임만 재시작
-    public void RestartMainGameOnly()
-    {
-        Debug.Log("[GameFlowManager] Restarting main game only");
-
-        _mainGameStarted = false;
-        CurrentState = GameState.PlayingMain;
-
-        // [추가] 재시작이니까 다시 칼 들기
-        if (toolSwitcher) toolSwitcher.SwitchToKnife();
-
-        // BGM 정지
-        if (conductor && conductor.bgmSource)
-        {
-            conductor.bgmSource.Stop();
-        }
-
-        // 김밥 제거
-        if (spawner)
-            spawner.DestroyCurrentKimbap();
-
-        // 접시 초기화
-        if (plateController)
-            plateController.ResetToEmptyPlate();
-
-        // 결과 패널 숨기기
-        if (resultManager)
-        {
-            if (resultManager.panel100k) resultManager.panel100k.SetActive(false);
-            if (resultManager.panel50k) resultManager.panel50k.SetActive(false);
-            if (resultManager.panel0) resultManager.panel0.SetActive(false);
-        }
-
-        // [변경] 게이지 초기화 (StageUIManager 사용)
+        // 3. UI 초기화
         if (StageUIManager.Instance)
         {
             StageUIManager.Instance.UpdateGauge(0, 1);
-            StageUIManager.Instance.SetGuides(false, true); // 가이드 끄기
+            StageUIManager.Instance.SetGuides(false, true);
         }
 
-        // 라디오 비활성화
-        if (radio)
-        {
-            radio.SetClickable(false);
-        }
-
-        // 게임 시작
+        // 4. 리듬 게임 시작
         if (conductor && mainTriggerList)
         {
             conductor.isTutorialMode = false;
@@ -220,22 +77,59 @@ public class GameFlowManager : MonoBehaviour
             conductor.StartGame();
         }
 
-        // 결과 추적 시작
         if (resultManager && mainTriggerList)
         {
             resultManager.StartTracking(mainTriggerList.triggers.Length);
         }
+    }
 
-        Debug.Log("[GameFlowManager] Main game restarted with BGM!");
+    public void PauseGame()
+    {
+        if (CurrentState == GameState.Paused) return;
+
+        _stateBeforePause = CurrentState;
+        CurrentState = GameState.Paused;
+        Time.timeScale = 0f;
+        
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+        if (pauseManager) pauseManager.ShowPauseMenu();
+    }
+
+    public void ResumeGame()
+    {
+        if (CurrentState != GameState.Paused) return;
+
+        Time.timeScale = 1f;
+        CurrentState = _stateBeforePause;
+        
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+        if (pauseManager) pauseManager.HidePauseMenu();
+    }
+
+    public void EnterFinalResult(float successRate)
+    {
+        CurrentState = GameState.FinalResult;
+        
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+        
+        if (missionBoard)
+        {
+            missionBoard.UpdateHeader("< 영 업 종 료 >");
+            missionBoard.UpdateText("< 영 업 종 료 >", "오늘 장사 끝!\n수고하셨습니다.", "");
+            missionBoard.ShowSuccessStamp(true);
+        }
+    }
+
+    public void RestartMainGameOnly()
+    {
+        Time.timeScale = 1f;
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public void GoToMainMenu()
     {
-        Debug.Log("[GameFlowManager] Going to main menu...");
-        
-        // [추가] 로비로 나가니까 컨트롤러 꺼내기
-        if (toolSwitcher) toolSwitcher.SwitchToController();
-
+        Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
     }
 }

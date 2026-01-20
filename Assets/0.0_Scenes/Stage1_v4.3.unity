@@ -6915,7 +6915,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1605435826}
   m_Layer: 0
-  m_Name: Canvas_Holder
+  m_Name: Monitor_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10820,15 +10820,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_LocalScale.x
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_LocalScale.y
-      value: 50
+      value: 37.5
       objectReference: {fileID: 0}
     - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10869,6 +10869,10 @@ PrefabInstance:
     - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8554594094797867302, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9075833716099814300, guid: 78883f2b70e33644d8e413779b5e8f21, type: 3}
       propertyPath: m_Name

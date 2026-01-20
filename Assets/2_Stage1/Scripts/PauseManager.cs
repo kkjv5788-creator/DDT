@@ -7,7 +7,7 @@ public class PauseManager : MonoBehaviour
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
     public RhythmConductor conductor;
-    public TutorialController tutorialController;
+    public TutorialController tutorialController; // 튜토리얼용 (필요시)
     public GameObject pauseMenuPanel;
 
     [Header("Buttons")]
@@ -15,170 +15,66 @@ public class PauseManager : MonoBehaviour
     public Button restartButton;
     public Button mainMenuButton;
 
-    [Header("VR Pointer")]
-    public Transform rightHandAnchor;
-    public float pointerMaxDistance = 10f;
-    public LineRenderer pointerLine;
-    public LayerMask uiLayer;
-
     [Header("Audio")]
-    public AudioSource[] allAudioSources;
+    public AudioSource[] allAudioSources; // 멈출 오디오들
 
     [Header("Settings")]
     public float inputCooldown = 0.5f;
 
-    bool _isPaused;
+    bool _isPaused = false;
     float _lastPauseInputTime = -999f;
-    float _lastClickInputTime = -999f;
-    Button _currentHoveredButton;
 
     void Start()
     {
-        // 버튼 이벤트 연결
-        if (resumeButton)
-            resumeButton.onClick.AddListener(Resume);
+        // 버튼 리스너 연결
+        if (resumeButton) resumeButton.onClick.AddListener(Resume);
+        if (restartButton) restartButton.onClick.AddListener(Restart);
+        if (mainMenuButton) mainMenuButton.onClick.AddListener(GoToMainMenu);
 
-        if (restartButton)
-            restartButton.onClick.AddListener(Restart);
-
-        if (mainMenuButton)
-            mainMenuButton.onClick.AddListener(GoToMainMenu);
-
-        if (pauseMenuPanel)
-            pauseMenuPanel.SetActive(false);
-
-        if (pointerLine)
-            pointerLine.enabled = false;
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
     }
 
     void Update()
     {
-        // FinalResult 상태에서는 Pause 불가
-        if (gameFlowManager && gameFlowManager.CurrentState == GameState.FinalResult)
-            return;
+        // 입력 쿨타임 체크
+        if (Time.time - _lastPauseInputTime < inputCooldown) return;
 
-        if (_isPaused)
+        // B버튼 또는 Y버튼 또는 ESC로 일시정지 토글
+        if (OVRInput.GetDown(OVRInput.Button.Two) || OVRInput.GetDown(OVRInput.Button.Four) || Input.GetKeyDown(KeyCode.Escape))
         {
-            // Pause 중: VR 포인터로 버튼 조작
-            HandleVRPointer();
-        }
-        else
-        {
-            // 왼손 인덱스 트리거로 Pause 진입
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch))
-            {
-                if (Time.unscaledTime - _lastPauseInputTime > inputCooldown)
-                {
-                    _lastPauseInputTime = Time.unscaledTime;
-                    Pause();
-                }
-            }
+            _lastPauseInputTime = Time.time;
+            TogglePause();
         }
     }
 
-    void HandleVRPointer()
+    public void TogglePause()
     {
-        if (!rightHandAnchor) return;
-
-        Ray ray = new Ray(rightHandAnchor.position, rightHandAnchor.forward);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, pointerMaxDistance, uiLayer))
-        {
-            if (pointerLine)
-            {
-                pointerLine.enabled = true;
-                pointerLine.SetPosition(0, rightHandAnchor.position);
-                pointerLine.SetPosition(1, hit.point);
-            }
-
-            Button hitButton = hit.collider.GetComponent<Button>();
-            if (!hitButton)
-                hitButton = hit.collider.GetComponentInParent<Button>();
-
-            if (hitButton)
-            {
-                if (_currentHoveredButton != hitButton)
-                {
-                    if (_currentHoveredButton)
-                        ResetButtonColor(_currentHoveredButton);
-
-                    _currentHoveredButton = hitButton;
-                    HighlightButton(_currentHoveredButton);
-                }
-
-                // 🔥 오른손 인덱스 트리거로 클릭
-                if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
-                {
-                    if (Time.unscaledTime - _lastClickInputTime > 0.3f)
-                    {
-                        _lastClickInputTime = Time.unscaledTime;
-                        Debug.Log($"[PauseManager] Button clicked: {hitButton.name}");
-                        hitButton.onClick.Invoke();
-                    }
-                }
-            }
-            else
-            {
-                if (_currentHoveredButton)
-                {
-                    ResetButtonColor(_currentHoveredButton);
-                    _currentHoveredButton = null;
-                }
-            }
-        }
-        else
-        {
-            if (pointerLine)
-            {
-                pointerLine.enabled = true;
-                pointerLine.SetPosition(0, rightHandAnchor.position);
-                pointerLine.SetPosition(1, rightHandAnchor.position + rightHandAnchor.forward * pointerMaxDistance);
-            }
-
-            if (_currentHoveredButton)
-            {
-                ResetButtonColor(_currentHoveredButton);
-                _currentHoveredButton = null;
-            }
-        }
-    }
-
-    void HighlightButton(Button button)
-    {
-        if (!button) return;
-
-        var colors = button.colors;
-        colors.normalColor = Color.yellow;
-        button.colors = colors;
-    }
-
-    void ResetButtonColor(Button button)
-    {
-        if (!button) return;
-
-        var colors = button.colors;
-        colors.normalColor = Color.white;
-        button.colors = colors;
+        if (_isPaused) Resume();
+        else Pause();
     }
 
     public void Pause()
     {
         if (_isPaused) return;
 
+        // ★ GameFlowManager가 없거나, 이미 인트로/결과창이면 일시정지 불가
+        if (gameFlowManager == null) return;
+        
+        // ★ 여기서 에러가 났던 겁니다. 
+        // 전역 GameState를 쓰므로 GameFlowManager.GameState가 아니라 그냥 GameState입니다.
+        if (gameFlowManager.CurrentState == GameState.Intro || 
+            gameFlowManager.CurrentState == GameState.FinalResult) return;
+
         _isPaused = true;
-        Debug.Log("[PauseManager] Game paused");
-
-        Time.timeScale = 0f;
+        
+        // 메뉴 표시
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
+        
+        // 매니저에게 알림
+        gameFlowManager.PauseGame();
+        
+        // 소리 끄기 (선택)
         PauseAllAudio();
-
-        if (pauseMenuPanel)
-            pauseMenuPanel.SetActive(true);
-
-        if (pointerLine)
-            pointerLine.enabled = true;
-
-        if (gameFlowManager)
-            gameFlowManager.EnterPaused();
     }
 
     public void Resume()
@@ -186,113 +82,77 @@ public class PauseManager : MonoBehaviour
         if (!_isPaused) return;
 
         _isPaused = false;
-        Debug.Log("[PauseManager] Game resumed");
 
-        // 🔥 시간 재개
-        Time.timeScale = 1f;
+        // 메뉴 숨김
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
 
-        // 🔥 오디오 재개
+        // 매니저에게 알림
+        if (gameFlowManager) gameFlowManager.ResumeGame();
+
+        // 소리 켜기
         ResumeAllAudio();
-
-        // 패널 비활성화
-        if (pauseMenuPanel)
-            pauseMenuPanel.SetActive(false);
-
-        if (pointerLine)
-            pointerLine.enabled = false;
-
-        if (_currentHoveredButton)
-        {
-            ResetButtonColor(_currentHoveredButton);
-            _currentHoveredButton = null;
-        }
-
-        if (gameFlowManager)
-            gameFlowManager.ExitPaused();
     }
 
     public void Restart()
     {
-        Debug.Log($"[PauseManager] Restart requested from state: {gameFlowManager.CurrentState}");
+        Debug.Log("[PauseManager] 재시작 요청");
+        
+        // 일시정지 해제 (시간 흐르게 하기 위해)
+        Time.timeScale = 1f; 
 
-        // 🔥 시간 재개 (필수)
-        Time.timeScale = 1f;
-
-        // 🔥 패널 비활성화
-        _isPaused = false;
-        if (pauseMenuPanel)
-            pauseMenuPanel.SetActive(false);
-
-        if (pointerLine)
-            pointerLine.enabled = false;
-
-        if (_currentHoveredButton)
+        // 현재 모드에 따라 재시작 분기
+        if (gameFlowManager)
         {
-            ResetButtonColor(_currentHoveredButton);
-            _currentHoveredButton = null;
-        }
-
-        // 🔥 상태별 재시작
-        if (gameFlowManager.CurrentState == GameState.Tutorial)
-        {
-            // 튜토리얼 중: 씬 재시작
-            Debug.Log("[PauseManager] Restarting tutorial (reloading scene)");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // 전역 GameState 사용
+            if (gameFlowManager.CurrentState == GameState.Tutorial)
+            {
+                // 튜토리얼은 씬 재로딩이 깔끔할 수 있음
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                // 실전 모드는 매니저 리셋
+                gameFlowManager.RestartMainGameOnly();
+            }
         }
         else
         {
-            // 메인 게임: 메인 게임만 재시작
-            Debug.Log("[PauseManager] Restarting main game");
-
-            if (gameFlowManager)
-            {
-                gameFlowManager.RestartMainGameOnly();
-            }
+            // 예외 상황: 그냥 씬 재시작
+             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
     public void GoToMainMenu()
     {
-        Debug.Log("[PauseManager] Going to main menu");
-
         Time.timeScale = 1f;
-
-        if (pointerLine)
-            pointerLine.enabled = false;
-
-        if (gameFlowManager)
-        {
-            gameFlowManager.GoToMainMenu();
-        }
+        if (gameFlowManager) gameFlowManager.GoToMainMenu();
+        else SceneManager.LoadScene("Main_v4.1"); // 하드코딩 백업
     }
 
     void PauseAllAudio()
     {
-        Debug.Log($"[PauseManager] Pausing {allAudioSources.Length} audio sources");
-
         foreach (var source in allAudioSources)
         {
-            if (source && source.isPlaying)
-            {
-                source.Pause();
-                Debug.Log($"[PauseManager] Paused: {source.gameObject.name}");
-            }
+            if (source && source.isPlaying) source.Pause();
         }
     }
 
     void ResumeAllAudio()
     {
-        Debug.Log($"[PauseManager] Resuming {allAudioSources.Length} audio sources");
-
         foreach (var source in allAudioSources)
         {
-            if (source)
-            {
-                source.UnPause();
-                Debug.Log($"[PauseManager] Resumed: {source.gameObject.name}");
-            }
+            if (source) source.UnPause();
         }
     }
-
-    public bool IsPaused => _isPaused;
+    
+    // UI 포인터용 퍼블릭 메서드 (필요시 사용)
+    public void ShowPauseMenu() 
+    {
+         if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
+    }
+    
+    public void HidePauseMenu() 
+    {
+         if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+    }
 }
