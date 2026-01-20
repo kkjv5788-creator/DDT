@@ -291,21 +291,33 @@ public class CatchInput_st2 : MonoBehaviour
     public OVRInput.Controller handController;
     public Transform handTransform;
 
+    [Header("사운드")]
+    public AudioSource snapAudioSource;
+    public AudioClip snapSoundClip;
+
     private JudgeSystem_st2 judgeSystem;
     private BagManager_st2 bagManager;
     private EconomySystem_st2 economySystem;
+
+    // ✅ 추가: 마지막 판정/손 기록 (HUD용)
+    public JudgeResult_st2 lastJudgeResult;
+    public string lastHandName;
 
     public void Initialize(JudgeSystem_st2 judge, BagManager_st2 bag, EconomySystem_st2 economy, MoldController_st2[] moldControllers)
     {
         judgeSystem = judge;
         bagManager = bag;
         economySystem = economy;
+
+        // 초기값 설정
+        lastJudgeResult = JudgeResult_st2.Miss;
+        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
     }
 
     void Update()
     {
         if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing) return;
-        if (GameFlowController_st2.Instance.isEndingTriggered) return; // 종료 시 입력 차단
+        if (GameFlowController_st2.Instance.isEndingTriggered) return;
 
         ProcessHandInput();
     }
@@ -319,24 +331,21 @@ public class CatchInput_st2 : MonoBehaviour
         if (snapshotTarget == null) return;
         if (snapshotTarget.isResolved) return;
 
-        // assignedHand 확정
         if (snapshotTarget.assignedHand == null)
         {
             snapshotTarget.assignedHand = handController;
         }
 
-        // 다른 손이 할당되어 있으면 무시
         if (snapshotTarget.assignedHand != handController)
             return;
 
-        // 판정 진행
         double catchTime = AudioSettings.dspTime;
         JudgeResult_st2 result = judgeSystem.PerformJudge(snapshotTarget, catchTime);
 
-        // ✅ 제거: economySystem.ApplyJudgeResult(result);
-        // 이제 GameFlowController에서 OnJudgeResult 이벤트로 자동 처리됨
+        // ✅ 마지막 판정 기록
+        lastJudgeResult = result;
+        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
 
-        // 처리
         if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
         {
             OnCatchSuccess(snapshotTarget, result);
@@ -347,24 +356,35 @@ public class CatchInput_st2 : MonoBehaviour
         }
     }
 
-    // ✅ 수정: result 매개변수 추가
+    // ✅ 수정: 1프레임 스냅 보장
     void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
     {
-        // ✅ Rigidbody 비활성화 (물리 중단)
         fish.OnCaught();
 
         // 손으로 스냅
         fish.transform.position = handTransform.position;
         fish.transform.SetParent(handTransform);
 
-        // ✅ 수정: 정확한 피드백 표시
+        // ✅ "착" 사운드 재생
+        if (snapAudioSource != null && snapSoundClip != null)
+        {
+            snapAudioSource.PlayOneShot(snapSoundClip);
+        }
+
         string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
         FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, feedbackText);
 
-        // 봉투에 추가
         bagManager.AddItem();
 
-        // ✅ 수정: ownerMold로만 릴리즈
+        // ✅ 1프레임 후 풀로 반환 (손에 붙은 모습 보장)
+        StartCoroutine(ReleaseFishAfterFrame(fish));
+    }
+
+    // ✅ 추가: 1프레임 대기 후 풀 반환
+    IEnumerator ReleaseFishAfterFrame(FishCatchToken_st2 fish)
+    {
+        yield return null; // 1프레임 대기
+
         if (fish.ownerMold != null)
         {
             fish.ownerMold.ReleaseFish(fish);
@@ -373,14 +393,10 @@ public class CatchInput_st2 : MonoBehaviour
 
     void OnCatchMiss(FishCatchToken_st2 fish)
     {
-        // 피드백
         FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, "MISS");
 
-        // ✅ 수정: ownerMold로만 릴리즈
-        if (fish.ownerMold != null)
-        {
-            fish.ownerMold.ReleaseFish(fish);
-        }
+        // ✅ Miss는 즉시 삭제하지 않고 낙하 유지
+        // ReleaseFish 호출 제거 - 바닥에서 제거됨
     }
 }
 
@@ -499,6 +515,186 @@ public class CrowdMember_st2 : MonoBehaviour
 
 
 ----- END FILE: CrowdMember_st2.cs -----
+
+================================================================================
+FILE: DebugHUD_st2.cs
+================================================================================
+
+using UnityEngine;
+using static GameState_st2;
+
+public class DebugHUD_st2 : MonoBehaviour
+{
+    [Header("설정")]
+    public bool alwaysOn = true; // Quest 빌드에서는 true
+    public KeyCode toggleKey = KeyCode.F1; // PC 디버그용
+
+    [Header("참조")]
+    public GameFlowController_st2 gameFlow;
+    public JudgeSystem_st2 judgeSystem;
+    public EconomySystem_st2 economySystem;
+    public TutorialManager_st2 tutorialManager;
+    public HandCatchSensor_st2 leftSensor;
+    public HandCatchSensor_st2 rightSensor;
+    public CatchInput_st2 leftInput;
+    public CatchInput_st2 rightInput;
+    public MoldController_st2[] molds;
+
+    private bool isVisible = true;
+
+    void Start()
+    {
+        if (alwaysOn)
+        {
+            isVisible = true;
+        }
+    }
+
+    void Update()
+    {
+        // PC 디버그: F1로 토글
+        if (!alwaysOn && Input.GetKeyDown(toggleKey))
+        {
+            isVisible = !isVisible;
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!isVisible) return;
+
+        // 기본 스타일 설정
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        labelStyle.fontSize = 16;
+        labelStyle.normal.textColor = Color.white;
+        labelStyle.padding = new RectOffset(5, 5, 2, 2);
+
+        GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+        boxStyle.normal.background = MakeTex(2, 2, new Color(0, 0, 0, 0.7f));
+
+        float x = 10;
+        float y = 10;
+        float width = 350;
+        float lineHeight = 22;
+
+        // 배경 박스
+        GUI.Box(new Rect(x, y, width, 280), "", boxStyle);
+
+        y += 10;
+
+        // === 게임 상태 ===
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>STATE:</b> {gameFlow.CurrentState}", labelStyle);
+        y += lineHeight;
+
+        // === 튜토리얼 진행 (Tutorial 모드일 때만) ===
+        if (gameFlow.CurrentState == GameStatest2.Tutorial && tutorialManager != null)
+        {
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Tutorial:</b> {tutorialManager.GetCurrentStageInfo()}", labelStyle);
+            y += lineHeight;
+        }
+
+        // === 누적 카운트 ===
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>Perfect:</b> {judgeSystem.perfectCount}  <b>Good:</b> {judgeSystem.goodCount}  <b>Miss:</b> {judgeSystem.missCount}",
+            labelStyle);
+        y += lineHeight;
+
+        // === 마지막 판정 + 손 ===
+        string lastJudge = "None";
+        string lastHand = "-";
+
+        if (leftInput != null && leftInput.lastJudgeResult != JudgeResult_st2.Miss)
+        {
+            lastJudge = leftInput.lastJudgeResult.ToString();
+            lastHand = leftInput.lastHandName;
+        }
+        else if (rightInput != null && rightInput.lastJudgeResult != JudgeResult_st2.Miss)
+        {
+            lastJudge = rightInput.lastJudgeResult.ToString();
+            lastHand = rightInput.lastHandName;
+        }
+
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>Last Judge:</b> {lastJudge} ({lastHand})", labelStyle);
+        y += lineHeight;
+
+        // === 일급 ===
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>Wage:</b> {economySystem.currentWage:N0}원", labelStyle);
+        y += lineHeight;
+
+        // === 타겟 여부 ===
+        bool leftHasTarget = leftSensor != null && leftSensor.currentTarget != null;
+        bool rightHasTarget = rightSensor != null && rightSensor.currentTarget != null;
+
+        string leftStatus = leftHasTarget ? "TARGET" : "-";
+        string rightStatus = rightHasTarget ? "TARGET" : "-";
+
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>L Hand:</b> {leftStatus}  <b>R Hand:</b> {rightStatus}", labelStyle);
+        y += lineHeight;
+
+        // === ActiveFish 수 ===
+        int totalActiveFish = 0;
+        if (molds != null)
+        {
+            foreach (var mold in molds)
+            {
+                if (mold != null)
+                {
+                    totalActiveFish += mold.GetActiveFishCount();
+                }
+            }
+        }
+
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>Active Fish:</b> {totalActiveFish}", labelStyle);
+        y += lineHeight;
+
+        // === 시간 정보 (Playing 중일 때만) ===
+        if (gameFlow.CurrentState == GameStatest2.Playing && gameFlow.bgmSource != null)
+        {
+            float currentTime = gameFlow.bgmSource.time;
+            float totalTime = gameFlow.bgmSource.clip != null ? gameFlow.bgmSource.clip.length : 0;
+
+            int currMin = (int)(currentTime / 60);
+            int currSec = (int)(currentTime % 60);
+            int totalMin = (int)(totalTime / 60);
+            int totalSec = (int)(totalTime % 60);
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Time:</b> {currMin:00}:{currSec:00} / {totalMin:00}:{totalSec:00}", labelStyle);
+            y += lineHeight;
+        }
+
+        // === 토글 안내 (alwaysOn이 아닐 때만) ===
+        if (!alwaysOn)
+        {
+            y += 10;
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"[{toggleKey}] Toggle HUD", labelStyle);
+        }
+    }
+
+    // 단색 텍스처 생성 헬퍼
+    private Texture2D MakeTex(int width, int height, Color col)
+    {
+        Color[] pix = new Color[width * height];
+        for (int i = 0; i < pix.Length; i++)
+        {
+            pix[i] = col;
+        }
+
+        Texture2D result = new Texture2D(width, height);
+        result.SetPixels(pix);
+        result.Apply();
+        return result;
+    }
+}
+
+----- END FILE: DebugHUD_st2.cs -----
 
 ================================================================================
 FILE: EconomySystem_st2.cs
@@ -659,14 +855,14 @@ public class FishCatchToken_st2 : MonoBehaviour
     public OVRInput.Controller? assignedHand = null;
 
     [Header("이동 데이터")]
-    private Vector3 moldPosition;      // 틀 위치
+    private Vector3 moldPosition;
     private Transform parentMold;
 
     [Header("점프 설정 (Rigidbody)")]
-    public float jumpHeight = 2.5f;       // 점프 높이 (위로 얼마나 올라갈지)
-    public float forwardDistance = 2.0f;  // ✅ -Z 방향으로 날아갈 거리
-    public float gravity = 9.81f;         // 중력 가속도
-    public LayerMask groundLayer;         // ✅ 땅 레이어
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
 
     private Rigidbody rb;
     private bool hasJumped = false;
@@ -676,21 +872,18 @@ public class FishCatchToken_st2 : MonoBehaviour
 
     void Awake()
     {
-        // Rigidbody 컴포넌트 가져오기 또는 추가
         rb = GetComponent<Rigidbody>();
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
-        // Rigidbody 설정
         rb.useGravity = true;
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        rb.constraints = RigidbodyConstraints.FreezeRotation; // 회전 고정 (선택)
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
-    // 초기화
     public void Initialize(double popDspTime, Transform mold, MoldController_st2 owner)
     {
         popTime = popDspTime;
@@ -701,83 +894,52 @@ public class FishCatchToken_st2 : MonoBehaviour
         ownerMold = owner;
         hasJumped = false;
 
-        // 위치 설정
         moldPosition = mold.position;
         transform.position = moldPosition;
 
-        // Rigidbody 초기화
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = true;
         rb.isKinematic = false;
 
-        // ✅ Scale 설정
         transform.localScale = Vector3.one * 100.0f;
 
-        // ✅ 점프 시작 (플레이어 방향 회전 전에 실행)
         PerformJump();
 
-        // 플레이어 방향 회전 (점프 후에 실행)
         Transform playerCam = Camera.main.transform;
         Vector3 toPlayer = (playerCam.position - transform.position).normalized;
         transform.right = toPlayer;
     }
 
-    // ✅ Rigidbody 기반 점프 (포물선 운동 - 월드 좌표 기준)
     void PerformJump()
     {
         if (hasJumped) return;
 
-        // 위쪽 속도 계산 (점프 높이 기준)
-        // v_y = sqrt(2 * g * h)
         float jumpVelocityY = Mathf.Sqrt(2f * gravity * jumpHeight);
-
-        // 비행 시간 계산 (올라갔다 떨어지는 시간)
-        // t = 2 * v_y / g
         float flightTime = 2f * jumpVelocityY / gravity;
-
-        // -Z 방향 속도 계산 (포물선을 그리며 forwardDistance만큼 이동)
-        // v_z = distance / time
         float forwardVelocityZ = forwardDistance / flightTime;
 
-        // ✅ 월드 좌표 기준: Y축(위), -Z축(앞)
         Vector3 velocity = new Vector3(0, jumpVelocityY, -forwardVelocityZ);
-
         rb.velocity = velocity;
 
-        // 중력 설정
         Physics.gravity = new Vector3(0, -gravity, 0);
-
         hasJumped = true;
-
-        Debug.Log($"Jump! Y velocity: {jumpVelocityY}, Z velocity: {-forwardVelocityZ}, flight time: {flightTime}s");
     }
 
-    // fish 움직임 업데이트
     public void UpdateMovement()
     {
-        if (isResolved) return;
-
         // Rigidbody가 자동으로 물리 처리
-        // 땅 충돌 감지는 OnCollisionEnter에서 처리
     }
 
-    // ✅ 충돌 감지 - 땅에 닿으면 Miss 처리
+    // ✅ 수정: 바닥 삭제 조건을 isCaught와 분리
     void OnCollisionEnter(Collision collision)
     {
-        // 이미 처리된 경우 무시
-        if (isResolved) return;
-
         // 땅 레이어와 충돌했는지 확인
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            Debug.Log("붕어빵이 땅에 떨어짐 - Miss 처리");
+            Debug.Log("붕어빵이 땅에 떨어짐 - 풀로 반환");
 
-            // Miss 처리
-            isResolved = true;
-            isCaught = false;
-
-            // ownerMold로 릴리즈
+            // ✅ isResolved 상태와 무관하게 바닥에 닿으면 제거
             if (ownerMold != null)
             {
                 ownerMold.ReleaseFish(this);
@@ -785,7 +947,6 @@ public class FishCatchToken_st2 : MonoBehaviour
         }
     }
 
-    // ✅ 잡혔을 때 Rigidbody 비활성화
     public void OnCaught()
     {
         if (rb != null)
@@ -796,7 +957,6 @@ public class FishCatchToken_st2 : MonoBehaviour
         }
     }
 
-    // ✅ 풀로 반환될 때 Rigidbody 리셋
     public void OnReturnToPool()
     {
         if (rb != null)
@@ -1152,12 +1312,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+
 public class HandCatchSensor_st2 : MonoBehaviour
 {
     [Header("설정")]
     public OVRInput.Controller handController;
     public LayerMask fishLayer;
     public float raycastLength = 0.15f;
+
+    [Header("LineRenderer 설정")]
+    public LineRenderer lineRenderer;
+    public bool showLineRenderer = true;
+
+    [Header("라인 색상")]
+    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f); // 회색 반투명
+    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);      // 초록색
+    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f); // 빨간색 (이미 처리됨)
+
+    [Header("라인 스타일")]
+    public float lineWidth = 0.002f; // 라인 굵기 (0.2cm)
+    public int lineSegments = 20;    // 라인 세그먼트 수 (부드러운 곡선용)
+    public AnimationCurve lineWidthCurve = AnimationCurve.Linear(0, 1, 1, 0.3f); // 시작->끝 굵기 변화
 
     [Header("상태")]
     public FishCatchToken_st2 currentTarget;
@@ -1168,11 +1343,55 @@ public class HandCatchSensor_st2 : MonoBehaviour
     void Awake()
     {
         cachedTransform = transform;
+
+        // LineRenderer 자동 설정
+        SetupLineRenderer();
+    }
+
+    void Start()
+    {
+        if (lineRenderer != null && !showLineRenderer)
+        {
+            lineRenderer.enabled = false;
+        }
     }
 
     void Update()
     {
         UpdateCurrentTarget();
+        UpdateLineRenderer();
+    }
+
+    void SetupLineRenderer()
+    {
+        if (lineRenderer == null)
+        {
+            // LineRenderer가 없으면 자동 생성
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        }
+
+        // 기본 설정
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.positionCount = 2;
+        lineRenderer.useWorldSpace = true;
+
+        // Material 설정 (Unlit/Color 셰이더 사용)
+        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
+        {
+            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+        }
+
+        // 초기 색상
+        lineRenderer.startColor = noTargetColor;
+        lineRenderer.endColor = noTargetColor;
+
+        // 굵기 곡선 적용
+        lineRenderer.widthCurve = lineWidthCurve;
+
+        // 그림자/라이팅 끄기 (성능 최적화)
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
     }
 
     void UpdateCurrentTarget()
@@ -1217,8 +1436,88 @@ public class HandCatchSensor_st2 : MonoBehaviour
 
         currentTarget = closestFish;
     }
-}
 
+    void UpdateLineRenderer()
+    {
+        if (lineRenderer == null || !showLineRenderer)
+            return;
+
+        // 게임 상태 체크 (Playing 상태에서만 표시)
+        if (GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
+
+        lineRenderer.enabled = true;
+
+        // 시작점: 손 위치
+        Vector3 startPos = cachedTransform.position;
+
+        // 끝점: Raycast 방향
+        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
+
+        // 타겟이 있으면 타겟까지만 그리기
+        if (currentTarget != null)
+        {
+            endPos = currentTarget.transform.position;
+        }
+
+        // LineRenderer 위치 설정
+        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(1, endPos);
+
+        // 색상 설정
+        Color lineColor = GetLineColor();
+        lineRenderer.startColor = lineColor;
+        lineRenderer.endColor = lineColor;
+    }
+
+    Color GetLineColor()
+    {
+        if (currentTarget == null)
+        {
+            // 타겟 없음: 회색
+            return noTargetColor;
+        }
+        else if (currentTarget.isResolved)
+        {
+            // 이미 처리된 타겟: 빨간색
+            return resolvedTargetColor;
+        }
+        else
+        {
+            // 잡을 수 있는 타겟: 초록색
+            return hasTargetColor;
+        }
+    }
+
+    /// <summary>
+    /// 런타임에서 LineRenderer 표시/숨김 토글
+    /// </summary>
+    public void ToggleLineRenderer()
+    {
+        showLineRenderer = !showLineRenderer;
+
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = showLineRenderer;
+        }
+    }
+
+    /// <summary>
+    /// LineRenderer 표시 설정
+    /// </summary>
+    public void SetLineRendererVisible(bool visible)
+    {
+        showLineRenderer = visible;
+
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = visible;
+        }
+    }
+}
 
 ----- END FILE: HandCatchSensor_st2.cs -----
 
@@ -1247,7 +1546,6 @@ public class JudgeSystem_st2 : MonoBehaviour
     // 이벤트
     public event Action<JudgeResult_st2, float> OnJudgeResult;
 
-    // ✅ 수정: HashSet으로 변경 (O(1) 제거 성능)
     private HashSet<FishCatchToken_st2> activeFish = new HashSet<FishCatchToken_st2>();
 
     public void RegisterFish(FishCatchToken_st2 fish)
@@ -1255,13 +1553,10 @@ public class JudgeSystem_st2 : MonoBehaviour
         activeFish.Add(fish);
     }
 
-    // ✅ 추가: 명시적 제거 메서드
     public void UnregisterFish(FishCatchToken_st2 fish)
     {
         activeFish.Remove(fish);
     }
-
-   
 
     public JudgeResult_st2 PerformJudge(FishCatchToken_st2 fish, double catchTime)
     {
@@ -1291,7 +1586,6 @@ public class JudgeSystem_st2 : MonoBehaviour
         fish.isResolved = true;
         fish.isCaught = (result != JudgeResult_st2.Miss);
 
-        // ✅ 추가: 판정 확정 즉시 제거
         activeFish.Remove(fish);
 
         OnJudgeResult?.Invoke(result, delta);
@@ -1299,21 +1593,21 @@ public class JudgeSystem_st2 : MonoBehaviour
         return result;
     }
 
+    // ✅ 수정: Timeout Miss는 즉시 삭제하지 않고 낙하 유지
     void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
         if (fish.isResolved) return;
 
+        // ✅ Miss 확정만 하고 물리 낙하는 유지
         fish.isResolved = true;
         fish.isCaught = false;
         missCount++;
 
         OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
-        // ✅ ownerMold로 릴리즈
-        if (fish.ownerMold != null)
-        {
-            fish.ownerMold.ReleaseFish(fish);
-        }
+        // ✅ 즉시 ReleaseFish 호출 제거 - 바닥에서 제거됨
+        // 단, activeFish에서는 제거
+        activeFish.Remove(fish);
     }
 
     public void ResetStats()
@@ -1324,7 +1618,6 @@ public class JudgeSystem_st2 : MonoBehaviour
         activeFish.Clear();
     }
 
-    // ✅ 추가: 곡 종료 시 남은 fish 강제 Miss
     public void ForceResolveAll()
     {
         var fishList = new List<FishCatchToken_st2>(activeFish);
@@ -1739,6 +2032,10 @@ public class MoldController_st2 : MonoBehaviour
         }
         activeFish.Clear();
     }
+    public int GetActiveFishCount()
+    {
+        return activeFish.Count;
+    }
 }
 
 ----- END FILE: MoldController_st2.cs -----
@@ -2020,7 +2317,6 @@ using TMPro;
 using UnityEngine;
 using static GameState_st2;
 
-
 public class TutorialManager_st2 : MonoBehaviour
 {
     public enum TutorialStage
@@ -2039,7 +2335,7 @@ public class TutorialManager_st2 : MonoBehaviour
 
     private int telegraphCount = 0;
     private int popCount = 0;
-    private int successfulCatchCount = 0;
+    private int goodOrBetterCount = 0; // ✅ 수정: Good 이상만 카운트
     private bool hasSeenBagSwap = false;
     private bool hasSuccessSync2 = false;
     private bool hasSuccessRun3 = false;
@@ -2061,7 +2357,6 @@ public class TutorialManager_st2 : MonoBehaviour
     {
         if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Tutorial) return;
 
-        // 스킵 입력
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
             SkipTutorial();
@@ -2086,7 +2381,8 @@ public class TutorialManager_st2 : MonoBehaviour
                 break;
 
             case TutorialStage.Catch:
-                if (successfulCatchCount >= 1)
+                // ✅ 수정: Good 이상 2회 요구
+                if (goodOrBetterCount >= 2)
                     AdvanceToNextStage();
                 break;
 
@@ -2136,17 +2432,18 @@ public class TutorialManager_st2 : MonoBehaviour
                 break;
 
             case TutorialStage.Catch:
-                instructionText.text = "Catch the fish with Trigger!";
-                progressText.text = $"Get Good or Perfect!";
+                // ✅ 수정: Good 이상 2회 요구 안내
+                instructionText.text = "Catch fish with Good or Perfect!";
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
                 break;
 
             case TutorialStage.BagSwap:
                 instructionText.text = "Collect 3 fish to swap bag!";
-                progressText.text = $"Catches: {successfulCatchCount}/3";
+                progressText.text = $"Catches needed for swap";
                 break;
 
             case TutorialStage.Sync2Pattern:
-                instructionText.text = "Try Sync2 pattern! (띠링)";
+                instructionText.text = "Try Sync2 pattern! (땡땡)";
                 progressText.text = "Catch at least 1!";
                 break;
 
@@ -2177,17 +2474,17 @@ public class TutorialManager_st2 : MonoBehaviour
 
     public void OnCatchSuccess(JudgeResult_st2 result)
     {
+        // ✅ 수정: Good 이상만 처리
         if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
         {
             if (currentStage == TutorialStage.Catch)
             {
-                successfulCatchCount++;
-                progressText.text = "Great! You caught it!";
+                goodOrBetterCount++;
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
             }
             else if (currentStage == TutorialStage.BagSwap)
             {
-                successfulCatchCount++;
-                progressText.text = $"Catches: {successfulCatchCount}/3";
+                // BagSwap은 OnBagSwapped 이벤트로 처리
             }
             else if (currentStage == TutorialStage.Sync2Pattern && currentPatternType == PatternType_st2.Sync2)
             {
@@ -2231,8 +2528,31 @@ public class TutorialManager_st2 : MonoBehaviour
 
         GameFlowController_st2.Instance.TransitionToPlaying();
     }
-}
 
+    // ✅ 추가: HUD에서 현재 진행 상황 문자열로 제공
+    public string GetCurrentStageInfo()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.Telegraph:
+                return $"Telegraph {telegraphCount}/2";
+            case TutorialStage.Pop:
+                return $"Pop {popCount}/2";
+            case TutorialStage.Catch:
+                return $"Catch {goodOrBetterCount}/2";
+            case TutorialStage.BagSwap:
+                return "BagSwap Wait";
+            case TutorialStage.Sync2Pattern:
+                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
+            case TutorialStage.Run3Pattern:
+                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
+            case TutorialStage.Complete:
+                return "Complete";
+            default:
+                return "Unknown";
+        }
+    }
+}
 
 ----- END FILE: TutorialManager_st2.cs -----
 

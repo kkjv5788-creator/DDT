@@ -19,7 +19,6 @@ public class JudgeSystem_st2 : MonoBehaviour
     // 이벤트
     public event Action<JudgeResult_st2, float> OnJudgeResult;
 
-    // ✅ 수정: HashSet으로 변경 (O(1) 제거 성능)
     private HashSet<FishCatchToken_st2> activeFish = new HashSet<FishCatchToken_st2>();
 
     public void RegisterFish(FishCatchToken_st2 fish)
@@ -27,13 +26,10 @@ public class JudgeSystem_st2 : MonoBehaviour
         activeFish.Add(fish);
     }
 
-    // ✅ 추가: 명시적 제거 메서드
     public void UnregisterFish(FishCatchToken_st2 fish)
     {
         activeFish.Remove(fish);
     }
-
-   
 
     public JudgeResult_st2 PerformJudge(FishCatchToken_st2 fish, double catchTime)
     {
@@ -63,7 +59,6 @@ public class JudgeSystem_st2 : MonoBehaviour
         fish.isResolved = true;
         fish.isCaught = (result != JudgeResult_st2.Miss);
 
-        // ✅ 추가: 판정 확정 즉시 제거
         activeFish.Remove(fish);
 
         OnJudgeResult?.Invoke(result, delta);
@@ -71,21 +66,21 @@ public class JudgeSystem_st2 : MonoBehaviour
         return result;
     }
 
+    // ✅ 수정: Timeout Miss는 즉시 삭제하지 않고 낙하 유지
     void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
         if (fish.isResolved) return;
 
+        // ✅ Miss 확정만 하고 물리 낙하는 유지
         fish.isResolved = true;
         fish.isCaught = false;
         missCount++;
 
         OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
-        // ✅ ownerMold로 릴리즈
-        if (fish.ownerMold != null)
-        {
-            fish.ownerMold.ReleaseFish(fish);
-        }
+        // ✅ 즉시 ReleaseFish 호출 제거 - 바닥에서 제거됨
+        // 단, activeFish에서는 제거
+        activeFish.Remove(fish);
     }
 
     public void ResetStats()
@@ -96,7 +91,6 @@ public class JudgeSystem_st2 : MonoBehaviour
         activeFish.Clear();
     }
 
-    // ✅ 추가: 곡 종료 시 남은 fish 강제 Miss
     public void ForceResolveAll()
     {
         var fishList = new List<FishCatchToken_st2>(activeFish);

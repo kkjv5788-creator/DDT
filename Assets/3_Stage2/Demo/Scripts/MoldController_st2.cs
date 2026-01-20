@@ -246,4 +246,8 @@ public class MoldController_st2 : MonoBehaviour
         }
         activeFish.Clear();
     }
+    public int GetActiveFishCount()
+    {
+        return activeFish.Count;
+    }
 }
