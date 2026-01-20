@@ -468,7 +468,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1591346110}
         m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
-        m_MethodName: LoadStage1
+        m_MethodName: LoadStage2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2357,6 +2357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage1SceneIndex: 1
+  stage2SceneIndex: 2
   fadeDuration: 1
   playerRig: {fileID: 6162932486190058805}
   titlePoint: {fileID: 1589090609}

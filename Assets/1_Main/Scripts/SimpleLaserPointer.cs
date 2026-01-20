@@ -103,15 +103,15 @@ public class SimpleLaserPointer : MonoBehaviour
                     currentHitObject = hitObj;
                     PlayFeedback(); // 소리/진동
 
-                    // 1. 아웃라인 켜기
-                    var outline = hitObj.GetComponentInParent<Outline>();
-                    if (outline != null)
-                    {
-                        outline.enabled = true;
-                        outline.OutlineColor = hoverLaserColor;
-                        outline.OutlineWidth = 5f; // 두께 조절 가능
-                        currentOutline = outline;
-                    }
+                    // // 1. 아웃라인 켜기
+                    // var outline = hitObj.GetComponentInParent<Outline>();
+                    // if (outline != null)
+                    // {
+                    //     outline.enabled = true;
+                    //     outline.OutlineColor = hoverLaserColor;
+                    //     outline.OutlineWidth = 5f; // 두께 조절 가능
+                    //     currentOutline = outline;
+                    // }
 
                     // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
                     var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
