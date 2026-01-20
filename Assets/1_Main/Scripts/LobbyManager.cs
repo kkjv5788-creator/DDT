@@ -6,6 +6,7 @@ public class LobbyManager : MonoBehaviour
 {
     [Header("Settings")]
     public int stage1SceneIndex = 1;
+    public int stage2SceneIndex = 2; // 🔥 [추가] 스테이지 2 인덱스 (기본값 2)
     public float fadeDuration = 1.0f;
 
     [Header("Locations (Drag & Drop)")]
@@ -24,7 +25,6 @@ public class LobbyManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        // 시작하면 타이틀 위치로 강제 이동 & 안내 UI 숨기기
         if (playerRig && titlePoint)
         {
             playerRig.position = titlePoint.position;
@@ -35,33 +35,25 @@ public class LobbyManager : MonoBehaviour
         if (guideUI) guideUI.SetActive(false);
     }
 
-    // 🔥 [수정] 버튼은 이 함수를 불러야 합니다! (Wrapper 함수 추가)
     public void MoveToLobby()
     {
         StartCoroutine(RoutineMoveToLobby());
     }
 
-    // 내부 로직 (버튼이 직접 못 부름)
     IEnumerator RoutineMoveToLobby()
     {
-        // 1. 화면 어둡게
         if (fader) fader.FadeOut();
-        
-        // 2. 대기
         yield return new WaitForSeconds(fadeDuration);
 
-        // 3. 플레이어 이동
         if (playerRig && lobbyPoint)
         {
             playerRig.position = lobbyPoint.position;
             playerRig.rotation = lobbyPoint.rotation;
         }
 
-        // 4. UI 교체
         if (titleCanvas) titleCanvas.SetActive(false); 
         if (guideUI) guideUI.SetActive(true);         
 
-        // 5. 화면 다시 밝게 (Fade In)
         if (fader) fader.FadeIn(); 
     }
 
@@ -75,15 +67,24 @@ public class LobbyManager : MonoBehaviour
         #endif
     }
 
+    // --- 스테이지 로드 관련 함수들 ---
+
     public void LoadStage1()
     {
-        StartCoroutine(RoutineLoadStage());
+        StartCoroutine(RoutineLoadStage(stage1SceneIndex));
     }
 
-    IEnumerator RoutineLoadStage()
+    // 🔥 [추가] 스테이지 2 로드 함수
+    public void LoadStage2()
+    {
+        StartCoroutine(RoutineLoadStage(stage2SceneIndex));
+    }
+
+    // [개선] 코드 중복을 피하기 위해 통합된 루틴 사용
+    IEnumerator RoutineLoadStage(int sceneIndex)
     {
         if (fader) fader.FadeOut();
         yield return new WaitForSeconds(fadeDuration);
-        SceneManager.LoadScene(stage1SceneIndex);
+        SceneManager.LoadScene(sceneIndex);
     }
 }
