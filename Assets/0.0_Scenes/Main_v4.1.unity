@@ -821,7 +821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5013298695391559155, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSize
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5013298695391559155, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontAsset
@@ -829,11 +829,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: ff58b3bd72df2ea4c89d46fa0b7e66c5, type: 2}
     - target: {fileID: 5013298695391559155, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSizeMax
-      value: 2
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5013298695391559155, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSizeBase
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5013298695391559155, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_sharedMaterial
@@ -969,7 +969,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340753027459215757, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSize
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8340753027459215757, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontAsset
@@ -977,11 +977,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: ff58b3bd72df2ea4c89d46fa0b7e66c5, type: 2}
     - target: {fileID: 8340753027459215757, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSizeMax
-      value: 2
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8340753027459215757, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_fontSizeBase
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8340753027459215757, guid: dbdb851de3b38c44b82d77b35b644342, type: 3}
       propertyPath: m_sharedMaterial
