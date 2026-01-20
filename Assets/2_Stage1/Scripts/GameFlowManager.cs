@@ -11,7 +11,10 @@ public class GameFlowManager : MonoBehaviour
     public KimbapSpawner spawner;
     public ResultManager resultManager;
     public PauseManager pauseManager;
-    public ProgressGaugeUI progressGaugeUI;
+
+    [Header("New Managers")]
+    public HandToolSwitcher toolSwitcher; // [새로 추가] 칼/컨트롤러 교체
+    // public ProgressGaugeUI progressGaugeUI; // [삭제됨] StageUIManager가 대신함
 
     [Header("Data")]
     public RhythmTriggerListSO mainTriggerList;
@@ -26,6 +29,7 @@ public class GameFlowManager : MonoBehaviour
 
     void Start()
     {
+        // 1. 기본 연결
         if (conductor && plateController)
             conductor.plateController = plateController;
 
@@ -35,12 +39,26 @@ public class GameFlowManager : MonoBehaviour
         if (tutorialController && radio)
             tutorialController.radio = radio;
 
-        if (resultManager && progressGaugeUI)
+        // 2. [변경] 게이지 업데이트를 StageUIManager로 연결
+        if (resultManager)
         {
-            resultManager.OnProgressUpdate.AddListener(progressGaugeUI.UpdateProgress);
+            // ResultManager 이벤트: (현재점수, 총점수, 퍼센트)
+            // StageUIManager 함수: (현재, 최대)
+            resultManager.OnProgressUpdate.AddListener((curr, total, pct) => 
+            {
+                if (StageUIManager.Instance) 
+                    StageUIManager.Instance.UpdateGauge(curr, total);
+            });
         }
 
+        // 3. 초기 상태 설정
         CurrentState = GameState.Tutorial;
+        
+        // [추가] 시작할 땐 '칼' 들기 + 라디오 가이드 끄기 + 왼손 팁 켜기
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(false, true);
+
+        // 4. 튜토리얼 시작
         if (tutorialController)
         {
             tutorialController.StartTutorial();
@@ -65,10 +83,12 @@ public class GameFlowManager : MonoBehaviour
 
         if (radio)
         {
-            // 튜토리얼 컨트롤러 쪽에서 못 세팅해도 여기서 한 번 더 보장
             radio.SetTutorialCompleted(true);
             radio.SetClickable(true);
         }
+
+        // [추가] 튜토리얼 끝났으니 라디오 쏘라고 가이드 화살표 띄우기
+        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(true, true);
     }
 
     void StartMainGame()
@@ -83,6 +103,10 @@ public class GameFlowManager : MonoBehaviour
 
         _mainGameStarted = true;
         CurrentState = GameState.PlayingMain;
+
+        // [추가] 게임 시작: 라디오 가이드 끄기 + 무조건 칼 들기
+        if (StageUIManager.Instance) StageUIManager.Instance.SetGuides(false, true);
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
 
         if (radio)
         {
@@ -111,12 +135,20 @@ public class GameFlowManager : MonoBehaviour
     {
         _stateBeforePause = CurrentState;
         CurrentState = GameState.Paused;
+        
+        // [추가] 일시정지 시 메뉴 눌러야 하니까 컨트롤러 꺼내기
+        if (toolSwitcher) toolSwitcher.SwitchToController(); 
+
         Debug.Log($"[GameFlowManager] Entered Paused (from {_stateBeforePause})");
     }
 
     public void ExitPaused()
     {
         CurrentState = _stateBeforePause;
+        
+        // [추가] 일시정지 해제 시 다시 칼 들기
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+
         Debug.Log($"[GameFlowManager] Exited Paused (back to {CurrentState})");
     }
 
@@ -124,6 +156,9 @@ public class GameFlowManager : MonoBehaviour
     {
         CurrentState = GameState.FinalResult;
         Debug.Log($"[GameFlowManager] Entered FinalResult (Success Rate: {successRate:F1}%)");
+        
+        // [추가] 결과창에서는 버튼 눌러야 하니 컨트롤러 꺼내기
+        if (toolSwitcher) toolSwitcher.SwitchToController();
 
         if (successRate >= 50f)
         {
@@ -131,14 +166,16 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // 🔥 메인 게임만 재시작 (튜토리얼 스킵)
+    // 🔥 메인 게임만 재시작
     public void RestartMainGameOnly()
     {
         Debug.Log("[GameFlowManager] Restarting main game only");
 
-        // 상태 초기화
         _mainGameStarted = false;
         CurrentState = GameState.PlayingMain;
+
+        // [추가] 재시작이니까 다시 칼 들기
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
 
         // BGM 정지
         if (conductor && conductor.bgmSource)
@@ -162,27 +199,28 @@ public class GameFlowManager : MonoBehaviour
             if (resultManager.panel0) resultManager.panel0.SetActive(false);
         }
 
-        // 게이지 초기화
-        if (progressGaugeUI)
+        // [변경] 게이지 초기화 (StageUIManager 사용)
+        if (StageUIManager.Instance)
         {
-            progressGaugeUI.UpdateProgress(0, 1, 0f);
+            StageUIManager.Instance.UpdateGauge(0, 1);
+            StageUIManager.Instance.SetGuides(false, true); // 가이드 끄기
         }
 
-        // 라디오 비활성화 (자동 시작)
+        // 라디오 비활성화
         if (radio)
         {
             radio.SetClickable(false);
         }
 
-        // 🔥 메인 게임 즉시 시작 (BGM 포함)
+        // 게임 시작
         if (conductor && mainTriggerList)
         {
             conductor.isTutorialMode = false;
             conductor.data = mainTriggerList;
-            conductor.StartGame(); // 이 안에서 BGM이 처음부터 재생됨
+            conductor.StartGame();
         }
 
-        // 결과 추적 시작 (이 안에서 _gameEnded 리셋 및 Invoke 취소)
+        // 결과 추적 시작
         if (resultManager && mainTriggerList)
         {
             resultManager.StartTracking(mainTriggerList.triggers.Length);
@@ -194,6 +232,10 @@ public class GameFlowManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Debug.Log("[GameFlowManager] Going to main menu...");
+        
+        // [추가] 로비로 나가니까 컨트롤러 꺼내기
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+
         SceneManager.LoadScene(mainMenuSceneName);
     }
 }
