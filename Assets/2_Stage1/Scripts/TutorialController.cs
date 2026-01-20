@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 public class TutorialController : MonoBehaviour
@@ -7,7 +6,9 @@ public class TutorialController : MonoBehaviour
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
     public RadioClickable radio;
-    public TutorialUIController tutorialUI; // 🔥 UI 컨트롤러 연결
+    
+    // 🔥 기존 UI 대신 MissionBoardUI 사용
+    public MissionBoardUI missionBoard; 
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
@@ -37,25 +38,19 @@ public class TutorialController : MonoBehaviour
 
     void OnEnable()
     {
-        if (conductor)
-        {
-            conductor.OnRoundResult.AddListener(HandleRoundResult);
-        }
+        if (conductor) conductor.OnRoundResult.AddListener(HandleRoundResult);
     }
 
     void OnDisable()
     {
-        if (conductor)
-        {
-            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
-        }
+        if (conductor) conductor.OnRoundResult.RemoveListener(HandleRoundResult);
     }
 
     public void StartTutorial()
     {
         if (!conductor || !tutorialTriggerList)
         {
-            UnityEngine.Debug.LogError("[TutorialController] Missing conductor or tutorialTriggerList.");
+            Debug.LogError("[TutorialController] Missing conductor or tutorialTriggerList.");
             return;
         }
 
@@ -69,15 +64,18 @@ public class TutorialController : MonoBehaviour
         conductor.data = tutorialTriggerList;
         conductor.StartGame();
 
-        UnityEngine.Debug.Log("[TutorialController] Tutorial started - Need 3 successes per step");
+        Debug.Log("[TutorialController] Tutorial started");
 
-        // 🔥 UI 초기화
-        if (tutorialUI)
+        // 🔥 주문서 초기화
+        if (missionBoard)
         {
-            tutorialUI.OnTutorialStart();
+            missionBoard.InitializeUI();
+            missionBoard.UpdateHeader("< 수습 교육 >");
+            // 아직 첫 미션 시작 전이므로 대기 멘트
+            missionBoard.UpdateText("< 수습 교육 >", "준비 중...", "");
         }
 
-        // 첫 번째 트리거 수동 시작 (시간 기반 진행 차단되므로)
+        // 첫 번째 트리거 수동 시작
         Invoke(nameof(StartFirstTrigger), 1.0f);
     }
 
@@ -85,39 +83,39 @@ public class TutorialController : MonoBehaviour
     {
         if (conductor && conductor.CurrentTriggerIndex < 0)
         {
-            UnityEngine.Debug.Log("[TutorialController] Starting first trigger manually");
+            Debug.Log("[TutorialController] Starting first trigger manually");
             conductor.AdvanceToNextTrigger();
 
-            // 🔥 UI에 현재 단계 정보 전달
-            if (tutorialUI && tutorialTriggerList.triggers.Length > 0)
-            {
-                var trigger = tutorialTriggerList.triggers[0];
-                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
-            }
+            // 🔥 첫 미션 UI 표시
+            UpdateMissionUI(_currentStepIndex);
         }
     }
 
     void HandleRoundResult(bool success)
     {
         if (_tutorialCompleted) return;
-        if (_isProcessingResult) return; // 중복 방지
+        if (_isProcessingResult) return; 
 
-        _isProcessingResult = true; // 처리 시작
+        _isProcessingResult = true;
 
         if (success)
         {
             _successCountThisStep++;
-            UnityEngine.Debug.Log($"[TutorialController] Step {_currentStepIndex} SUCCESS! ({_successCountThisStep}/{requiredSuccessCount})");
+            Debug.Log($"[TutorialController] Step {_currentStepIndex} SUCCESS! ({_successCountThisStep}/{requiredSuccessCount})");
 
-            // 🔥 UI 업데이트 - 성공 카운트 갱신
-            if (tutorialUI)
+            // 🔥 주문서 업데이트 (체크박스 채우기)
+            if (missionBoard)
             {
-                tutorialUI.UpdateSuccessCount(_currentStepIndex, _successCountThisStep, requiredSuccessCount);
+                string missionName = GetMissionName(_currentStepIndex);
+                missionBoard.UpdateMission(missionName, _successCountThisStep, requiredSuccessCount);
             }
 
             if (_successCountThisStep >= requiredSuccessCount)
             {
-                UnityEngine.Debug.Log($"[TutorialController] Step {_currentStepIndex} COMPLETED!");
+                Debug.Log($"[TutorialController] Step {_currentStepIndex} COMPLETED!");
+
+                // 🔥 단계 완료 도장 쾅!
+                if (missionBoard) missionBoard.ShowSuccessStamp(true);
 
                 _currentStepIndex++;
                 _successCountThisStep = 0;
@@ -125,23 +123,23 @@ public class TutorialController : MonoBehaviour
                 // 모든 단계 완료 확인
                 if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
                 {
-                    CompleteTutorial();
+                    Invoke(nameof(CompleteTutorial), 2.0f); // 도장 보여줄 시간 줌
                     return;
                 }
 
                 // 다음 단계로 이동
-                Invoke(nameof(MoveToNextStep), 1.5f);
+                Invoke(nameof(MoveToNextStep), 2.0f);
             }
             else
             {
-                // 같은 단계 재시도 (성공 카운트 유지)
+                // 같은 단계 재시도
                 Invoke(nameof(RetryCurrentStep), 1.5f);
             }
         }
         else
         {
-            // 실패 시 같은 단계 재시도 (성공 카운트 유지)
-            UnityEngine.Debug.Log($"[TutorialController] Step {_currentStepIndex} FAILED (current: {_successCountThisStep}/{requiredSuccessCount})");
+            Debug.Log($"[TutorialController] Step {_currentStepIndex} FAILED");
+            // 실패 시 재시도 (UI는 그대로 둠)
             Invoke(nameof(RetryCurrentStep), 1.5f);
         }
     }
@@ -150,126 +148,99 @@ public class TutorialController : MonoBehaviour
     {
         if (conductor)
         {
-            UnityEngine.Debug.Log($"[TutorialController] Moving to step {_currentStepIndex}...");
             conductor.AdvanceToNextTrigger();
-
-            // 🔥 UI에 새 단계 정보 전달
-            if (tutorialUI && _currentStepIndex < tutorialTriggerList.triggers.Length)
-            {
-                var trigger = tutorialTriggerList.triggers[_currentStepIndex];
-                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
-            }
+            // 🔥 다음 단계 UI 갱신 (도장 지우고 새 종이)
+            UpdateMissionUI(_currentStepIndex);
         }
-
-        _isProcessingResult = false; // 처리 완료
+        _isProcessingResult = false;
     }
 
     void RetryCurrentStep()
     {
         if (conductor)
         {
-            UnityEngine.Debug.Log($"[TutorialController] Retrying step {_currentStepIndex}...");
             conductor.RetryCurrentTrigger();
-
-            // 🔥 UI에 재시도 정보 전달
-            if (tutorialUI && _currentStepIndex < tutorialTriggerList.triggers.Length)
-            {
-                var trigger = tutorialTriggerList.triggers[_currentStepIndex];
-                tutorialUI.ShowStepInstruction(_currentStepIndex, requiredSuccessCount, trigger.judgeDuration);
-            }
+            // 재시도 시 UI는 유지 (도장은 이미 꺼져있음)
         }
+        _isProcessingResult = false;
+    }
 
-        _isProcessingResult = false; // 처리 완료
+    // 🔥 단계별 미션 이름 반환 헬퍼
+    string GetMissionName(int index)
+    {
+        switch (index)
+        {
+            case 0: return "기본 썰기 (정지)";
+            case 1: return "연속 썰기 (이동)";
+            case 2: return "빠른 썰기 (심화)";
+            default: return $"실전 연습 {index + 1}";
+        }
+    }
+
+    // 🔥 주문서 갱신 통합 함수
+    void UpdateMissionUI(int index)
+    {
+        if (!missionBoard) return;
+
+        missionBoard.ShowSuccessStamp(false); // 도장 끄기
+        missionBoard.UpdateHeader($"< 실습 {index + 1} 단계 >");
+        
+        string name = GetMissionName(index);
+        missionBoard.UpdateMission(name, 0, requiredSuccessCount);
     }
 
     void SkipTutorial()
     {
-        UnityEngine.Debug.Log("[TutorialController] Tutorial skipped by A button!");
+        Debug.Log("[TutorialController] Skipped");
         _tutorialCompleted = true;
+        CleanupTutorial();
 
-        if (conductor)
+        // UI 숨김 대신 "스킵됨" 표시
+        if (missionBoard)
         {
-            conductor.isTutorialMode = false;
-
-            // BGM 정지
-            if (conductor.bgmSource)
-            {
-                conductor.bgmSource.Stop();
-                UnityEngine.Debug.Log("[TutorialController] Tutorial BGM stopped");
-            }
-
-            // 🔥 가이드 비트 코루틴 + SFX 정리
-            conductor.StopAllGuideBeats();
+            missionBoard.UpdateText("< 알림 >", "교육 건너뜀", "");
+            missionBoard.ShowSuccessStamp(false);
         }
-
-        // 🔥 UI 숨김
-        if (tutorialUI)
-        {
-            tutorialUI.Hide();
-        }
-
-        // 라디오 활성화 + 클릭 가능하도록 설정
-        if (radio)
-        {
-            radio.SetTutorialCompleted(true);
-            radio.SetClickable(true);
-            UnityEngine.Debug.Log("[TutorialController] Radio unlocked and clickable after skip");
-        }
-
+        
         // 스킵 이벤트 발행
-        if (conductor.OnTutorialSkipped != null)
-            conductor.OnTutorialSkipped.Invoke();
+        if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
     void CompleteTutorial()
     {
-        UnityEngine.Debug.Log("[TutorialController] Tutorial completed! All steps cleared.");
+        Debug.Log("[TutorialController] Completed");
         _tutorialCompleted = true;
+        CleanupTutorial();
 
+        // 🔥 최종 완료 메시지
+        if (missionBoard)
+        {
+            missionBoard.ShowSuccessStamp(true); // 마지막 도장 유지
+            missionBoard.UpdateHeader("< 교육 수료 >");
+            missionBoard.UpdateText("< 교육 수료 >", "정직원 채용됨", "라디오를 켜세요");
+        }
+        
+        // 완료 이벤트 발행
+        if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
+    }
+
+    void CleanupTutorial()
+    {
         if (conductor)
         {
             conductor.isTutorialMode = false;
-
-            // BGM 정지
-            if (conductor.bgmSource)
-            {
-                conductor.bgmSource.Stop();
-                UnityEngine.Debug.Log("[TutorialController] Tutorial BGM stopped");
-            }
-
-            // 🔥 가이드 비트 코루틴 + SFX 정리
+            if (conductor.bgmSource) conductor.bgmSource.Stop();
             conductor.StopAllGuideBeats();
         }
 
-        // 🔥 UI 완료 표시
-        if (tutorialUI)
-        {
-            tutorialUI.ShowCompletionMessage();
-            Invoke(nameof(HideTutorialUI), 3.0f);
-        }
-
-        // 라디오 활성화 + 클릭 가능하도록 설정
         if (radio)
         {
             radio.SetTutorialCompleted(true);
             radio.SetClickable(true);
-            UnityEngine.Debug.Log("[TutorialController] Radio unlocked and clickable after completion");
-        }
-
-        // 완료 이벤트 발행
-        if (conductor.OnTutorialCompleted != null)
-            conductor.OnTutorialCompleted.Invoke();
-    }
-
-    void HideTutorialUI()
-    {
-        if (tutorialUI)
-        {
-            tutorialUI.Hide();
         }
     }
-
-    // 🔥 외부에서 현재 진행 상황 조회
+    
+    // 외부 참조용
     public int GetCurrentStepIndex() => _currentStepIndex;
     public int GetSuccessCount() => _successCountThisStep;
     public int GetTotalSteps() => tutorialTriggerList ? tutorialTriggerList.triggers.Length : 0;

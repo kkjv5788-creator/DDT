@@ -190,16 +190,15 @@ public class SimpleLaserPointer : MonoBehaviour
             }
         }
     }
-
-    void DisableLaser()
+void DisableLaser()
     {
-        if (lr.enabled)
+        // lr이 존재하는지 먼저 확인 (안전장치 추가)
+        if (lr != null && lr.enabled)
         {
             lr.enabled = false;
             ResetPreviousEffects();
         }
     }
-
     bool IsInteractable(GameObject obj)
     {
         if (obj.GetComponentInParent<Button>() != null) return true;

@@ -1,452 +1,9 @@
 [PROJECT DUMP START]
 Scene: Main_v4.0
-Date: 2026-01-20 오전 11:01:09
+Date: 2026-01-20 오후 12:54:34
 ========================================
               SCENE HIERARCHY
 ========================================
-
-[O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (-0.91, 12.96, -1.92) | Rot: (27.24, 16.25, 359.66) | Scale: (1.00, 1.00, 1.00)
-    - (Component) Light
-
-[O] Environment (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (0.00, 0.00, 5.47) | Rot: (0.00, 0.00, 0.00) | Scale: (3.00, 3.00, 3.00)
-
-    [O] Arcade (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-4.16, 1.47, 10.96) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-3.58, 1.17, 10.95) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-3.79, 1.94, 10.73) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Machine (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (6.00, 1.46, 11.26) | Rot: (270.00, 4.20, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (5.11, 2.05, 11.33) | Rot: (270.00, 4.20, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Table (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-2.34, 0.38, 4.81) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Chair (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-0.45, 0.43, 4.93) | Rot: (270.00, 318.89, 0.00) | Scale: (0.30, 0.30, 0.30)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Chair (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-4.32, 0.45, 5.29) | Rot: (270.00, 225.02, 0.00) | Scale: (0.30, 0.30, 0.30)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Pole (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (7.23, 3.77, 11.98) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (6.43, 6.58, 12.26) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Pole_1 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-6.30, 3.77, -8.72) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-6.30, 6.58, -7.86) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Pole_2 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (5.25, 3.77, -8.72) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (4.96, 6.58, -7.86) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Lamp _1 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-8.58, 2.23, -2.53) | Rot: (270.00, 270.00, 0.00) | Scale: (1.50, 1.50, 1.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-8.10, 3.62, -2.63) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
-            - (Component) Light
-
-    [O] Lamp _4 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-1.05, 2.23, -8.00) | Rot: (270.00, 180.00, 0.00) | Scale: (1.50, 1.50, 1.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-0.99, 3.76, -7.13) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
-            - (Component) Light
-
-    [O] Lamp _2 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (5.68, 2.23, 1.83) | Rot: (270.00, 90.00, 0.00) | Scale: (1.50, 1.50, 1.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (3.59, 3.76, 0.96) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
-            - (Component) Light
-
-    [O] Lamp _3 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-10.86, 2.34, 13.69) | Rot: (270.00, 270.00, 0.00) | Scale: (1.50, 1.50, 1.50)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] DogHouse (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (4.08, 0.39, 13.36) | Rot: (270.00, 345.50, 0.00) | Scale: (0.30, 0.30, 0.30)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Plane (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-0.84, 0.00, 5.47) | Rot: (0.00, 180.00, 0.00) | Scale: (1.10, 1.10, 1.10)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-        - (Component) MeshCollider
-
-    [O] Korean_Store (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (0.00, 0.00, 16.48) | Rot: (270.00, 180.00, 0.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Korean_House (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-7.83, 0.00, 17.23) | Rot: (270.00, 270.00, 0.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-6.22, 2.93, 15.44) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-9.44, 2.91, 15.40) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_3 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.23, 4.04, 13.65) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Korean_House_2 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-12.72, 0.00, -5.84) | Rot: (270.00, 180.00, 0.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.93, 2.93, -4.24) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.89, 2.91, -7.45) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Korean_House_1 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-13.62, 0.00, 17.24) | Rot: (270.25, 201.89, 68.02) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Hope (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (10.36, 0.00, 6.61) | Rot: (270.00, 1.54, 0.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (7.81, 2.74, 6.03) | Rot: (270.00, 1.54, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (7.74, 6.69, 6.27) | Rot: (270.00, 1.54, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Hardware_Store (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-11.88, 4.56, 9.04) | Rot: (270.00, 180.00, 0.00) | Scale: (300.00, 300.00, 300.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.38, 2.56, 9.04) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-9.00, 6.54, 8.13) | Rot: (270.00, 1.54, 0.00) | Scale: (0.33, 0.33, 0.33)
-            - (Component) Light
-
-    [O] Tower (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (8.73, 180.00, 305.47) | Rot: (270.00, 0.00, 0.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] bakery (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-11.88, 4.24, 0.28) | Rot: (270.02, 176.94, 0.00) | Scale: (300.00, 300.00, 300.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Korean_House2 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (9.11, 3.03, 17.18) | Rot: (270.00, 270.00, 0.00) | Scale: (300.00, 300.00, 300.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (6.72, 2.85, 15.23) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light (1) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (11.24, 2.85, 15.23) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (8.93, 2.79, 14.85) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] Korean_House2_1 (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (10.35, 3.03, -3.11) | Rot: (270.00, 0.00, 0.00) | Scale: (300.00, 300.00, 300.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (8.41, 2.85, -0.72) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (8.02, 2.79, -2.93) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-        [O] Point Light_3 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (8.41, 2.85, -5.49) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-
-    [O] StoneWall_Set (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-1.02, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (100.00, 100.00, 100.00)
-
-        [O] StoneWall (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-13.77, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (4) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-17.58, 0.00, 16.15) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (6) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-17.58, 0.00, -8.27) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 0.50, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (5) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (16.05, 0.00, 16.15) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (9) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (16.05, 0.00, -8.27) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 0.50, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (10) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (16.05, 0.00, -1.64) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (11) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (16.05, 0.00, 7.27) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (7) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-17.58, 0.00, -1.64) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (8) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-17.58, 0.00, 7.27) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (1) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (3.90, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (3) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (12.36, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 0.90, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (12) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-13.79, 0.00, -11.42) | Rot: (270.40, 90.00, 180.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (13) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (3.90, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (14) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (12.36, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 0.90, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (15) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-5.01, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] StoneWall (2) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-5.01, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-    [O] Disco_Ball (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (266.67, 266.67, 266.67)
-        - (Component) Animator
-
-        [O] Color-lights (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] Disco_ball_ext (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] Disco_ball_int (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 305.11, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] DiscoBall-motor (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) MeshFilter
-            - (Component) MeshRenderer
-
-        [O] Spot Light (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-2.14, 16.18, 25.21) | Rot: (327.22, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-            - (Component) SmoothRainbowLight
-                > saturation: 0.9
-                > value: 1
-                > hueSpeed: 0.1
-
-        [O] Spot Light_1 (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-13.36, 14.04, 20.51) | Rot: (327.22, 305.15, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) Light
-            - (Component) SmoothRainbowLight
-                > saturation: 0.9
-                > value: 1
-                > hueSpeed: 0.1
-
-[O] Spot_Title (Active: True, Tag: Untagged, Layer: UI)
-    Pos: (0.00, -500.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-
-    [O] Title_Background_Sphere (Active: True, Tag: Untagged, Layer: UI)
-        Pos: (0.00, -500.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (-50.00, 50.00, 50.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Title_UI_Group (Active: True, Tag: Untagged, Layer: UI)
-        Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) CanvasRenderer
-
-        [O] ddt_logo_1 (Active: True, Tag: Untagged, Layer: UI)
-            Pos: (0.00, -496.50, 3.00) | Rot: (90.00, 180.00, 0.00) | Scale: (0.80, 1.20, 0.80)
-
-            [O] Text (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 180.00, 0.00) | Scale: (200.00, 200.00, 200.00)
-                - (Component) MeshFilter
-                - (Component) MeshRenderer
-
-            [O] Text.001 (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 180.00, 0.00) | Scale: (200.00, 200.00, 200.00)
-                - (Component) MeshFilter
-                - (Component) MeshRenderer
-
-            [O] Logo_Particles (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (0.00, -496.50, 3.00) | Rot: (270.00, 0.00, 0.00) | Scale: (0.50, 0.33, 0.50)
-                - (Component) ParticleSystem
-                - (Component) ParticleSystemRenderer
-
-            [O] Point Light (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (0.00, -495.67, 2.27) | Rot: (90.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) Light
-
-        [O] Canvas (Active: True, Tag: Untagged, Layer: UI)
-            Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.02, 0.02, 0.02)
-            - (Component) Canvas
-            - (Component) CanvasScaler
-            - (Component) OVRRaycaster
-                > pointer: RightHandAnchor (UnityEngine.GameObject)
-                > sortOrder: 0
-
-            [O] play_btn (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (0.00, -497.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) Image
-                - (Component) Button
-                - (Component) UIHoverEffect
-                    > hoverScale: 1.1
-                    > animationSpeed: 0.15
-                - (Component) BoxCollider
-
-                [O] Text (TMP) (Active: True, Tag: Untagged, Layer: UI)
-                    Pos: (0.00, -497.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.75, 0.75, 0.75)
-                    - (Component) CanvasRenderer
-                    - (Component) TextMeshProUGUI
-
-            [O] quit_btn (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (0.00, -498.00, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) Image
-                - (Component) Button
-                - (Component) UIHoverEffect
-                    > hoverScale: 1.1
-                    > animationSpeed: 0.15
-                - (Component) BoxCollider
-
-                [O] Text (TMP) (Active: True, Tag: Untagged, Layer: UI)
-                    Pos: (0.00, -498.00, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.75, 0.75, 0.75)
-                    - (Component) CanvasRenderer
-                    - (Component) TextMeshProUGUI
-
-[O] MainAudioDirector (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-    - (Component) MainAudioDirector
-        > titleBgm: Title (UnityEngine.AudioClip)
-        > lobbyBgm: 피리 (UnityEngine.AudioClip)
-        > a: AudioSource A (UnityEngine.AudioSource)
-        > b: AudioSource B (UnityEngine.AudioSource)
-        > masterVolume: 0.8
-        > fadeSeconds: 0.5
-
-    [O] AudioSource A (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) AudioSource
-
-    [O] AudioSource B (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-        - (Component) AudioSource
-
-[O] Point_Title (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (0.00, -498.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-
-[O] Point_Lobby (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (0.00, 0.00, 10.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
 
 [O] Player_Core (Active: True, Tag: Untagged, Layer: Default)
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -551,9 +108,10 @@ Date: 2026-01-20 오전 11:01:09
                     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
                     - (Component) LineRenderer
                     - (Component) SimpleLaserPointer
-                        > maxDistance: 3
+                        > maxDistance: 10
                         > laserWidth: 0.005
-                        > hoverColor: RGBA(0.000, 1.000, 0.729, 0.588)
+                        > normalLaserColor: RGBA(1.000, 1.000, 1.000, 1.000)
+                        > hoverLaserColor: RGBA(0.000, 1.000, 0.000, 1.000)
                         > hoverSound: Retro4 (UnityEngine.AudioClip)
                         > clickSound: Retro6 (UnityEngine.AudioClip)
                         > vibrationStrength: 0.2
@@ -956,9 +514,10 @@ Date: 2026-01-20 오전 11:01:09
                     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
                     - (Component) LineRenderer
                     - (Component) SimpleLaserPointer
-                        > maxDistance: 3
+                        > maxDistance: 10
                         > laserWidth: 0.005
-                        > hoverColor: RGBA(0.000, 1.000, 0.729, 0.588)
+                        > normalLaserColor: RGBA(1.000, 1.000, 1.000, 1.000)
+                        > hoverLaserColor: RGBA(0.000, 1.000, 0.000, 1.000)
                         > hoverSound: Retro4 (UnityEngine.AudioClip)
                         > clickSound: Retro6 (UnityEngine.AudioClip)
                         > vibrationStrength: 0.2
@@ -1378,6 +937,500 @@ Date: 2026-01-20 오전 11:01:09
             > activeGraphicRaycaster: 
             > angleDragThreshold: 1
 
+[O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
+    Pos: (-0.91, 12.96, -1.92) | Rot: (27.24, 16.25, 359.66) | Scale: (1.00, 1.00, 1.00)
+    - (Component) Light
+
+[O] Environment (Active: True, Tag: Untagged, Layer: Default)
+    Pos: (0.00, 0.00, 5.47) | Rot: (0.00, 0.00, 0.00) | Scale: (3.00, 3.00, 3.00)
+
+    [O] Arcade (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-6.40, 1.47, 8.80) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-5.82, 1.17, 8.79) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Directional Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-6.03, 1.94, 8.57) | Rot: (270.00, 226.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Machine (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (6.00, 1.46, 11.26) | Rot: (270.00, 4.20, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (5.11, 2.05, 11.33) | Rot: (270.00, 4.20, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Table (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-2.34, 0.38, 4.81) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Chair (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-0.45, 0.43, 4.93) | Rot: (270.00, 318.89, 0.00) | Scale: (0.30, 0.30, 0.30)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Chair (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-4.32, 0.45, 5.29) | Rot: (270.00, 225.02, 0.00) | Scale: (0.30, 0.30, 0.30)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Pole (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (7.23, 3.77, 11.98) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (6.43, 6.58, 12.26) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Pole_1 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-6.30, 3.77, -8.72) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-6.30, 6.58, -7.86) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Pole_2 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (5.25, 3.77, -8.72) | Rot: (270.00, 0.00, 0.00) | Scale: (2.00, 2.00, 2.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (4.96, 6.58, -7.86) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Lamp _1 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-8.58, 2.23, -2.53) | Rot: (270.00, 270.00, 0.00) | Scale: (1.50, 1.50, 1.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-8.10, 3.62, -2.63) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
+            - (Component) Light
+
+    [O] Lamp _4 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-1.05, 2.23, -8.00) | Rot: (270.00, 180.00, 0.00) | Scale: (1.50, 1.50, 1.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-0.99, 3.76, -7.13) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
+            - (Component) Light
+
+    [O] Lamp _2 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (5.68, 2.23, 1.83) | Rot: (270.00, 90.00, 0.00) | Scale: (1.50, 1.50, 1.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (3.59, 3.76, 0.96) | Rot: (270.00, 180.00, 0.00) | Scale: (66.67, 66.67, 66.67)
+            - (Component) Light
+
+    [O] Lamp _3 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-10.86, 2.34, 13.69) | Rot: (270.00, 270.00, 0.00) | Scale: (1.50, 1.50, 1.50)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] DogHouse (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (4.08, 0.39, 13.36) | Rot: (270.00, 345.50, 0.00) | Scale: (0.30, 0.30, 0.30)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Plane (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-0.84, 0.00, 5.47) | Rot: (0.00, 180.00, 0.00) | Scale: (1.10, 1.10, 1.10)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+        - (Component) MeshCollider
+
+    [O] Korean_Store (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (0.00, 0.00, 16.48) | Rot: (270.00, 180.00, 0.00) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Korean_House (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-7.83, 0.00, 17.23) | Rot: (270.00, 270.00, 0.00) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-6.22, 2.93, 15.44) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-9.44, 2.91, 15.40) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_3 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.23, 4.04, 13.65) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Korean_House_2 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-12.72, 0.00, -5.84) | Rot: (270.00, 180.00, 0.00) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.93, 2.93, -4.24) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.89, 2.91, -7.45) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Korean_House_1 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-13.62, 0.00, 17.24) | Rot: (270.25, 201.89, 68.02) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Hope (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (10.36, 0.00, 6.61) | Rot: (270.00, 1.54, 0.00) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (7.81, 2.74, 6.03) | Rot: (270.00, 1.54, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (7.74, 6.69, 6.27) | Rot: (270.00, 1.54, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Hardware_Store (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-11.88, 4.56, 9.04) | Rot: (270.00, 180.00, 0.00) | Scale: (300.00, 300.00, 300.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.38, 2.56, 9.04) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-9.00, 6.54, 8.13) | Rot: (270.00, 1.54, 0.00) | Scale: (0.33, 0.33, 0.33)
+            - (Component) Light
+
+    [O] Tower (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (8.73, 180.00, 305.47) | Rot: (270.00, 0.00, 0.00) | Scale: (100.00, 100.00, 100.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] bakery (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-11.88, 4.24, 0.28) | Rot: (270.02, 176.94, 0.00) | Scale: (300.00, 300.00, 300.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Korean_House2 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (9.11, 3.03, 17.18) | Rot: (270.00, 270.00, 0.00) | Scale: (300.00, 300.00, 300.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (6.72, 2.85, 15.23) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light (1) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (11.24, 2.85, 15.23) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (8.93, 2.79, 14.85) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] Korean_House2_1 (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (10.35, 3.03, -3.11) | Rot: (270.00, 0.00, 0.00) | Scale: (300.00, 300.00, 300.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (8.41, 2.85, -0.72) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_2 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (8.02, 2.79, -2.93) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+        [O] Point Light_3 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (8.41, 2.85, -5.49) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] StoneWall_Set (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-1.02, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (100.00, 100.00, 100.00)
+
+        [O] StoneWall (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-13.77, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (4) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-17.58, 0.00, 16.15) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (6) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-17.58, 0.00, -8.27) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 0.50, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (5) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (16.05, 0.00, 16.15) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (9) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (16.05, 0.00, -8.27) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 0.50, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (10) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (16.05, 0.00, -1.64) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (11) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (16.05, 0.00, 7.27) | Rot: (270.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (7) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-17.58, 0.00, -1.64) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (8) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-17.58, 0.00, 7.27) | Rot: (270.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (1) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (3.90, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (3) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (12.36, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 0.90, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (12) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-13.79, 0.00, -11.42) | Rot: (270.40, 90.00, 180.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (13) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (3.90, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (14) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (12.36, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 0.90, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (15) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-5.01, 0.00, -11.42) | Rot: (270.00, 270.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] StoneWall (2) (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-5.01, 0.00, 21.25) | Rot: (270.00, 90.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+    [O] Disco_Ball (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (266.67, 266.67, 266.67)
+        - (Component) Animator
+
+        [O] Color-lights (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Disco_ball_ext (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Disco_ball_int (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 305.11, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] DiscoBall-motor (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-10.11, 16.12, 25.91) | Rot: (270.00, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Spot Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.14, 16.18, 25.21) | Rot: (327.22, 304.39, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+            - (Component) SmoothRainbowLight
+                > saturation: 0.9
+                > value: 1
+                > hueSpeed: 0.1
+
+        [O] Spot Light_1 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-13.36, 14.04, 20.51) | Rot: (327.22, 305.15, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+            - (Component) SmoothRainbowLight
+                > saturation: 0.9
+                > value: 1
+                > hueSpeed: 0.1
+
+    [O] Tent_Ass'y (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-2.79, 0.00, 12.39) | Rot: (0.00, 180.00, 0.00) | Scale: (0.17, 0.17, 0.17)
+
+        [O] Bottom (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.79, 0.53, 11.57) | Rot: (270.00, 180.00, 0.00) | Scale: (200.00, 150.00, 80.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Caster (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-1.88, 0.12, 10.91) | Rot: (89.98, 0.00, 0.00) | Scale: (17.00, 17.00, 1.70)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Frame (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.86, 0.00, 12.39) | Rot: (270.00, 180.00, 0.00) | Scale: (876.26, 864.62, 895.87)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Plane (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.86, -1.26, 12.39) | Rot: (270.00, 180.00, 0.00) | Scale: (862.24, 843.79, 841.28)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Top (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.79, 0.95, 11.57) | Rot: (270.00, 180.00, 0.00) | Scale: (220.00, 170.00, 5.00)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Top.001 (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.86, 1.28, 12.39) | Rot: (270.00, 90.00, 0.00) | Scale: (895.87, 895.87, 895.87)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Point Light (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.79, 1.47, 12.39) | Rot: (0.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) Light
+
+    [O] hodu_frame (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (-2.71, 3.24, 10.63) | Rot: (90.00, 180.00, 0.00) | Scale: (0.20, 0.20, 0.20)
+        - (Component) Animator
+
+        [O] Hodu (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-3.67, 3.48, 10.59) | Rot: (0.00, 180.00, 319.28) | Scale: (111.64, 112.68, 71.83)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+        [O] Logo (Active: True, Tag: Untagged, Layer: Default)
+            Pos: (-2.62, 3.13, 10.63) | Rot: (0.00, 180.00, 0.00) | Scale: (230.42, 232.58, 148.26)
+            - (Component) MeshFilter
+            - (Component) MeshRenderer
+
+[O] Spot_Title (Active: True, Tag: Untagged, Layer: UI)
+    Pos: (0.00, -500.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+
+    [O] Title_Background_Sphere (Active: True, Tag: Untagged, Layer: UI)
+        Pos: (0.00, -500.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (-50.00, 50.00, 50.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+
+    [O] Title_UI_Group (Active: True, Tag: Untagged, Layer: UI)
+        Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) CanvasRenderer
+
+        [O] ddt_logo_1 (Active: True, Tag: Untagged, Layer: UI)
+            Pos: (0.00, -496.50, 3.00) | Rot: (90.00, 180.00, 0.00) | Scale: (0.80, 1.20, 0.80)
+
+            [O] Text (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 180.00, 0.00) | Scale: (200.00, 200.00, 200.00)
+                - (Component) MeshFilter
+                - (Component) MeshRenderer
+
+            [O] Text.001 (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 180.00, 0.00) | Scale: (200.00, 200.00, 200.00)
+                - (Component) MeshFilter
+                - (Component) MeshRenderer
+
+            [O] Logo_Particles (Active: True, Tag: Untagged, Layer: Default)
+                Pos: (0.00, -496.50, 3.00) | Rot: (270.00, 0.00, 0.00) | Scale: (0.50, 0.33, 0.50)
+                - (Component) ParticleSystem
+                - (Component) ParticleSystemRenderer
+
+            [O] Point Light (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (0.00, -495.67, 2.27) | Rot: (90.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) Light
+
+        [O] Canvas (Active: True, Tag: Untagged, Layer: UI)
+            Pos: (0.00, -496.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.02, 0.02, 0.02)
+            - (Component) Canvas
+            - (Component) CanvasScaler
+            - (Component) OVRRaycaster
+                > pointer: RightHandAnchor (UnityEngine.GameObject)
+                > sortOrder: 0
+
+            [O] play_btn (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (0.00, -497.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) Image
+                - (Component) Button
+                - (Component) UIHoverEffect
+                    > hoverScale: 1.1
+                    > animationSpeed: 0.15
+                - (Component) BoxCollider
+
+                [O] Text (TMP) (Active: True, Tag: Untagged, Layer: UI)
+                    Pos: (0.00, -497.50, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.75, 0.75, 0.75)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+            [O] quit_btn (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (0.00, -498.00, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) Image
+                - (Component) Button
+                - (Component) UIHoverEffect
+                    > hoverScale: 1.1
+                    > animationSpeed: 0.15
+                - (Component) BoxCollider
+
+                [O] Text (TMP) (Active: True, Tag: Untagged, Layer: UI)
+                    Pos: (0.00, -498.00, 3.00) | Rot: (0.00, 0.00, 0.00) | Scale: (0.75, 0.75, 0.75)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+[O] MainAudioDirector (Active: True, Tag: Untagged, Layer: Default)
+    Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+    - (Component) MainAudioDirector
+        > titleBgm: Title (UnityEngine.AudioClip)
+        > lobbyBgm: 피리 (UnityEngine.AudioClip)
+        > a: AudioSource A (UnityEngine.AudioSource)
+        > b: AudioSource B (UnityEngine.AudioSource)
+        > masterVolume: 0.8
+        > fadeSeconds: 0.5
+
+    [O] AudioSource A (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) AudioSource
+
+    [O] AudioSource B (Active: True, Tag: Untagged, Layer: Default)
+        Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        - (Component) AudioSource
+
+[O] Point_Title (Active: True, Tag: Untagged, Layer: Default)
+    Pos: (0.00, -498.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+
+[O] Point_Lobby (Active: True, Tag: Untagged, Layer: Default)
+    Pos: (0.00, 0.00, 10.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+
 [O] LobbyManager (Active: True, Tag: Untagged, Layer: Default)
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
     - (Component) LobbyManager
@@ -1391,19 +1444,82 @@ Date: 2026-01-20 오전 11:01:09
         > fader: CenterEyeAnchor (OVRScreenFade)
 
 [O] 3DInteractiveObject (Active: True, Tag: Untagged, Layer: UI)
-    Pos: (292.00, 176.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+    Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
     - (Component) Canvas
     - (Component) CanvasScaler
     - (Component) GraphicRaycaster
 
     [O] Stage1_door (Active: True, Tag: Untagged, Layer: Door)
-        Pos: (2.04, 1.65, 14.84) | Rot: (270.00, 180.00, 0.00) | Scale: (3.00, 0.32, 3.00)
+        Pos: (1.91, 1.40, 15.68) | Rot: (0.00, 0.00, 0.00) | Scale: (3.00, 3.00, 1.00)
         - (Component) MeshFilter
         - (Component) MeshRenderer
         - (Component) BoxCollider
         - (Component) Outline
         - (Component) ObjectClickEvent
             > onClick: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+
+        [O] Canvas_Stage1Info (Active: True, Tag: Untagged, Layer: Door)
+            Pos: (1.91, 1.31, 14.69) | Rot: (0.00, 0.00, 0.00) | Scale: (0.00, 0.00, 0.00)
+            - (Component) Canvas
+            - (Component) CanvasScaler
+            - (Component) GraphicRaycaster
+            - (Component) CanvasGroup
+
+            [O] Panel_Background (Active: True, Tag: Untagged, Layer: Door)
+                Pos: (1.91, 1.31, 14.69) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) Image
+
+                [O] Text_Title (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (1.91, 2.06, 14.69) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+                [O] Text_Desc (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (1.91, 1.31, 14.69) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+                [O] Text_Score (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (1.91, 0.56, 14.69) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+    [O] Stage2_door (Active: True, Tag: Untagged, Layer: Door)
+        Pos: (-2.67, 1.50, 11.06) | Rot: (0.00, 0.00, 0.00) | Scale: (3.00, 3.00, 1.00)
+        - (Component) MeshFilter
+        - (Component) MeshRenderer
+        - (Component) BoxCollider
+        - (Component) Outline
+        - (Component) ObjectClickEvent
+            > onClick: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+
+        [O] Canvas_Stage2Info (Active: True, Tag: Untagged, Layer: Door)
+            Pos: (-2.67, 1.23, 10.56) | Rot: (0.00, 0.00, 0.00) | Scale: (0.00, 0.00, 0.00)
+            - (Component) Canvas
+            - (Component) CanvasScaler
+            - (Component) GraphicRaycaster
+            - (Component) CanvasGroup
+
+            [O] Panel_Background (Active: True, Tag: Untagged, Layer: Door)
+                Pos: (-2.67, 1.23, 10.56) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) Image
+
+                [O] Text_Title (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (-2.67, 1.98, 10.56) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+                [O] Text_Desc (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (-2.67, 1.23, 10.56) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
+
+                [O] Text_Score (Active: True, Tag: Untagged, Layer: Door)
+                    Pos: (-2.67, 0.48, 10.56) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) TextMeshProUGUI
 
 
 ========================================
@@ -8792,33 +8908,32 @@ using UnityEngine.EventSystems;
 public class SimpleLaserPointer : MonoBehaviour
 {
     [Header("1. 레이저 설정")]
-    public float maxDistance = 5.0f;       
-    public float laserWidth = 0.005f;      
+    public float maxDistance = 5.0f;
+    public float laserWidth = 0.005f;
 
-    [Header("2. 색상 알림")]
-    public Color hoverColor = Color.green; // 닿았을 때 색상
+    [Header("2. 색상 설정")]
+    public Color normalLaserColor = Color.white; // 평소 레이저 색 (흰색)
+    public Color hoverLaserColor = Color.green;  // 닿았을 때 레이저/아웃라인 색 (초록)
 
     [Header("3. 사운드 & 진동")]
-    public AudioClip hoverSound;    
-    public AudioClip clickSound;    
-    [Range(0, 1)] public float vibrationStrength = 0.2f; 
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
+    [Range(0, 1)] public float vibrationStrength = 0.2f;
 
     private LineRenderer lr;
     private AudioSource audioSource;
     private OVRInput.Controller controllerType = OVRInput.Controller.None;
-    private GameFlowManager gameFlowManager; // [추가] 게임 상태 확인용
+    private GameFlowManager gameFlowManager;
 
-    // --- 상태 관리 ---
-    private GameObject currentHitObject;      
-    private Renderer currentRenderer;         
-    private Color originalObjectColor;
+    // --- 상태 관리 변수 ---
+    private GameObject currentHitObject; // 현재 가리키고 있는 오브젝트
+    private Outline currentOutline;      // 현재 켜진 아웃라인
+    private CanvasGroup currentCanvas;   // 현재 켜진 정보창
 
     void Start()
     {
         lr = GetComponent<LineRenderer>();
         audioSource = GetComponent<AudioSource>();
-
-        // GameFlowManager 찾기
         gameFlowManager = FindObjectOfType<GameFlowManager>();
 
         lr.useWorldSpace = true;
@@ -8828,10 +8943,9 @@ public class SimpleLaserPointer : MonoBehaviour
         if (!lr.material) lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
 
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0.5f; 
+        audioSource.spatialBlend = 0.5f;
 
-        // 시작 시 끄기
-        DisableLaser();
+        DisableLaser(); // 시작 시 끄기
 
         if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
             controllerType = OVRInput.Controller.LTouch;
@@ -8848,125 +8962,105 @@ public class SimpleLaserPointer : MonoBehaviour
     {
         if (!lr) return;
 
-        // 🔥 [1] 게임 상태 체크 (핵심 기능)
-        // 튜토리얼 중이거나 메인 게임 중일 때는 레이저를 아예 꺼버립니다.
+        // [1] 게임 상태 체크 (메뉴/대기 상태가 아니면 레이저 끄기)
         if (gameFlowManager != null)
         {
-            bool isMenuState = 
-                gameFlowManager.CurrentState == GameState.WaitForRadio || // 튜토리얼 끝나고 라디오 켤 때
-                gameFlowManager.CurrentState == GameState.Paused ||       // 일시정지 메뉴
-                gameFlowManager.CurrentState == GameState.FinalResult;    // 결과 화면
+            bool isMenuState =
+                gameFlowManager.CurrentState == GameState.WaitForRadio ||
+                gameFlowManager.CurrentState == GameState.Paused ||
+                gameFlowManager.CurrentState == GameState.FinalResult;
 
             if (!isMenuState)
             {
                 DisableLaser();
-                return; // 여기서 코드 종료 (레이저 안 나감)
+                return;
             }
         }
 
-        // --- 아래는 기존의 "스마트 레이저" 로직 (메뉴 상태일 때만 실행됨) ---
+        // [2] 레이저 로직 시작
+        if (!lr.enabled) lr.enabled = true; // 레이저 켜기
+        lr.SetPosition(0, transform.position); // 시작점
 
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
-        
-        // 레이저 충돌 감지
+
+        // 충돌 감지
         if (Physics.Raycast(ray, out hit, maxDistance))
         {
+            lr.SetPosition(1, hit.point); // 끝점은 닿은 곳
             GameObject hitObj = hit.collider.gameObject;
-            
-            // 상호작용 가능한 물체일 때만 레이저 표시
+
+            // [A] 상호작용 가능한 물체인가? (버튼, 문 등)
             if (IsInteractable(hitObj))
             {
-                if (!lr.enabled) lr.enabled = true; // 레이저 켜기
+                // 레이저 색상 -> 초록색
+                SetLaserColor(hoverLaserColor);
 
-                lr.SetPosition(0, transform.position); 
-                lr.SetPosition(1, hit.point); 
-                SetLaserColor(hoverColor);
-
+                // 새로운 물체에 닿았을 때만 처리 (최적화)
                 if (currentHitObject != hitObj)
                 {
-                    ResetObjectColor();
-                    PlayFeedback(); 
+                    ResetPreviousEffects(); // 이전 효과 끄기
+                    
                     currentHitObject = hitObj;
-                    ChangeObjectColor(currentHitObject, hoverColor);
+                    PlayFeedback(); // 소리/진동
+
+                    // 1. 아웃라인 켜기
+                    var outline = hitObj.GetComponentInParent<Outline>();
+                    if (outline != null)
+                    {
+                        outline.enabled = true;
+                        outline.OutlineColor = hoverLaserColor;
+                        outline.OutlineWidth = 5f; // 두께 조절 가능
+                        currentOutline = outline;
+                    }
+
+                    // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
+                    var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
+                    if (canvasGroup != null)
+                    {
+                        canvasGroup.alpha = 1f; // 보이게 설정
+                        currentCanvas = canvasGroup;
+                    }
                 }
             }
             else
             {
-                DisableLaser(); // 버튼/라디오 아니면 숨김
+                // [B] 벽이나 바닥 (상호작용 불가)
+                SetLaserColor(normalLaserColor); // 레이저 흰색
+                ResetPreviousEffects();          // 아웃라인/정보창 끄기
             }
         }
         else
         {
-            DisableLaser(); // 허공이면 숨김
+            // [C] 허공
+            lr.SetPosition(1, transform.position + (transform.forward * maxDistance)); // 길게 뻗기
+            SetLaserColor(normalLaserColor); // 레이저 흰색
+            ResetPreviousEffects();          // 아웃라인/정보창 끄기
         }
 
         // 트리거 클릭 입력
-        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
-        {
-            if (clickSound) audioSource.PlayOneShot(clickSound);
-
-            if (currentHitObject != null)
-            {
-                // UI 버튼 클릭
-                var button = currentHitObject.GetComponentInParent<Button>();
-                if (button != null) button.onClick.Invoke();
-
-                // 일반 물체 클릭
-                var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
-                if (clickHandler != null)
-                {
-                    PointerEventData data = new PointerEventData(EventSystem.current);
-                    clickHandler.OnPointerClick(data);
-                }
-                
-                // 라디오 클릭 호환
-                var radio = currentHitObject.GetComponentInParent<RadioClickable>();
-                // (RadioClickable은 보통 IPointerClickHandler나 자체 로직으로 처리됨)
-            }
-        }
-    }
-
-    void DisableLaser()
-    {
-        if (lr.enabled)
-        {
-            lr.enabled = false;
-            ResetObjectColor();
-        }
+        HandleInput();
     }
 
     // --- 기능 함수들 ---
 
-    bool IsInteractable(GameObject obj)
+    void ResetPreviousEffects()
     {
-        if (obj.GetComponentInParent<Button>() != null) return true;
-        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
-        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
-        return false;
-    }
-
-    void ChangeObjectColor(GameObject obj, Color color)
-    {
-        currentRenderer = obj.GetComponent<Renderer>();
-        if (currentRenderer == null) currentRenderer = obj.GetComponentInChildren<Renderer>();
-        if (currentRenderer == null) currentRenderer = obj.GetComponentInParent<Renderer>();
-
-        if (currentRenderer != null)
+        // 아웃라인 끄기
+        if (currentOutline != null)
         {
-            originalObjectColor = currentRenderer.material.color;
-            currentRenderer.material.color = color;
+            currentOutline.enabled = false;
+            currentOutline = null;
         }
-    }
 
-    void ResetObjectColor()
-    {
-        if (currentHitObject != null && currentRenderer != null)
+        // 정보창 숨기기
+        if (currentCanvas != null)
         {
-            currentRenderer.material.color = originalObjectColor;
+            currentCanvas.alpha = 0f; // 투명하게
+            currentCanvas = null;
         }
+
         currentHitObject = null;
-        currentRenderer = null;
     }
 
     void SetLaserColor(Color c)
@@ -8975,11 +9069,54 @@ public class SimpleLaserPointer : MonoBehaviour
         lr.endColor = c;
     }
 
+    void HandleInput()
+    {
+        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
+        {
+            if (currentHitObject != null)
+            {
+                if (clickSound) audioSource.PlayOneShot(clickSound);
+
+                // UI 버튼 클릭
+                var button = currentHitObject.GetComponentInParent<Button>();
+                if (button != null) button.onClick.Invoke();
+
+                // 일반 상호작용
+                var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
+                if (clickHandler != null)
+                {
+                    PointerEventData data = new PointerEventData(EventSystem.current);
+                    clickHandler.OnPointerClick(data);
+                }
+            }
+        }
+    }
+void DisableLaser()
+    {
+        // lr이 존재하는지 먼저 확인 (안전장치 추가)
+        if (lr != null && lr.enabled)
+        {
+            lr.enabled = false;
+            ResetPreviousEffects();
+        }
+    }
+    bool IsInteractable(GameObject obj)
+    {
+        if (obj.GetComponentInParent<Button>() != null) return true;
+        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
+        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
+        
+        // Outline이 있는 오브젝트도 상호작용 대상으로 간주 (문 등)
+        if (obj.GetComponentInParent<Outline>() != null) return true; 
+        
+        return false;
+    }
+
     void PlayFeedback()
     {
-        if (hoverSound) 
+        if (hoverSound)
         {
-            audioSource.pitch = Random.Range(0.95f, 1.05f); 
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
             audioSource.PlayOneShot(hoverSound);
         }
 
