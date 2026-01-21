@@ -2100,7 +2100,7 @@ GameObject:
   - component: {fileID: 557582934}
   - component: {fileID: 557582936}
   - component: {fileID: 557582935}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image_Stamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2360,13 +2360,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571141314}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: -0.5}
   m_LocalPosition: {x: 0.76, y: -0.77100015, z: -3.22}
   m_LocalScale: {x: 54.000034, y: 54.00004, z: 95.40002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 463253588}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 180}
 --- !u!1001 &577632426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2456,13 +2456,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 590716408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: -0.5}
   m_LocalPosition: {x: 0.76, y: -0.77100015, z: -3.22}
   m_LocalScale: {x: 54.00004, y: 54.000042, z: 95.40003}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 463253588}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 180}
 --- !u!114 &595154082 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8172878322312613405, guid: 0196eeedc311552429a011a24996afd4, type: 3}
@@ -3283,7 +3283,7 @@ GameObject:
   - component: {fileID: 613357421}
   - component: {fileID: 613357423}
   - component: {fileID: 613357422}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4684,7 +4684,7 @@ GameObject:
   - component: {fileID: 911701203}
   - component: {fileID: 911701205}
   - component: {fileID: 911701204}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text_Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4820,7 +4820,7 @@ GameObject:
   - component: {fileID: 918129800}
   - component: {fileID: 918129799}
   - component: {fileID: 918129802}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LegalPad_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4941,7 +4941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970001698}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Panel_SelectMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5116,7 +5116,7 @@ GameObject:
   - component: {fileID: 972966188}
   - component: {fileID: 972966190}
   - component: {fileID: 972966189}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text_Mission
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7294,7 +7294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65c64d2e6bb512447aba5f20b2aaef89, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.57
+      value: -2.19
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65c64d2e6bb512447aba5f20b2aaef89, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7753,7 +7753,7 @@ GameObject:
   - component: {fileID: 1605435829}
   - component: {fileID: 1605435828}
   - component: {fileID: 1605435827}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Monitor_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10544,7 +10544,7 @@ GameObject:
   - component: {fileID: 1825406062}
   - component: {fileID: 1825406064}
   - component: {fileID: 1825406063}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text_MissionName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11073,7 +11073,7 @@ GameObject:
   - component: {fileID: 1889349313}
   - component: {fileID: 1889349315}
   - component: {fileID: 1889349314}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text_Progress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11314,13 +11314,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957891270}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: -0.5}
   m_LocalPosition: {x: 0.76, y: -0.77100015, z: -3.22}
   m_LocalScale: {x: 54.000034, y: 54.00004, z: 95.40002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 463253588}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 180}
 --- !u!1 &1958428900
 GameObject:
   m_ObjectHideFlags: 0
@@ -11562,7 +11562,7 @@ GameObject:
   - component: {fileID: 2001577293}
   - component: {fileID: 2001577295}
   - component: {fileID: 2001577294}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
