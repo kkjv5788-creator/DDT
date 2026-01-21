@@ -3663,6 +3663,32 @@ MonoBehaviour:
   cueAudioSource: {fileID: 238504337}
   sync2Cue: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
   run3Cue: {fileID: 8300000, guid: da9da6c6d94bb6b48acb7dd8f0784f6e, type: 3}
+--- !u!1 &1123334853 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+  m_PrefabInstance: {fileID: 1610901169}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1123334858
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123334853}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.000001, y: 2.2204463e-16, z: 10.000001}
+  m_Center: {x: 0.000000029802322, y: 0, z: 0}
 --- !u!1 &1179276669
 GameObject:
   m_ObjectHideFlags: 0
@@ -6039,6 +6065,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 6149530801814160081, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       propertyPath: m_LocalPosition.y
       value: 49.8
@@ -6072,7 +6106,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6149530801814160081, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1868594968}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1123334858}
   m_SourcePrefab: {fileID: 100100000, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
 --- !u!4 &1610901170 stripped
 Transform:
@@ -6511,6 +6548,7 @@ MonoBehaviour:
   snapAudioSource: {fileID: 2062163476}
   snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
   snapHoldSeconds: 0.2
+  bagFishVisualPrefab: {fileID: 306578032}
   lastJudgeResult: 0
   lastHandName: 
   hasJudgedOnce: 0
@@ -6532,6 +6570,7 @@ MonoBehaviour:
   snapAudioSource: {fileID: 1735968141}
   snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
   snapHoldSeconds: 0.2
+  bagFishVisualPrefab: {fileID: 306578032}
   lastJudgeResult: 0
   lastHandName: 
   hasJudgedOnce: 0

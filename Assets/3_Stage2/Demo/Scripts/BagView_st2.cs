@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class BagView_st2 : MonoBehaviour
@@ -37,13 +38,30 @@ public class BagView_st2 : MonoBehaviour
         itemCount++;
     }
 
-    // 실물 붕어빵 적재
+    // ✅ 실물 붕어빵 적재 (개선)
     public void AddFish(FishCatchToken_st2 fish, float visualScale = 0.8f)
     {
-        if (fish == null) return;
-        if (itemCount >= slots.Length) return;
+        if (fish == null)
+        {
+            UnityEngine.Debug.LogError("❌ AddFish: fish is null!");
+            return;
+        }
 
-        // 봉투 안에서 튀지 않게
+        if (itemCount >= slots.Length)
+        {
+            UnityEngine.Debug.LogWarning("❌ AddFish: Bag is full!");
+            return;
+        }
+
+        if (slots[itemCount] == null)
+        {
+            UnityEngine.Debug.LogError($"❌ AddFish: Slot {itemCount} is null!");
+            return;
+        }
+
+        UnityEngine.Debug.Log($"✅ AddFish: Adding {fish.gameObject.name} to slot {itemCount}");
+
+        // ✅ 봉투 안에서 튀지 않게 (중복 체크하지만 안전하게)
         var rb = fish.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -53,13 +71,14 @@ public class BagView_st2 : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        // 충돌 끄기
+        // ✅ 충돌 끄기
         var cols = fish.GetComponentsInChildren<Collider>(true);
         foreach (var col in cols) col.enabled = false;
 
-        // 이동/충돌 로직 잠시 끄기(선택)
+        // ✅ 이동/충돌 로직 잠시 끄기
         fish.enabled = false;
 
+        // ✅ 슬롯으로 부모 설정 (worldPositionStays = false로 로컬 좌표 사용)
         fish.transform.SetParent(slots[itemCount], false);
         fish.transform.localPosition = Vector3.zero;
         fish.transform.localRotation = Quaternion.identity;
@@ -67,6 +86,8 @@ public class BagView_st2 : MonoBehaviour
 
         storedFish.Add(fish);
         itemCount++;
+
+        UnityEngine.Debug.Log($"✅ Fish added successfully. Total items in bag: {itemCount}");
     }
 
     public void Clear()
@@ -83,6 +104,8 @@ public class BagView_st2 : MonoBehaviour
         {
             var fish = storedFish[i];
             if (fish == null) continue;
+
+            UnityEngine.Debug.Log($"✅ Returning {fish.gameObject.name} to pool");
 
             // 재사용 위해 원복
             var cols = fish.GetComponentsInChildren<Collider>(true);
@@ -103,6 +126,7 @@ public class BagView_st2 : MonoBehaviour
     private void OnDestroy()
     {
         // 봉투 오브젝트가 파괴될 때 누수 방지
+        UnityEngine.Debug.Log($"✅ BagView destroyed, clearing {storedFish.Count} fish");
         Clear();
     }
 }

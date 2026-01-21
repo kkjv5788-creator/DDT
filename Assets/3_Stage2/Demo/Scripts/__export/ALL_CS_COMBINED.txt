@@ -5,29 +5,26 @@ FILE: BagManager_st2.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class BagManager_st2 : MonoBehaviour
 {
-    [Header("봉투 설정")]
+    [Header("현재 봉투/스택")]
     public Transform currentBagAnchor;
     public Transform filledBagStackAnchor;
     public GameObject bagPrefab;
     public int itemsPerBag = 3;
     public int maxFilledBags = 10;
 
-    [Header("스택 설정")]
-    public int columns = 2;
-    public Vector3 colStep = new Vector3(0.08f, 0, 0);
-    public Vector3 rowStep = new Vector3(0, 0, -0.09f);
-    public float[] yawPattern = { -6f, 6f };
-    public float jitterPos = 0.004f;
-    public float jitterYaw = 1f;
+    [Header("스택 배치")]
+    public float stackSpacingY = 0.12f;
 
-    [Header("현재 상태")]
+    [Header("붕어빵 비주얼 프리팹(선택)")]
+    public GameObject fishVisualPrefab;
+
     private BagView_st2 currentBag;
-    private List<BagView_st2> filledBags = new List<BagView_st2>();
+    private readonly List<BagView_st2> filledBags = new List<BagView_st2>();
 
     public event Action OnBagSwapped;
     public event Action<int> OnItemAdded;
@@ -37,117 +34,128 @@ public class BagManager_st2 : MonoBehaviour
         CreateNewCurrentBag();
     }
 
+    // =========================
+    // 호환용 AddItem 오버로드
+    // =========================
+
+    // (1) 기존 호환: 그냥 비주얼 1개 추가
     public void AddItem()
     {
-        if (currentBag == null) return;
+        AddItem((GameObject)null);
+    }
 
-        currentBag.AddItem();
+    // (2) ✅ 비주얼 프리팹을 봉투에 추가 (이게 메인 방식)
+    public void AddItem(GameObject overrideVisualPrefab)
+    {
+        AddFishVisual(overrideVisualPrefab);
+    }
+
+    // (3) 실물 붕어빵을 봉투에 추가 (사용 안 함, 호환용만 남김)
+    public void AddItem(FishCatchToken_st2 fish)
+    {
+        // 비주얼 방식 사용 시 이 메서드는 호출 안 됨
+        UnityEngine.Debug.LogWarning("AddItem(FishCatchToken) called but using visual mode");
+        AddFishVisual(fishVisualPrefab);
+    }
+
+    // =========================
+    // ✅ 비주얼 쌓기 (메인 로직)
+    // =========================
+    public void AddFishVisual(GameObject overrideVisualPrefab)
+    {
+        if (currentBag == null)
+        {
+            UnityEngine.Debug.LogError("❌ currentBag is null!");
+            return;
+        }
+
+        var prefab = overrideVisualPrefab != null ? overrideVisualPrefab : fishVisualPrefab;
+
+        if (prefab == null)
+        {
+            UnityEngine.Debug.LogError("❌ No fish visual prefab assigned!");
+            return;
+        }
+
+        currentBag.AddItem(prefab);
+        UnityEngine.Debug.Log($"✅ Visual added to bag. Count: {currentBag.itemCount}/{itemsPerBag}");
+
         OnItemAdded?.Invoke(currentBag.itemCount);
 
         if (currentBag.itemCount >= itemsPerBag)
         {
+            UnityEngine.Debug.Log("✅ Bag full, swapping...");
             SwapBag();
         }
     }
 
     void SwapBag()
     {
-        // 현재 봉투를 스택으로 이동
         AddFilledBagToStack(currentBag);
-
-        // 새 봉투 생성
         CreateNewCurrentBag();
-
         OnBagSwapped?.Invoke();
     }
 
     void CreateNewCurrentBag()
     {
+        if (bagPrefab == null || currentBagAnchor == null)
+        {
+            UnityEngine.Debug.LogError("❌ bagPrefab or currentBagAnchor not assigned!");
+            return;
+        }
+
         var bagObj = Instantiate(bagPrefab, currentBagAnchor);
         bagObj.transform.localPosition = Vector3.zero;
         bagObj.transform.localRotation = Quaternion.identity;
 
         currentBag = bagObj.GetComponent<BagView_st2>();
+        if (currentBag == null)
+            currentBag = bagObj.AddComponent<BagView_st2>();
 
-        // 페이드인 효과 (선택)
+        UnityEngine.Debug.Log("✅ New bag created");
+
         StartCoroutine(FadeIn(bagObj, 0.2f));
     }
 
     void AddFilledBagToStack(BagView_st2 completedBag)
     {
-        // 스택 초과 시 가장 오래된 봉투 제거 (FIFO)
+        if (completedBag == null || filledBagStackAnchor == null) return;
+
+        // 스택 꽉 차면 가장 오래된 것 제거
         if (filledBags.Count >= maxFilledBags)
         {
-            var oldestBag = filledBags[0];
+            var oldest = filledBags[0];
             filledBags.RemoveAt(0);
-            StartCoroutine(FadeOutAndDestroy(oldestBag.gameObject, 0.3f));
+            if (oldest != null) StartCoroutine(FadeOutAndDestroy(oldest.gameObject, 0.2f));
         }
 
         filledBags.Add(completedBag);
 
-        // 스택 위치로 이동 (비동기)
-        int index = filledBags.Count - 1;
-        Vector3 targetPos = CalculateStackPosition(index);
-        Quaternion targetRot = CalculateStackRotation(index);
-
-        completedBag.transform.SetParent(filledBagStackAnchor);
-        StartCoroutine(LerpToStack(completedBag.transform, targetPos, targetRot, 0.4f));
+        completedBag.transform.SetParent(filledBagStackAnchor, true);
+        RepositionStack();
     }
 
-    Vector3 CalculateStackPosition(int index)
+    void RepositionStack()
     {
-        int row = index / columns;
-        int col = index % columns;
-
-        Vector3 pos = col * colStep + row * rowStep;
-
-        // 지터 추가
-        pos += new Vector3(
-            UnityEngine.Random.Range(-jitterPos, jitterPos),
-            0,
-            UnityEngine.Random.Range(-jitterPos, jitterPos)
-        );
-
-        return pos;
-    }
-
-    Quaternion CalculateStackRotation(int index)
-    {
-        float yaw = yawPattern[index % yawPattern.Length];
-        yaw += UnityEngine.Random.Range(-jitterYaw, jitterYaw);
-        return Quaternion.Euler(0, yaw, 0);
-    }
-
-    IEnumerator LerpToStack(Transform bag, Vector3 targetPos, Quaternion targetRot, float duration)
-    {
-        Vector3 startPos = bag.localPosition;
-        Quaternion startRot = bag.localRotation;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        for (int i = 0; i < filledBags.Count; i++)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            bag.localPosition = Vector3.Lerp(startPos, targetPos, t);
-            bag.localRotation = Quaternion.Lerp(startRot, targetRot, t);
-
-            yield return null;
+            if (filledBags[i] == null) continue;
+            filledBags[i].transform.localPosition = new Vector3(0f, -stackSpacingY * i, 0f);
+            filledBags[i].transform.localRotation = Quaternion.identity;
         }
-
-        bag.localPosition = targetPos;
-        bag.localRotation = targetRot;
     }
 
     IEnumerator FadeIn(GameObject obj, float duration)
     {
+        if (obj == null) yield break;
+
         var renderers = obj.GetComponentsInChildren<Renderer>();
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float alpha = elapsed / duration;
+            float alpha = Mathf.Clamp01(elapsed / duration);
 
             foreach (var renderer in renderers)
             {
@@ -165,6 +173,8 @@ public class BagManager_st2 : MonoBehaviour
 
     IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
     {
+        if (obj == null) yield break;
+
         var renderers = obj.GetComponentsInChildren<Renderer>();
         float elapsed = 0f;
 
@@ -189,6 +199,10 @@ public class BagManager_st2 : MonoBehaviour
         Destroy(obj);
     }
 
+    // =========================
+    // 외부에서 쓰는 유틸
+    // =========================
+
     public void FinalizeBag()
     {
         if (currentBag != null && currentBag.itemCount > 0)
@@ -205,22 +219,18 @@ public class BagManager_st2 : MonoBehaviour
 
     public void Reset()
     {
-        // 모든 봉투 제거
-        foreach (var bag in filledBags)
+        for (int i = filledBags.Count - 1; i >= 0; i--)
         {
-            Destroy(bag.gameObject);
+            if (filledBags[i] != null) Destroy(filledBags[i].gameObject);
         }
         filledBags.Clear();
 
         if (currentBag != null)
-        {
             Destroy(currentBag.gameObject);
-        }
 
         CreateNewCurrentBag();
     }
 }
-
 
 ----- END FILE: BagManager_st2.cs -----
 
@@ -228,46 +238,138 @@ public class BagManager_st2 : MonoBehaviour
 FILE: BagView_st2.cs
 ================================================================================
 
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class BagView_st2 : MonoBehaviour
 {
     [Header("슬롯")]
     public Transform[] slots = new Transform[3];
 
-    [Header("아이템")]
+    [Header("기존(프리팹)")]
     public GameObject itemPrefab;
+
     public int itemCount = 0;
 
-    private List<GameObject> items = new List<GameObject>();
+    private readonly List<GameObject> spawnedItems = new List<GameObject>();
+    private readonly List<FishCatchToken_st2> storedFish = new List<FishCatchToken_st2>();
 
+    // 기존 호환
     public void AddItem()
     {
-        if (itemCount >= 3) return;
+        AddItem(itemPrefab);
+    }
 
-        var item = Instantiate(itemPrefab, slots[itemCount]);
+    // 비주얼 프리팹 추가(override 지원)
+    public void AddItem(GameObject overridePrefab)
+    {
+        if (itemCount >= slots.Length) return;
+
+        var prefab = overridePrefab != null ? overridePrefab : itemPrefab;
+        if (prefab == null) return;
+
+        var item = Instantiate(prefab, slots[itemCount]);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
         item.transform.localScale = Vector3.one * 0.8f;
 
-        items.Add(item);
+        spawnedItems.Add(item);
         itemCount++;
+    }
+
+    // ✅ 실물 붕어빵 적재 (개선)
+    public void AddFish(FishCatchToken_st2 fish, float visualScale = 0.8f)
+    {
+        if (fish == null)
+        {
+            UnityEngine.Debug.LogError("❌ AddFish: fish is null!");
+            return;
+        }
+
+        if (itemCount >= slots.Length)
+        {
+            UnityEngine.Debug.LogWarning("❌ AddFish: Bag is full!");
+            return;
+        }
+
+        if (slots[itemCount] == null)
+        {
+            UnityEngine.Debug.LogError($"❌ AddFish: Slot {itemCount} is null!");
+            return;
+        }
+
+        UnityEngine.Debug.Log($"✅ AddFish: Adding {fish.gameObject.name} to slot {itemCount}");
+
+        // ✅ 봉투 안에서 튀지 않게 (중복 체크하지만 안전하게)
+        var rb = fish.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // ✅ 충돌 끄기
+        var cols = fish.GetComponentsInChildren<Collider>(true);
+        foreach (var col in cols) col.enabled = false;
+
+        // ✅ 이동/충돌 로직 잠시 끄기
+        fish.enabled = false;
+
+        // ✅ 슬롯으로 부모 설정 (worldPositionStays = false로 로컬 좌표 사용)
+        fish.transform.SetParent(slots[itemCount], false);
+        fish.transform.localPosition = Vector3.zero;
+        fish.transform.localRotation = Quaternion.identity;
+        fish.transform.localScale = Vector3.one * visualScale;
+
+        storedFish.Add(fish);
+        itemCount++;
+
+        UnityEngine.Debug.Log($"✅ Fish added successfully. Total items in bag: {itemCount}");
     }
 
     public void Clear()
     {
-        foreach (var item in items)
+        // 비주얼 프리팹 제거
+        for (int i = 0; i < spawnedItems.Count; i++)
         {
-            Destroy(item);
+            if (spawnedItems[i] != null) Destroy(spawnedItems[i]);
         }
-        items.Clear();
+        spawnedItems.Clear();
+
+        // 실물 붕어빵은 풀로 반환
+        for (int i = storedFish.Count - 1; i >= 0; i--)
+        {
+            var fish = storedFish[i];
+            if (fish == null) continue;
+
+            UnityEngine.Debug.Log($"✅ Returning {fish.gameObject.name} to pool");
+
+            // 재사용 위해 원복
+            var cols = fish.GetComponentsInChildren<Collider>(true);
+            foreach (var col in cols) col.enabled = true;
+
+            fish.enabled = true;
+
+            fish.transform.SetParent(null, true);
+
+            if (fish.ownerMold != null) fish.ownerMold.ReleaseFish(fish);
+            else Destroy(fish.gameObject);
+        }
+        storedFish.Clear();
+
         itemCount = 0;
     }
-}
 
+    private void OnDestroy()
+    {
+        // 봉투 오브젝트가 파괴될 때 누수 방지
+        UnityEngine.Debug.Log($"✅ BagView destroyed, clearing {storedFish.Count} fish");
+        Clear();
+    }
+}
 
 ----- END FILE: BagView_st2.cs -----
 
@@ -275,13 +377,9 @@ public class BagView_st2 : MonoBehaviour
 FILE: CatchInput_st2.cs
 ================================================================================
 
-using UnityEngine;
-using UnityEngine.Pool;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
+using System.Diagnostics;
+using UnityEngine;
 using static GameState_st2;
 
 public class CatchInput_st2 : MonoBehaviour
@@ -295,13 +393,23 @@ public class CatchInput_st2 : MonoBehaviour
     public AudioSource snapAudioSource;
     public AudioClip snapSoundClip;
 
+    [Header("스냅 연출")]
+    public float snapHoldSeconds = 0.2f;
+
+    [Header("봉투에 넣을 비주얼 프리팹")]
+    public GameObject bagFishVisualPrefab;
+
+    [Header("✅ 봉투 이동 페이드 설정")]
+    public float fadeDuration = 0.3f; // 페이드 아웃 시간
+
     private JudgeSystem_st2 judgeSystem;
     private BagManager_st2 bagManager;
     private EconomySystem_st2 economySystem;
 
-    // ✅ 추가: 마지막 판정/손 기록 (HUD용)
-    public JudgeResult_st2 lastJudgeResult;
+    // HUD용
+    public JudgeResult_st2 lastJudgeResult = JudgeResult_st2.Miss;
     public string lastHandName;
+    public bool hasJudgedOnce = false;
 
     public void Initialize(JudgeSystem_st2 judge, BagManager_st2 bag, EconomySystem_st2 economy, MoldController_st2[] moldControllers)
     {
@@ -309,15 +417,18 @@ public class CatchInput_st2 : MonoBehaviour
         bagManager = bag;
         economySystem = economy;
 
-        // 초기값 설정
         lastJudgeResult = JudgeResult_st2.Miss;
         lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
+        hasJudgedOnce = false;
     }
 
     void Update()
     {
-        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing) return;
-        if (GameFlowController_st2.Instance.isEndingTriggered) return;
+        var gf = GameFlowController_st2.Instance;
+        if (gf == null) return;
+
+        if (gf.CurrentState != GameStatest2.Playing) return;
+        if (gf.isEndingTriggered) return;
 
         ProcessHandInput();
     }
@@ -327,76 +438,114 @@ public class CatchInput_st2 : MonoBehaviour
         if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, handController))
             return;
 
-        var snapshotTarget = sensor.currentTarget;
-        if (snapshotTarget == null) return;
-        if (snapshotTarget.isResolved) return;
-
-        if (snapshotTarget.assignedHand == null)
-        {
-            snapshotTarget.assignedHand = handController;
-        }
-
-        if (snapshotTarget.assignedHand != handController)
-            return;
+        var target = sensor != null ? sensor.currentTarget : null;
+        if (target == null) return;
+        if (target.isResolved) return;
 
         double catchTime = AudioSettings.dspTime;
-        JudgeResult_st2 result = judgeSystem.PerformJudge(snapshotTarget, catchTime);
+        JudgeResult_st2 result = judgeSystem.PerformJudge(target, catchTime);
 
-        // ✅ 마지막 판정 기록
         lastJudgeResult = result;
         lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
+        hasJudgedOnce = true;
 
         if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
+            OnCatchSuccess(target, result);
+        else
+            OnCatchMiss(target);
+    }
+
+    void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
+    {
+        if (fish == null) return;
+
+        fish.OnCaught();
+
+        Vector3 originalPos = fish.transform.position;
+
+        // 센서에 스냅
+        Transform snapParent = (sensor != null) ? sensor.transform : (handTransform != null ? handTransform : transform);
+
+        fish.transform.position = snapParent.position;
+        fish.transform.SetParent(snapParent, true);
+
+        if (snapAudioSource != null && snapSoundClip != null)
+            snapAudioSource.PlayOneShot(snapSoundClip);
+
+        string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
+        FeedbackManager_st2.Instance?.ShowJudgeFeedback(originalPos, feedbackText);
+
+        // ✅ 수정: 페이드 아웃하면서 봉투에 비주얼 추가 + 풀 반환
+        StartCoroutine(HoldFadeAndRelease(fish));
+    }
+
+    // ✅ 수정: 이동 연출 제거, 페이드만 적용
+    IEnumerator HoldFadeAndRelease(FishCatchToken_st2 fish)
+    {
+        if (fish == null) yield break;
+
+        var owner = fish.ownerMold;
+
+        // ✅ 0.2초 홀드
+        yield return new WaitForSeconds(snapHoldSeconds);
+
+        // ✅ 안전 체크
+        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
         {
-            OnCatchSuccess(snapshotTarget, result);
+            UnityEngine.Debug.LogWarning("Fish was destroyed during hold");
+            yield break;
+        }
+
+        // ✅ 페이드 아웃 시작
+        var renderers = fish.GetComponentsInChildren<Renderer>();
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = 1f - (elapsed / fadeDuration);
+
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null) continue;
+                foreach (var mat in renderer.materials)
+                {
+                    Color color = mat.color;
+                    color.a = alpha;
+                    mat.color = color;
+                }
+            }
+
+            yield return null;
+        }
+
+        // ✅ 페이드 완료 후 봉투에 비주얼 추가
+        if (bagManager != null)
+        {
+            bagManager.AddItem(bagFishVisualPrefab);
+            UnityEngine.Debug.Log($"✅ Visual fish added to bag");
+        }
+
+        // ✅ 손에서 떼기
+        fish.transform.SetParent(null, true);
+
+        // ✅ 실물은 풀로 반환
+        if (owner != null)
+        {
+            owner.ReleaseFish(fish);
+            UnityEngine.Debug.Log($"✅ Real fish returned to pool");
         }
         else
         {
-            OnCatchMiss(snapshotTarget);
-        }
-    }
-
-    // ✅ 수정: 1프레임 스냅 보장
-    void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
-    {
-        fish.OnCaught();
-
-        // 손으로 스냅
-        fish.transform.position = handTransform.position;
-        fish.transform.SetParent(handTransform);
-
-        // ✅ "착" 사운드 재생
-        if (snapAudioSource != null && snapSoundClip != null)
-        {
-            snapAudioSource.PlayOneShot(snapSoundClip);
-        }
-
-        string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, feedbackText);
-
-        bagManager.AddItem();
-
-        // ✅ 1프레임 후 풀로 반환 (손에 붙은 모습 보장)
-        StartCoroutine(ReleaseFishAfterFrame(fish));
-    }
-
-    // ✅ 추가: 1프레임 대기 후 풀 반환
-    IEnumerator ReleaseFishAfterFrame(FishCatchToken_st2 fish)
-    {
-        yield return null; // 1프레임 대기
-
-        if (fish.ownerMold != null)
-        {
-            fish.ownerMold.ReleaseFish(fish);
+            fish.gameObject.SetActive(false);
+            UnityEngine.Debug.LogWarning("Fish has no owner, deactivated instead");
         }
     }
 
     void OnCatchMiss(FishCatchToken_st2 fish)
     {
+        if (fish == null) return;
         FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, "MISS");
-
-        // ✅ Miss는 즉시 삭제하지 않고 낙하 유지
-        // ReleaseFish 호출 제거 - 바닥에서 제거됨
     }
 }
 
@@ -846,6 +995,7 @@ FILE: FishCatchToken_st2.cs
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class FishCatchToken_st2 : MonoBehaviour
@@ -933,24 +1083,51 @@ public class FishCatchToken_st2 : MonoBehaviour
         // Rigidbody가 자동으로 물리 처리
     }
 
-    // ✅ 수정: 바닥 삭제 조건을 isCaught와 분리
     void OnCollisionEnter(Collision collision)
     {
-        // 땅 레이어와 충돌했는지 확인
+        // ✅ 중요: 이미 잡힌 물고기는 바닥 충돌 무시
+        if (isCaught || isResolved)
+            return;
+
+        // ✅ 바닥 충돌 체크 (레이어 또는 태그로 확인)
+        bool isGround = false;
+
+        // 방법 1: LayerMask 사용
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            Debug.Log("붕어빵이 땅에 떨어짐 - 풀로 반환");
+            isGround = true;
+        }
 
-            // ✅ isResolved 상태와 무관하게 바닥에 닿으면 제거
-            if (ownerMold != null)
+        // 방법 2: 태그 사용 (보조 체크)
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Floor"))
+        {
+            isGround = true;
+        }
+
+        if (isGround)
+        {
+            UnityEngine.Debug.Log($"✅ Fish hit ground - triggering MISS for {gameObject.name}");
+
+            // MISS 처리
+            var gf = GameFlowController_st2.Instance;
+            if (gf != null && gf.judgeSystem != null)
             {
-                ownerMold.ReleaseFish(this);
+                gf.judgeSystem.ResolveMissFromGround(this);
             }
+
+            // MISS 피드백
+            FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
+
+            // 풀로 반환
+            if (ownerMold != null)
+                ownerMold.ReleaseFish(this);
         }
     }
 
     public void OnCaught()
     {
+        isCaught = true;
+
         if (rb != null)
         {
             rb.isKinematic = true;
@@ -1319,211 +1496,73 @@ FILE: HandCatchSensor_st2.cs
 ================================================================================
 
 using UnityEngine;
-using UnityEngine.Pool;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 
 public class HandCatchSensor_st2 : MonoBehaviour
 {
-    [Header("설정")]
-    public OVRInput.Controller handController;
+    [Header("레이캐스트 설정")]
+    public float raycastLength = 0.35f;
     public LayerMask fishLayer;
-    public float raycastLength = 0.15f;
 
-    [Header("LineRenderer 설정")]
-    public LineRenderer lineRenderer;
-    public bool showLineRenderer = true;
-
-    [Header("라인 색상")]
-    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
-    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);
-    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f);
-
-    [Header("라인 스타일")]
-    public float lineWidth = 0.002f;
-    public int lineSegments = 20;
-    public AnimationCurve lineWidthCurve = AnimationCurve.Linear(0, 1, 1, 0.3f);
-
-    [Header("상태")]
+    [Header("현재 타겟")]
     public FishCatchToken_st2 currentTarget;
 
-    private RaycastHit[] hits = new RaycastHit[10];
+    // (기존에 LineRenderer, 디버그 등이 있으면 그대로 유지 가능)
     private Transform cachedTransform;
+    private readonly RaycastHit[] hits = new RaycastHit[16];
 
     void Awake()
     {
         cachedTransform = transform;
-        SetupLineRenderer();
-    }
-
-    void Start()
-    {
-        if (lineRenderer != null && !showLineRenderer)
-        {
-            lineRenderer.enabled = false;
-        }
-    }
-
-    // ✅ 추가: 활성화 시 초기화
-    void OnEnable()
-    {
-        currentTarget = null;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = showLineRenderer;
-        }
-    }
-
-    // ✅ 추가: 비활성화 시 정리
-    void OnDisable()
-    {
-        currentTarget = null;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = false;
-        }
     }
 
     void Update()
     {
         UpdateCurrentTarget();
-        UpdateLineRenderer();
-    }
-
-    void SetupLineRenderer()
-    {
-        if (lineRenderer == null)
-        {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-        }
-
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
-        lineRenderer.positionCount = 2;
-        lineRenderer.useWorldSpace = true;
-
-        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
-        {
-            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        }
-
-        lineRenderer.startColor = noTargetColor;
-        lineRenderer.endColor = noTargetColor;
-        lineRenderer.widthCurve = lineWidthCurve;
-        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        lineRenderer.receiveShadows = false;
+        // 기존 UpdateLineRenderer() 같은 게 있으면 여기서 호출 유지
     }
 
     void UpdateCurrentTarget()
     {
-        Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
-        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
+        if (cachedTransform == null) cachedTransform = transform;
 
-        FishCatchToken_st2 closestFish = null;
-        float closestDistance = float.MaxValue;
+        Vector3 origin = cachedTransform.position;
+        Vector3 dir = cachedTransform.forward;
+
+        int hitCount = Physics.RaycastNonAlloc(
+            origin,
+            dir,
+            hits,
+            raycastLength,
+            fishLayer,
+            QueryTriggerInteraction.Collide
+        );
+
+        FishCatchToken_st2 closest = null;
+        float closestDist = float.MaxValue;
 
         for (int i = 0; i < hitCount; i++)
         {
-            var fish = hits[i].collider.GetComponent<FishCatchToken_st2>();
+            var col = hits[i].collider;
+            if (col == null) continue;
 
+            // ✅ 메인에서 “안 잡히는” 주요 원인 해결: 자식 콜라이더 → 루트 토큰 탐색
+            var fish = col.GetComponentInParent<FishCatchToken_st2>();
             if (fish == null) continue;
-            if (fish.isResolved) continue;
+            if (!fish.gameObject.activeInHierarchy) continue;
+            if (fish.isResolved) continue; // 이미 판정 끝난 애는 타겟 제외
 
-            float distance = hits[i].distance;
-
-            // 히스테리시스
-            if (currentTarget != null)
+            float d = Vector3.Distance(origin, fish.transform.position);
+            if (d < closestDist)
             {
-                if (fish == currentTarget)
-                {
-                    closestFish = fish;
-                    break;
-                }
-
-                if (distance < closestDistance - 0.03f)
-                {
-                    closestDistance = distance;
-                    closestFish = fish;
-                }
-            }
-            else
-            {
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestFish = fish;
-                }
+                closestDist = d;
+                closest = fish;
             }
         }
 
-        currentTarget = closestFish;
-    }
-
-    void UpdateLineRenderer()
-    {
-        if (lineRenderer == null || !showLineRenderer)
-            return;
-
-        // 게임 상태 체크 (Playing 상태에서만 표시)
-        if (GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
-        {
-            lineRenderer.enabled = false;
-            return;
-        }
-
-        lineRenderer.enabled = true;
-
-        Vector3 startPos = cachedTransform.position;
-        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
-
-        if (currentTarget != null)
-        {
-            endPos = currentTarget.transform.position;
-        }
-
-        lineRenderer.SetPosition(0, startPos);
-        lineRenderer.SetPosition(1, endPos);
-
-        Color lineColor = GetLineColor();
-        lineRenderer.startColor = lineColor;
-        lineRenderer.endColor = lineColor;
-    }
-
-    Color GetLineColor()
-    {
-        if (currentTarget == null)
-            return noTargetColor;
-        else if (currentTarget.isResolved)
-            return resolvedTargetColor;
-        else
-            return hasTargetColor;
-    }
-
-    public void ToggleLineRenderer()
-    {
-        showLineRenderer = !showLineRenderer;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = showLineRenderer;
-        }
-    }
-
-    public void SetLineRendererVisible(bool visible)
-    {
-        showLineRenderer = visible;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = visible;
-        }
+        currentTarget = closest;
     }
 }
+
 
 ----- END FILE: HandCatchSensor_st2.cs -----
 
@@ -1599,20 +1638,31 @@ public class JudgeSystem_st2 : MonoBehaviour
         return result;
     }
 
-    // ✅ 수정: Timeout Miss는 즉시 삭제하지 않고 낙하 유지
+    // ✅ 추가: 바닥에 떨어진 물고기 MISS 확정
+    public void ResolveMissFromGround(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        if (fish.isResolved) return; // 중복 방지
+
+        fish.isResolved = true;
+        fish.isCaught = false;
+        missCount++;
+
+        activeFish.Remove(fish);
+
+        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
+    }
+
     void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
         if (fish.isResolved) return;
 
-        // ✅ Miss 확정만 하고 물리 낙하는 유지
         fish.isResolved = true;
         fish.isCaught = false;
         missCount++;
 
         OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
-        // ✅ 즉시 ReleaseFish 호출 제거 - 바닥에서 제거됨
-        // 단, activeFish에서는 제거
         activeFish.Remove(fish);
     }
 
@@ -2314,7 +2364,7 @@ public class PatternDirector_st2 : MonoBehaviour
 ----- END FILE: PatternDirector_st2.cs -----
 
 ================================================================================
-FILE: Tuto/StandaloneTutorialController_st2.cs
+FILE: StandaloneTutorialController_st2.cs
 ================================================================================
 
 using System.Collections;
@@ -2384,6 +2434,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     [Header("판정 설정")]
     public float perfectWindow = 0.04f;
     public float goodWindow = 0.075f;
+    [Header("스냅 연출(튜토리얼)")]
+    public float snapHoldSeconds = 0.2f;
 
     // 진행 카운터
     private int telegraphCount = 0;
@@ -2654,27 +2706,29 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
             // 손으로 스냅
             target.transform.position = sensor.transform.position;
-            target.transform.SetParent(sensor.transform);
+            target.transform.SetParent(sensor.transform, true);
 
-            // 1프레임 후 풀 반환
-            StartCoroutine(ReleaseFishAfterFrame(target));
+            // ✅ 1프레임 후 반환 → ✅ 0.2초 홀드 후 반환
+            StartCoroutine(SnapHoldThenRelease(target));
 
             OnCatchSuccess(result);
         }
         else
         {
-            // Miss는 바닥에서 처리되도록 놔둠
             OnCatchMiss();
         }
     }
 
-    IEnumerator ReleaseFishAfterFrame(TutorialFishToken_st2 fish)
+    IEnumerator SnapHoldThenRelease(TutorialFishToken_st2 fish)
     {
-        yield return null;
+        yield return new WaitForSeconds(snapHoldSeconds);
 
-        // ✅ 안전 체크: 이미 반환되었거나 null이면 스킵
+        // 이미 정리됐으면 스킵
         if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
             yield break;
+
+        // 손에 부모로 남는 거 방지용: 떼고 반환
+        fish.transform.SetParent(null, true);
 
         if (fish.ownerMold != null)
             fish.ownerMold.ReleaseFish(fish);
@@ -2937,10 +2991,10 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 }
 
------ END FILE: Tuto/StandaloneTutorialController_st2.cs -----
+----- END FILE: StandaloneTutorialController_st2.cs -----
 
 ================================================================================
-FILE: Tuto/TutorialFishToken_st2.cs
+FILE: TutorialFishToken_st2.cs
 ================================================================================
 
 using UnityEngine;
@@ -3070,10 +3124,10 @@ public class TutorialFishToken_st2 : MonoBehaviour
     }
 }
 
------ END FILE: Tuto/TutorialFishToken_st2.cs -----
+----- END FILE: TutorialFishToken_st2.cs -----
 
 ================================================================================
-FILE: Tuto/TutorialHandSensor_st2.cs
+FILE: TutorialHandSensor_st2.cs
 ================================================================================
 
 using UnityEngine;
@@ -3261,126 +3315,7 @@ public class TutorialHandSensor_st2 : MonoBehaviour
     }
 }
 
------ END FILE: Tuto/TutorialHandSensor_st2.cs -----
-
-================================================================================
-FILE: Tuto/TutorialMoldController_st2.cs
-================================================================================
-
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Pool;
-
-/// <summary>
-/// 튜토리얼 전용 몰드 - 메인 MoldController와 독립
-/// </summary>
-public class TutorialMoldController_st2 : MonoBehaviour
-{
-    [Header("프리팹")]
-    public GameObject tutorialFishPrefab;
-
-    [Header("애니메이션")]
-    public Animator moldAnimator;
-    public string popAnimationTrigger = "Pop";
-    public float popAnimationLeadTime = 0.2f;
-
-    [Header("점프 설정")]
-    public float jumpHeight = 2.5f;
-    public float forwardDistance = 2.0f;
-    public float gravity = 9.81f;
-    public LayerMask groundLayer;
-
-    private ObjectPool<TutorialFishToken_st2> fishPool;
-    private List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
-
-    void Awake()
-    {
-        InitializePool();
-    }
-
-    void InitializePool()
-    {
-        fishPool = new ObjectPool<TutorialFishToken_st2>(
-            createFunc: () => {
-                var obj = Instantiate(tutorialFishPrefab, transform);
-                var fish = obj.GetComponent<TutorialFishToken_st2>();
-                if (fish == null)
-                    fish = obj.AddComponent<TutorialFishToken_st2>();
-                return fish;
-            },
-            actionOnGet: (fish) => {
-                fish.gameObject.SetActive(true);
-            },
-            actionOnRelease: (fish) => {
-                fish.OnReturnToPool();
-                fish.transform.SetParent(transform);
-                fish.transform.localPosition = Vector3.zero;
-                fish.transform.localRotation = Quaternion.identity;
-                fish.transform.localScale = Vector3.one;
-                fish.gameObject.SetActive(false);
-                activeFish.Remove(fish);
-            },
-            actionOnDestroy: (fish) => {
-                if (fish != null && fish.gameObject != null)
-                    Destroy(fish.gameObject);
-            },
-            defaultCapacity: 5
-        );
-    }
-
-    public void SpawnFish(double popTime)
-    {
-        // Pop 애니메이션 (미리 시작)
-        if (moldAnimator != null)
-        {
-            moldAnimator.SetTrigger(popAnimationTrigger);
-        }
-
-        // Fish 생성
-        var fish = fishPool.Get();
-        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
-        activeFish.Add(fish);
-    }
-
-    public void ReleaseFish(TutorialFishToken_st2 fish)
-    {
-        if (fish != null)
-        {
-            fishPool.Release(fish);
-        }
-    }
-
-    void Update()
-    {
-        // 활성 fish 업데이트
-        for (int i = activeFish.Count - 1; i >= 0; i--)
-        {
-            if (activeFish[i] != null && !activeFish[i].isResolved)
-            {
-                activeFish[i].UpdateMovement();
-            }
-        }
-    }
-
-    void OnDisable()
-    {
-        // 비활성화 시 모든 fish 정리
-        CleanupAllFish();
-    }
-
-    // ✅ 추가: 모든 fish 강제 정리
-    public void CleanupAllFish()
-    {
-        foreach (var fish in activeFish.ToArray())
-        {
-            if (fish != null)
-                fishPool.Release(fish);
-        }
-        activeFish.Clear();
-    }
-}
-
------ END FILE: Tuto/TutorialMoldController_st2.cs -----
+----- END FILE: TutorialHandSensor_st2.cs -----
 
 ================================================================================
 FILE: TutorialManager_st2.cs
@@ -3631,4 +3566,123 @@ public class TutorialManager_st2 : MonoBehaviour
 
 
 ----- END FILE: TutorialManager_st2.cs -----
+
+================================================================================
+FILE: TutorialMoldController_st2.cs
+================================================================================
+
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Pool;
+
+/// <summary>
+/// 튜토리얼 전용 몰드 - 메인 MoldController와 독립
+/// </summary>
+public class TutorialMoldController_st2 : MonoBehaviour
+{
+    [Header("프리팹")]
+    public GameObject tutorialFishPrefab;
+
+    [Header("애니메이션")]
+    public Animator moldAnimator;
+    public string popAnimationTrigger = "Pop";
+    public float popAnimationLeadTime = 0.2f;
+
+    [Header("점프 설정")]
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
+
+    private ObjectPool<TutorialFishToken_st2> fishPool;
+    private List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
+
+    void Awake()
+    {
+        InitializePool();
+    }
+
+    void InitializePool()
+    {
+        fishPool = new ObjectPool<TutorialFishToken_st2>(
+            createFunc: () => {
+                var obj = Instantiate(tutorialFishPrefab, transform);
+                var fish = obj.GetComponent<TutorialFishToken_st2>();
+                if (fish == null)
+                    fish = obj.AddComponent<TutorialFishToken_st2>();
+                return fish;
+            },
+            actionOnGet: (fish) => {
+                fish.gameObject.SetActive(true);
+            },
+            actionOnRelease: (fish) => {
+                fish.OnReturnToPool();
+                fish.transform.SetParent(transform);
+                fish.transform.localPosition = Vector3.zero;
+                fish.transform.localRotation = Quaternion.identity;
+                fish.transform.localScale = Vector3.one;
+                fish.gameObject.SetActive(false);
+                activeFish.Remove(fish);
+            },
+            actionOnDestroy: (fish) => {
+                if (fish != null && fish.gameObject != null)
+                    Destroy(fish.gameObject);
+            },
+            defaultCapacity: 5
+        );
+    }
+
+    public void SpawnFish(double popTime)
+    {
+        // Pop 애니메이션 (미리 시작)
+        if (moldAnimator != null)
+        {
+            moldAnimator.SetTrigger(popAnimationTrigger);
+        }
+
+        // Fish 생성
+        var fish = fishPool.Get();
+        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
+        activeFish.Add(fish);
+    }
+
+    public void ReleaseFish(TutorialFishToken_st2 fish)
+    {
+        if (fish != null)
+        {
+            fishPool.Release(fish);
+        }
+    }
+
+    void Update()
+    {
+        // 활성 fish 업데이트
+        for (int i = activeFish.Count - 1; i >= 0; i--)
+        {
+            if (activeFish[i] != null && !activeFish[i].isResolved)
+            {
+                activeFish[i].UpdateMovement();
+            }
+        }
+    }
+
+    void OnDisable()
+    {
+        // 비활성화 시 모든 fish 정리
+        CleanupAllFish();
+    }
+
+    // ✅ 추가: 모든 fish 강제 정리
+    public void CleanupAllFish()
+    {
+        foreach (var fish in activeFish.ToArray())
+        {
+            if (fish != null)
+                fishPool.Release(fish);
+        }
+        activeFish.Clear();
+    }
+}
+
+----- END FILE: TutorialMoldController_st2.cs -----
 

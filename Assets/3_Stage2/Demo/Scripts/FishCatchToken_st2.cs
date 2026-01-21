@@ -89,26 +89,54 @@ public class FishCatchToken_st2 : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        // ✅ 잡아서(Perfect/Good) 손에 붙은 애는 바닥 충돌 무시
+        if (isCaught) return;
+
+        // ✅ 바닥 충돌 체크 (레이어 또는 태그로 확인)
+        bool isGround = false;
+
+        // 방법 1: LayerMask 사용
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            // ✅ 바닥에 떨어진 건 전부 MISS 확정
+            isGround = true;
+        }
+
+        // 방법 2: 태그 사용 (보조 체크)
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGround = true;
+        }
+
+        if (!isGround) return;
+
+        // ✅ 아직 판정 안 된 상태에서 바닥 = Miss 확정 (기존 유지)
+        if (!isResolved)
+        {
+            UnityEngine.Debug.Log($"✅ Fish hit ground - triggering MISS for {gameObject.name}");
+
+            // MISS 처리
             var gf = GameFlowController_st2.Instance;
             if (gf != null && gf.judgeSystem != null)
             {
                 gf.judgeSystem.ResolveMissFromGround(this);
             }
 
-            // ✅ (선택) Miss 텍스트 띄우려면: feedbackTextPrefab부터 연결되어 있어야 함
+            // MISS 피드백
             FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
+        }
 
-            if (ownerMold != null)
-                ownerMold.ReleaseFish(this);
+        // ✅ 이미 Miss든 판정 전이든 "바닥 닿으면 무조건 사라짐" (풀로 반환)
+        if (ownerMold != null)
+        {
+            ownerMold.ReleaseFish(this);
+            UnityEngine.Debug.Log($"✅ Fish returned to pool after ground collision");
         }
     }
 
-
     public void OnCaught()
     {
+        isCaught = true;
+
         if (rb != null)
         {
             rb.isKinematic = true;

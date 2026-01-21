@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class BagManager_st2 : MonoBehaviour
@@ -39,47 +40,49 @@ public class BagManager_st2 : MonoBehaviour
         AddItem((GameObject)null);
     }
 
-    // (2) 비주얼 프리팹을 봉투에 추가
+    // (2) ✅ 비주얼 프리팹을 봉투에 추가 (이게 메인 방식)
     public void AddItem(GameObject overrideVisualPrefab)
     {
         AddFishVisual(overrideVisualPrefab);
     }
 
-    // (3) 실물 붕어빵을 봉투에 추가 (요청 기능)
+    // (3) 실물 붕어빵을 봉투에 추가 (사용 안 함, 호환용만 남김)
     public void AddItem(FishCatchToken_st2 fish)
     {
-        AddFishToBag(fish);
+        // 비주얼 방식 사용 시 이 메서드는 호출 안 됨
+        UnityEngine.Debug.LogWarning("AddItem(FishCatchToken) called but using visual mode");
+        AddFishVisual(fishVisualPrefab);
     }
 
     // =========================
-    // 비주얼 쌓기
+    // ✅ 비주얼 쌓기 (메인 로직)
     // =========================
     public void AddFishVisual(GameObject overrideVisualPrefab)
     {
-        if (currentBag == null) return;
+        if (currentBag == null)
+        {
+            UnityEngine.Debug.LogError("❌ currentBag is null!");
+            return;
+        }
 
         var prefab = overrideVisualPrefab != null ? overrideVisualPrefab : fishVisualPrefab;
+
+        if (prefab == null)
+        {
+            UnityEngine.Debug.LogError("❌ No fish visual prefab assigned!");
+            return;
+        }
+
         currentBag.AddItem(prefab);
+        UnityEngine.Debug.Log($"✅ Visual added to bag. Count: {currentBag.itemCount}/{itemsPerBag}");
 
         OnItemAdded?.Invoke(currentBag.itemCount);
 
         if (currentBag.itemCount >= itemsPerBag)
+        {
+            UnityEngine.Debug.Log("✅ Bag full, swapping...");
             SwapBag();
-    }
-
-    // =========================
-    // 실물(잡은 붕어빵) 쌓기
-    // =========================
-    public void AddFishToBag(FishCatchToken_st2 fish)
-    {
-        if (currentBag == null) return;
-        if (fish == null) return;
-
-        currentBag.AddFish(fish);
-        OnItemAdded?.Invoke(currentBag.itemCount);
-
-        if (currentBag.itemCount >= itemsPerBag)
-            SwapBag();
+        }
     }
 
     void SwapBag()
@@ -91,7 +94,11 @@ public class BagManager_st2 : MonoBehaviour
 
     void CreateNewCurrentBag()
     {
-        if (bagPrefab == null || currentBagAnchor == null) return;
+        if (bagPrefab == null || currentBagAnchor == null)
+        {
+            UnityEngine.Debug.LogError("❌ bagPrefab or currentBagAnchor not assigned!");
+            return;
+        }
 
         var bagObj = Instantiate(bagPrefab, currentBagAnchor);
         bagObj.transform.localPosition = Vector3.zero;
@@ -100,6 +107,8 @@ public class BagManager_st2 : MonoBehaviour
         currentBag = bagObj.GetComponent<BagView_st2>();
         if (currentBag == null)
             currentBag = bagObj.AddComponent<BagView_st2>();
+
+        UnityEngine.Debug.Log("✅ New bag created");
 
         StartCoroutine(FadeIn(bagObj, 0.2f));
     }
@@ -187,7 +196,7 @@ public class BagManager_st2 : MonoBehaviour
     }
 
     // =========================
-    // 외부에서 쓰는 유틸(에러 났던 것들)
+    // 외부에서 쓰는 유틸
     // =========================
 
     public void FinalizeBag()
