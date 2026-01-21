@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/1_Main/Scene_backup/Main_v3.0.unity
     guid: ce700715d7dcad842b55ab7c1bc8e0b7
   - enabled: 1
-    path: Assets/0.0_Scenes/Stage1_v4.3.unity
+    path: Assets/0.0_Scenes/Stage1_v4.4.unity
     guid: aee9e1ea808e693459cc189302267d41
   - enabled: 1
     path: Assets/0.0_Scenes/Stage2_v1.2.unity
