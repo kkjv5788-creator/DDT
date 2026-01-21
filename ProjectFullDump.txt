@@ -1,6 +1,6 @@
 [PROJECT DUMP START]
 Scene: Stage2_demo
-Date: 2026-01-20 오후 7:24:31
+Date: 2026-01-21 오전 11:22:34
 ========================================
               SCENE HIERARCHY
 ========================================
@@ -103,6 +103,27 @@ Date: 2026-01-20 오후 7:24:31
 
             [O] LeftHandAnchor (Active: True, Tag: Untagged, Layer: Default)
                 Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CatchInput_st2
+                    > sensor: LeftHandAnchor (HandCatchSensor_st2)
+                    > handController: LTouch
+                    > handTransform: LeftHand (UnityEngine.Transform)
+                    > snapAudioSource: LeftHand (UnityEngine.AudioSource)
+                    > snapSoundClip: 착 (UnityEngine.AudioClip)
+                    > lastJudgeResult: Perfect
+                    > lastHandName: 
+                - (Component) HandCatchSensor_st2
+                    > handController: LTouch
+                    > fishLayer: UnityEngine.LayerMask
+                    > raycastLength: 5
+                    > lineRenderer: LaserVisual_L (UnityEngine.LineRenderer)
+                    > showLineRenderer: True
+                    > noTargetColor: RGBA(0.500, 0.500, 0.500, 0.300)
+                    > hasTargetColor: RGBA(0.000, 1.000, 0.000, 0.800)
+                    > resolvedTargetColor: RGBA(1.000, 0.000, 0.000, 0.500)
+                    > lineWidth: 0.002
+                    > lineSegments: 20
+                    > lineWidthCurve: UnityEngine.AnimationCurve
+                    > currentTarget: 
 
                 [O] LaserVisual_L (Active: True, Tag: Untagged, Layer: Default)
                     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -509,31 +530,31 @@ Date: 2026-01-20 오후 7:24:31
 
                 [O] LeftHand (Active: True, Tag: Untagged, Layer: Default)
                     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-                    - (Component) CatchInput_st2
-                        > sensor: LeftHand (HandCatchSensor_st2)
-                        > handController: LTouch
-                        > handTransform: LeftHand (UnityEngine.Transform)
-                        > snapAudioSource: LeftHand (UnityEngine.AudioSource)
-                        > snapSoundClip: 착 (UnityEngine.AudioClip)
-                        > lastJudgeResult: Perfect
-                        > lastHandName: 
-                    - (Component) HandCatchSensor_st2
-                        > handController: LTouch
-                        > fishLayer: UnityEngine.LayerMask
-                        > raycastLength: 1
-                        > lineRenderer: LaserVisual_L (UnityEngine.LineRenderer)
-                        > showLineRenderer: True
-                        > noTargetColor: RGBA(0.500, 0.500, 0.500, 0.300)
-                        > hasTargetColor: RGBA(0.000, 1.000, 0.000, 0.800)
-                        > resolvedTargetColor: RGBA(1.000, 0.000, 0.000, 0.500)
-                        > lineWidth: 0.002
-                        > lineSegments: 20
-                        > lineWidthCurve: UnityEngine.AnimationCurve
-                        > currentTarget: 
                     - (Component) AudioSource
 
             [O] RightHandAnchor (Active: True, Tag: Untagged, Layer: Default)
                 Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) HandCatchSensor_st2
+                    > handController: RTouch
+                    > fishLayer: UnityEngine.LayerMask
+                    > raycastLength: 5
+                    > lineRenderer: LaserVisual_R (UnityEngine.LineRenderer)
+                    > showLineRenderer: True
+                    > noTargetColor: RGBA(0.500, 0.500, 0.500, 0.300)
+                    > hasTargetColor: RGBA(0.000, 1.000, 0.000, 0.800)
+                    > resolvedTargetColor: RGBA(1.000, 0.000, 0.000, 0.500)
+                    > lineWidth: 0.002
+                    > lineSegments: 20
+                    > lineWidthCurve: UnityEngine.AnimationCurve
+                    > currentTarget: 
+                - (Component) CatchInput_st2
+                    > sensor: RightHandAnchor (HandCatchSensor_st2)
+                    > handController: RTouch
+                    > handTransform: RightHand (UnityEngine.Transform)
+                    > snapAudioSource: RightHand (UnityEngine.AudioSource)
+                    > snapSoundClip: 착 (UnityEngine.AudioClip)
+                    > lastJudgeResult: Perfect
+                    > lastHandName: 
 
                 [O] LaserVisual_R (Active: True, Tag: Untagged, Layer: Default)
                     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -940,27 +961,6 @@ Date: 2026-01-20 오후 7:24:31
 
                 [O] RightHand (Active: True, Tag: Untagged, Layer: Default)
                     Pos: (-1.86, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-                    - (Component) CatchInput_st2
-                        > sensor: RightHand (HandCatchSensor_st2)
-                        > handController: RTouch
-                        > handTransform: RightHand (UnityEngine.Transform)
-                        > snapAudioSource: RightHand (UnityEngine.AudioSource)
-                        > snapSoundClip: 착 (UnityEngine.AudioClip)
-                        > lastJudgeResult: Perfect
-                        > lastHandName: 
-                    - (Component) HandCatchSensor_st2
-                        > handController: RTouch
-                        > fishLayer: UnityEngine.LayerMask
-                        > raycastLength: 1
-                        > lineRenderer: LaserVisual_R (UnityEngine.LineRenderer)
-                        > showLineRenderer: True
-                        > noTargetColor: RGBA(0.500, 0.500, 0.500, 0.300)
-                        > hasTargetColor: RGBA(0.000, 1.000, 0.000, 0.800)
-                        > resolvedTargetColor: RGBA(1.000, 0.000, 0.000, 0.500)
-                        > lineWidth: 0.002
-                        > lineSegments: 20
-                        > lineWidthCurve: UnityEngine.AnimationCurve
-                        > currentTarget: 
                     - (Component) AudioSource
 
             [O] LeftHandAnchorDetached (Active: True, Tag: Untagged, Layer: Default)
@@ -997,7 +997,7 @@ Date: 2026-01-20 오후 7:24:31
     [O] GameFlowController (Active: True, Tag: Untagged, Layer: Default)
         Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) GameFlowController_st2
-            > CurrentState: MainMenu
+            > CurrentState: Playing
             > isEndingTriggered: True
             > bgmSource: BGM_Source (UnityEngine.AudioSource)
             > bgmClip: Stage2_main (UnityEngine.AudioClip)
@@ -1184,7 +1184,7 @@ Date: 2026-01-20 오후 7:24:31
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
 
     [O] MenuMonitorCanvas (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (558.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        Pos: (545.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) Canvas
         - (Component) CanvasScaler
         - (Component) GraphicRaycaster
@@ -1199,7 +1199,7 @@ Date: 2026-01-20 오후 7:24:31
             > filledBagsText: 
 
     [O] TutorialCanvas (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (558.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        Pos: (545.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) Canvas
         - (Component) CanvasScaler
         - (Component) GraphicRaycaster
@@ -1210,27 +1210,22 @@ Date: 2026-01-20 오후 7:24:31
             > skipText: Text (TMP) (TMPro.TextMeshProUGUI)
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (558.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (558.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (558.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 255.50, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
 [O] Crowd (Active: True, Tag: Untagged, Layer: Default)
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-
-[O] EventSystem (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
-    - (Component) EventSystem
-    - (Component) StandaloneInputModule
 
 [O] Hands (Active: True, Tag: Untagged, Layer: Default)
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -1250,10 +1245,10 @@ Date: 2026-01-20 오후 7:24:31
         > judgeSystem: JudgeSystem (JudgeSystem_st2)
         > economySystem: EconomySystem (EconomySystem_st2)
         > tutorialManager: TutorialCanvas (TutorialManager_st2)
-        > leftSensor: LeftHand (HandCatchSensor_st2)
-        > rightSensor: RightHand (HandCatchSensor_st2)
-        > leftInput: LeftHand (CatchInput_st2)
-        > rightInput: RightHand (CatchInput_st2)
+        > leftSensor: 
+        > rightSensor: 
+        > leftInput: 
+        > rightInput: 
         > molds: MoldController_st2[]
 
 

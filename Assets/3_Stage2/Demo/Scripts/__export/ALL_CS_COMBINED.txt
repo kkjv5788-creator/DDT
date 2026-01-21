@@ -1399,13 +1399,35 @@ public class HandCatchSensor_st2 : MonoBehaviour
         Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
         int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
 
+        // ✅ 디버그 추가
+        Debug.Log($"[{handController}] Raycast Hit Count: {hitCount}");
+
+        if (hitCount == 0)
+        {
+            Debug.LogWarning($"[{handController}] 아무것도 감지 안 됨! Layer: {fishLayer.value}");
+        }
+
         FishCatchToken_st2 closestFish = null;
         float closestDistance = float.MaxValue;
 
         for (int i = 0; i < hitCount; i++)
         {
+            // ✅ 디버그 추가
+            Debug.Log($"[{handController}] Hit [{i}]: {hits[i].collider.gameObject.name}, Layer: {hits[i].collider.gameObject.layer}");
+
             var fish = hits[i].collider.GetComponent<FishCatchToken_st2>();
-            if (fish == null || fish.isResolved) continue;
+
+            if (fish == null)
+            {
+                Debug.LogError($"[{handController}] FishCatchToken_st2 컴포넌트 없음: {hits[i].collider.gameObject.name}");
+                continue;
+            }
+
+            if (fish.isResolved)
+            {
+                Debug.Log($"[{handController}] 이미 처리된 Fish: {fish.name}");
+                continue;
+            }
 
             float distance = hits[i].distance;
 
@@ -1415,13 +1437,15 @@ public class HandCatchSensor_st2 : MonoBehaviour
                 if (fish == currentTarget)
                 {
                     closestFish = fish;
+                    Debug.Log($"[{handController}] 기존 타겟 유지: {fish.name}");
                     break;
                 }
 
-                if (distance < closestDistance - 0.03f) // 3cm 이상 차이나야 교체
+                if (distance < closestDistance - 0.03f)
                 {
                     closestDistance = distance;
                     closestFish = fish;
+                    Debug.Log($"[{handController}] 새 타겟 발견: {fish.name}, 거리: {distance:F3}m");
                 }
             }
             else
@@ -1430,11 +1454,22 @@ public class HandCatchSensor_st2 : MonoBehaviour
                 {
                     closestDistance = distance;
                     closestFish = fish;
+                    Debug.Log($"[{handController}] 첫 타겟 발견: {fish.name}, 거리: {distance:F3}m");
                 }
             }
         }
 
         currentTarget = closestFish;
+
+        // ✅ 최종 결과 디버그
+        if (currentTarget != null)
+        {
+            Debug.Log($"[{handController}] ✓ 현재 타겟: {currentTarget.name}");
+        }
+        else
+        {
+            Debug.Log($"[{handController}] ✗ 타겟 없음");
+        }
     }
 
     void UpdateLineRenderer()

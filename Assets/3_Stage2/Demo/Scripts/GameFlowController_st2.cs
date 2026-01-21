@@ -23,9 +23,11 @@ public class GameFlowController_st2 : MonoBehaviour
     public CrowdManager_st2 crowdManager;
     public PatternDirector_st2 patternDirector;
     public MenuMonitorUI_st2 menuMonitorUI;
-    public TutorialManager_st2 tutorialManager;
     public MoldController_st2[] molds;
     public CatchInput_st2[] catchInputs;
+
+    [Header("튜토리얼 (옵션)")]
+    public StandaloneTutorialController_st2 tutorialController; // ✅ 추가
 
     [Header("타이밍")]
     private double songStartDspTime;
@@ -58,46 +60,39 @@ public class GameFlowController_st2 : MonoBehaviour
 
         menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
 
-        // ✅ 수정: 중앙 이벤트 연결
+        // ✅ 중앙 이벤트 연결
         judgeSystem.OnJudgeResult += OnJudgeResult;
         bagManager.OnBagSwapped += OnBagSwapped;
         patternDirector.OnPatternQueued += OnPatternQueued;
 
-        // ✅ 추가: 튜토리얼 연결 (각 Mold 이벤트)
-        foreach (var mold in molds)
-        {
-            mold.OnTelegraphPlayed += () =>
-            {
-                if (tutorialManager != null && tutorialManager.gameObject.activeInHierarchy)
-                {
-                    tutorialManager.OnTelegraphPlayed();
-                }
-            };
+        // ✅ 개발용: 매 실행마다 튜토리얼 강제
+        PlayerPrefs.SetInt("TutorialCompleted", 0);
+        PlayerPrefs.Save();
 
-            mold.OnPopPlayed += () =>
-            {
-                if (tutorialManager != null && tutorialManager.gameObject.activeInHierarchy)
-                {
-                    tutorialManager.OnPopPlayed();
-                }
-            };
-        }
-
-        // 튜토리얼 체크
+        // ✅ 튜토리얼 체크
         bool hasCompletedTutorial = PlayerPrefs.GetInt("TutorialCompleted", 0) == 1;
 
-        if (!hasCompletedTutorial)
+        if (!hasCompletedTutorial && tutorialController != null)
         {
+            // 튜토리얼 활성화, 메인 게임 비활성화
             TransitionToTutorial();
         }
         else
         {
+            // 튜토리얼 비활성화, 메인 게임 시작
+            if (tutorialController != null)
+            {
+                tutorialController.gameObject.SetActive(false);
+            }
             TransitionToPlaying();
         }
     }
 
     void Update()
     {
+        // ✅ Tutorial 상태일 때는 메인 게임 로직 실행 안 함
+        if (CurrentState == GameStatest2.Tutorial) return;
+
         // PAUSE 입력
         if (CurrentState == GameStatest2.Playing)
         {
@@ -127,13 +122,29 @@ public class GameFlowController_st2 : MonoBehaviour
         }
     }
 
+    // ✅ 추가: 튜토리얼 전환
     public void TransitionToTutorial()
     {
         CurrentState = GameStatest2.Tutorial;
         menuMonitorUI.UpdateState(CurrentState);
 
-        // 튜토리얼 시작
-        tutorialManager.gameObject.SetActive(true);
+        // 메인 게임 몰드 비활성화
+        foreach (var mold in molds)
+        {
+            mold.gameObject.SetActive(false);
+        }
+
+        // 메인 게임 입력 비활성화
+        foreach (var input in catchInputs)
+        {
+            input.enabled = false;
+        }
+
+        // 튜토리얼 활성화
+        if (tutorialController != null)
+        {
+            tutorialController.gameObject.SetActive(true);
+        }
     }
 
     public void TransitionToPlaying()
@@ -142,11 +153,31 @@ public class GameFlowController_st2 : MonoBehaviour
         isEndingTriggered = false;
         menuMonitorUI.UpdateState(CurrentState);
 
-        // 튜토리얼 비활성화
-        if (tutorialManager != null)
+        // ✅ 튜토리얼 완전 비활성화
+        if (tutorialController != null)
         {
-            tutorialManager.gameObject.SetActive(false);
+            tutorialController.gameObject.SetActive(false);
         }
+
+        // ✅ 메인 게임 몰드 활성화 및 초기화
+        foreach (var mold in molds)
+        {
+            mold.gameObject.SetActive(true);
+            mold.CancelAllScheduledSpawns(); // 혹시 모를 이전 스폰 정리
+        }
+
+        // ✅ 메인 게임 입력 활성화 및 초기화
+        foreach (var input in catchInputs)
+        {
+            input.enabled = true;
+            // 혹시 이전 판정 기록 초기화
+            input.lastJudgeResult = JudgeResult_st2.Miss;
+        }
+
+        // ✅ 메인 게임 시스템 초기화
+        judgeSystem.ResetStats();
+        economySystem.Reset();
+        bagManager.Reset();
 
         // 곡 시작
         songStartDspTime = AudioSettings.dspTime;
@@ -156,6 +187,8 @@ public class GameFlowController_st2 : MonoBehaviour
         // 시스템 시작
         crowdManager.Initialize(bgmSource, bgmClip);
         patternDirector.StartPatternSystem(songStartDspTime);
+
+        Debug.Log("✅ Main game started - Tutorial cleanup complete");
     }
 
     void PauseGame()
@@ -166,8 +199,6 @@ public class GameFlowController_st2 : MonoBehaviour
         bgmSource.Pause();
 
         menuMonitorUI.UpdateState(CurrentState);
-
-        // PAUSE 메뉴 표시 (구현 필요)
     }
 
     public void ResumeGame()
@@ -185,7 +216,7 @@ public class GameFlowController_st2 : MonoBehaviour
         // 예약 이벤트 정리
         patternDirector.ClearAllScheduledEvents();
 
-        // ✅ 추가: Mold 스폰 취소
+        // Mold 스폰 취소
         foreach (var mold in molds)
         {
             mold.CancelAllScheduledSpawns();
@@ -219,13 +250,13 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         isEndingTriggered = true;
 
-        // ✅ 추가: Mold 스폰 취소
+        // Mold 스폰 취소
         foreach (var mold in molds)
         {
             mold.CancelAllScheduledSpawns();
         }
 
-        // ✅ 수정: 남은 fish 강제 Miss 처리
+        // 남은 fish 강제 Miss 처리
         judgeSystem.ForceResolveAll();
 
         // 현재 봉투 완성
@@ -245,41 +276,21 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         CurrentState = GameStatest2.Result;
         menuMonitorUI.UpdateState(CurrentState);
-
-        // Result 화면 표시 (구현 필요)
     }
 
-    // ============================================================
-    // ✅ 수정: 중앙 이벤트 핸들러 (Economy 자동 반영)
-    // ============================================================
-
+    // ✅ 중앙 이벤트 핸들러 (튜토리얼과 무관)
     void OnJudgeResult(JudgeResult_st2 result, float delta)
     {
-        // ✅ Economy에 자동 반영 (Timeout Miss 포함)
         economySystem.ApplyJudgeResult(result);
-
-        // 튜토리얼 모드일 때만 전달
-        if (tutorialManager != null && tutorialManager.gameObject.activeInHierarchy)
-        {
-            tutorialManager.OnCatchSuccess(result);
-        }
     }
 
     void OnBagSwapped()
     {
-        // 튜토리얼 모드일 때만 전달
-        if (tutorialManager != null && tutorialManager.gameObject.activeInHierarchy)
-        {
-            tutorialManager.OnBagSwapped();
-        }
+        // 메인 게임에서만 사용
     }
 
     void OnPatternQueued(PatternType_st2 type)
     {
-        // 튜토리얼 모드일 때만 전달
-        if (tutorialManager != null && tutorialManager.gameObject.activeInHierarchy)
-        {
-            tutorialManager.OnPatternQueued(type);
-        }
+        // 메인 게임에서만 사용
     }
 }

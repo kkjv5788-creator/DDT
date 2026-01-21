@@ -1,22 +1,24 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static GameState_st2;
 
 public class DebugHUD_st2 : MonoBehaviour
 {
-    [Header("¼³Á¤")]
-    public bool alwaysOn = true; // Quest ºôµå¿¡¼­´Â true
-    public KeyCode toggleKey = KeyCode.F1; // PC µğ¹ö±×¿ë
+    [Header("ì„¤ì •")]
+    public bool alwaysOn = true;
+    public KeyCode toggleKey = KeyCode.F1;
 
-    [Header("ÂüÁ¶")]
+    [Header("ì°¸ì¡°")]
     public GameFlowController_st2 gameFlow;
     public JudgeSystem_st2 judgeSystem;
     public EconomySystem_st2 economySystem;
-    public TutorialManager_st2 tutorialManager;
     public HandCatchSensor_st2 leftSensor;
     public HandCatchSensor_st2 rightSensor;
     public CatchInput_st2 leftInput;
     public CatchInput_st2 rightInput;
     public MoldController_st2[] molds;
+
+    [Header("íŠœí† ë¦¬ì–¼ (ì˜µì…˜)")]
+    public StandaloneTutorialController_st2 tutorialController; // âœ… ì¶”ê°€
 
     private bool isVisible = true;
 
@@ -30,7 +32,6 @@ public class DebugHUD_st2 : MonoBehaviour
 
     void Update()
     {
-        // PC µğ¹ö±×: F1·Î Åä±Û
         if (!alwaysOn && Input.GetKeyDown(toggleKey))
         {
             isVisible = !isVisible;
@@ -41,7 +42,6 @@ public class DebugHUD_st2 : MonoBehaviour
     {
         if (!isVisible) return;
 
-        // ±âº» ½ºÅ¸ÀÏ ¼³Á¤
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.fontSize = 16;
         labelStyle.normal.textColor = Color.white;
@@ -55,99 +55,102 @@ public class DebugHUD_st2 : MonoBehaviour
         float width = 350;
         float lineHeight = 22;
 
-        // ¹è°æ ¹Ú½º
         GUI.Box(new Rect(x, y, width, 280), "", boxStyle);
 
         y += 10;
 
-        // === °ÔÀÓ »óÅÂ ===
+        // === ê²Œì„ ìƒíƒœ ===
         GUI.Label(new Rect(x, y, width, lineHeight),
             $"<b>STATE:</b> {gameFlow.CurrentState}", labelStyle);
         y += lineHeight;
 
-        // === Æ©Åä¸®¾ó ÁøÇà (Tutorial ¸ğµåÀÏ ¶§¸¸) ===
-        if (gameFlow.CurrentState == GameStatest2.Tutorial && tutorialManager != null)
+        // âœ… íŠœí† ë¦¬ì–¼ ì§„í–‰ë„ (Tutorial ëª¨ë“œì¼ ë•Œë§Œ)
+        if (gameFlow.CurrentState == GameStatest2.Tutorial && tutorialController != null)
         {
             GUI.Label(new Rect(x, y, width, lineHeight),
-                $"<b>Tutorial:</b> {tutorialManager.GetCurrentStageInfo()}", labelStyle);
+                $"<b>Tutorial:</b> {tutorialController.GetCurrentStageInfo()}", labelStyle);
             y += lineHeight;
         }
 
-        // === ´©Àû Ä«¿îÆ® ===
-        GUI.Label(new Rect(x, y, width, lineHeight),
-            $"<b>Perfect:</b> {judgeSystem.perfectCount}  <b>Good:</b> {judgeSystem.goodCount}  <b>Miss:</b> {judgeSystem.missCount}",
-            labelStyle);
-        y += lineHeight;
-
-        // === ¸¶Áö¸· ÆÇÁ¤ + ¼Õ ===
-        string lastJudge = "None";
-        string lastHand = "-";
-
-        if (leftInput != null && leftInput.lastJudgeResult != JudgeResult_st2.Miss)
+        // âœ… ë©”ì¸ ê²Œì„ ì •ë³´ëŠ” Playing ìƒíƒœì¼ ë•Œë§Œ í‘œì‹œ
+        if (gameFlow.CurrentState == GameStatest2.Playing)
         {
-            lastJudge = leftInput.lastJudgeResult.ToString();
-            lastHand = leftInput.lastHandName;
-        }
-        else if (rightInput != null && rightInput.lastJudgeResult != JudgeResult_st2.Miss)
-        {
-            lastJudge = rightInput.lastJudgeResult.ToString();
-            lastHand = rightInput.lastHandName;
-        }
+            // === ëˆ„ì  ì¹´ìš´íŠ¸ ===
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Perfect:</b> {judgeSystem.perfectCount}  <b>Good:</b> {judgeSystem.goodCount}  <b>Miss:</b> {judgeSystem.missCount}",
+                labelStyle);
+            y += lineHeight;
 
-        GUI.Label(new Rect(x, y, width, lineHeight),
-            $"<b>Last Judge:</b> {lastJudge} ({lastHand})", labelStyle);
-        y += lineHeight;
+            // === ë§ˆì§€ë§‰ íŒì • + ì† ===
+            string lastJudge = "None";
+            string lastHand = "-";
 
-        // === ÀÏ±Ş ===
-        GUI.Label(new Rect(x, y, width, lineHeight),
-            $"<b>Wage:</b> {economySystem.currentWage:N0}¿ø", labelStyle);
-        y += lineHeight;
-
-        // === Å¸°Ù ¿©ºÎ ===
-        bool leftHasTarget = leftSensor != null && leftSensor.currentTarget != null;
-        bool rightHasTarget = rightSensor != null && rightSensor.currentTarget != null;
-
-        string leftStatus = leftHasTarget ? "TARGET" : "-";
-        string rightStatus = rightHasTarget ? "TARGET" : "-";
-
-        GUI.Label(new Rect(x, y, width, lineHeight),
-            $"<b>L Hand:</b> {leftStatus}  <b>R Hand:</b> {rightStatus}", labelStyle);
-        y += lineHeight;
-
-        // === ActiveFish ¼ö ===
-        int totalActiveFish = 0;
-        if (molds != null)
-        {
-            foreach (var mold in molds)
+            if (leftInput != null && leftInput.lastJudgeResult != JudgeResult_st2.Miss)
             {
-                if (mold != null)
+                lastJudge = leftInput.lastJudgeResult.ToString();
+                lastHand = leftInput.lastHandName;
+            }
+            else if (rightInput != null && rightInput.lastJudgeResult != JudgeResult_st2.Miss)
+            {
+                lastJudge = rightInput.lastJudgeResult.ToString();
+                lastHand = rightInput.lastHandName;
+            }
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Last Judge:</b> {lastJudge} ({lastHand})", labelStyle);
+            y += lineHeight;
+
+            // === ì¼ê¸‰ ===
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Wage:</b> {economySystem.currentWage:N0}ì›", labelStyle);
+            y += lineHeight;
+
+            // === íƒ€ê²Ÿ ì—¬ë¶€ ===
+            bool leftHasTarget = leftSensor != null && leftSensor.currentTarget != null;
+            bool rightHasTarget = rightSensor != null && rightSensor.currentTarget != null;
+
+            string leftStatus = leftHasTarget ? "TARGET" : "-";
+            string rightStatus = rightHasTarget ? "TARGET" : "-";
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>L Hand:</b> {leftStatus}  <b>R Hand:</b> {rightStatus}", labelStyle);
+            y += lineHeight;
+
+            // === ActiveFish ìˆ˜ ===
+            int totalActiveFish = 0;
+            if (molds != null)
+            {
+                foreach (var mold in molds)
                 {
-                    totalActiveFish += mold.GetActiveFishCount();
+                    if (mold != null)
+                    {
+                        totalActiveFish += mold.GetActiveFishCount();
+                    }
                 }
+            }
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Active Fish:</b> {totalActiveFish}", labelStyle);
+            y += lineHeight;
+
+            // === ì‹œê°„ ì •ë³´ ===
+            if (gameFlow.bgmSource != null)
+            {
+                float currentTime = gameFlow.bgmSource.time;
+                float totalTime = gameFlow.bgmSource.clip != null ? gameFlow.bgmSource.clip.length : 0;
+
+                int currMin = (int)(currentTime / 60);
+                int currSec = (int)(currentTime % 60);
+                int totalMin = (int)(totalTime / 60);
+                int totalSec = (int)(totalTime % 60);
+
+                GUI.Label(new Rect(x, y, width, lineHeight),
+                    $"<b>Time:</b> {currMin:00}:{currSec:00} / {totalMin:00}:{totalSec:00}", labelStyle);
+                y += lineHeight;
             }
         }
 
-        GUI.Label(new Rect(x, y, width, lineHeight),
-            $"<b>Active Fish:</b> {totalActiveFish}", labelStyle);
-        y += lineHeight;
-
-        // === ½Ã°£ Á¤º¸ (Playing ÁßÀÏ ¶§¸¸) ===
-        if (gameFlow.CurrentState == GameStatest2.Playing && gameFlow.bgmSource != null)
-        {
-            float currentTime = gameFlow.bgmSource.time;
-            float totalTime = gameFlow.bgmSource.clip != null ? gameFlow.bgmSource.clip.length : 0;
-
-            int currMin = (int)(currentTime / 60);
-            int currSec = (int)(currentTime % 60);
-            int totalMin = (int)(totalTime / 60);
-            int totalSec = (int)(totalTime % 60);
-
-            GUI.Label(new Rect(x, y, width, lineHeight),
-                $"<b>Time:</b> {currMin:00}:{currSec:00} / {totalMin:00}:{totalSec:00}", labelStyle);
-            y += lineHeight;
-        }
-
-        // === Åä±Û ¾È³» (alwaysOnÀÌ ¾Æ´Ò ¶§¸¸) ===
+        // === í† ê¸€ ì•ˆë‚´ ===
         if (!alwaysOn)
         {
             y += 10;
@@ -156,7 +159,6 @@ public class DebugHUD_st2 : MonoBehaviour
         }
     }
 
-    // ´Ü»ö ÅØ½ºÃ³ »ı¼º ÇïÆÛ
     private Texture2D MakeTex(int width, int height, Color col)
     {
         Color[] pix = new Color[width * height];
