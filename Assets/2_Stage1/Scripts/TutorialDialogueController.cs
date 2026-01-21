@@ -138,11 +138,11 @@ public class TutorialDialogueController : MonoBehaviour
                 Debug.Log($"[TutorialDialogueController] Condition met: {currentDialogue.conditionType}");
 
                 // 🔥 조건 충족 시 주문서에 "완료" 도장 찍기
-                if (missionBoard)
-                {
-                    missionBoard.UpdateMission("장비 착용하기", 1, 1); // 체크박스 채움
-                    missionBoard.ShowSuccessStamp(true);
-                }
+                // if (missionBoard)
+                // {
+                //     missionBoard.UpdateMission("장비 착용하기", 1, 1); // 체크박스 채움
+                //     missionBoard.ShowSuccessStamp(true);
+                // }
             }
         }
         

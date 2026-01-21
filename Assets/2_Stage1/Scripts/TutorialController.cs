@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro; // 텍스트 UI(TextMeshPro) 사용을 위해 필수
 
 public class TutorialController : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class TutorialController : MonoBehaviour
     
     // ★ 공용 리갈패드 연결
     public MissionBoardUI missionBoard; 
+
+    // ★ 모니터 피드백 텍스트 연결
+    [Header("Monitor Text")]
+    public TextMeshProUGUI monitorText; 
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
@@ -79,6 +84,9 @@ public class TutorialController : MonoBehaviour
             UpdateMissionUI();
         }
 
+        // 시작 멘트 (모니터)
+        ShowMonitorText("가이드 소리에\n집중하세요!", Color.yellow);
+
         // 1초 뒤 첫 트리거 로직 시작
         Invoke(nameof(StartFirstTrigger), 1.0f);
     }
@@ -90,6 +98,8 @@ public class TutorialController : MonoBehaviour
         {
             conductor.AdvanceToNextTrigger();
             UpdateMissionUI();
+            // 준비 멘트 지우기
+            ShowMonitorText("", Color.white);
         }
     }
 
@@ -102,22 +112,21 @@ public class TutorialController : MonoBehaviour
         {
             _successCountThisStep++;
             
-            // ★ 미션보드 갱신 (체크박스)
-            if (missionBoard)
-            {
-                string missionName = GetMissionName(_currentStepIndex);
-                missionBoard.UpdateMission(missionName, _successCountThisStep, requiredSuccessCount);
-            }
+            // [핵심] 성공할 때마다 즉시 UI 갱신 (칼 아이콘 줄어들게!)
+            UpdateMissionUI();
 
+            // 성공 피드백 텍스트 (모니터)
+            ShowMonitorText("NICE!!", Color.cyan);
+            
             if (_successCountThisStep >= requiredSuccessCount)
             {
-                // 단계 클리어 -> 도장 쾅!
                 if (missionBoard) missionBoard.ShowSuccessStamp(true);
+                ShowMonitorText("완벽합니다!", Color.green);
                 
                 _currentStepIndex++;
                 _successCountThisStep = 0;
 
-                // 다음 단계 확인
+                // 모든 단계 완료 체크
                 if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
                 {
                     Invoke(nameof(CompleteTutorial), 2.0f);
@@ -127,13 +136,17 @@ public class TutorialController : MonoBehaviour
             }
             else
             {
+                // 아직 횟수가 남았으면 재시도
                 Invoke(nameof(RetryCurrentStep), 1.5f);
+                Invoke(nameof(ClearMonitorText), 1.0f);
             }
         }
         else
         {
-            // 실패 시 재시도
+            // 실패 피드백
+            ShowMonitorText("다시 들어보세요!", Color.red);
             Invoke(nameof(RetryCurrentStep), 1.5f);
+            Invoke(nameof(ClearMonitorText), 1.0f);
         }
     }
 
@@ -145,6 +158,7 @@ public class TutorialController : MonoBehaviour
             UpdateMissionUI();
         }
         _isProcessingResult = false;
+        ClearMonitorText();
     }
 
     void RetryCurrentStep()
@@ -156,26 +170,56 @@ public class TutorialController : MonoBehaviour
         _isProcessingResult = false;
     }
 
+    // 노트(리갈패드) UI 갱신 로직 (아이콘 자동화)
     void UpdateMissionUI()
     {
         if (!missionBoard) return;
         
         missionBoard.ShowSuccessStamp(false);
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
-        
-        string missionName = GetMissionName(_currentStepIndex);
-        missionBoard.UpdateMission(missionName, 0, requiredSuccessCount);
-    }
 
-    string GetMissionName(int index)
-    {
-        switch (index)
+        // 1. 데이터 가져오기
+        int targetSliceCount = 0;
+        if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
         {
-            case 0: return "기본 썰기 (정지)";
-            case 1: return "연속 썰기 (이동)";
-            case 2: return "빠른 썰기 (심화)";
-            default: return $"실전 연습 {index + 1}";
+            targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
         }
+
+        // 2. 남은 횟수 계산 (전체 목표 - 현재 성공 횟수)
+        int remainCount = Mathf.Max(0, targetSliceCount - _successCountThisStep);
+
+        // 3. 칼 아이콘 만들기 (남은 횟수만큼 🔪 반복)
+        string knifeIcons = "";
+        for (int i = 0; i < remainCount; i++)
+        {
+            knifeIcons += "🔪 "; 
+        }
+
+        // 4. 텍스트 구성
+        string highlightNum = $"<color=#FF3333><size=120%>{targetSliceCount}</size></color>"; 
+        string guideText = "";
+
+        switch (_currentStepIndex)
+        {
+            case 0: 
+                guideText = $"👂 소리를 듣고\n{highlightNum}번 썰어보세요!"; 
+                break;
+            case 1: 
+                guideText = $"👂 리듬을 타고\n{highlightNum}번 연속 썰기!"; 
+                break;
+            case 2: 
+                guideText = $"👂 빠른 박자입니다.\n{highlightNum}번 집중!"; 
+                break;
+            default:
+                guideText = $"🔪 박자에 맞춰\n{highlightNum}번 써세요!";
+                break;
+        }
+
+        // 5. 텍스트 아래에 칼 아이콘 붙이기
+        guideText += $"\n\n<size=150%>{knifeIcons}</size>";
+
+        // 6. UI 적용 (진행도 숫자는 0으로 숨김)
+        missionBoard.UpdateMission(guideText, 0, 0);
     }
 
     void SkipTutorial()
@@ -214,12 +258,28 @@ public class TutorialController : MonoBehaviour
         if (conductor)
         {
             conductor.isTutorialMode = false;
-            conductor.StopAllGuideBeats(); // 해당 함수가 Conductor에 있어야 함
+            conductor.StopAllGuideBeats(); 
         }
         if (radio)
         {
             radio.SetTutorialCompleted(true);
             radio.SetClickable(true);
         }
+    }
+
+    // ★ 모니터 텍스트 제어 함수
+    void ShowMonitorText(string text, Color color)
+    {
+        if (monitorText)
+        {
+            monitorText.text = text;
+            monitorText.color = color;
+            monitorText.gameObject.SetActive(true);
+        }
+    }
+
+    void ClearMonitorText()
+    {
+        if (monitorText) monitorText.text = "";
     }
 }
