@@ -61,20 +61,20 @@ public class SimpleLaserPointer : MonoBehaviour
     {
         if (!lr) return;
 
-        // [1] 게임 상태 체크 (메뉴/대기 상태가 아니면 레이저 끄기)
-        if (gameFlowManager != null)
-        {
-            bool isMenuState =
-                gameFlowManager.CurrentState == GameState.WaitForRadio ||
-                gameFlowManager.CurrentState == GameState.Paused ||
-                gameFlowManager.CurrentState == GameState.FinalResult;
+        // // [1] 게임 상태 체크 (메뉴/대기 상태가 아니면 레이저 끄기)
+        // if (gameFlowManager != null)
+        // {
+        //     bool isMenuState =
+        //         gameFlowManager.CurrentState == GameState.WaitForRadio ||
+        //         gameFlowManager.CurrentState == GameState.Paused ||
+        //         gameFlowManager.CurrentState == GameState.FinalResult;
 
-            if (!isMenuState)
-            {
-                DisableLaser();
-                return;
-            }
-        }
+        //     if (!isMenuState)
+        //     {
+        //         DisableLaser();
+        //         return;
+        //     }
+        // }
 
         // [2] 레이저 로직 시작
         if (!lr.enabled) lr.enabled = true; // 레이저 켜기
