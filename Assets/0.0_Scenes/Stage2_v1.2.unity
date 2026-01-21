@@ -206,7 +206,7 @@ MonoBehaviour:
   bagManager: {fileID: 1597276628}
   crowdManager: {fileID: 206713837}
   patternDirector: {fileID: 1113865398}
-  menuMonitorUI: {fileID: 0}
+  menuMonitorUI: {fileID: 337722545}
   molds:
   - {fileID: 410289139}
   - {fileID: 92310526}
@@ -5798,7 +5798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentBagAnchor: {fileID: 3424701}
-  filledBagStackAnchor: {fileID: 0}
+  filledBagStackAnchor: {fileID: 285979275}
   bagPrefab: {fileID: 7209417807938222635, guid: e9c6a32a8c6c9c74c8e8a9a72f7ba997, type: 3}
   itemsPerBag: 3
   maxFilledBags: 10
@@ -6242,10 +6242,10 @@ PrefabInstance:
       addedObject: {fileID: 1735968141}
     - targetCorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1735968142}
+      addedObject: {fileID: 1735968143}
     - targetCorrespondingSourceObject: {fileID: 5060304780681823686, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1735968143}
+      addedObject: {fileID: 1735968142}
   m_SourcePrefab: {fileID: 100100000, guid: 0196eeedc311552429a011a24996afd4, type: 3}
 --- !u!120 &1735968135 stripped
 LineRenderer:
