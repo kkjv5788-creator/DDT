@@ -87,21 +87,25 @@ public class FishCatchToken_st2 : MonoBehaviour
         // Rigidbody가 자동으로 물리 처리
     }
 
-    // ✅ 수정: 바닥 삭제 조건을 isCaught와 분리
     void OnCollisionEnter(Collision collision)
     {
-        // 땅 레이어와 충돌했는지 확인
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            Debug.Log("붕어빵이 땅에 떨어짐 - 풀로 반환");
-
-            // ✅ isResolved 상태와 무관하게 바닥에 닿으면 제거
-            if (ownerMold != null)
+            // ✅ 바닥에 떨어진 건 전부 MISS 확정
+            var gf = GameFlowController_st2.Instance;
+            if (gf != null && gf.judgeSystem != null)
             {
-                ownerMold.ReleaseFish(this);
+                gf.judgeSystem.ResolveMissFromGround(this);
             }
+
+            // ✅ (선택) Miss 텍스트 띄우려면: feedbackTextPrefab부터 연결되어 있어야 함
+            FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
+
+            if (ownerMold != null)
+                ownerMold.ReleaseFish(this);
         }
     }
+
 
     public void OnCaught()
     {

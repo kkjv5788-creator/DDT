@@ -74,9 +74,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9137943602440395926}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5504603967039096193}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
       insertIndex: -1
@@ -90,30 +87,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f323ad8797140174386cfc499804b995, type: 3}
   m_PrefabInstance: {fileID: 5356937068927366750}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9137943602440395926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5086464142114851599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7a798bf59e7ff4a906459292d6d590, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishPrefab: {fileID: 5551336303472369171, guid: 12d4eeebc0d34d94db255d9741478272, type: 3}
-  telegraphSource: {fileID: 5504603967039096193}
-  popSource: {fileID: 5279721207029650468}
-  telegraphClip: {fileID: 8300000, guid: 16dfeb62544291d4aadd8432ebb61c78, type: 3}
-  popClip: {fileID: 8300000, guid: 19a7f60544395b94395bd6819adbe39d, type: 3}
-  moldAnimator: {fileID: 0}
-  popAnimationTrigger: Pop
-  popAnimationLeadTime: 0.2
-  useTelegraphShake: 1
-  shakeIntensity: 0.02
-  shakeDuration: 0.3
-  shakeCount: 8
 --- !u!82 &5504603967039096193
 AudioSource:
   m_ObjectHideFlags: 0

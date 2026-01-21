@@ -1,29 +1,25 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class BagManager_st2 : MonoBehaviour
 {
-    [Header("∫¿≈ı º≥¡§")]
+    [Header("ÌòÑÏû¨ Î¥âÌà¨/Ïä§ÌÉù")]
     public Transform currentBagAnchor;
     public Transform filledBagStackAnchor;
     public GameObject bagPrefab;
     public int itemsPerBag = 3;
     public int maxFilledBags = 10;
 
-    [Header("Ω∫≈√ º≥¡§")]
-    public int columns = 2;
-    public Vector3 colStep = new Vector3(0.08f, 0, 0);
-    public Vector3 rowStep = new Vector3(0, 0, -0.09f);
-    public float[] yawPattern = { -6f, 6f };
-    public float jitterPos = 0.004f;
-    public float jitterYaw = 1f;
+    [Header("Ïä§ÌÉù Î∞∞Ïπò")]
+    public float stackSpacingY = 0.12f;
 
-    [Header("«ˆ¿Á ªÛ≈¬")]
+    [Header("Î∂ïÏñ¥Îπµ ÎπÑÏ£ºÏñº ÌîÑÎ¶¨Ìåπ(ÏÑ†ÌÉù)")]
+    public GameObject fishVisualPrefab;
+
     private BagView_st2 currentBag;
-    private List<BagView_st2> filledBags = new List<BagView_st2>();
+    private readonly List<BagView_st2> filledBags = new List<BagView_st2>();
 
     public event Action OnBagSwapped;
     public event Action<int> OnItemAdded;
@@ -33,117 +29,120 @@ public class BagManager_st2 : MonoBehaviour
         CreateNewCurrentBag();
     }
 
+    // =========================
+    // Ìò∏ÌôòÏö© AddItem Ïò§Î≤ÑÎ°úÎìú
+    // =========================
+
+    // (1) Í∏∞Ï°¥ Ìò∏Ìôò: Í∑∏ÎÉ• ÎπÑÏ£ºÏñº 1Í∞ú Ï∂îÍ∞Ä
     public void AddItem()
+    {
+        AddItem((GameObject)null);
+    }
+
+    // (2) ÎπÑÏ£ºÏñº ÌîÑÎ¶¨ÌåπÏùÑ Î¥âÌà¨Ïóê Ï∂îÍ∞Ä
+    public void AddItem(GameObject overrideVisualPrefab)
+    {
+        AddFishVisual(overrideVisualPrefab);
+    }
+
+    // (3) Ïã§Î¨º Î∂ïÏñ¥ÎπµÏùÑ Î¥âÌà¨Ïóê Ï∂îÍ∞Ä (ÏöîÏ≤≠ Í∏∞Îä•)
+    public void AddItem(FishCatchToken_st2 fish)
+    {
+        AddFishToBag(fish);
+    }
+
+    // =========================
+    // ÎπÑÏ£ºÏñº ÏåìÍ∏∞
+    // =========================
+    public void AddFishVisual(GameObject overrideVisualPrefab)
     {
         if (currentBag == null) return;
 
-        currentBag.AddItem();
+        var prefab = overrideVisualPrefab != null ? overrideVisualPrefab : fishVisualPrefab;
+        currentBag.AddItem(prefab);
+
         OnItemAdded?.Invoke(currentBag.itemCount);
 
         if (currentBag.itemCount >= itemsPerBag)
-        {
             SwapBag();
-        }
+    }
+
+    // =========================
+    // Ïã§Î¨º(Ïû°ÏùÄ Î∂ïÏñ¥Îπµ) ÏåìÍ∏∞
+    // =========================
+    public void AddFishToBag(FishCatchToken_st2 fish)
+    {
+        if (currentBag == null) return;
+        if (fish == null) return;
+
+        currentBag.AddFish(fish);
+        OnItemAdded?.Invoke(currentBag.itemCount);
+
+        if (currentBag.itemCount >= itemsPerBag)
+            SwapBag();
     }
 
     void SwapBag()
     {
-        // «ˆ¿Á ∫¿≈ı∏¶ Ω∫≈√¿∏∑Œ ¿Ãµø
         AddFilledBagToStack(currentBag);
-
-        // ªı ∫¿≈ı ª˝º∫
         CreateNewCurrentBag();
-
         OnBagSwapped?.Invoke();
     }
 
     void CreateNewCurrentBag()
     {
+        if (bagPrefab == null || currentBagAnchor == null) return;
+
         var bagObj = Instantiate(bagPrefab, currentBagAnchor);
         bagObj.transform.localPosition = Vector3.zero;
         bagObj.transform.localRotation = Quaternion.identity;
 
         currentBag = bagObj.GetComponent<BagView_st2>();
+        if (currentBag == null)
+            currentBag = bagObj.AddComponent<BagView_st2>();
 
-        // ∆‰¿ÃµÂ¿Œ »ø∞˙ (º±≈√)
         StartCoroutine(FadeIn(bagObj, 0.2f));
     }
 
     void AddFilledBagToStack(BagView_st2 completedBag)
     {
-        // Ω∫≈√ √ ∞˙ Ω√ ∞°¿Â ø¿∑°µ» ∫¿≈ı ¡¶∞≈ (FIFO)
+        if (completedBag == null || filledBagStackAnchor == null) return;
+
+        // Ïä§ÌÉù ÍΩâ Ï∞®Î©¥ Í∞ÄÏû• Ïò§ÎûòÎêú Í≤É Ï†úÍ±∞
         if (filledBags.Count >= maxFilledBags)
         {
-            var oldestBag = filledBags[0];
+            var oldest = filledBags[0];
             filledBags.RemoveAt(0);
-            StartCoroutine(FadeOutAndDestroy(oldestBag.gameObject, 0.3f));
+            if (oldest != null) StartCoroutine(FadeOutAndDestroy(oldest.gameObject, 0.2f));
         }
 
         filledBags.Add(completedBag);
 
-        // Ω∫≈√ ¿ßƒ°∑Œ ¿Ãµø (∫Òµø±‚)
-        int index = filledBags.Count - 1;
-        Vector3 targetPos = CalculateStackPosition(index);
-        Quaternion targetRot = CalculateStackRotation(index);
-
-        completedBag.transform.SetParent(filledBagStackAnchor);
-        StartCoroutine(LerpToStack(completedBag.transform, targetPos, targetRot, 0.4f));
+        completedBag.transform.SetParent(filledBagStackAnchor, true);
+        RepositionStack();
     }
 
-    Vector3 CalculateStackPosition(int index)
+    void RepositionStack()
     {
-        int row = index / columns;
-        int col = index % columns;
-
-        Vector3 pos = col * colStep + row * rowStep;
-
-        // ¡ˆ≈Õ √ﬂ∞°
-        pos += new Vector3(
-            UnityEngine.Random.Range(-jitterPos, jitterPos),
-            0,
-            UnityEngine.Random.Range(-jitterPos, jitterPos)
-        );
-
-        return pos;
-    }
-
-    Quaternion CalculateStackRotation(int index)
-    {
-        float yaw = yawPattern[index % yawPattern.Length];
-        yaw += UnityEngine.Random.Range(-jitterYaw, jitterYaw);
-        return Quaternion.Euler(0, yaw, 0);
-    }
-
-    IEnumerator LerpToStack(Transform bag, Vector3 targetPos, Quaternion targetRot, float duration)
-    {
-        Vector3 startPos = bag.localPosition;
-        Quaternion startRot = bag.localRotation;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        for (int i = 0; i < filledBags.Count; i++)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            bag.localPosition = Vector3.Lerp(startPos, targetPos, t);
-            bag.localRotation = Quaternion.Lerp(startRot, targetRot, t);
-
-            yield return null;
+            if (filledBags[i] == null) continue;
+            filledBags[i].transform.localPosition = new Vector3(0f, -stackSpacingY * i, 0f);
+            filledBags[i].transform.localRotation = Quaternion.identity;
         }
-
-        bag.localPosition = targetPos;
-        bag.localRotation = targetRot;
     }
 
     IEnumerator FadeIn(GameObject obj, float duration)
     {
+        if (obj == null) yield break;
+
         var renderers = obj.GetComponentsInChildren<Renderer>();
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float alpha = elapsed / duration;
+            float alpha = Mathf.Clamp01(elapsed / duration);
 
             foreach (var renderer in renderers)
             {
@@ -161,6 +160,8 @@ public class BagManager_st2 : MonoBehaviour
 
     IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
     {
+        if (obj == null) yield break;
+
         var renderers = obj.GetComponentsInChildren<Renderer>();
         float elapsed = 0f;
 
@@ -185,6 +186,10 @@ public class BagManager_st2 : MonoBehaviour
         Destroy(obj);
     }
 
+    // =========================
+    // Ïô∏Î∂ÄÏóêÏÑú Ïì∞Îäî Ïú†Ìã∏(ÏóêÎü¨ ÎÇ¨Îçò Í≤ÉÎì§)
+    // =========================
+
     public void FinalizeBag()
     {
         if (currentBag != null && currentBag.itemCount > 0)
@@ -201,17 +206,14 @@ public class BagManager_st2 : MonoBehaviour
 
     public void Reset()
     {
-        // ∏µÁ ∫¿≈ı ¡¶∞≈
-        foreach (var bag in filledBags)
+        for (int i = filledBags.Count - 1; i >= 0; i--)
         {
-            Destroy(bag.gameObject);
+            if (filledBags[i] != null) Destroy(filledBags[i].gameObject);
         }
         filledBags.Clear();
 
         if (currentBag != null)
-        {
             Destroy(currentBag.gameObject);
-        }
 
         CreateNewCurrentBag();
     }

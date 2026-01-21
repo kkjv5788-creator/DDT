@@ -65,6 +65,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     [Header("판정 설정")]
     public float perfectWindow = 0.04f;
     public float goodWindow = 0.075f;
+    [Header("스냅 연출(튜토리얼)")]
+    public float snapHoldSeconds = 0.2f;
 
     // 진행 카운터
     private int telegraphCount = 0;
@@ -335,27 +337,29 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
             // 손으로 스냅
             target.transform.position = sensor.transform.position;
-            target.transform.SetParent(sensor.transform);
+            target.transform.SetParent(sensor.transform, true);
 
-            // 1프레임 후 풀 반환
-            StartCoroutine(ReleaseFishAfterFrame(target));
+            // ✅ 1프레임 후 반환 → ✅ 0.2초 홀드 후 반환
+            StartCoroutine(SnapHoldThenRelease(target));
 
             OnCatchSuccess(result);
         }
         else
         {
-            // Miss는 바닥에서 처리되도록 놔둠
             OnCatchMiss();
         }
     }
 
-    IEnumerator ReleaseFishAfterFrame(TutorialFishToken_st2 fish)
+    IEnumerator SnapHoldThenRelease(TutorialFishToken_st2 fish)
     {
-        yield return null;
+        yield return new WaitForSeconds(snapHoldSeconds);
 
-        // ✅ 안전 체크: 이미 반환되었거나 null이면 스킵
+        // 이미 정리됐으면 스킵
         if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
             yield break;
+
+        // 손에 부모로 남는 거 방지용: 떼고 반환
+        fish.transform.SetParent(null, true);
 
         if (fish.ownerMold != null)
             fish.ownerMold.ReleaseFish(fish);
