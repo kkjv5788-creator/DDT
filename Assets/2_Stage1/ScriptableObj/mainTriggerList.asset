@@ -20,8 +20,8 @@ MonoBehaviour:
     judgeDuration: 1.5
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
     requiredSliceCount: 3
-    minKnifeSpeed: 0.6
-    minContactMs: 115
+    minKnifeSpeed: 1.3
+    minContactMs: 300
     thinSliceThicknessNorm: 0.08
     thinThicknessCurve:
       serializedVersion: 2

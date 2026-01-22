@@ -1,18 +1,15 @@
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// 튜토리얼 대사 전용 UI 컨트롤러
-/// 기존 TutorialUIController와 독립적으로 작동
-/// </summary>
 public class TutorialDialogueUIController : MonoBehaviour
 {
-    [Header("Canvas")]
-    public Canvas dialogueCanvas; // World Space Canvas (대사 전용)
+    [Header("UI Root")]
+    // [수정됨] Canvas 대신 GameObject로 변경하여 패널을 직접 넣을 수 있게 함
+    public GameObject dialoguePanel; 
 
     [Header("UI Elements")]
     public TextMeshProUGUI dialogueText;  // 대사 텍스트
-    public TextMeshProUGUI hintText;  // 안내 문구 (예: "오른손 트리거 버튼을 눌러주세요")
+    public TextMeshProUGUI hintText;      // 힌트 텍스트
 
     [Header("Colors")]
     public Color dialogueColor = Color.white;
@@ -29,64 +26,59 @@ public class TutorialDialogueUIController : MonoBehaviour
 
     void Awake()
     {
-        // CanvasGroup 추가 (페이드 인/아웃용)
-        if (dialogueCanvas != null)
+        // dialoguePanel이 연결되어 있는지 확인
+        if (dialoguePanel != null)
         {
+            // CanvasGroup 컴포넌트 가져오기 (없으면 자동 추가)
+            _canvasGroup = dialoguePanel.GetComponent<CanvasGroup>();
             if (!_canvasGroup)
             {
-                _canvasGroup = dialogueCanvas.gameObject.GetComponent<CanvasGroup>();
-                if (!_canvasGroup)
-                {
-                    _canvasGroup = dialogueCanvas.gameObject.AddComponent<CanvasGroup>();
-                }
+                _canvasGroup = dialoguePanel.AddComponent<CanvasGroup>();
             }
 
-            // 초기 상태: 숨김
+            // 초기 상태: 투명하게 만들고 비활성화
             _canvasGroup.alpha = 0f;
-            dialogueCanvas.gameObject.SetActive(false);
+            dialoguePanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("TutorialDialogueUIController: 대화창 패널(Dialogue Panel)이 연결되지 않았습니다!");
         }
     }
 
     void Update()
     {
-        // 페이드 처리
         HandleFade();
     }
 
     void HandleFade()
     {
-        if (!_isFading) return;
+        if (!_isFading || dialoguePanel == null) return;
 
         _fadeTimer += Time.deltaTime;
 
         if (_targetVisible)
         {
-            // Fade In
+            // 페이드 인 (점점 나타남)
             float t = Mathf.Clamp01(_fadeTimer / fadeInDuration);
             _canvasGroup.alpha = t;
 
-            if (t >= 1f)
-            {
-                _isFading = false;
-            }
+            if (t >= 1f) _isFading = false;
         }
         else
         {
-            // Fade Out
+            // 페이드 아웃 (점점 사라짐)
             float t = Mathf.Clamp01(_fadeTimer / fadeOutDuration);
             _canvasGroup.alpha = 1f - t;
 
             if (t >= 1f)
             {
                 _isFading = false;
-                dialogueCanvas.gameObject.SetActive(false);
+                dialoguePanel.SetActive(false); // 다 사라지면 끄기
             }
         }
     }
 
-    /// <summary>
-    /// 대사 표시
-    /// </summary>
     public void ShowDialogue(string text, string hint = "")
     {
         if (dialogueText != null)
@@ -95,7 +87,6 @@ public class TutorialDialogueUIController : MonoBehaviour
             dialogueText.color = dialogueColor;
         }
 
-        // 안내 문구 표시/숨김
         if (hintText != null)
         {
             if (!string.IsNullOrEmpty(hint))
@@ -113,16 +104,13 @@ public class TutorialDialogueUIController : MonoBehaviour
         FadeIn();
     }
 
-    /// <summary>
-    /// 페이드 인
-    /// </summary>
     public void FadeIn()
     {
-        if (dialogueCanvas == null || _canvasGroup == null) return;
+        if (dialoguePanel == null || _canvasGroup == null) return;
 
-        if (!dialogueCanvas.gameObject.activeSelf)
+        if (!dialoguePanel.activeSelf)
         {
-            dialogueCanvas.gameObject.SetActive(true);
+            dialoguePanel.SetActive(true);
         }
 
         _targetVisible = true;
@@ -130,9 +118,6 @@ public class TutorialDialogueUIController : MonoBehaviour
         _fadeTimer = 0f;
     }
 
-    /// <summary>
-    /// 페이드 아웃
-    /// </summary>
     public void FadeOut()
     {
         if (_canvasGroup == null) return;
@@ -142,17 +127,9 @@ public class TutorialDialogueUIController : MonoBehaviour
         _fadeTimer = 0f;
     }
 
-    /// <summary>
-    /// UI 숨김
-    /// </summary>
     public void Hide()
     {
-        // 안내 문구도 숨김
-        if (hintText != null)
-        {
-            hintText.gameObject.SetActive(false);
-        }
-        
+        if (hintText != null) hintText.gameObject.SetActive(false);
         FadeOut();
     }
 }
