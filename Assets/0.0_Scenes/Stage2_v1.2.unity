@@ -5977,6 +5977,10 @@ MonoBehaviour:
   itemsPerBag: 3
   maxFilledBags: 10
   stackSpacingY: 0.12
+  stackColumns: 5
+  stackSpacingX: 0.12
+  stackSpacingZ: 0.28
+  stackOffsetLocal: {x: 0, y: 0, z: 0}
   fishVisualPrefab: {fileID: 306578032}
 --- !u!1001 &1610901169
 PrefabInstance:
