@@ -1,6 +1,6 @@
 [PROJECT DUMP START]
 Scene: Stage2_v1.2
-Date: 2026-01-22 오전 12:42:31
+Date: 2026-01-22 오후 12:32:38
 ========================================
               SCENE HIERARCHY
 ========================================
@@ -105,16 +105,16 @@ Date: 2026-01-22 오전 12:42:31
                 Pos: (-3.25, 2.08, 12.54) | Rot: (0.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
                 - (Component) AudioSource
                 - (Component) CatchInput_st2
-                    > sensor: LeftHandAnchor (HandCatchSensor_st2)
-                    > handController: LTouch
-                    > handTransform: LeftHandAnchor (UnityEngine.Transform)
-                    > snapAudioSource: LeftHandAnchor (UnityEngine.AudioSource)
-                    > snapSoundClip: 착 (UnityEngine.AudioClip)
-                    > snapHoldSeconds: 0.2
-                    > bagFishVisualPrefab: FishShapeBun (UnityEngine.GameObject)
                     > lastJudgeResult: Perfect
                     > lastHandName: 
-                    > hasJudgedOnce: False
+                    > leftHandRoot: LeftHandAnchor (UnityEngine.Transform)
+                    > rightHandRoot: RightHandAnchor (UnityEngine.Transform)
+                    > leftSensor: 
+                    > rightSensor: 
+                    > fishLayer: UnityEngine.LayerMask
+                    > catchRadius: 5
+                    > triggerThreshold: 0.9
+                    > perHandCooldown: 0.05
                 - (Component) HandCatchSensor_st2
                     > raycastLength: 5
                     > fishLayer: UnityEngine.LayerMask
@@ -543,16 +543,16 @@ Date: 2026-01-22 오전 12:42:31
             [O] RightHandAnchor (Active: True, Tag: Untagged, Layer: Default)
                 Pos: (-3.25, 2.08, 12.54) | Rot: (0.00, 180.00, 0.00) | Scale: (1.00, 1.00, 1.00)
                 - (Component) CatchInput_st2
-                    > sensor: RightHandAnchor (HandCatchSensor_st2)
-                    > handController: RTouch
-                    > handTransform: RightHand (UnityEngine.Transform)
-                    > snapAudioSource: RightHand (UnityEngine.AudioSource)
-                    > snapSoundClip: 착 (UnityEngine.AudioClip)
-                    > snapHoldSeconds: 0.2
-                    > bagFishVisualPrefab: FishShapeBun (UnityEngine.GameObject)
                     > lastJudgeResult: Perfect
                     > lastHandName: 
-                    > hasJudgedOnce: False
+                    > leftHandRoot: null
+                    > rightHandRoot: null
+                    > leftSensor: 
+                    > rightSensor: 
+                    > fishLayer: UnityEngine.LayerMask
+                    > catchRadius: 0.12
+                    > triggerThreshold: 0.9
+                    > perHandCooldown: 0.05
                 - (Component) HandCatchSensor_st2
                     > raycastLength: 5
                     > fishLayer: UnityEngine.LayerMask
@@ -1765,6 +1765,8 @@ Date: 2026-01-22 오전 12:42:31
         - (Component) MeshRenderer
         - (Component) MeshCollider
         - (Component) BoxCollider
+        - (Component) GroundMissReporter_st2
+            > fishLayer: UnityEngine.LayerMask
 
     [O] Korean_Store (Active: True, Tag: Untagged, Layer: Default)
         Pos: (0.00, 0.00, 16.48) | Rot: (270.00, 180.00, 0.00) | Scale: (100.00, 100.00, 100.00)
@@ -2326,7 +2328,7 @@ Date: 2026-01-22 오전 12:42:31
     - (Component) AudioSource
 
     [O] TutorialCanvas (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) Canvas
         - (Component) CanvasScaler
         - (Component) GraphicRaycaster
@@ -2337,22 +2339,22 @@ Date: 2026-01-22 오전 12:42:31
             > skipText: Text (TMP) (TMPro.TextMeshProUGUI)
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
         [O] Text (TMP) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
@@ -2433,6 +2435,18 @@ Date: 2026-01-22 오전 12:42:31
 
 [O] Systems (Active: True, Tag: Untagged, Layer: Default)
     Pos: (-1.49, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+    - (Component) Stage2EventHub_st2
+    - (Component) JudgeBridge_st2
+    - (Component) EconomyListener_st2
+    - (Component) CatchVfx_st2
+        > snapHoldSeconds: 0.2
+        > fadeSeconds: 0.25
+        > leftHandSnap: LeftHandAnchor (UnityEngine.Transform)
+        > rightHandSnap: RightHandAnchor (UnityEngine.Transform)
+    - (Component) BagPolicy_st2
+        > bagFishVisualPrefab: FishShapeBun_inbag (UnityEngine.GameObject)
+    - (Component) FishConsumer_st2
+    - (Component) GoraniDanceSpeedByJudge_st2
 
     [O] GameFlowController (Active: True, Tag: Untagged, Layer: Default)
         Pos: (-1.49, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -2455,7 +2469,7 @@ Date: 2026-01-22 오전 12:42:31
         Pos: (-1.49, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) JudgeSystem_st2
             > perfectHalfWindow: 3
-            > goodHalfWindow: 3
+            > goodHalfWindow: 4
             > fishCatchableDuration: 5
             > perfectCount: 0
             > goodCount: 0
@@ -2498,13 +2512,13 @@ Date: 2026-01-22 오전 12:42:31
             > itemsPerBag: 3
             > maxFilledBags: 10
             > stackSpacingY: 0.12
-            > fishVisualPrefab: FishShapeBun (UnityEngine.GameObject)
+            > fishVisualPrefab: FishShapeBun_inbag (UnityEngine.GameObject)
 
         [O] bagancor (Active: True, Tag: Untagged, Layer: Default)
             Pos: (-5.85, 1.93, 10.83) | Rot: (0.00, 180.00, 180.00) | Scale: (1.00, 1.00, 1.00)
 
         [O] filledbag (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-5.93, 1.94, 9.85) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (-5.93, 1.94, 9.85) | Rot: (0.00, 180.00, 180.00) | Scale: (1.00, 1.00, 1.00)
 
     [O] CrowdManager (Active: True, Tag: Untagged, Layer: Default)
         Pos: (-1.49, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
@@ -2536,7 +2550,7 @@ Date: 2026-01-22 오전 12:42:31
         Pos: (-3.23, 2.18, 8.49) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
 
         [O] FishShapeBun_Mold (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-3.32, 1.92, 10.49) | Rot: (0.00, 270.00, 270.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (-3.32, 1.92, 10.49) | Rot: (0.00, 90.00, 270.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) Animator
             - (Component) MoldController_st2
                 > fishPrefab: FishShapeBun (UnityEngine.GameObject)
@@ -2555,17 +2569,17 @@ Date: 2026-01-22 오전 12:42:31
             - (Component) AudioSource
 
             [O] Mold_Bottom (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-3.55, 1.91, 10.57) | Rot: (358.41, 0.00, 270.00) | Scale: (100.00, 100.00, 100.00)
+                Pos: (-3.08, 1.91, 10.40) | Rot: (358.41, 180.00, 270.00) | Scale: (100.00, 100.00, 100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
             [O] Mold_Top (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-3.55, 1.91, 10.57) | Rot: (358.41, 180.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
+                Pos: (-3.08, 1.91, 10.40) | Rot: (358.41, 0.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
         [O] FishShapeBun_Mold (1) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-4.10, 1.93, 10.49) | Rot: (0.00, 270.00, 270.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (-4.10, 1.93, 10.49) | Rot: (0.00, 90.00, 270.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) Animator
             - (Component) MoldController_st2
                 > fishPrefab: FishShapeBun 1 (UnityEngine.GameObject)
@@ -2584,17 +2598,17 @@ Date: 2026-01-22 오전 12:42:31
             - (Component) AudioSource
 
             [O] Mold_Bottom (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-4.34, 1.92, 10.57) | Rot: (358.41, 0.00, 270.00) | Scale: (100.00, 100.00, 100.00)
+                Pos: (-3.86, 1.92, 10.41) | Rot: (358.41, 180.00, 270.00) | Scale: (100.00, 100.00, 100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
             [O] Mold_Top (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-4.34, 1.92, 10.57) | Rot: (358.41, 180.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
+                Pos: (-3.86, 1.92, 10.41) | Rot: (358.41, 0.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
         [O] FishShapeBun_Mold (2) (Active: True, Tag: Untagged, Layer: Default)
-            Pos: (-4.88, 1.95, 10.45) | Rot: (0.00, 270.00, 270.00) | Scale: (1.00, 1.00, 1.00)
+            Pos: (-4.88, 1.95, 10.45) | Rot: (0.00, 90.00, 270.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) Animator
             - (Component) MoldController_st2
                 > fishPrefab: FishShapeBun 2 (UnityEngine.GameObject)
@@ -2613,12 +2627,12 @@ Date: 2026-01-22 오전 12:42:31
             - (Component) AudioSource
 
             [O] Mold_Bottom (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-5.12, 1.93, 10.53) | Rot: (358.41, 0.00, 270.00) | Scale: (100.00, 100.00, 100.00)
+                Pos: (-4.65, 1.93, 10.37) | Rot: (358.41, 180.00, 270.00) | Scale: (100.00, 100.00, 100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
             [O] Mold_Top (Active: True, Tag: Untagged, Layer: Default)
-                Pos: (-5.12, 1.93, 10.53) | Rot: (358.41, 180.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
+                Pos: (-4.65, 1.93, 10.37) | Rot: (358.41, 0.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
                 - (Component) MeshFilter
                 - (Component) MeshRenderer
 
@@ -2635,7 +2649,7 @@ Date: 2026-01-22 오전 12:42:31
     Pos: (0.00, 0.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
 
     [O] MenuMonitorCanvas (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (607.50, 293.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
+        Pos: (545.50, 303.00, 0.00) | Rot: (0.00, 0.00, 0.00) | Scale: (1.00, 1.00, 1.00)
         - (Component) Canvas
         - (Component) CanvasScaler
         - (Component) GraphicRaycaster
@@ -2664,36 +2678,7 @@ Date: 2026-01-22 오전 12:42:31
             > molds: MoldController_st2[]
             > tutorialController: Tuto (StandaloneTutorialController_st2)
 
-[O] FishShapeBun_Mold (Active: True, Tag: Untagged, Layer: Default)
-    Pos: (-4.51, 0.13, 10.70) | Rot: (0.00, 90.00, 270.00) | Scale: (1.00, 1.00, 1.00)
-    - (Component) Animator
-    - (Component) MoldController_st2
-        > fishPrefab: FishShapeBun (UnityEngine.GameObject)
-        > telegraphSource: FishShapeBun_Mold (UnityEngine.AudioSource)
-        > popSource: FishShapeBun_Mold (UnityEngine.AudioSource)
-        > telegraphClip: 달그락 (UnityEngine.AudioClip)
-        > popClip: 퐁 (UnityEngine.AudioClip)
-        > moldAnimator: null
-        > popAnimationTrigger: Pop
-        > popAnimationLeadTime: 0.2
-        > useTelegraphShake: True
-        > shakeIntensity: 0.02
-        > shakeDuration: 0.3
-        > shakeCount: 8
-    - (Component) AudioSource
-    - (Component) AudioSource
-
-    [O] Mold_Bottom (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-4.27, 0.12, 10.62) | Rot: (358.41, 180.00, 270.00) | Scale: (100.00, 100.00, 100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-    [O] Mold_Top (Active: True, Tag: Untagged, Layer: Default)
-        Pos: (-4.27, 0.12, 10.62) | Rot: (358.41, 0.00, 270.00) | Scale: (-100.00, -100.00, -100.00)
-        - (Component) MeshFilter
-        - (Component) MeshRenderer
-
-[O] FishShapeBun (Active: True, Tag: Untagged, Layer: Default)
+[O] FishShapeBun_inbag (Active: True, Tag: Untagged, Layer: Default)
     Pos: (0.00, 0.00, 0.00) | Rot: (270.02, 0.00, 0.00) | Scale: (100.00, 100.00, 100.00)
     - (Component) MeshFilter
     - (Component) MeshRenderer
@@ -2742,20 +2727,20 @@ public class FlipbookNeonBright : MonoBehaviour
     public float hueSpeed = 0.08f;
     [Range(0f, 1f)] public float saturation = 1f;
 
-    [Tooltip(" ּ           (  ο       ʰ )")]
+    [Tooltip("�ּ� ��� ���� (��ο����� �ʰ�)")]
     [Range(0.6f, 2.5f)] public float minValue = 1.2f;
 
-    [Tooltip(" ִ     ( ׿      ). Additive   1.5~2.5   õ")]
+    [Tooltip("�ִ� ���(�׿� ����). Additive�� 1.5~2.5 ��õ")]
     [Range(0.8f, 4f)] public float maxValue = 2.0f;
 
-    [Header("Smooth Pulse (         ȭ)")]
+    [Header("Smooth Pulse (������ ��ȭ)")]
     public bool smoothPulse = true;
     public float pulseSpeed = 1.5f;
     [Range(0f, 1f)] public float pulseMin = 0.35f;
     [Range(0f, 1f)] public float pulseMax = 1.0f;
     public AnimationCurve pulseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [Header("Alpha Lock (      ״           )")]
+    [Header("Alpha Lock (���� �״� ���� ����)")]
     public bool lockAlpha = true;
     [Range(0.1f, 1f)] public float fixedAlpha = 1.0f;
 
@@ -2782,7 +2767,7 @@ public class FlipbookNeonBright : MonoBehaviour
     {
         if (frames == null || frames.Length == 0) return;
 
-        // 1) Flipbook          ȯ
+        // 1) Flipbook ������ ��ȯ
         float frameTime = 1f / Mathf.Max(1f, fps);
         frameTimer += Time.deltaTime;
         while (frameTimer >= frameTime)
@@ -2795,7 +2780,7 @@ public class FlipbookNeonBright : MonoBehaviour
 
         if (currentMat == null) return;
 
-        // 2)  ޽  (0~1)
+        // 2) �޽� (0~1)
         float p = 1f;
         if (smoothPulse)
         {
@@ -2804,14 +2789,14 @@ public class FlipbookNeonBright : MonoBehaviour
             p = Mathf.Lerp(pulseMin, pulseMax, eased);
         }
 
-        // 3)    (value)    ּ       ϸ鼭  ޽             
-        float v = Mathf.Lerp(minValue, maxValue, p); //  ׻  minValue  ̻ 
+        // 3) ���(value)�� �ּ� �����ϸ鼭 �޽��� ���� ����
+        float v = Mathf.Lerp(minValue, maxValue, p); // �׻� minValue �̻�
 
-        // 4)    κ     ÷      
+        // 4) ���κ��� �÷� ����
         float h = Mathf.Repeat(Time.time * hueSpeed, 1f);
         Color col = Color.HSVToRGB(h, saturation, v);
 
-        // 5)    Ĵ      (  ο     ̴           )
+        // 5) ���Ĵ� ����(��ο� ���̴� ���� ����)
         if (lockAlpha) col.a = fixedAlpha;
 
         currentMat.color = col;
@@ -2839,22 +2824,22 @@ using UnityEngine;
 public class RainbowDecalAndLight : MonoBehaviour
 {
     [Header("Targets")]
-    public Renderer decalRenderer;   //     (  Į) Renderer
+    public Renderer decalRenderer;   // ����(��Į) Renderer
     public Light spotLight;         // Spot Light
 
     [Header("Rainbow")]
-    [Tooltip("       ȭ  ӵ (1 = 1 ʿ                   ).")]
+    [Tooltip("���� ��ȭ �ӵ�(1 = 1�ʿ� �� ���� ���� ����).")]
     public float hueSpeed = 0.15f;
 
     [Range(0f, 1f)] public float saturation = 1f;
-    [Tooltip("1  ̻  ̸     ¸ ϰ      (Ư   Additive).")]
+    [Tooltip("1 �̻��̸� �� ¸�ϰ� ����(Ư�� Additive).")]
     public float value = 1.2f;
 
     [Header("Decal Intensity")]
-    [Tooltip("  Ƽ      ÷      (Transparent  迭 ̸       , Additive            ).")]
+    [Tooltip("��Ƽ���� �÷� ����(Transparent �迭�̸� �����, Additive�� ���� ����).")]
     [Range(0f, 1f)] public float decalAlpha = 1f;
 
-    [Header("Optional: Blink ( ޽ )")]
+    [Header("Optional: Blink (�޽�)")]
     public bool pulse = false;
     public float pulseSpeed = 6f;
     [Range(0f, 1f)] public float pulseMin = 0.35f;
@@ -2871,18 +2856,18 @@ public class RainbowDecalAndLight : MonoBehaviour
     {
         if (decalRenderer != null)
         {
-            // renderer.material:  ν  Ͻ      (  Ÿ ӿ                  )
+            // renderer.material: �ν��Ͻ� ����(��Ÿ�ӿ��� ���� ���� ����)
             _decalMat = decalRenderer.material;
         }
     }
 
     void Update()
     {
-        // 1)    κ     ÷       (HSV)
+        // 1) ���κ��� �÷� ���� (HSV)
         float h = Mathf.Repeat(Time.time * hueSpeed, 1f);
         Color rainbow = Color.HSVToRGB(h, saturation, value);
 
-        // 2)  ޽ (    )
+        // 2) �޽�(����)
         float p = 1f;
         if (pulse)
         {
@@ -2890,7 +2875,7 @@ public class RainbowDecalAndLight : MonoBehaviour
             p = Mathf.Lerp(pulseMin, pulseMax, wave);
         }
 
-        // 3)   Į   Ƽ      ÷      
+        // 3) ��Į ��Ƽ���� �÷� ����
         if (_decalMat != null)
         {
             Color c = rainbow;
@@ -2898,10 +2883,10 @@ public class RainbowDecalAndLight : MonoBehaviour
             _decalMat.color = c;
         }
 
-        // 4)    ̶   Ʈ  ÷      
+        // 4) ���̶���Ʈ �÷� ����
         if (spotLight != null)
         {
-            spotLight.color = Color.HSVToRGB(h, saturation, 1f); //     Ʈ   value 1   õ
+            spotLight.color = Color.HSVToRGB(h, saturation, 1f); // ����Ʈ�� value 1 ��õ
 
             if (pulseLightIntensity)
             {
@@ -2922,9 +2907,9 @@ public class SignBulbBlinkPro : MonoBehaviour
 {
     public enum BlinkMode
     {
-        Sequential,     //   -  -  -       ( Ǵ           )
-        RandomFlicker,  //          
-        AllOnOff        //   ü      ->   ü  ҵ   ݺ 
+        Sequential,     // ��-��-��-�� ����(�Ǵ� ���� ����)
+        RandomFlicker,  // ���� ����
+        AllOnOff        // ��ü ���� -> ��ü �ҵ� �ݺ�
     }
 
     [Header("Target")]
@@ -2935,29 +2920,29 @@ public class SignBulbBlinkPro : MonoBehaviour
     public BlinkMode mode = BlinkMode.Sequential;
 
     [Header("Timing")]
-    [Tooltip("  ü  ӵ  (Ŀ           )")]
+    [Tooltip("��ü �ӵ� (Ŀ������ ����)")]
     public float speed = 6f;
 
-    [Tooltip("Sequential         Ժ   ð   ")]
+    [Tooltip("Sequential�� �� ���Ժ� �ð���")]
     public float phaseOffset = 0.6f;
 
-    [Tooltip("AllOnOff      ON           (0~1)")]
+    [Tooltip("AllOnOff�� �� ON ���� ���� (0~1)")]
     [Range(0f, 1f)] public float allOnDuty = 0.55f;
 
     [Header("Emission")]
-    public float minEmission = 0f;     // OFF    ߱  (0   õ)
-    public float maxEmission = 4.5f;   // ON    ߱  (3~8   õ)
+    public float minEmission = 0f;     // OFF�� �߱� (0 ��õ)
+    public float maxEmission = 4.5f;   // ON�� �߱� (3~8 ��õ)
 
-    [Header("Base Color dim (OFF   Ӱ )")]
-    [Tooltip("OFF         ̽        (0.08~0.2   õ)")]
+    [Header("Base Color dim (OFF ��Ӱ�)")]
+    [Tooltip("OFF�� �� ���̽� �� �� (0.08~0.2 ��õ)")]
     public float offBaseDim = 0.12f;
 
-    [Tooltip("ON         ̽        (     1)")]
+    [Tooltip("ON�� �� ���̽� �� �� (���� 1)")]
     public float onBaseDim = 1f;
 
-    [Header("Optional: Beat     (  ܽ      )")]
+    [Header("Optional: Beat ����(��ܽ� ����)")]
     public bool stepLikeBeat = false;
-    [Range(1, 16)] public int stepsPerCycle = 4; // 4   4       
+    [Range(1, 16)] public int stepsPerCycle = 4; // 4�� 4�� ����
 
     static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
     static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -2970,7 +2955,7 @@ public class SignBulbBlinkPro : MonoBehaviour
         if (!target) target = GetComponent<Renderer>();
         if (!target) { enabled = false; return; }
 
-        mats = target.materials; //  ν  Ͻ        
+        mats = target.materials; // �ν��Ͻ� ������
         originalBase = new Color[mats.Length];
         for (int i = 0; i < mats.Length; i++)
             originalBase[i] = mats[i].color;
@@ -3014,7 +2999,7 @@ public class SignBulbBlinkPro : MonoBehaviour
                 }
             case BlinkMode.AllOnOff:
                 {
-                    // 0~1  ݺ    ȣ
+                    // 0~1 �ݺ� ��ȣ
                     float cycle = Mathf.Repeat(time * (speed * 0.25f), 1f);
                     v = (cycle < allOnDuty) ? 1f : 0f;
                     break;
@@ -3023,7 +3008,7 @@ public class SignBulbBlinkPro : MonoBehaviour
 
         if (stepLikeBeat)
         {
-            //   ܽ (    ó             )
+            // ��ܽ�(����ó�� ���� �����)
             float step = Mathf.Floor(v * stepsPerCycle) / Mathf.Max(1, stepsPerCycle - 1);
             v = Mathf.Clamp01(step);
         }
@@ -3033,7 +3018,7 @@ public class SignBulbBlinkPro : MonoBehaviour
 
     void ApplyToMaterial(int idx, float v)
     {
-        // OFF         ̽      Ӱ 
+        // OFF�� �� ���̽��� ��Ӱ�
         float baseMul = Mathf.Lerp(offBaseDim, onBaseDim, v);
         Color baseCol = originalBase[idx] * baseMul;
         mats[idx].SetColor(ColorId, baseCol);
@@ -3044,7 +3029,7 @@ public class SignBulbBlinkPro : MonoBehaviour
         mats[idx].SetColor(EmissionId, emission);
     }
 
-    //  ܺο         ٲٰ          ȣ   
+    // �ܺο��� ��� �ٲٰ� ���� �� ȣ���
     public void SetMode(int modeIndex)
     {
         mode = (BlinkMode)Mathf.Clamp(modeIndex, 0, 2);
@@ -3339,7 +3324,7 @@ public class SmoothRainbowLight : MonoBehaviour
     [Range(0f, 1f)] public float value = 1.0f;
 
     [Header("Speed")]
-    public float hueSpeed = 0.1f; //                   ε巯  
+    public float hueSpeed = 0.1f; // ���� �������� �� �ε巯��
 
     private Light pointLight;
     private float hue;
@@ -3844,12 +3829,12 @@ public class DiscoLightController : MonoBehaviour
 {
     [Header("Rotation")]
     public bool enableRotation = true;
-    public Vector3 rotationAxis = new Vector3(0f, 1f, 0f); // Y   ȸ    ⺻
+    public Vector3 rotationAxis = new Vector3(0f, 1f, 0f); // Y�� ȸ�� �⺻
     public float rotationSpeed = 25f;
 
     [Header("Rainbow Color")]
     public bool enableRainbow = true;
-    public float rainbowSpeed = 0.25f;   // 0.1~1.0   õ
+    public float rainbowSpeed = 0.25f;   // 0.1~1.0 ��õ
     [Range(0f, 1f)] public float saturation = 1f;
     [Range(0f, 1f)] public float brightness = 1f;
 
@@ -3865,27 +3850,27 @@ public class DiscoLightController : MonoBehaviour
     {
         _light = GetComponent<Light>();
 
-        //  ʱⰪ     
+        // �ʱⰪ ����
         if (enableIntensityPulse)
             _light.intensity = baseIntensity;
     }
 
     void Update()
     {
-        // 1) ȸ  
+        // 1) ȸ��
         if (enableRotation)
         {
             transform.Rotate(rotationAxis.normalized, rotationSpeed * Time.deltaTime, Space.Self);
         }
 
-        // 2)    κ     ÷    ȭ
+        // 2) ���κ��� �÷� ��ȭ
         if (enableRainbow)
         {
             float h = Mathf.Repeat(Time.time * rainbowSpeed, 1f);
             _light.color = Color.HSVToRGB(h, saturation, brightness);
         }
 
-        // 3) ( ɼ )           
+        // 3) (�ɼ�) ��� ������
         if (enableIntensityPulse)
         {
             float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f; // 0~1
@@ -3904,25 +3889,25 @@ public class FeedbackRouter : MonoBehaviour
 {
     [Header("Refs")]
     public RhythmConductor conductor;
-    public KnifeSlicer knifeSlicer; // (      Ʈ           ɷ          ־      )
+    public KnifeSlicer knifeSlicer; // (������Ʈ���� ���� �ɷ����� �� �־� ����)
     public AudioSource sfxSource;
     public FeedbackSetSO feedbackSet;
     public PlateController plateController;
 
     [Header("VFX Spawn Override")]
-    [Tooltip("üũ ϸ , Slice      VFX   hitPos              ġ          մϴ .")]
+    [Tooltip("üũ�ϸ�, Slice ���� VFX�� hitPos ��� ������ ��ġ���� �����մϴ�.")]
     public bool overrideSliceSuccessVfxSpawn = false;
 
-    [Tooltip("Slice      VFX        ġ(Transform).                    Ʈ(transform)      .")]
+    [Tooltip("Slice ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
     public Transform sliceSuccessVfxSpawnPoint;
 
-    [Tooltip("üũ ϸ , Result(    /    ) VFX   transform.position              ġ          մϴ .")]
+    [Tooltip("üũ�ϸ�, Result(����/����) VFX�� transform.position ��� ������ ��ġ���� �����մϴ�.")]
     public bool overrideResultVfxSpawn = false;
 
-    [Tooltip("Result      VFX        ġ(Transform).                    Ʈ(transform)      .")]
+    [Tooltip("Result ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
     public Transform resultSuccessVfxSpawnPoint;
 
-    [Tooltip("Result      VFX        ġ(Transform).                    Ʈ(transform)      .")]
+    [Tooltip("Result ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
     public Transform resultFailVfxSpawnPoint;
 
     float _lastFailFeedbackTime = -999f;
@@ -3936,7 +3921,7 @@ public class FeedbackRouter : MonoBehaviour
 
     void OnEnable()
     {
-        // RhythmConductor   UnityEvent        ϴ   ̺ Ʈ       
+        // RhythmConductor�� UnityEvent�� �����ϴ� �̺�Ʈ�� ����
         if (conductor)
         {
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
@@ -3976,7 +3961,7 @@ public class FeedbackRouter : MonoBehaviour
             Destroy(vfx, 2f);
         }
 
-        //  ÷            ߰ 
+        // �÷����� ���� �߰�
         if (plateController)
             plateController.AddPlatingPiece();
     }
@@ -3985,7 +3970,7 @@ public class FeedbackRouter : MonoBehaviour
     {
         if (!feedbackSet) return;
 
-        // Spam      (FeedbackSetSO   failCooldown    )
+        // Spam ���� (FeedbackSetSO�� failCooldown ���)
         if (Time.time - _lastFailFeedbackTime < feedbackSet.failCooldown)
             return;
         _lastFailFeedbackTime = Time.time;
@@ -3994,7 +3979,7 @@ public class FeedbackRouter : MonoBehaviour
         if (feedbackSet.sfxSliceFail && sfxSource)
             sfxSource.PlayOneShot(feedbackSet.sfxSliceFail);
 
-        // VFX (   д      ó   hitPos       )
+        // VFX (���д� ����ó�� hitPos�� ����)
         if (feedbackSet.vfxSliceFailPrefab)
         {
             var vfx = Instantiate(feedbackSet.vfxSliceFailPrefab, hitPos, Quaternion.identity);
@@ -4025,7 +4010,7 @@ public class FeedbackRouter : MonoBehaviour
                 Destroy(vfx, 3f);
             }
 
-            //        ü
+            // ���� ��ü
             if (plateController)
                 plateController.ShowSuccessPlate();
         }
@@ -4048,7 +4033,7 @@ public class FeedbackRouter : MonoBehaviour
                 Destroy(vfx, 3f);
             }
 
-            //        ü
+            // ���� ��ü
             if (plateController)
                 plateController.ShowFailPlate();
         }
@@ -4069,7 +4054,7 @@ public class FeedbackRouter : MonoBehaviour
             Destroy(vfx, 1.5f);
         }
 
-        // ª         
+        // ª�� ������
         XRHaptics.SendHaptic(true, 0.2f, 0.08f);
     }
 }
@@ -4128,12 +4113,12 @@ public class FinalResultInputHandler : MonoBehaviour
 
     void Update()
     {
-        // FinalResult    °   ƴϸ      
+        // FinalResult ���°� �ƴϸ� ����
         if (!gameFlowManager || gameFlowManager.CurrentState != GameState.FinalResult)
             return;
 
-        // A   ư      
-        if (OVRInput.GetDown(OVRInput.Button.One)) // A   ư
+        // A ��ư�� ���
+        if (OVRInput.GetDown(OVRInput.Button.One)) // A ��ư
         {
             if (Time.time - _lastInputTime > inputCooldown)
             {
@@ -4347,8 +4332,8 @@ public class KimbapController : MonoBehaviour
 {
     public enum AxisMode
     {
-        WorldX,             //      +X (                  ̰ɷ         찡     )
-        WorldZ,             //      +Z
+        WorldX,             // ���� +X (���� ���� ������ �̰ɷ� ���� ��찡 ����)
+        WorldZ,             // ���� +Z
         ReferenceRight,     // axisReference.right
         ReferenceForward    // axisReference.forward
     }
@@ -4360,12 +4345,12 @@ public class KimbapController : MonoBehaviour
     [Header("Refs")]
     public Collider sliceTrigger;     // Trigger collider (KimbapSliceable layer)
     public Collider blockCollider;    // Solid collider (KimbapBlocked layer)
-    public Transform mainMeshRoot;    // Mesh-only object (         Ÿ ӿ   ڵ      / и )
+    public Transform mainMeshRoot;    // Mesh-only object (������ ��Ÿ�ӿ� �ڵ� ����/�и�)
     public Material crossSectionMaterial;
 
     [Header("Slice Direction")]
     public AxisMode axisMode = AxisMode.WorldX;
-    public Transform axisReference;   //    ̺            Transform (Reference   忡      )
+    public Transform axisReference;   // ���̺� ���� ���� Transform (Reference ��忡�� ���)
     public bool invertAxis = false;
 
     [Header("Debug")]
@@ -4377,17 +4362,17 @@ public class KimbapController : MonoBehaviour
 
     RhythmTriggerListSO.Trigger _trigger;
 
-    // current mesh GO ( ׻  " ޽      "       Ʈ       Ű       )
+    // current mesh GO (�׻� "�޽� ����" ������Ʈ�� ����Ű�� ����)
     GameObject _currentMeshGO;
 
     int _activeThinPieces;
 
     void Awake()
     {
-        //  ⺻       
+        // �⺻�� ����
         SetSliceable(false);
 
-        //   Ʈ   Mesh    پ          Ÿ ӿ   ޽        ڽ       и 
+        // ��Ʈ�� Mesh�� �پ������� ��Ÿ�ӿ� �޽� ���� �ڽ����� �и�
         EnsureMeshRoot();
 
         _currentMeshGO = FindMeshGameObject(mainMeshRoot);
@@ -4448,8 +4433,8 @@ public class KimbapController : MonoBehaviour
     }
 
     /// <summary>
-    ///           "    (=Axis)"             徿           .
-    /// sliceIndex0Based   thin thickness curve  .
+    /// ���� ���� "����(=Axis)"���� ��� �� �徿 ����� ����.
+    /// sliceIndex0Based�� thin thickness curve��.
     /// </summary>
     public bool ExecuteRightThinSlice(int sliceIndex0Based)
     {
@@ -4482,10 +4467,10 @@ public class KimbapController : MonoBehaviour
             return false;
         }
 
-        //        (              )
+        // ���� ��(���� ���� ����)
         Vector3 axis = GetCutAxis();
 
-        // thickness    
+        // thickness ���
         float tNorm = _trigger.thinSliceThicknessNorm;
         if (_trigger.thinThicknessCurve != null && _trigger.thinThicknessCurve.length > 0 && _trigger.requiredSliceCount > 1)
         {
@@ -4496,19 +4481,19 @@ public class KimbapController : MonoBehaviour
 
         Bounds wb = rend.bounds;
 
-        // bounds corners   axis        ؼ           
+        // bounds corners�� axis�� �����ؼ� ���� ����
         GetMinMaxAlongDir(wb, axis, out float minD, out float maxD);
         float lengthAlongAxis = Mathf.Max(0.0001f, maxD - minD);
 
         float thinWorld = Mathf.Max(lengthAlongAxis * tNorm, _trigger.minThinThicknessWorld);
 
-        // "       " (axis        max   )
-        // AABB   axis          center        Ī ̹Ƿ   Ʒ              
+        // "���� ��" (axis ������ max ��)
+        // AABB�� axis �������� center ���� ��Ī�̹Ƿ� �Ʒ� ����� ������
         Vector3 axisEnd = wb.center + axis * (lengthAlongAxis * 0.5f);
 
-        // axisEnd     thinWorld  ŭ                                   
+        // axisEnd���� thinWorld��ŭ �������� ���� ������ ���� ��� ����
         Vector3 planePoint = axisEnd - axis * thinWorld;
-        Vector3 planeNormal = axis; // normal   axis         ϸ  axisEnd                     
+        Vector3 planeNormal = axis; // normal�� axis ���� ���ϸ� axisEnd �� ������ ��� ������
 
         if (debugDrawPlane)
         {
@@ -4516,17 +4501,17 @@ public class KimbapController : MonoBehaviour
             UnityEngine.Debug.DrawRay(planePoint, -planeNormal * 0.2f, Color.red, debugDrawSeconds);
         }
 
-        //      ̽    " ޽             Ʈ"          !
-        // (  Ʈ        Destroy  ϸ       )
+        // �����̽��� "�޽� ���� ������Ʈ"�� �������!
+        // (��Ʈ�� ���� Destroy �ϸ� �� ��)
         Transform meshT = _currentMeshGO.transform;
 
-        //   Ʈ                    (     ̽   Ŀ                  )
+        // ��Ʈ ���� ���� ���� ����(�����̽� �Ŀ��� ���� ���� ����)
         Transform root = transform;
         Vector3 localPos = root.InverseTransformPoint(meshT.position);
         Quaternion localRot = Quaternion.Inverse(root.rotation) * meshT.rotation;
         Vector3 localScale = meshT.localScale;
 
-        //           ̽ 
+        // ���� �����̽�
         var hull = _currentMeshGO.Slice(planePoint, planeNormal, crossSectionMaterial);
         if (hull == null)
         {
@@ -4545,16 +4530,16 @@ public class KimbapController : MonoBehaviour
             return false;
         }
 
-        // big/small     (   ū        ü)
+        // big/small ����(�� ū ���� ��ü)
         float vu = BoundsVolume(upper);
         float vl = BoundsVolume(lower);
         GameObject big = (vu >= vl) ? upper : lower;
         GameObject small = (big == upper) ? lower : upper;
 
-        //       ޽        Ʈ     
+        // ���� �޽� ������Ʈ ����
         Destroy(_currentMeshGO);
 
-        // big/small     Ʈ  Ʒ       ̰                
+        // big/small�� ��Ʈ �Ʒ��� ���̰� ���� ���� ����
         big.name = "MainMeshRuntime";
         big.transform.SetParent(root, false);
         big.transform.localPosition = localPos;
@@ -4566,18 +4551,18 @@ public class KimbapController : MonoBehaviour
         small.transform.localRotation = localRot;
         small.transform.localScale = localScale;
 
-        //       ޽      
+        // ���� �޽� ����
         mainMeshRoot = big.transform;
         _currentMeshGO = big;
 
-        //               
+        // ���� ���� ����
         if (CanSpawnThinPiece())
         {
             NotifyThinPieceSpawned();
 
             var tp = small.AddComponent<ThinPieceAutoCleanup>();
             tp.owner = this;
-            tp.flyDirection = axis;     //            ¦ ƨ   
+            tp.flyDirection = axis;     // �������� ��¦ ƨ���
             tp.flySeconds = 0.22f;
             tp.lifeSeconds = 1.2f;
 
@@ -4593,12 +4578,12 @@ public class KimbapController : MonoBehaviour
 #endif
     }
 
-    // ---  ٽ :   Ʈ   Mesh    پ         ޽     ڽ       и  ؼ  "  Ʈ  ı "      ---
+    // --- �ٽ�: ��Ʈ�� Mesh�� �پ������� �޽��� �ڽ����� �и��ؼ� "��Ʈ �ı�" ���� ---
     void EnsureMeshRoot()
     {
         if (mainMeshRoot && FindMeshGameObject(mainMeshRoot)) return;
 
-        //   Ʈ   Mesh    پ           Ÿ        ؼ   ڽ       и 
+        // ��Ʈ�� Mesh�� �پ� ������ ��Ÿ�� �����ؼ� �ڽ����� �и�
         var mf = GetComponent<MeshFilter>();
         var mr = GetComponent<MeshRenderer>();
         if (mf && mr)
@@ -4615,7 +4600,7 @@ public class KimbapController : MonoBehaviour
             var newMr = go.AddComponent<MeshRenderer>();
             newMr.sharedMaterials = mr.sharedMaterials;
 
-            //   Ʈ MeshRenderer      α ( ݶ  ̴ /  ũ  Ʈ       )
+            // ��Ʈ MeshRenderer�� ���α�(�ݶ��̴�/��ũ��Ʈ�� ����)
             mr.enabled = false;
             mf.mesh = null;
 
@@ -4624,8 +4609,8 @@ public class KimbapController : MonoBehaviour
             return;
         }
 
-        //   Ʈ   Mesh      ٸ ( ̹   ڽ             )
-        // mainMeshRoot     Ʈ    ΰ   ˻ 
+        // ��Ʈ�� Mesh�� ���ٸ�(�̹� �ڽ� ������ ����)
+        // mainMeshRoot�� ��Ʈ�� �ΰ� �˻�
         if (!mainMeshRoot) mainMeshRoot = transform;
     }
 
@@ -5630,36 +5615,36 @@ public class ProgressGaugeUI : MonoBehaviour
 {
     [Header("UI Elements")]
     public Slider progressSlider;        // 0 ~ 100
-    public Image fillImage;              // Slider   Fill
+    public Image fillImage;              // Slider�� Fill
     public Text percentageText;          // "75%"
     public Text countText;               // "15 / 20"
 
     [Header("Colors")]
-    public Gradient colorGradient;       // 0% ~ 100%        ȭ
+    public Gradient colorGradient;       // 0% ~ 100% ���� ��ȭ
 
     public void UpdateProgress(int successCount, int totalTriggers, float percentage)
     {
         percentage = Mathf.Clamp(percentage, 0f, 100f);
 
-        // Slider       Ʈ
+        // Slider ������Ʈ
         if (progressSlider)
         {
             progressSlider.value = percentage;
         }
 
-        // Fill          
+        // Fill ���� ����
         if (fillImage && colorGradient != null)
         {
             fillImage.color = colorGradient.Evaluate(percentage / 100f);
         }
 
-        //  ۼ Ʈ  ؽ Ʈ
+        // �ۼ�Ʈ �ؽ�Ʈ
         if (percentageText)
         {
             percentageText.text = $"{percentage:F0}%";
         }
 
-        // ī  Ʈ  ؽ Ʈ
+        // ī��Ʈ �ؽ�Ʈ
         if (countText)
         {
             countText.text = $"{successCount} / {totalTriggers}";
@@ -5971,18 +5956,18 @@ public class ResultManager : MonoBehaviour
     public RhythmConductor conductor;
     public GameFlowManager gameFlowManager;
 
-    [Header("Result Panels (3      1     Ȱ  ȭ)")]
+    [Header("Result Panels (3�� �� 1���� Ȱ��ȭ)")]
     public GameObject panel100k; // 100% ~ 80%
     public GameObject panel50k;  // 80% ~ 50%
     public GameObject panel0;    // 50% ~ 0%
 
     [Header("Settings")]
-    public float endDelaySeconds = 3f; //        Ʈ      Ϸ          ð 
+    public float endDelaySeconds = 3f; // ������ Ʈ���� �Ϸ� �� ��� �ð�
 
     [Header("Events")]
     public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
 
-    //   Ÿ         
+    // ��Ÿ�� ������
     int _totalTriggers;
     int _successCount;
     bool _gameEnded;
@@ -6014,7 +5999,7 @@ public class ResultManager : MonoBehaviour
 
         Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
 
-        //  ʱ               Ʈ
+        // �ʱ� ������ ������Ʈ
         OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
     }
 
@@ -6033,11 +6018,11 @@ public class ResultManager : MonoBehaviour
             Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
         }
 
-        //          
+        // ����� ���
         float percentage = (_successCount / (float)_totalTriggers) * 100f;
         OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
 
-        //        Ʈ      Ϸ  Ȯ  
+        // ������ Ʈ���� �Ϸ� Ȯ��
         if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
         {
             Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
@@ -6052,33 +6037,33 @@ public class ResultManager : MonoBehaviour
 
         Debug.Log("[ResultManager] Game ended. Showing result panel...");
 
-        //           
+        // ������ ���
         float successRate = (_successCount / (float)_totalTriggers) * 100f;
 
-        // BGM     
+        // BGM ����
         if (conductor && conductor.bgmSource)
         {
             conductor.bgmSource.Stop();
         }
 
-        //        ȯ
+        // ���� ��ȯ
         if (gameFlowManager)
         {
             gameFlowManager.EnterFinalResult(successRate);
         }
 
-        //  г  Ȱ  ȭ
+        // �г� Ȱ��ȭ
         ShowResultPanel(successRate);
     }
 
     void ShowResultPanel(float successRate)
     {
-        //      г    Ȱ  ȭ
+        // ��� �г� ��Ȱ��ȭ
         if (panel100k) panel100k.SetActive(false);
         if (panel50k) panel50k.SetActive(false);
         if (panel0) panel0.SetActive(false);
 
-        //    ǿ   ´   гθ  Ȱ  ȭ
+        // ���ǿ� �´� �гθ� Ȱ��ȭ
         if (successRate >= 80f)
         {
             if (panel100k) panel100k.SetActive(true);
@@ -6096,7 +6081,7 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    //  ܺο    ȣ       
+    // �ܺο��� ȣ�� ����
     public int GetSuccessCount() => _successCount;
     public int GetTotalTriggers() => _totalTriggers;
     public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
@@ -8728,163 +8713,199 @@ public class BagView_st2 : MonoBehaviour
 --------------------------------------------------
 
 --- FILENAME: CatchInput_st2.cs (Assets/3_Stage2/Demo/Scripts/CatchInput_st2.cs) ---
-using System.Collections;
+using System.Reflection;
 using UnityEngine;
 using static GameState_st2;
 
 public class CatchInput_st2 : MonoBehaviour
 {
-    [Header("참조")]
-    public HandCatchSensor_st2 sensor;
-    public OVRInput.Controller handController;
-    public Transform handTransform;
-
-    [Header("사운드")]
-    public AudioSource snapAudioSource;
-    public AudioClip snapSoundClip;
-
-    [Header("스냅 연출")]
-    public float snapHoldSeconds = 0.2f;
-
-    [Header("봉투에 넣을 비주얼 프리팹")]
-    public GameObject bagFishVisualPrefab;
-
-    private JudgeSystem_st2 judgeSystem;
-    private BagManager_st2 bagManager;
-    private EconomySystem_st2 economySystem;
-
-    // HUD용
+    // ✅ DebugHUD/GameFlowController 호환용 (기존 스크립트가 읽는 필드)
+    // - 판정 결과는 hub.JudgeResolved 구독으로 "값만" 업데이트됨 (로직 결합 X)
     public JudgeResult_st2 lastJudgeResult = JudgeResult_st2.Miss;
-    public string lastHandName;
-    public bool hasJudgedOnce = false;
+    public string lastHandName = "-";
 
-    public void Initialize(JudgeSystem_st2 judge, BagManager_st2 bag, EconomySystem_st2 economy, MoldController_st2[] moldControllers)
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Hand Roots (required if no sensor)")]
+    public Transform leftHandRoot;
+    public Transform rightHandRoot;
+
+    [Header("Optional Sensors (if you already have HandCatchSensor_st2 or similar)")]
+    public MonoBehaviour leftSensor;
+    public MonoBehaviour rightSensor;
+
+    [Header("Target Search Fallback")]
+    public LayerMask fishLayer = ~0;
+    public float catchRadius = 0.12f;
+
+    [Header("Input")]
+    [Range(0f, 1f)] public float triggerThreshold = 0.9f;
+    public float perHandCooldown = 0.05f;
+
+    private double _lastLeftAttemptDsp = -999;
+    private double _lastRightAttemptDsp = -999;
+    private bool _subscribed = false;
+
+    public void Initialize(Stage2EventHub_st2 eventHub)
     {
-        judgeSystem = judge;
-        bagManager = bag;
-        economySystem = economy;
-
-        lastJudgeResult = JudgeResult_st2.Miss;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
-        hasJudgedOnce = false;
+        hub = eventHub;
+        TryBindHub();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        var gf = GameFlowController_st2.Instance;
-        if (gf == null) return;
-
-        if (gf.CurrentState != GameStatest2.Playing) return;
-        if (gf.isEndingTriggered) return;
-
-        ProcessHandInput();
+        TryBindHub();
     }
 
-    void ProcessHandInput()
+    private void OnDisable()
     {
-        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, handController))
-            return;
+        TryUnbindHub();
+    }
 
-        var target = sensor != null ? sensor.currentTarget : null;
-        if (target == null) return;
-        if (target.isResolved) return;
+    private void TryBindHub()
+    {
+        if (_subscribed) return;
+        if (hub == null) return;
 
-        double catchTime = AudioSettings.dspTime;
+        hub.JudgeResolved += OnJudgeResolved_Debug;
+        _subscribed = true;
+    }
 
-        // ✅ JudgeSystem을 통해 판정 수행 (통계 자동 업데이트 + 이벤트 발행)
-        JudgeResult_st2 result = judgeSystem.PerformJudge(target, catchTime);
+    private void TryUnbindHub()
+    {
+        if (!_subscribed) return;
+        if (hub == null) { _subscribed = false; return; }
 
+        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        _subscribed = false;
+    }
+
+    // ✅ Debug 필드 업데이트 전용 (표시용)
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
         lastJudgeResult = result;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
-        hasJudgedOnce = true;
-
-        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
-            OnCatchSuccess(target, result);
-        else
-            OnCatchMiss(target);
+        lastHandName = HandToName(hand);
     }
 
-    void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
+    private void Update()
     {
-        if (fish == null) return;
+        if (hub == null) return;
 
-        fish.OnCaught();
-
-        Vector3 originalPos = fish.transform.position;
-
-        // 센서(손)로 스냅
-        Transform snapParent = (sensor != null) ? sensor.transform : (handTransform != null ? handTransform : transform);
-
-        fish.transform.position = snapParent.position;
-        fish.transform.SetParent(snapParent, true);
-
-        if (snapAudioSource != null && snapSoundClip != null)
-            snapAudioSource.PlayOneShot(snapSoundClip);
-
-        string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(originalPos, feedbackText);
-
-        // ✅ 튜토리얼과 동일: 0.2초 붙였다가 → 봉투 추가 → 풀 반환
-        StartCoroutine(SnapHoldThenBagAndRelease(fish));
+        ProcessHand(OVRInput.Controller.LTouch, leftHandRoot, leftSensor, ref _lastLeftAttemptDsp);
+        ProcessHand(OVRInput.Controller.RTouch, rightHandRoot, rightSensor, ref _lastRightAttemptDsp);
     }
 
-    // ✅ 튜토리얼과 완전 동일한 로직
-    IEnumerator SnapHoldThenBagAndRelease(FishCatchToken_st2 fish)
+    private void ProcessHand(OVRInput.Controller hand, Transform handRoot, MonoBehaviour sensor, ref double lastAttemptDsp)
     {
-        if (fish == null) yield break;
+        double dsp = AudioSettings.dspTime;
+        if (dsp - lastAttemptDsp < perHandCooldown) return;
 
-        var owner = fish.ownerMold;
+        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
+        bool pressed = axis >= triggerThreshold;
+        if (!pressed) return;
 
-        // ✅ 0.2초 홀드 (튜토리얼과 동일)
-        yield return new WaitForSeconds(snapHoldSeconds);
+        // ✅ HUD가 "마지막 입력 손" 표시할 수 있게 시도 시점에도 갱신(표시용)
+        lastHandName = HandToName(hand);
 
-        // 안전 체크
-        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
-        {
-            UnityEngine.Debug.LogWarning("Fish was destroyed during hold");
-            yield break;
-        }
+        var target = TryGetTargetFromSensor(sensor);
+        if (target == null)
+            target = FindClosestFishByOverlap(handRoot);
 
-        // ✅ 봉투에 비주얼 추가 (BagManager가 3개 제한 자동 처리)
-        if (bagManager != null)
-        {
-            bagManager.AddItem(bagFishVisualPrefab);
-            UnityEngine.Debug.Log($"✅ Visual fish added to bag");
-        }
+        if (target == null) return;
 
-        // ✅ 손에서 떼기
-        fish.transform.SetParent(null, true);
+        lastAttemptDsp = dsp;
 
-        // ✅ 실물 붕어빵은 풀로 반환
-        if (owner != null)
-        {
-            owner.ReleaseFish(fish);
-            UnityEngine.Debug.Log($"✅ Real fish returned to pool");
-        }
-        else
-        {
-            fish.gameObject.SetActive(false);
-            UnityEngine.Debug.LogWarning("Fish has no owner, deactivated instead");
-        }
+        // ✅ 여기서부터가 v6.2 핵심: 판정/봉투/임금 직접 호출 금지
+        hub.PublishCatchAttempted(target, hand, dsp);
     }
 
-    void OnCatchMiss(FishCatchToken_st2 fish)
+    private FishCatchToken_st2 TryGetTargetFromSensor(MonoBehaviour sensor)
     {
-        if (fish == null) return;
+        if (sensor == null) return null;
 
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, "MISS");
-
-        // ✅ 혹시라도 부모에 붙어있을 가능성 대비: 무조건 떨어지는 상태 보장
-        fish.transform.SetParent(null, true);
-
-        var rb = fish.GetComponent<Rigidbody>();
-        if (rb != null)
+        try
         {
-            rb.isKinematic = false;
-            rb.useGravity = true;
+            var t = sensor.GetType();
+
+            // 1) GetCurrentTarget()
+            var mi = t.GetMethod("GetCurrentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (mi != null)
+            {
+                var r = mi.Invoke(sensor, null);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
+
+            // 2) CurrentTarget property
+            var pi = t.GetProperty("CurrentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (pi != null)
+            {
+                var r = pi.GetValue(sensor);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
+
+            // 3) currentTarget field
+            var fi = t.GetField("currentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (fi != null)
+            {
+                var r = fi.GetValue(sensor);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
         }
+        catch { /* ignore */ }
+
+        return null;
     }
+
+    private FishCatchToken_st2 FindClosestFishByOverlap(Transform handRoot)
+    {
+        if (handRoot == null) return null;
+
+        Collider[] hits = Physics.OverlapSphere(handRoot.position, catchRadius, fishLayer, QueryTriggerInteraction.Collide);
+        if (hits == null || hits.Length == 0) return null;
+
+        FishCatchToken_st2 best = null;
+        float bestD = float.MaxValue;
+
+        foreach (var c in hits)
+        {
+            if (c == null) continue;
+            var fish = c.GetComponentInParent<FishCatchToken_st2>();
+            if (fish == null) continue;
+
+            float d = (fish.transform.position - handRoot.position).sqrMagnitude;
+            if (d < bestD)
+            {
+                bestD = d;
+                best = fish;
+            }
+        }
+
+        return best;
+    }
+
+    private static string HandToName(OVRInput.Controller hand)
+    {
+        return hand == OVRInput.Controller.LTouch ? "Left" :
+               hand == OVRInput.Controller.RTouch ? "Right" :
+               hand.ToString();
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if (leftHandRoot != null) Gizmos.DrawWireSphere(leftHandRoot.position, catchRadius);
+        if (rightHandRoot != null) Gizmos.DrawWireSphere(rightHandRoot.position, catchRadius);
+    }
+#endif
 }
+
 
 --------------------------------------------------
 
@@ -8896,12 +8917,12 @@ using static CrowdMember_st2;
 
 public class CrowdManager_st2 : MonoBehaviour
 {
-    [Header("    ")]
+    [Header("����")]
     public List<CrowdMember> crowdMembers = new List<CrowdMember>();
     public int startVisible = 3;
     public int maxVisible = 20;
 
-    [Header("   ൵")]
+    [Header("���൵")]
     public float revealStartProgress = 0.1f;
     public float revealEndProgress = 0.9f;
     public AnimationCurve revealCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
@@ -8915,14 +8936,14 @@ public class CrowdManager_st2 : MonoBehaviour
         audioSource = source;
         currentClip = clip;
 
-        //       Ʈ ĳ  
+        // ������Ʈ ĳ��
         foreach (var member in crowdMembers)
         {
             member.cachedRenderer = member.gameObject.GetComponent<Renderer>();
             member.cachedAnimator = member.gameObject.GetComponent<Animator>();
         }
 
-        //  ʱ  Ȱ  ȭ
+        // �ʱ� Ȱ��ȭ
         visibleCount = startVisible;
         for (int i = 0; i < crowdMembers.Count; i++)
         {
@@ -9184,13 +9205,13 @@ using static GameState_st2;
 
 public class EconomySystem_st2 : MonoBehaviour
 {
-    [Header(" ϱ      ")]
+    [Header("�ϱ� ����")]
     public int baseWage = 10000;
     public int perfectBonus = 100;
     public int missPenalty = 50;
     public int maxWage = 30000;
 
-    [Header("         ")]
+    [Header("���� ����")]
     public int currentWage;
 
     public event Action<int> OnWageChanged;
@@ -9237,7 +9258,7 @@ public class FeedbackManager_st2 : MonoBehaviour
 {
     public static FeedbackManager_st2 Instance { get; private set; }
 
-    [Header(" ǵ         ")]
+    [Header("�ǵ�� ������")]
     public GameObject feedbackTextPrefab;
 
     private ObjectPool<GameObject> feedbackPool;
@@ -9254,7 +9275,7 @@ public class FeedbackManager_st2 : MonoBehaviour
             return;
         }
 
-        //  ǵ   Ǯ     
+        // �ǵ�� Ǯ ����
         feedbackPool = new ObjectPool<GameObject>(
             createFunc: () => Instantiate(feedbackTextPrefab),
             actionOnGet: (obj) => obj.SetActive(true),
@@ -9429,12 +9450,7 @@ public class FishCatchToken_st2 : MonoBehaviour
             UnityEngine.Debug.Log($"✅ Fish hit ground - triggering MISS for {gameObject.name}");
 
             // MISS 처리
-            var gf = GameFlowController_st2.Instance;
-            if (gf != null && gf.judgeSystem != null)
-            {
-                gf.judgeSystem.ResolveMissFromGround(this);
-            }
-
+            
             // MISS 피드백
             FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
         }
@@ -9531,7 +9547,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
         foreach (var input in catchInputs)
         {
-            input.Initialize(judgeSystem, bagManager, economySystem, molds);
+           
         }
 
         menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
@@ -10411,24 +10427,24 @@ using UnityEngine.Pool;
 
 public class PatternDirector_st2 : MonoBehaviour
 {
-    [Header("BPM     ")]
+    [Header("BPM ����")]
     public float BPM = 120f;
     public float telegraphLeadTime = 0.4f;
     public float cueLeadTime = 0.35f;
     public float runStep = 0.25f;
 
-    [Header("         ")]
+    [Header("���� ����")]
     public int patternIntervalBeats = 3;
     public float minPatternInterval = 0.5f;
     public float initialDelay = 5.0f;
 
-    [Header("Ư            ")]
+    [Header("Ư�� ���� ����")]
     public int specialCooldownBeats = 4;
     public int maxBeatsWithoutSpecial = 12;
     public float sync2Chance = 30f;
     public float run3Chance = 30f;
 
-    [Header("    ")]
+    [Header("����")]
     public MoldController_st2[] molds = new MoldController_st2[3];
     public AudioSource cueAudioSource;
     public AudioClip sync2Cue;
@@ -10470,16 +10486,16 @@ public class PatternDirector_st2 : MonoBehaviour
 
     bool CanSelectNewPattern(double dspTime)
     {
-        // 1    :    üũ
+        // 1����: �� üũ
         if (dspTime < patternLockUntilDspTime) return false;
 
-        // 2    :  ּ      
+        // 2����: �ּ� ����
         if (dspTime < lastPatternTime + minPatternInterval) return false;
 
-        // 3    :  ׸    üũ
+        // 3����: �׸��� üũ
         if (dspTime < nextPatternTime) return false;
 
-        //            5       
+        // �� ���� �� 5�� ����
         AudioSource bgm = GameFlowController_st2.Instance.bgmSource;
         if (bgm.clip.length - bgm.time < 5.0f) return false;
 
@@ -10491,12 +10507,12 @@ public class PatternDirector_st2 : MonoBehaviour
         PatternType_st2 selectedPattern = SelectPattern();
         ExecutePattern(selectedPattern, currentDsp);
 
-        //            ð     
+        // ���� ���� �ð� ���
         float beatDuration = 60f / BPM;
         nextPatternTime = currentDsp + patternIntervalBeats * beatDuration;
         lastPatternTime = currentDsp;
 
-        //   / ׸     浹             
+        // ��/�׸��� �浹 �� ���� ����
         if (nextPatternTime < patternLockUntilDspTime + minPatternInterval)
         {
             nextPatternTime = patternLockUntilDspTime + minPatternInterval;
@@ -10507,7 +10523,7 @@ public class PatternDirector_st2 : MonoBehaviour
 
     PatternType_st2 SelectPattern()
     {
-        // 1.   ٿ  üũ
+        // 1. ��ٿ� üũ
         if (isInCooldown)
         {
             beatsSinceLastSpecial++;
@@ -10522,7 +10538,7 @@ public class PatternDirector_st2 : MonoBehaviour
             }
         }
 
-        // 2.      üũ (  ٿ    켱)
+        // 2. ���� üũ (��ٿ�� �켱)
         if (beatsSinceLastSpecial >= maxBeatsWithoutSpecial)
         {
             beatsSinceLastSpecial = 0;
@@ -10531,7 +10547,7 @@ public class PatternDirector_st2 : MonoBehaviour
             return UnityEngine.Random.value < 0.5f ? PatternType_st2.Sync2 : PatternType_st2.Run3;
         }
 
-        // 3. Ȯ       
+        // 3. Ȯ�� ����
         float roll = UnityEngine.Random.Range(0f, 100f);
 
         if (roll < sync2Chance)
@@ -10584,7 +10600,7 @@ public class PatternDirector_st2 : MonoBehaviour
 
     void ExecuteSync2Pattern(double t0)
     {
-        // Ʋ     : {0,1}, {1,2}, {0,2}
+        // Ʋ ����: {0,1}, {1,2}, {0,2}
         int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
         int[] selectedPair = pairs[UnityEngine.Random.Range(0, 3)];
 
@@ -10592,10 +10608,10 @@ public class PatternDirector_st2 : MonoBehaviour
         double telegraphTime = t0;
         double popTime = t0 + telegraphLeadTime;
 
-        // ť     
+        // ť ����
         ScheduleCueSound(sync2Cue, cueTime);
 
-        //    Ʋ          
+        // �� Ʋ ���� ����
         foreach (int moldId in selectedPair)
         {
             molds[moldId].ScheduleTelegraph(telegraphTime);
@@ -10609,12 +10625,12 @@ public class PatternDirector_st2 : MonoBehaviour
     {
         double cueTime = t0 - cueLeadTime;
 
-        // ť     
+        // ť ����
         ScheduleCueSound(run3Cue, cueTime);
 
         double lastPopTime = 0;
 
-        // 3            
+        // 3�� ���� ����
         for (int i = 0; i < 3; i++)
         {
             double telegraphTime = t0 + runStep * i;
@@ -10638,7 +10654,7 @@ public class PatternDirector_st2 : MonoBehaviour
 
     public void ClearAllScheduledEvents()
     {
-        // AudioSource     
+        // AudioSource ����
         foreach (var source in scheduledSources)
         {
             if (source != null)
@@ -10648,7 +10664,7 @@ public class PatternDirector_st2 : MonoBehaviour
         }
         scheduledSources.Clear();
 
-        // Coroutine     
+        // Coroutine ����
         foreach (var routine in scheduledCoroutines)
         {
             if (routine != null)
@@ -10665,1191 +10681,221 @@ public class PatternDirector_st2 : MonoBehaviour
 
 --------------------------------------------------
 
---- FILENAME: StandaloneTutorialController_st2.cs (Assets/3_Stage2/Demo/Scripts/StandaloneTutorialController_st2.cs) ---
+--- FILENAME: BagPolicy_st2.cs (Assets/3_Stage2/Demo/Scripts_/BagPolicy_st2.cs) ---
+using UnityEngine;
+
+public class BagPolicy_st2 : MonoBehaviour
+{
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private BagManager_st2 bag;
+
+    [Header("Bag Visual Prefab")]
+    public GameObject bagFishVisualPrefab;
+
+    public void Construct(Stage2EventHub_st2 eventHub, BagManager_st2 bagManager)
+    {
+        hub = eventHub;
+        bag = bagManager;
+    }
+
+    private void OnEnable()
+    {
+        if (hub != null) hub.FishConsumeRequested += OnConsumeRequested;
+    }
+
+    private void OnDisable()
+    {
+        if (hub != null) hub.FishConsumeRequested -= OnConsumeRequested;
+    }
+
+    private void OnConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (bag == null) return;
+        if (reason != FishConsumeReason_st2.Success) return;
+
+        if (bagFishVisualPrefab != null)
+            bag.AddItem(bagFishVisualPrefab);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: CatchVfx_st2.cs (Assets/3_Stage2/Demo/Scripts_/CatchVfx_st2.cs) ---
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using System.Reflection;
 using UnityEngine;
 using static GameState_st2;
 
-/// <summary>
-/// 메인 게임 로직과 완전히 독립된 튜토리얼 컨트롤러
-/// 자체 패턴 생성, 자체 판정, 자체 UI를 가짐
-/// </summary>
-public class StandaloneTutorialController_st2 : MonoBehaviour
+public class CatchVfx_st2 : MonoBehaviour
 {
-    public enum TutorialStage
-    {
-        T0_Telegraph,
-        T1_Pop,
-        T2_Catch,
-        T4_Sync2,
-        T5_Run3,
-        Complete,
-        WaitBeforeMain
-    }
+    [SerializeField] private Stage2EventHub_st2 hub;
 
-    [Header("현재 스테이지")]
-    public TutorialStage currentStage = TutorialStage.T0_Telegraph;
-
-    [Header("튜토리얼 전용 몰드 (메인과 별도)")]
-    public TutorialMoldController_st2[] tutorialMolds = new TutorialMoldController_st2[3];
-
-    [Header("튜토리얼 전용 손 센서")]
-    public TutorialHandSensor_st2 leftSensor;
-    public TutorialHandSensor_st2 rightSensor;
-
-    [Header("UI")]
-    public TextMeshProUGUI instructionText;
-    public TextMeshProUGUI progressText;
-    public TextMeshProUGUI skipText;
-    public TextMeshProUGUI stageCompleteText; // ✅ 추가: 스테이지 완료 메시지
-    public GameObject tutorialCanvas;
-
-    [Header("오디오")]
-    public AudioSource telegraphSource;
-    public AudioSource popSource;
-    public AudioSource cueSource;
-    public AudioClip telegraphClip;
-    public AudioClip popClip;
-    public AudioClip sync2Cue;
-    public AudioClip run3Cue;
-
-    [Header("튜토리얼 BGM")]
-    public AudioSource tutorialBGMSource; // ✅ 추가
-    public AudioClip tutorialBGMClip;     // ✅ 추가
-    public float bgmVolume = 0.5f;        // ✅ 추가
-
-    [Header("타이밍 설정")]
-    public float telegraphToPopDelay = 0.4f;
-    public float manualPatternInterval = 2.0f;
-    public float runStepInterval = 0.25f;
-    public float waitBeforeMainDuration = 3.0f;
-
-    [Header("스테이지 전환 설정")]
-    public float stageTransitionDelay = 2.0f; // ✅ 추가: 스테이지 완료 후 다음으로 넘어가기 전 대기
-    public bool showStageCompleteMessage = true; // ✅ 추가: 완료 메시지 표시 여부
-
-    [Header("판정 설정")]
-    public float perfectWindow = 0.04f;
-    public float goodWindow = 0.075f;
-    [Header("스냅 연출(튜토리얼)")]
+    [Header("Timing")]
     public float snapHoldSeconds = 0.2f;
+    public float fadeSeconds = 0.25f;
 
-    // 진행 카운터
-    private int telegraphCount = 0;
-    private int popCount = 0;
-    private int goodOrBetterCount = 0;
-    private int sync2SuccessCount = 0;
-    private int run3SuccessCount = 0;
+    [Header("Snap (optional)")]
+    public Transform leftHandSnap;
+    public Transform rightHandSnap;
 
-    // 현재 활성 패턴 타입
-    private PatternType_st2 currentPatternType = PatternType_st2.Normal;
-
-    // ✅ 추가: Sync2, Run3 성공 플래그
-    private bool hasSuccessSync2 = false;
-    private bool hasSuccessRun3 = false;
-
-    // 자동 패턴 생성 제어
-    private Coroutine autoPatternRoutine;
-
-    void Start()
+    public void Construct(Stage2EventHub_st2 eventHub)
     {
-        InitializeUI();
-        InitializeSensors();
-        StartTutorialBGM(); // ✅ 추가
-        StartStage(currentStage);
+        hub = eventHub;
     }
 
-    void Update()
+    private void OnEnable()
     {
-        // A 버튼으로 스킵
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        if (hub != null) hub.JudgeResolved += OnJudgeResolved;
+    }
+
+    private void OnDisable()
+    {
+        if (hub != null) hub.JudgeResolved -= OnJudgeResolved;
+    }
+
+    private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
+        if (fish == null) return;
+
+        bool success = (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good);
+        if (!success) return;
+
+        StartCoroutine(CoSuccess(fish, hand));
+    }
+
+    private IEnumerator CoSuccess(FishCatchToken_st2 fish, OVRInput.Controller hand)
+    {
+        // 1) fish.OnCaught()가 있으면 호출 (기존 기능 유지용)
+        SafeInvokeNoArg(fish, "OnCaught");
+
+        // 2) 1프레임 스냅(선택)
+        Transform handT = (hand == OVRInput.Controller.LTouch) ? leftHandSnap : rightHandSnap;
+        if (handT != null)
         {
-            SkipTutorial();
+            var tr = fish.transform;
+            tr.position = handT.position;
+            tr.rotation = handT.rotation;
         }
+        yield return null;
 
-        // 손 입력 처리 (메인과 독립)
-        ProcessHandInput(leftSensor, OVRInput.Controller.LTouch);
-        ProcessHandInput(rightSensor, OVRInput.Controller.RTouch);
-    }
-
-    void InitializeUI()
-    {
-        if (skipText != null)
-            skipText.text = "[Press A to Skip Tutorial]";
-
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(true);
-
-        // ✅ 완료 메시지 초기화
-        if (stageCompleteText != null)
-            stageCompleteText.gameObject.SetActive(false);
-    }
-
-    void InitializeSensors()
-    {
-        if (leftSensor != null)
-            leftSensor.Initialize(OVRInput.Controller.LTouch);
-
-        if (rightSensor != null)
-            rightSensor.Initialize(OVRInput.Controller.RTouch);
-    }
-
-    // ✅ 추가: 튜토리얼 BGM 시작
-    void StartTutorialBGM()
-    {
-        if (tutorialBGMSource != null && tutorialBGMClip != null)
-        {
-            tutorialBGMSource.clip = tutorialBGMClip;
-            tutorialBGMSource.loop = true;
-            tutorialBGMSource.volume = bgmVolume;
-            tutorialBGMSource.Play();
-            Debug.Log("✅ Tutorial BGM started");
-        }
-    }
-
-    // ✅ 추가: 튜토리얼 BGM 중지
-    void StopTutorialBGM()
-    {
-        if (tutorialBGMSource != null)
-        {
-            tutorialBGMSource.Stop();
-            Debug.Log("✅ Tutorial BGM stopped");
-        }
-    }
-
-    void StartStage(TutorialStage stage)
-    {
-        currentStage = stage;
-
-        // 이전 자동 패턴 중지
-        if (autoPatternRoutine != null)
-        {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
-
-        // ✅ 완료 메시지 숨기기
-        HideStageComplete();
-
-        // 스테이지별 시작 로직
-        switch (stage)
-        {
-            case TutorialStage.T0_Telegraph:
-                ShowInstruction("Listen to the 'Telegraph' sound!", $"Progress: {telegraphCount}/2");
-                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
-                break;
-
-            case TutorialStage.T1_Pop:
-                ShowInstruction("Watch the fish 'Pop' out!", $"Progress: {popCount}/2");
-                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
-                break;
-
-            case TutorialStage.T2_Catch:
-                ShowInstruction("Catch fish with Good or Perfect!", $"Good+ Catches: {goodOrBetterCount}/2");
-                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
-                break;
-
-            case TutorialStage.T4_Sync2:
-                ShowInstruction("Try Sync2 pattern! (땡땡)", "Catch at least 1 fish!");
-                autoPatternRoutine = StartCoroutine(AutoSpawnSync2Pattern());
-                break;
-
-            case TutorialStage.T5_Run3:
-                ShowInstruction("Try Run3 pattern! (딸랑)", "Catch at least 1 fish!");
-                autoPatternRoutine = StartCoroutine(AutoSpawnRun3Pattern());
-                break;
-
-            case TutorialStage.Complete:
-                ShowInstruction("Tutorial Complete!", "Starting main game...");
-                StartCoroutine(WaitThenStartMain());
-                break;
-        }
-    }
-
-    void ShowInstruction(string instruction, string progress)
-    {
-        if (instructionText != null)
-            instructionText.text = instruction;
-
-        if (progressText != null)
-            progressText.text = progress;
-    }
-
-    // ========================================
-    // 자동 패턴 생성 (메인 PatternDirector와 독립)
-    // ========================================
-
-    IEnumerator AutoSpawnNormalPattern()
-    {
-        while (true)
-        {
-            currentPatternType = PatternType_st2.Normal;
-
-            // 랜덤 몰드 선택
-            int moldIndex = Random.Range(0, 3);
-            yield return StartCoroutine(SpawnSingleFish(moldIndex));
-
-            // 다음 패턴까지 대기
-            yield return new WaitForSeconds(manualPatternInterval);
-        }
-    }
-
-    IEnumerator AutoSpawnSync2Pattern()
-    {
-        while (true)
-        {
-            currentPatternType = PatternType_st2.Sync2;
-
-            // 2개 몰드 선택
-            int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
-            int[] selectedPair = pairs[Random.Range(0, 3)];
-
-            // 큐 사운드
-            if (cueSource != null && sync2Cue != null)
-                cueSource.PlayOneShot(sync2Cue);
-
-            yield return new WaitForSeconds(0.35f);
-
-            // 동시 스폰
-            foreach (int moldIndex in selectedPair)
-            {
-                StartCoroutine(SpawnSingleFish(moldIndex));
-            }
-
-            yield return new WaitForSeconds(manualPatternInterval);
-        }
-    }
-
-    IEnumerator AutoSpawnRun3Pattern()
-    {
-        while (true)
-        {
-            currentPatternType = PatternType_st2.Run3;
-
-            // 큐 사운드
-            if (cueSource != null && run3Cue != null)
-                cueSource.PlayOneShot(run3Cue);
-
-            yield return new WaitForSeconds(0.35f);
-
-            // 순차 스폰
-            for (int i = 0; i < 3; i++)
-            {
-                StartCoroutine(SpawnSingleFish(i));
-                yield return new WaitForSeconds(runStepInterval);
-            }
-
-            yield return new WaitForSeconds(manualPatternInterval);
-        }
-    }
-
-    IEnumerator SpawnSingleFish(int moldIndex)
-    {
-        if (tutorialMolds[moldIndex] == null) yield break;
-
-        // Telegraph 사운드
-        if (telegraphSource != null && telegraphClip != null)
-        {
-            telegraphSource.PlayOneShot(telegraphClip);
-            OnTelegraphPlayed();
-        }
-
-        // Telegraph → Pop 대기
-        yield return new WaitForSeconds(telegraphToPopDelay);
-
-        // Pop 사운드 & 물고기 스폰
-        if (popSource != null && popClip != null)
-        {
-            popSource.PlayOneShot(popClip);
-        }
-
-        double popTime = AudioSettings.dspTime;
-        tutorialMolds[moldIndex].SpawnFish(popTime);
-        OnPopPlayed();
-    }
-
-    // ========================================
-    // 손 입력 처리 (메인 CatchInput과 독립)
-    // ========================================
-
-    void ProcessHandInput(TutorialHandSensor_st2 sensor, OVRInput.Controller controller)
-    {
-        if (sensor == null) return;
-        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) return;
-
-        var target = sensor.GetCurrentTarget();
-        if (target == null) return;
-        if (target.isResolved) return;
-
-        // 판정 수행
-        double catchTime = AudioSettings.dspTime;
-        float delta = Mathf.Abs((float)(catchTime - target.popTime));
-
-        JudgeResult_st2 result;
-        if (delta <= perfectWindow)
-            result = JudgeResult_st2.Perfect;
-        else if (delta <= goodWindow)
-            result = JudgeResult_st2.Good;
-        else
-            result = JudgeResult_st2.Miss;
-
-        // ✅ 먼저 resolved 플래그 설정 (중복 처리 방지)
-        target.isResolved = true;
-
-        // 성공 시 처리
-        if (result != JudgeResult_st2.Miss)
-        {
-            target.OnCaught();
-
-            // 손으로 스냅
-            target.transform.position = sensor.transform.position;
-            target.transform.SetParent(sensor.transform, true);
-
-            // ✅ 1프레임 후 반환 → ✅ 0.2초 홀드 후 반환
-            StartCoroutine(SnapHoldThenRelease(target));
-
-            OnCatchSuccess(result);
-        }
-        else
-        {
-            OnCatchMiss();
-        }
-    }
-
-    IEnumerator SnapHoldThenRelease(TutorialFishToken_st2 fish)
-    {
+        // 3) 홀드
         yield return new WaitForSeconds(snapHoldSeconds);
 
-        // 이미 정리됐으면 스킵
-        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
-            yield break;
+        // 4) 페이드(재질 컬러 프로퍼티가 있을 때만)
+        yield return FadeOutRenderers(fish.gameObject, fadeSeconds);
 
-        // 손에 부모로 남는 거 방지용: 떼고 반환
-        fish.transform.SetParent(null, true);
-
-        if (fish.ownerMold != null)
-            fish.ownerMold.ReleaseFish(fish);
+        // 5) 소비 요청 발행 (BagPolicy는 여기(Success) 타이밍에 맞춰 담기)
+        if (hub != null) hub.PublishFishConsumeRequested(fish, FishConsumeReason_st2.Success);
     }
 
-    // ========================================
-    // 진행 이벤트 처리
-    // ========================================
-
-    void OnTelegraphPlayed()
+    private static void SafeInvokeNoArg(object target, string methodName)
     {
-        if (currentStage == TutorialStage.T0_Telegraph)
+        try
         {
-            telegraphCount++;
-            UpdateProgress($"Progress: {telegraphCount}/2");
+            var mi = target.GetType().GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            mi?.Invoke(target, null);
+        }
+        catch { /* ignore */ }
+    }
 
-            if (telegraphCount >= 2)
+    private static IEnumerator FadeOutRenderers(GameObject root, float duration)
+    {
+        if (root == null) yield break;
+        if (duration <= 0f) yield break;
+
+        var renderers = root.GetComponentsInChildren<Renderer>(true);
+        if (renderers == null || renderers.Length == 0) yield break;
+
+        var mpb = new MaterialPropertyBlock();
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float a = Mathf.Clamp01(1f - (t / duration));
+
+            foreach (var r in renderers)
             {
-                // ✅ 스테이지 완료 메시지 표시 후 전환
-                ShowStageComplete("Telegraph Stage Complete!");
-                StartCoroutine(AdvanceStageDelayed());
-            }
-        }
-    }
+                if (r == null) continue;
 
-    void OnPopPlayed()
-    {
-        if (currentStage == TutorialStage.T1_Pop)
-        {
-            popCount++;
-            UpdateProgress($"Progress: {popCount}/2");
+                // _BaseColor 또는 _Color 지원
+                r.GetPropertyBlock(mpb);
 
-            if (popCount >= 2)
-            {
-                ShowStageComplete("Pop Stage Complete!");
-                StartCoroutine(AdvanceStageDelayed());
-            }
-        }
-    }
-
-    void OnCatchSuccess(JudgeResult_st2 result)
-    {
-        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
-        {
-            if (currentStage == TutorialStage.T2_Catch)
-            {
-                goodOrBetterCount++;
-                UpdateProgress($"Good+ Catches: {goodOrBetterCount}/2");
-
-                if (goodOrBetterCount >= 2)
-                    AdvanceStage();
-            }
-            else if (currentStage == TutorialStage.T4_Sync2 && currentPatternType == PatternType_st2.Sync2)
-            {
-                hasSuccessSync2 = true; // ✅ 플래그 설정
-                sync2SuccessCount++;
-                UpdateProgress($"Sync2 Success: {sync2SuccessCount}/1");
-
-                if (sync2SuccessCount >= 1)
-                    AdvanceStage();
-            }
-            else if (currentStage == TutorialStage.T5_Run3 && currentPatternType == PatternType_st2.Run3)
-            {
-                hasSuccessRun3 = true; // ✅ 플래그 설정
-                run3SuccessCount++;
-                UpdateProgress($"Run3 Success: {run3SuccessCount}/1");
-
-                if (run3SuccessCount >= 1)
-                    AdvanceStage();
-            }
-        }
-    }
-
-    void OnCatchMiss()
-    {
-        // Miss는 진행에 영향 없음
-    }
-
-    void UpdateProgress(string text)
-    {
-        if (progressText != null)
-            progressText.text = text;
-    }
-
-    // ✅ 추가: 스테이지 완료 메시지 표시
-    void ShowStageComplete(string message)
-    {
-        if (!showStageCompleteMessage || stageCompleteText == null)
-            return;
-
-        stageCompleteText.text = message;
-        stageCompleteText.gameObject.SetActive(true);
-    }
-
-    // ✅ 추가: 완료 메시지 숨기기
-    void HideStageComplete()
-    {
-        if (stageCompleteText != null)
-            stageCompleteText.gameObject.SetActive(false);
-    }
-
-    // ✅ 추가: 지연 후 스테이지 전환
-    IEnumerator AdvanceStageDelayed()
-    {
-        // 자동 패턴 일시 중지
-        if (autoPatternRoutine != null)
-        {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
-
-        // 완료 메시지 표시 시간
-        yield return new WaitForSeconds(stageTransitionDelay);
-
-        // 완료 메시지 숨기기
-        HideStageComplete();
-
-        // 다음 스테이지로 전환
-        AdvanceStage();
-    }
-
-    void AdvanceStage()
-    {
-        StartStage(currentStage + 1);
-    }
-
-    // ========================================
-    // 디버그/HUD용 메서드
-    // ========================================
-
-    /// <summary>
-    /// DebugHUD에서 현재 진행 상황을 표시하기 위한 메서드
-    /// </summary>
-    public string GetCurrentStageInfo()
-    {
-        switch (currentStage)
-        {
-            case TutorialStage.T0_Telegraph:
-                return $"Telegraph {telegraphCount}/2";
-            case TutorialStage.T1_Pop:
-                return $"Pop {popCount}/2";
-            case TutorialStage.T2_Catch:
-                return $"Catch {goodOrBetterCount}/2";
-            case TutorialStage.T4_Sync2:
-                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
-            case TutorialStage.T5_Run3:
-                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
-            case TutorialStage.Complete:
-                return "Complete";
-            case TutorialStage.WaitBeforeMain:
-                return "Wait...";
-            default:
-                return "Unknown";
-        }
-    }
-
-    // ========================================
-    // 튜토리얼 종료 및 정리
-    // ========================================
-
-    IEnumerator WaitThenStartMain()
-    {
-        // 자동 패턴 중지
-        if (autoPatternRoutine != null)
-        {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
-
-        // ✅ BGM 중지
-        StopTutorialBGM();
-
-        // ✅ 모든 튜토리얼 물고기 정리
-        CleanupAllTutorialFish();
-
-        // 3초 대기
-        yield return new WaitForSeconds(waitBeforeMainDuration);
-
-        // 튜토리얼 완료 플래그
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
-        PlayerPrefs.Save();
-
-        // 튜토리얼 UI 비활성화
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(false);
-
-        // ✅ 튜토리얼 전체 비활성화 (GameFlowController가 처리)
-        gameObject.SetActive(false);
-
-        // 메인 게임 시작
-        GameFlowController_st2.Instance?.TransitionToPlaying();
-    }
-
-    void SkipTutorial()
-    {
-        // 모든 코루틴 중지
-        StopAllCoroutines();
-
-        // ✅ BGM 중지
-        StopTutorialBGM();
-
-        // ✅ 모든 튜토리얼 물고기 정리
-        CleanupAllTutorialFish();
-
-        // 플래그 저장
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
-        PlayerPrefs.Save();
-
-        // UI 비활성화
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(false);
-
-        // ✅ 튜토리얼 전체 비활성화
-        gameObject.SetActive(false);
-
-        // 메인 게임 시작
-        GameFlowController_st2.Instance?.TransitionToPlaying();
-    }
-
-    // ✅ 추가: 모든 튜토리얼 물고기 정리
-    void CleanupAllTutorialFish()
-    {
-        // 각 몰드의 활성 물고기 모두 제거
-        foreach (var mold in tutorialMolds)
-        {
-            if (mold != null)
-            {
-                mold.CleanupAllFish();
-            }
-        }
-
-        // 손에 붙은 물고기도 정리 (부모 체크)
-        if (leftSensor != null)
-        {
-            CleanupHandAttachedFish(leftSensor.transform);
-        }
-
-        if (rightSensor != null)
-        {
-            CleanupHandAttachedFish(rightSensor.transform);
-        }
-    }
-
-    // ✅ 추가: 손에 붙은 물고기 강제 제거
-    void CleanupHandAttachedFish(Transform handTransform)
-    {
-        // 손의 자식으로 있는 모든 TutorialFishToken 찾아서 제거
-        var attachedFish = handTransform.GetComponentsInChildren<TutorialFishToken_st2>();
-        foreach (var fish in attachedFish)
-        {
-            // ✅ 안전 체크
-            if (fish != null && fish.gameObject != null && fish.gameObject.activeInHierarchy)
-            {
-                if (fish.ownerMold != null)
+                if (r.sharedMaterial != null)
                 {
-                    fish.ownerMold.ReleaseFish(fish);
+                    if (r.sharedMaterial.HasProperty("_BaseColor"))
+                    {
+                        Color c = r.sharedMaterial.GetColor("_BaseColor");
+                        c.a *= a;
+                        mpb.SetColor("_BaseColor", c);
+                        r.SetPropertyBlock(mpb);
+                    }
+                    else if (r.sharedMaterial.HasProperty("_Color"))
+                    {
+                        Color c = r.sharedMaterial.GetColor("_Color");
+                        c.a *= a;
+                        mpb.SetColor("_Color", c);
+                        r.SetPropertyBlock(mpb);
+                    }
                 }
             }
+            yield return null;
         }
     }
 }
 
---------------------------------------------------
-
---- FILENAME: TutorialFishToken_st2.cs (Assets/3_Stage2/Demo/Scripts/TutorialFishToken_st2.cs) ---
-using UnityEngine;
-
-/// <summary>
-/// Ʃ 丮                ū -      FishCatchToken       
-/// </summary>
-public class TutorialFishToken_st2 : MonoBehaviour
-{
-    [Header("           ")]
-    public double popTime;
-    public bool isResolved = false;
-    public bool isCaught = false;
-
-    [Header("    ")]
-    private Rigidbody rb;
-    private bool hasJumped = false;
-
-    //         
-    public TutorialMoldController_st2 ownerMold;
-
-    //           (  Ÿ ӿ      )
-    private float jumpHeight;
-    private float forwardDistance;
-    private float gravity;
-    private LayerMask groundLayer;
-
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-        }
-
-        rb.useGravity = true;
-        rb.isKinematic = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-    }
-
-    public void Initialize(double popDspTime, Transform mold, TutorialMoldController_st2 owner,
-                           float jh, float fd, float grav, LayerMask gl)
-    {
-        popTime = popDspTime;
-        isResolved = false;
-        isCaught = false;
-        ownerMold = owner;
-        hasJumped = false;
-
-        jumpHeight = jh;
-        forwardDistance = fd;
-        gravity = grav;
-        groundLayer = gl;
-
-        transform.position = mold.position;
-        transform.localScale = Vector3.one * 100.0f;
-
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.useGravity = true;
-        rb.isKinematic = false;
-
-        PerformJump();
-
-        //  ÷  ̾           
-        Transform playerCam = Camera.main.transform;
-        Vector3 toPlayer = (playerCam.position - transform.position).normalized;
-        transform.right = toPlayer;
-    }
-
-    void PerformJump()
-    {
-        if (hasJumped) return;
-
-        float jumpVelocityY = Mathf.Sqrt(2f * gravity * jumpHeight);
-        float flightTime = 2f * jumpVelocityY / gravity;
-        float forwardVelocityZ = forwardDistance / flightTime;
-
-        Vector3 velocity = new Vector3(0, jumpVelocityY, -forwardVelocityZ);
-        rb.velocity = velocity;
-
-        Physics.gravity = new Vector3(0, -gravity, 0);
-        hasJumped = true;
-    }
-
-    public void UpdateMovement()
-    {
-        // Rigidbody    ڵ           ó  
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        //               Ǯ     ȯ
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
-        {
-            if (ownerMold != null)
-            {
-                ownerMold.ReleaseFish(this);
-            }
-        }
-    }
-
-    public void OnCaught()
-    {
-        isCaught = true;
-
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-    }
-
-    public void OnReturnToPool()
-    {
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-        }
-        hasJumped = false;
-        isResolved = false;
-        isCaught = false;
-    }
-}
 
 --------------------------------------------------
 
---- FILENAME: TutorialHandSensor_st2.cs (Assets/3_Stage2/Demo/Scripts/TutorialHandSensor_st2.cs) ---
-using UnityEngine;
-
-/// <summary>
-/// 튜토리얼 전용 손 센서 - 메인 HandCatchSensor와 독립
-/// </summary>
-public class TutorialHandSensor_st2 : MonoBehaviour
-{
-    [Header("설정")]
-    public OVRInput.Controller handController;
-    public LayerMask fishLayer;
-    public float raycastLength = 0.15f;
-
-    [Header("LineRenderer")]
-    public LineRenderer lineRenderer;
-    public bool showLineRenderer = true;
-
-    [Header("라인 색상")]
-    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
-    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);
-    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f);
-
-    [Header("라인 스타일")]
-    public float lineWidth = 0.002f;
-
-    private TutorialFishToken_st2 currentTarget;
-    private RaycastHit[] hits = new RaycastHit[10];
-    private Transform cachedTransform;
-
-    void Awake()
-    {
-        cachedTransform = transform;
-        SetupLineRenderer();
-    }
-
-    public void Initialize(OVRInput.Controller controller)
-    {
-        handController = controller;
-
-        // Awake에서 이미 초기화되었지만 안전하게 재확인
-        if (cachedTransform == null)
-            cachedTransform = transform;
-
-        SetupLineRenderer();
-    }
-
-    void SetupLineRenderer()
-    {
-        if (lineRenderer == null)
-        {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-        }
-
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
-        lineRenderer.positionCount = 2;
-        lineRenderer.useWorldSpace = true;
-
-        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
-        {
-            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        }
-
-        lineRenderer.startColor = noTargetColor;
-        lineRenderer.endColor = noTargetColor;
-        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        lineRenderer.receiveShadows = false;
-    }
-
-    void Update()
-    {
-        // ✅ Null 체크 추가
-        if (cachedTransform == null)
-            cachedTransform = transform;
-
-        UpdateCurrentTarget();
-        UpdateLineRenderer();
-    }
-
-    void UpdateCurrentTarget()
-    {
-        // ✅ 안전 체크
-        if (cachedTransform == null) return;
-
-        Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
-        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
-
-        TutorialFishToken_st2 closestFish = null;
-        float closestDistance = float.MaxValue;
-
-        for (int i = 0; i < hitCount; i++)
-        {
-            var fish = hits[i].collider.GetComponent<TutorialFishToken_st2>();
-            if (fish == null) continue;
-            if (fish.isResolved) continue;
-
-            float distance = hits[i].distance;
-
-            // 히스테리시스
-            if (currentTarget != null)
-            {
-                if (fish == currentTarget)
-                {
-                    closestFish = fish;
-                    break;
-                }
-
-                if (distance < closestDistance - 0.03f)
-                {
-                    closestDistance = distance;
-                    closestFish = fish;
-                }
-            }
-            else
-            {
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestFish = fish;
-                }
-            }
-        }
-
-        currentTarget = closestFish;
-    }
-
-    void UpdateLineRenderer()
-    {
-        if (lineRenderer == null || !showLineRenderer)
-            return;
-
-        // ✅ 안전 체크
-        if (cachedTransform == null) return;
-
-        lineRenderer.enabled = true;
-
-        Vector3 startPos = cachedTransform.position;
-        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
-
-        if (currentTarget != null)
-        {
-            endPos = currentTarget.transform.position;
-        }
-
-        lineRenderer.SetPosition(0, startPos);
-        lineRenderer.SetPosition(1, endPos);
-
-        Color lineColor = GetLineColor();
-        lineRenderer.startColor = lineColor;
-        lineRenderer.endColor = lineColor;
-    }
-
-    Color GetLineColor()
-    {
-        if (currentTarget == null)
-            return noTargetColor;
-        else if (currentTarget.isResolved)
-            return resolvedTargetColor;
-        else
-            return hasTargetColor;
-    }
-
-    public TutorialFishToken_st2 GetCurrentTarget()
-    {
-        return currentTarget;
-    }
-
-    public void SetLineRendererVisible(bool visible)
-    {
-        showLineRenderer = visible;
-        if (lineRenderer != null)
-            lineRenderer.enabled = visible;
-    }
-
-    // ✅ 추가: 튜토리얼 종료 시 정리
-    void OnDisable()
-    {
-        currentTarget = null;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = false;
-        }
-    }
-}
-
---------------------------------------------------
-
---- FILENAME: TutorialManager_st2.cs (Assets/3_Stage2/Demo/Scripts/TutorialManager_st2.cs) ---
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+--- FILENAME: EconomyListener_st2.cs (Assets/3_Stage2/Demo/Scripts_/EconomyListener_st2.cs) ---
+using System;
+using System.Reflection;
 using UnityEngine;
 using static GameState_st2;
 
-public class TutorialManager_st2 : MonoBehaviour
+public class EconomyListener_st2 : MonoBehaviour
 {
-    public enum TutorialStage
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private EconomySystem_st2 economy;
+
+    public void Construct(Stage2EventHub_st2 eventHub, EconomySystem_st2 eco)
     {
-        Telegraph,
-        Pop,
-        Catch,
-        BagSwap,
-        Sync2Pattern,
-        Run3Pattern,
-        Complete
+        hub = eventHub;
+        economy = eco;
     }
 
-    [Header("현재 상태")]
-    public TutorialStage currentStage = TutorialStage.Telegraph;
-
-    private int telegraphCount = 0;
-    private int popCount = 0;
-    private int goodOrBetterCount = 0; // ✅ 수정: Good 이상만 카운트
-    private bool hasSeenBagSwap = false;
-    private bool hasSuccessSync2 = false;
-    private bool hasSuccessRun3 = false;
-
-    [Header("UI")]
-    public TextMeshProUGUI instructionText;
-    public TextMeshProUGUI progressText;
-    public TextMeshProUGUI skipText;
-
-    private PatternType_st2 currentPatternType;
-
-    void Start()
+    private void OnEnable()
     {
-        skipText.text = "[Press A to Skip]";
-        ShowStageInstruction(currentStage);
+        if (hub != null) hub.JudgeResolved += OnJudgeResolved;
     }
 
-    void Update()
+    private void OnDisable()
     {
-        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Tutorial) return;
-
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
-        {
-            SkipTutorial();
-            return;
-        }
-
-        CheckStageProgress();
+        if (hub != null) hub.JudgeResolved -= OnJudgeResolved;
     }
 
-    void CheckStageProgress()
+    private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
     {
-        switch (currentStage)
+        if (economy == null) return;
+
+        // ApplyJudgeResult(result) 호출 (reflection)
+        try
         {
-            case TutorialStage.Telegraph:
-                if (telegraphCount >= 2)
-                    AdvanceToNextStage();
-                break;
+            var mi = economy.GetType().GetMethod("ApplyJudgeResult",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-            case TutorialStage.Pop:
-                if (popCount >= 2)
-                    AdvanceToNextStage();
-                break;
-
-            case TutorialStage.Catch:
-                // ✅ 수정: Good 이상 2회 요구
-                if (goodOrBetterCount >= 2)
-                    AdvanceToNextStage();
-                break;
-
-            case TutorialStage.BagSwap:
-                if (hasSeenBagSwap)
-                    AdvanceToNextStage();
-                break;
-
-            case TutorialStage.Sync2Pattern:
-                if (hasSuccessSync2)
-                    AdvanceToNextStage();
-                break;
-
-            case TutorialStage.Run3Pattern:
-                if (hasSuccessRun3)
-                    AdvanceToNextStage();
-                break;
-        }
-    }
-
-    void AdvanceToNextStage()
-    {
-        currentStage++;
-
-        if (currentStage == TutorialStage.Complete)
-        {
-            CompleteTutorial();
-        }
-        else
-        {
-            ShowStageInstruction(currentStage);
-        }
-    }
-
-    void ShowStageInstruction(TutorialStage stage)
-    {
-        switch (stage)
-        {
-            case TutorialStage.Telegraph:
-                instructionText.text = "Listen to the 'Telegraph' sound!";
-                progressText.text = $"Progress: {telegraphCount}/2";
-                break;
-
-            case TutorialStage.Pop:
-                instructionText.text = "Watch the fish 'Pop' out!";
-                progressText.text = $"Progress: {popCount}/2";
-                break;
-
-            case TutorialStage.Catch:
-                // ✅ 수정: Good 이상 2회 요구 안내
-                instructionText.text = "Catch fish with Good or Perfect!";
-                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
-                break;
-
-            case TutorialStage.BagSwap:
-                instructionText.text = "Collect 3 fish to swap bag!";
-                progressText.text = $"Catches needed for swap";
-                break;
-
-            case TutorialStage.Sync2Pattern:
-                instructionText.text = "Try Sync2 pattern! (땡땡)";
-                progressText.text = "Catch at least 1!";
-                break;
-
-            case TutorialStage.Run3Pattern:
-                instructionText.text = "Try Run3 pattern! (딸랑)";
-                progressText.text = "Catch at least 1!";
-                break;
-        }
-    }
-
-    public void OnTelegraphPlayed()
-    {
-        if (currentStage == TutorialStage.Telegraph)
-        {
-            telegraphCount++;
-            progressText.text = $"Progress: {telegraphCount}/2";
-        }
-    }
-
-    public void OnPopPlayed()
-    {
-        if (currentStage == TutorialStage.Pop)
-        {
-            popCount++;
-            progressText.text = $"Progress: {popCount}/2";
-        }
-    }
-
-    public void OnCatchSuccess(JudgeResult_st2 result)
-    {
-        // ✅ 수정: Good 이상만 처리
-        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
-        {
-            if (currentStage == TutorialStage.Catch)
+            if (mi != null)
             {
-                goodOrBetterCount++;
-                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
-            }
-            else if (currentStage == TutorialStage.BagSwap)
-            {
-                // BagSwap은 OnBagSwapped 이벤트로 처리
-            }
-            else if (currentStage == TutorialStage.Sync2Pattern && currentPatternType == PatternType_st2.Sync2)
-            {
-                hasSuccessSync2 = true;
-                progressText.text = "Sync2 Success!";
-            }
-            else if (currentStage == TutorialStage.Run3Pattern && currentPatternType == PatternType_st2.Run3)
-            {
-                hasSuccessRun3 = true;
-                progressText.text = "Run3 Success!";
+                if (mi.GetParameters().Length == 1) mi.Invoke(economy, new object[] { result });
+                else mi.Invoke(economy, null);
             }
         }
-    }
-
-    public void OnBagSwapped()
-    {
-        if (currentStage == TutorialStage.BagSwap)
+        catch (Exception e)
         {
-            hasSeenBagSwap = true;
-            progressText.text = "Bag Swapped!";
-        }
-    }
-
-    public void OnPatternQueued(PatternType_st2 type)
-    {
-        currentPatternType = type;
-    }
-
-    void SkipTutorial()
-    {
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
-        PlayerPrefs.Save();
-
-        GameFlowController_st2.Instance.TransitionToPlaying();
-    }
-
-    void CompleteTutorial()
-    {
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
-        PlayerPrefs.Save();
-
-        GameFlowController_st2.Instance.TransitionToPlaying();
-    }
-
-    // ✅ 추가: HUD에서 현재 진행 상황 문자열로 제공
-    public string GetCurrentStageInfo()
-    {
-        switch (currentStage)
-        {
-            case TutorialStage.Telegraph:
-                return $"Telegraph {telegraphCount}/2";
-            case TutorialStage.Pop:
-                return $"Pop {popCount}/2";
-            case TutorialStage.Catch:
-                return $"Catch {goodOrBetterCount}/2";
-            case TutorialStage.BagSwap:
-                return "BagSwap Wait";
-            case TutorialStage.Sync2Pattern:
-                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
-            case TutorialStage.Run3Pattern:
-                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
-            case TutorialStage.Complete:
-                return "Complete";
-            default:
-                return "Unknown";
+            Debug.LogError($"[EconomyListener_st2] ApplyJudgeResult invoke failed: {e.Message}");
         }
     }
 }
@@ -11857,119 +10903,535 @@ public class TutorialManager_st2 : MonoBehaviour
 
 --------------------------------------------------
 
---- FILENAME: TutorialMoldController_st2.cs (Assets/3_Stage2/Demo/Scripts/TutorialMoldController_st2.cs) ---
-using System.Collections.Generic;
+--- FILENAME: FishConsumer_st2.cs (Assets/3_Stage2/Demo/Scripts_/FishConsumer_st2.cs) ---
+using System;
+using System.Reflection;
 using UnityEngine;
-using UnityEngine.Pool;
 
-/// <summary>
-/// 튜토리얼 전용 몰드 - 메인 MoldController와 독립
-/// </summary>
-public class TutorialMoldController_st2 : MonoBehaviour
+public class FishConsumer_st2 : MonoBehaviour
 {
-    [Header("프리팹")]
-    public GameObject tutorialFishPrefab;
+    [SerializeField] private Stage2EventHub_st2 hub;
 
-    [Header("애니메이션")]
-    public Animator moldAnimator;
-    public string popAnimationTrigger = "Pop";
-    public float popAnimationLeadTime = 0.2f;
-
-    [Header("점프 설정")]
-    public float jumpHeight = 2.5f;
-    public float forwardDistance = 2.0f;
-    public float gravity = 9.81f;
-    public LayerMask groundLayer;
-
-    private ObjectPool<TutorialFishToken_st2> fishPool;
-    private List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
-
-    void Awake()
+    public void Construct(Stage2EventHub_st2 eventHub)
     {
-        InitializePool();
+        hub = eventHub;
     }
 
-    void InitializePool()
+    private void OnEnable()
     {
-        fishPool = new ObjectPool<TutorialFishToken_st2>(
-            createFunc: () => {
-                var obj = Instantiate(tutorialFishPrefab, transform);
-                var fish = obj.GetComponent<TutorialFishToken_st2>();
-                if (fish == null)
-                    fish = obj.AddComponent<TutorialFishToken_st2>();
-                return fish;
-            },
-            actionOnGet: (fish) => {
-                fish.gameObject.SetActive(true);
-            },
-            actionOnRelease: (fish) => {
-                fish.OnReturnToPool();
-                fish.transform.SetParent(transform);
-                fish.transform.localPosition = Vector3.zero;
-                fish.transform.localRotation = Quaternion.identity;
-                fish.transform.localScale = Vector3.one;
-                fish.gameObject.SetActive(false);
-                activeFish.Remove(fish);
-            },
-            actionOnDestroy: (fish) => {
-                if (fish != null && fish.gameObject != null)
-                    Destroy(fish.gameObject);
-            },
-            defaultCapacity: 5
-        );
+        if (hub != null) hub.FishConsumeRequested += OnConsume;
     }
 
-    public void SpawnFish(double popTime)
+    private void OnDisable()
     {
-        // Pop 애니메이션 (미리 시작)
-        if (moldAnimator != null)
+        if (hub != null) hub.FishConsumeRequested -= OnConsume;
+    }
+
+    private void OnConsume(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (fish == null) return;
+
+        // ✅ 프로젝트에 이미 풀 반환 함수가 있으면 그걸 우선 호출
+        if (TryInvoke(fish, "ConsumeToPool", reason)) return;
+        if (TryInvoke(fish, "ReturnToPool")) return;
+        if (TryInvoke(fish, "Release")) return;
+
+        // fallback
+        fish.gameObject.SetActive(false);
+    }
+
+    private static bool TryInvoke(object target, string methodName, object arg = null)
+    {
+        try
         {
-            moldAnimator.SetTrigger(popAnimationTrigger);
-        }
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var t = target.GetType();
+            var mi = t.GetMethod(methodName, flags);
+            if (mi == null) return false;
 
-        // Fish 생성
-        var fish = fishPool.Get();
-        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
-        activeFish.Add(fish);
-    }
-
-    public void ReleaseFish(TutorialFishToken_st2 fish)
-    {
-        if (fish != null)
-        {
-            fishPool.Release(fish);
-        }
-    }
-
-    void Update()
-    {
-        // 활성 fish 업데이트
-        for (int i = activeFish.Count - 1; i >= 0; i--)
-        {
-            if (activeFish[i] != null && !activeFish[i].isResolved)
+            var ps = mi.GetParameters();
+            if (ps.Length == 0)
             {
-                activeFish[i].UpdateMovement();
+                mi.Invoke(target, null);
+                return true;
+            }
+            if (ps.Length == 1)
+            {
+                // reason 타입이 다를 수도 있어서 변환 시도
+                object param = arg;
+                if (arg != null && !ps[0].ParameterType.IsInstanceOfType(arg))
+                {
+                    // enum이면 name 매칭 시도
+                    if (ps[0].ParameterType.IsEnum)
+                        param = Enum.Parse(ps[0].ParameterType, arg.ToString(), true);
+                    else
+                        return false;
+                }
+                mi.Invoke(target, new object[] { param });
+                return true;
             }
         }
-    }
-
-    void OnDisable()
-    {
-        // 비활성화 시 모든 fish 정리
-        CleanupAllFish();
-    }
-
-    // ✅ 추가: 모든 fish 강제 정리
-    public void CleanupAllFish()
-    {
-        foreach (var fish in activeFish.ToArray())
-        {
-            if (fish != null)
-                fishPool.Release(fish);
-        }
-        activeFish.Clear();
+        catch { /* ignore */ }
+        return false;
     }
 }
+
+
+--------------------------------------------------
+
+--- FILENAME: GoraniDanceSpeedController_st2.cs (Assets/3_Stage2/Demo/Scripts_/GoraniDanceSpeedController_st2.cs) ---
+using System.Collections.Generic;
+using UnityEngine;
+using static GameState_st2;
+
+public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private Transform goraniRoot;
+    [SerializeField] private Animator[] goraniAnimators;
+
+    [Header("Speed Range")]
+    [SerializeField, Range(0f, 20f)] private float minSpeed = 0.4f;
+    [SerializeField, Range(0f, 20f)] private float maxSpeed = 20.0f;
+    [SerializeField, Range(0f, 20f)] private float startSpeed = 1.0f;
+
+    [Header("Smoothing")]
+    [SerializeField, Range(0f, 30f)] private float smooth = 8f;
+
+    [Header("Success Gain (Add only)")]
+    [SerializeField] private float goodBaseGain = 0.18f;
+    [SerializeField] private float perfectBaseGain = 0.28f;
+
+    [Tooltip("연속 성공 가중치(선형 더하기). 예: 3연속이면 base + bonus*(3-1)")]
+    [SerializeField] private float goodStreakBonus = 0.07f;
+    [SerializeField] private float perfectStreakBonus = 0.10f;
+
+    [Header("Miss Penalty (Add only)")]
+    [SerializeField] private float missBaseLoss = 0.22f;
+
+    [Tooltip("연속 미스 가중치(선형 더하기). 예: 4연속이면 base + bonus*(4-1)")]
+    [SerializeField] private float missStreakBonus = 0.12f;
+
+    [Header("Miss Source")]
+    [Tooltip("GroundMiss/Timeout도 미스로 속도 하락에 반영할지")]
+    [SerializeField] private bool countGroundMissAsMiss = true;
+
+    [Tooltip("성공한 fish는 이 시간 동안 GroundMiss/Timeout로 미스 처리하지 않음(중복 방지 핵심)")]
+    [SerializeField] private float ignoreGroundMissAfterSuccessSeconds = 10f;
+
+    [Header("Duplicate Guard")]
+    [SerializeField] private float judgedCacheSeconds = 0.8f;
+
+    [Header("Apply")]
+    [Tooltip("다른 스크립트가 speed=1 덮어써도 이기려면 TRUE")]
+    [SerializeField] private bool forceApplyInLateUpdate = true;
+
+    [Header("Debug (Read Only)")]
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private float targetSpeed;
+    [SerializeField] private int successStreak;
+    [SerializeField] private int missStreak;
+    [SerializeField] private int animatorCount;
+
+    // fish id -> last judge time(중복 방지)
+    private readonly Dictionary<int, float> _recentJudged = new();
+    // fish id -> last success time(성공 후 GroundMiss 무시)
+    private readonly Dictionary<int, float> _recentSuccess = new();
+    private readonly List<int> _removeKeys = new();
+
+    private void Reset()
+    {
+        if (!hub) hub = GetComponent<Stage2EventHub_st2>();
+        AutoCollectAnimators();
+    }
+
+    private void Awake()
+    {
+        if (!hub) hub = GetComponent<Stage2EventHub_st2>();
+        AutoCollectAnimators();
+
+        currentSpeed = ClampSpeed(startSpeed);
+        targetSpeed = currentSpeed;
+        ApplySpeed(currentSpeed);
+    }
+
+    private void OnEnable()
+    {
+        if (hub == null) return;
+        hub.JudgeResolved += OnJudgeResolved;
+        hub.FishConsumeRequested += OnFishConsumeRequested;
+    }
+
+    private void OnDisable()
+    {
+        if (hub == null) return;
+        hub.JudgeResolved -= OnJudgeResolved;
+        hub.FishConsumeRequested -= OnFishConsumeRequested;
+    }
+
+    private void Update()
+    {
+        CleanupDict(_recentJudged, judgedCacheSeconds);
+        CleanupDict(_recentSuccess, ignoreGroundMissAfterSuccessSeconds);
+
+        // ✅ 속도는 targetSpeed가 “유지”되고, currentSpeed가 부드럽게 따라감
+        float k = 1f - Mathf.Exp(-smooth * Time.deltaTime);
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, k);
+
+        if (!forceApplyInLateUpdate)
+            ApplySpeed(currentSpeed);
+
+        animatorCount = (goraniAnimators == null) ? 0 : goraniAnimators.Length;
+    }
+
+    private void LateUpdate()
+    {
+        if (forceApplyInLateUpdate)
+            ApplySpeed(currentSpeed);
+    }
+
+    private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
+        MarkRecent(_recentJudged, fish);
+
+        if (result == JudgeResult_st2.Perfect)
+        {
+            MarkRecent(_recentSuccess, fish);
+            ApplySuccess(isPerfect: true);
+        }
+        else if (result == JudgeResult_st2.Good)
+        {
+            MarkRecent(_recentSuccess, fish);
+            ApplySuccess(isPerfect: false);
+        }
+        else if (result == JudgeResult_st2.Miss)
+        {
+            ApplyMiss();
+        }
+    }
+
+    private void OnFishConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (!countGroundMissAsMiss) return;
+
+        if (reason != FishConsumeReason_st2.GroundMiss &&
+            reason != FishConsumeReason_st2.Timeout)
+            return;
+
+        // ✅ 방금 성공한 fish면 GroundMiss/Timeout은 무시
+        if (IsRecent(_recentSuccess, fish, ignoreGroundMissAfterSuccessSeconds))
+            return;
+
+        // ✅ JudgeResolved(Miss)와 겹치는 케이스 방지
+        if (IsRecent(_recentJudged, fish, judgedCacheSeconds))
+            return;
+
+        ApplyMiss();
+    }
+
+    // =========================
+    // ✅ Add-only 핵심 로직
+    // =========================
+    private void ApplySuccess(bool isPerfect)
+    {
+        successStreak++;
+        missStreak = 0;
+
+        int s = Mathf.Max(1, successStreak);
+        float baseGain = isPerfect ? perfectBaseGain : goodBaseGain;
+        float bonus = isPerfect ? perfectStreakBonus : goodStreakBonus;
+
+        // ✅ 선형 더하기: base + bonus*(streak-1)
+        float gain = baseGain + bonus * (s - 1);
+
+        targetSpeed = ClampSpeed(targetSpeed + gain);
+    }
+
+    private void ApplyMiss()
+    {
+        missStreak++;
+        successStreak = 0;
+
+        int m = Mathf.Max(1, missStreak);
+
+        // ✅ 선형 더하기: base + bonus*(streak-1)
+        float loss = missBaseLoss + missStreakBonus * (m - 1);
+
+        targetSpeed = ClampSpeed(targetSpeed - loss);
+    }
+
+    private float ClampSpeed(float s)
+    {
+        s = Mathf.Max(0f, s);
+        return Mathf.Clamp(s, minSpeed, maxSpeed);
+    }
+
+    private void AutoCollectAnimators()
+    {
+        if (goraniAnimators != null && goraniAnimators.Length > 0) return;
+        if (goraniRoot == null) return;
+
+        goraniAnimators = goraniRoot.GetComponentsInChildren<Animator>(true);
+    }
+
+    private void ApplySpeed(float speed)
+    {
+        if (goraniAnimators == null || goraniAnimators.Length == 0) return;
+
+        float clamped = ClampSpeed(speed);
+        for (int i = 0; i < goraniAnimators.Length; i++)
+        {
+            var a = goraniAnimators[i];
+            if (!a) continue;
+
+            // ✅ 너가 준 예시처럼 Animator.speed 직접 세팅
+            a.speed = clamped;
+        }
+    }
+
+    private static void MarkRecent(Dictionary<int, float> dict, FishCatchToken_st2 fish)
+    {
+        if (!fish) return;
+        dict[fish.GetInstanceID()] = Time.time;
+    }
+
+    private static bool IsRecent(Dictionary<int, float> dict, FishCatchToken_st2 fish, float window)
+    {
+        if (!fish) return false;
+        int id = fish.GetInstanceID();
+        return dict.TryGetValue(id, out float t) && (Time.time - t) <= window;
+    }
+
+    private void CleanupDict(Dictionary<int, float> dict, float window)
+    {
+        if (dict.Count == 0) return;
+
+        float now = Time.time;
+        _removeKeys.Clear();
+
+        foreach (var kv in dict)
+        {
+            if (now - kv.Value > window)
+                _removeKeys.Add(kv.Key);
+        }
+
+        for (int i = 0; i < _removeKeys.Count; i++)
+            dict.Remove(_removeKeys[i]);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: GroundMissReporter_st2.cs (Assets/3_Stage2/Demo/Scripts_/GroundMissReporter_st2.cs) ---
+using UnityEngine;
+
+public class GroundMissReporter_st2 : MonoBehaviour
+{
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private JudgeSystem_st2 judge;
+
+    [Header("Fish Layer Filter")]
+    public LayerMask fishLayer;
+
+    public void Construct(Stage2EventHub_st2 eventHub, JudgeSystem_st2 judgeSystem)
+    {
+        hub = eventHub;
+        judge = judgeSystem;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & fishLayer) == 0) return;
+
+        var fish = other.GetComponentInParent<FishCatchToken_st2>();
+        if (fish == null) return;
+
+        // ✅ 기존 ResolveMissFromGround 로직 유지
+        if (judge != null)
+            judge.ResolveMissFromGround(fish);
+
+        if (hub != null)
+            hub.PublishFishConsumeRequested(fish, FishConsumeReason_st2.GroundMiss);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: JudgeBridge_st2.cs (Assets/3_Stage2/Demo/Scripts_/JudgeBridge_st2.cs) ---
+using System;
+using System.Reflection;
+using UnityEngine;
+using static GameState_st2;
+
+public class JudgeBridge_st2 : MonoBehaviour
+{
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private JudgeSystem_st2 judge;
+
+    public void Construct(Stage2EventHub_st2 eventHub, JudgeSystem_st2 judgeSystem)
+    {
+        hub = eventHub;
+        judge = judgeSystem;
+    }
+
+    private void OnEnable()
+    {
+        if (hub != null) hub.CatchAttempted += OnCatchAttempted;
+    }
+
+    private void OnDisable()
+    {
+        if (hub != null) hub.CatchAttempted -= OnCatchAttempted;
+    }
+
+    private void OnCatchAttempted(FishCatchToken_st2 fish, OVRInput.Controller hand, double catchDspTime)
+    {
+        if (hub == null || judge == null || fish == null) return;
+
+        // PerformJudge(fish, catchDspTime) ȣ�� (�ñ״�ó�� �ٸ� �� �־� reflection ���)
+        JudgeResult_st2 result = JudgeResult_st2.Miss;
+
+        try
+        {
+            var mi = judge.GetType().GetMethod("PerformJudge",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (mi != null)
+            {
+                object r = mi.GetParameters().Length switch
+                {
+                    2 => mi.Invoke(judge, new object[] { fish, catchDspTime }),
+                    1 => mi.Invoke(judge, new object[] { fish }),
+                    _ => mi.Invoke(judge, null)
+                };
+
+                if (r is JudgeResult_st2 jr) result = jr;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[JudgeBridge_st2] PerformJudge invoke failed: {e.Message}");
+            result = JudgeResult_st2.Miss;
+        }
+
+        float delta = ComputeDeltaFromFishPopTime(fish, catchDspTime);
+        hub.PublishJudgeResolved(fish, result, hand, delta);
+    }
+
+    private float ComputeDeltaFromFishPopTime(FishCatchToken_st2 fish, double catchDspTime)
+    {
+        // popTime/popDspTime ���� �ʵ尡 ������ delta ���, ������ 0
+        try
+        {
+            var t = fish.GetType();
+            var f1 = t.GetField("popDspTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (f1 != null && f1.GetValue(fish) is double popDsp)
+                return (float)(catchDspTime - popDsp);
+
+            var f2 = t.GetField("popTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (f2 != null && f2.GetValue(fish) is double popTime)
+                return (float)(catchDspTime - popTime);
+
+            var p1 = t.GetProperty("popDspTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (p1 != null && p1.GetValue(fish) is double popDsp2)
+                return (float)(catchDspTime - popDsp2);
+
+            var p2 = t.GetProperty("popTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (p2 != null && p2.GetValue(fish) is double popTime2)
+                return (float)(catchDspTime - popTime2);
+        }
+        catch { /* ignore */ }
+
+        return 0f;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: MainInstaller_st2.cs (Assets/3_Stage2/Demo/Scripts_/MainInstaller_st2.cs) ---
+using UnityEngine;
+
+public class MainInstaller_st2 : MonoBehaviour
+{
+    [Header("Main Systems (MainRoot)")]
+    public CatchInput_st2[] catchInputs;
+    public JudgeSystem_st2 judgeSystem;
+    public EconomySystem_st2 economySystem;
+    public BagManager_st2 bagManager;
+
+    [Header("Optional")]
+    public GroundMissReporter_st2 groundMissReporter;
+
+    private void Awake()
+    {
+        // ✅ MainRoot 아래에만 허브가 존재해야 함
+        var hub = GetComponent<Stage2EventHub_st2>();
+        if (hub == null) hub = gameObject.AddComponent<Stage2EventHub_st2>();
+
+        // CatchInput은 허브만 받음
+        if (catchInputs != null)
+        {
+            foreach (var input in catchInputs)
+                if (input != null) input.Initialize(hub);
+        }
+
+        // 브리지/리스너/정책/연출/소비
+        var judgeBridge = gameObject.AddComponent<JudgeBridge_st2>();
+        judgeBridge.Construct(hub, judgeSystem);
+
+        var ecoListener = gameObject.AddComponent<EconomyListener_st2>();
+        ecoListener.Construct(hub, economySystem);
+
+        var vfx = gameObject.AddComponent<CatchVfx_st2>();
+        vfx.Construct(hub);
+
+        var bagPolicy = gameObject.AddComponent<BagPolicy_st2>();
+        bagPolicy.Construct(hub, bagManager);
+
+        var consumer = gameObject.AddComponent<FishConsumer_st2>();
+        consumer.Construct(hub);
+
+        if (groundMissReporter != null)
+            groundMissReporter.Construct(hub, judgeSystem);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: Stage2EventHub_st2.cs (Assets/3_Stage2/Demo/Scripts_/Stage2EventHub_st2.cs) ---
+using System;
+using UnityEngine;
+using static GameState_st2;
+
+public enum FishConsumeReason_st2
+{
+    Success,
+    GroundMiss,
+    Timeout,
+    Despawn
+}
+
+public class Stage2EventHub_st2 : MonoBehaviour
+{
+    public event Action<FishCatchToken_st2, OVRInput.Controller, double> CatchAttempted;
+    public event Action<FishCatchToken_st2, JudgeResult_st2, OVRInput.Controller, float> JudgeResolved;
+    public event Action<FishCatchToken_st2, FishConsumeReason_st2> FishConsumeRequested;
+
+    public void PublishCatchAttempted(FishCatchToken_st2 fish, OVRInput.Controller hand, double dspTime)
+        => CatchAttempted?.Invoke(fish, hand, dspTime);
+
+    public void PublishJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+        => JudgeResolved?.Invoke(fish, result, hand, delta);
+
+    public void PublishFishConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+        => FishConsumeRequested?.Invoke(fish, reason);
+}
+
 
 --------------------------------------------------
 
@@ -15016,6 +14478,1314 @@ namespace Oculus.Interaction.Samples
     }
 }
 
+
+--------------------------------------------------
+
+--- FILENAME: StandaloneTutorialController_st2.cs (Assets/3_Stage2/Demo/Scripts_/Tuto/StandaloneTutorialController_st2.cs) ---
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using static GameState_st2;
+
+/// <summary>
+/// 메인 게임 로직과 완전히 독립된 튜토리얼 컨트롤러
+/// 자체 패턴 생성, 자체 판정, 자체 UI를 가짐
+/// </summary>
+public class StandaloneTutorialController_st2 : MonoBehaviour
+{
+    public enum TutorialStage
+    {
+        T0_Telegraph,
+        T1_Pop,
+        T2_Catch,
+        T4_Sync2,
+        T5_Run3,
+        Complete,
+        WaitBeforeMain
+    }
+
+    [Header("현재 스테이지")]
+    public TutorialStage currentStage = TutorialStage.T0_Telegraph;
+
+    [Header("튜토리얼 전용 몰드 (메인과 별도)")]
+    public TutorialMoldController_st2[] tutorialMolds = new TutorialMoldController_st2[3];
+
+    [Header("튜토리얼 전용 손 센서")]
+    public TutorialHandSensor_st2 leftSensor;
+    public TutorialHandSensor_st2 rightSensor;
+
+    [Header("UI")]
+    public TextMeshProUGUI instructionText;
+    public TextMeshProUGUI progressText;
+    public TextMeshProUGUI skipText;
+    public TextMeshProUGUI stageCompleteText; // ✅ 추가: 스테이지 완료 메시지
+    public GameObject tutorialCanvas;
+
+    [Header("오디오")]
+    public AudioSource telegraphSource;
+    public AudioSource popSource;
+    public AudioSource cueSource;
+    public AudioClip telegraphClip;
+    public AudioClip popClip;
+    public AudioClip sync2Cue;
+    public AudioClip run3Cue;
+
+    [Header("튜토리얼 BGM")]
+    public AudioSource tutorialBGMSource; // ✅ 추가
+    public AudioClip tutorialBGMClip;     // ✅ 추가
+    public float bgmVolume = 0.5f;        // ✅ 추가
+
+    [Header("타이밍 설정")]
+    public float telegraphToPopDelay = 0.4f;
+    public float manualPatternInterval = 2.0f;
+    public float runStepInterval = 0.25f;
+    public float waitBeforeMainDuration = 3.0f;
+
+    [Header("스테이지 전환 설정")]
+    public float stageTransitionDelay = 2.0f; // ✅ 추가: 스테이지 완료 후 다음으로 넘어가기 전 대기
+    public bool showStageCompleteMessage = true; // ✅ 추가: 완료 메시지 표시 여부
+
+    [Header("판정 설정")]
+    public float perfectWindow = 0.04f;
+    public float goodWindow = 0.075f;
+    [Header("스냅 연출(튜토리얼)")]
+    public float snapHoldSeconds = 0.2f;
+
+    // 진행 카운터
+    private int telegraphCount = 0;
+    private int popCount = 0;
+    private int goodOrBetterCount = 0;
+    private int sync2SuccessCount = 0;
+    private int run3SuccessCount = 0;
+
+    // 현재 활성 패턴 타입
+    private PatternType_st2 currentPatternType = PatternType_st2.Normal;
+
+    // ✅ 추가: Sync2, Run3 성공 플래그
+    private bool hasSuccessSync2 = false;
+    private bool hasSuccessRun3 = false;
+
+    // 자동 패턴 생성 제어
+    private Coroutine autoPatternRoutine;
+
+    void Start()
+    {
+        InitializeUI();
+        InitializeSensors();
+        StartTutorialBGM(); // ✅ 추가
+        StartStage(currentStage);
+    }
+
+    void Update()
+    {
+        // A 버튼으로 스킵
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            SkipTutorial();
+        }
+
+        // 손 입력 처리 (메인과 독립)
+        ProcessHandInput(leftSensor, OVRInput.Controller.LTouch);
+        ProcessHandInput(rightSensor, OVRInput.Controller.RTouch);
+    }
+
+    void InitializeUI()
+    {
+        if (skipText != null)
+            skipText.text = "[Press A to Skip Tutorial]";
+
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(true);
+
+        // ✅ 완료 메시지 초기화
+        if (stageCompleteText != null)
+            stageCompleteText.gameObject.SetActive(false);
+    }
+
+    void InitializeSensors()
+    {
+        if (leftSensor != null)
+            leftSensor.Initialize(OVRInput.Controller.LTouch);
+
+        if (rightSensor != null)
+            rightSensor.Initialize(OVRInput.Controller.RTouch);
+    }
+
+    // ✅ 추가: 튜토리얼 BGM 시작
+    void StartTutorialBGM()
+    {
+        if (tutorialBGMSource != null && tutorialBGMClip != null)
+        {
+            tutorialBGMSource.clip = tutorialBGMClip;
+            tutorialBGMSource.loop = true;
+            tutorialBGMSource.volume = bgmVolume;
+            tutorialBGMSource.Play();
+            Debug.Log("✅ Tutorial BGM started");
+        }
+    }
+
+    // ✅ 추가: 튜토리얼 BGM 중지
+    void StopTutorialBGM()
+    {
+        if (tutorialBGMSource != null)
+        {
+            tutorialBGMSource.Stop();
+            Debug.Log("✅ Tutorial BGM stopped");
+        }
+    }
+
+    void StartStage(TutorialStage stage)
+    {
+        currentStage = stage;
+
+        // 이전 자동 패턴 중지
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        // ✅ 완료 메시지 숨기기
+        HideStageComplete();
+
+        // 스테이지별 시작 로직
+        switch (stage)
+        {
+            case TutorialStage.T0_Telegraph:
+                ShowInstruction("Listen to the 'Telegraph' sound!", $"Progress: {telegraphCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
+                break;
+
+            case TutorialStage.T1_Pop:
+                ShowInstruction("Watch the fish 'Pop' out!", $"Progress: {popCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
+                break;
+
+            case TutorialStage.T2_Catch:
+                ShowInstruction("Catch fish with Good or Perfect!", $"Good+ Catches: {goodOrBetterCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoSpawnNormalPattern());
+                break;
+
+            case TutorialStage.T4_Sync2:
+                ShowInstruction("Try Sync2 pattern! (땡땡)", "Catch at least 1 fish!");
+                autoPatternRoutine = StartCoroutine(AutoSpawnSync2Pattern());
+                break;
+
+            case TutorialStage.T5_Run3:
+                ShowInstruction("Try Run3 pattern! (딸랑)", "Catch at least 1 fish!");
+                autoPatternRoutine = StartCoroutine(AutoSpawnRun3Pattern());
+                break;
+
+            case TutorialStage.Complete:
+                ShowInstruction("Tutorial Complete!", "Starting main game...");
+                StartCoroutine(WaitThenStartMain());
+                break;
+        }
+    }
+
+    void ShowInstruction(string instruction, string progress)
+    {
+        if (instructionText != null)
+            instructionText.text = instruction;
+
+        if (progressText != null)
+            progressText.text = progress;
+    }
+
+    // ========================================
+    // 자동 패턴 생성 (메인 PatternDirector와 독립)
+    // ========================================
+
+    IEnumerator AutoSpawnNormalPattern()
+    {
+        while (true)
+        {
+            currentPatternType = PatternType_st2.Normal;
+
+            // 랜덤 몰드 선택
+            int moldIndex = Random.Range(0, 3);
+            yield return StartCoroutine(SpawnSingleFish(moldIndex));
+
+            // 다음 패턴까지 대기
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    IEnumerator AutoSpawnSync2Pattern()
+    {
+        while (true)
+        {
+            currentPatternType = PatternType_st2.Sync2;
+
+            // 2개 몰드 선택
+            int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
+            int[] selectedPair = pairs[Random.Range(0, 3)];
+
+            // 큐 사운드
+            if (cueSource != null && sync2Cue != null)
+                cueSource.PlayOneShot(sync2Cue);
+
+            yield return new WaitForSeconds(0.35f);
+
+            // 동시 스폰
+            foreach (int moldIndex in selectedPair)
+            {
+                StartCoroutine(SpawnSingleFish(moldIndex));
+            }
+
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    IEnumerator AutoSpawnRun3Pattern()
+    {
+        while (true)
+        {
+            currentPatternType = PatternType_st2.Run3;
+
+            // 큐 사운드
+            if (cueSource != null && run3Cue != null)
+                cueSource.PlayOneShot(run3Cue);
+
+            yield return new WaitForSeconds(0.35f);
+
+            // 순차 스폰
+            for (int i = 0; i < 3; i++)
+            {
+                StartCoroutine(SpawnSingleFish(i));
+                yield return new WaitForSeconds(runStepInterval);
+            }
+
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    IEnumerator SpawnSingleFish(int moldIndex)
+    {
+        if (tutorialMolds[moldIndex] == null) yield break;
+
+        // Telegraph 사운드
+        if (telegraphSource != null && telegraphClip != null)
+        {
+            telegraphSource.PlayOneShot(telegraphClip);
+            OnTelegraphPlayed();
+        }
+
+        // Telegraph → Pop 대기
+        yield return new WaitForSeconds(telegraphToPopDelay);
+
+        // Pop 사운드 & 물고기 스폰
+        if (popSource != null && popClip != null)
+        {
+            popSource.PlayOneShot(popClip);
+        }
+
+        double popTime = AudioSettings.dspTime;
+        tutorialMolds[moldIndex].SpawnFish(popTime);
+        OnPopPlayed();
+    }
+
+    // ========================================
+    // 손 입력 처리 (메인 CatchInput과 독립)
+    // ========================================
+
+    void ProcessHandInput(TutorialHandSensor_st2 sensor, OVRInput.Controller controller)
+    {
+        if (sensor == null) return;
+        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) return;
+
+        var target = sensor.GetCurrentTarget();
+        if (target == null) return;
+        if (target.isResolved) return;
+
+        // 판정 수행
+        double catchTime = AudioSettings.dspTime;
+        float delta = Mathf.Abs((float)(catchTime - target.popTime));
+
+        JudgeResult_st2 result;
+        if (delta <= perfectWindow)
+            result = JudgeResult_st2.Perfect;
+        else if (delta <= goodWindow)
+            result = JudgeResult_st2.Good;
+        else
+            result = JudgeResult_st2.Miss;
+
+        // ✅ 먼저 resolved 플래그 설정 (중복 처리 방지)
+        target.isResolved = true;
+
+        // 성공 시 처리
+        if (result != JudgeResult_st2.Miss)
+        {
+            target.OnCaught();
+
+            // 손으로 스냅
+            target.transform.position = sensor.transform.position;
+            target.transform.SetParent(sensor.transform, true);
+
+            // ✅ 1프레임 후 반환 → ✅ 0.2초 홀드 후 반환
+            StartCoroutine(SnapHoldThenRelease(target));
+
+            OnCatchSuccess(result);
+        }
+        else
+        {
+            OnCatchMiss();
+        }
+    }
+
+    IEnumerator SnapHoldThenRelease(TutorialFishToken_st2 fish)
+    {
+        yield return new WaitForSeconds(snapHoldSeconds);
+
+        // 이미 정리됐으면 스킵
+        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
+            yield break;
+
+        // 손에 부모로 남는 거 방지용: 떼고 반환
+        fish.transform.SetParent(null, true);
+
+        if (fish.ownerMold != null)
+            fish.ownerMold.ReleaseFish(fish);
+    }
+
+    // ========================================
+    // 진행 이벤트 처리
+    // ========================================
+
+    void OnTelegraphPlayed()
+    {
+        if (currentStage == TutorialStage.T0_Telegraph)
+        {
+            telegraphCount++;
+            UpdateProgress($"Progress: {telegraphCount}/2");
+
+            if (telegraphCount >= 2)
+            {
+                // ✅ 스테이지 완료 메시지 표시 후 전환
+                ShowStageComplete("Telegraph Stage Complete!");
+                StartCoroutine(AdvanceStageDelayed());
+            }
+        }
+    }
+
+    void OnPopPlayed()
+    {
+        if (currentStage == TutorialStage.T1_Pop)
+        {
+            popCount++;
+            UpdateProgress($"Progress: {popCount}/2");
+
+            if (popCount >= 2)
+            {
+                ShowStageComplete("Pop Stage Complete!");
+                StartCoroutine(AdvanceStageDelayed());
+            }
+        }
+    }
+
+    void OnCatchSuccess(JudgeResult_st2 result)
+    {
+        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
+        {
+            if (currentStage == TutorialStage.T2_Catch)
+            {
+                goodOrBetterCount++;
+                UpdateProgress($"Good+ Catches: {goodOrBetterCount}/2");
+
+                if (goodOrBetterCount >= 2)
+                    AdvanceStage();
+            }
+            else if (currentStage == TutorialStage.T4_Sync2 && currentPatternType == PatternType_st2.Sync2)
+            {
+                hasSuccessSync2 = true; // ✅ 플래그 설정
+                sync2SuccessCount++;
+                UpdateProgress($"Sync2 Success: {sync2SuccessCount}/1");
+
+                if (sync2SuccessCount >= 1)
+                    AdvanceStage();
+            }
+            else if (currentStage == TutorialStage.T5_Run3 && currentPatternType == PatternType_st2.Run3)
+            {
+                hasSuccessRun3 = true; // ✅ 플래그 설정
+                run3SuccessCount++;
+                UpdateProgress($"Run3 Success: {run3SuccessCount}/1");
+
+                if (run3SuccessCount >= 1)
+                    AdvanceStage();
+            }
+        }
+    }
+
+    void OnCatchMiss()
+    {
+        // Miss는 진행에 영향 없음
+    }
+
+    void UpdateProgress(string text)
+    {
+        if (progressText != null)
+            progressText.text = text;
+    }
+
+    // ✅ 추가: 스테이지 완료 메시지 표시
+    void ShowStageComplete(string message)
+    {
+        if (!showStageCompleteMessage || stageCompleteText == null)
+            return;
+
+        stageCompleteText.text = message;
+        stageCompleteText.gameObject.SetActive(true);
+    }
+
+    // ✅ 추가: 완료 메시지 숨기기
+    void HideStageComplete()
+    {
+        if (stageCompleteText != null)
+            stageCompleteText.gameObject.SetActive(false);
+    }
+
+    // ✅ 추가: 지연 후 스테이지 전환
+    IEnumerator AdvanceStageDelayed()
+    {
+        // 자동 패턴 일시 중지
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        // 완료 메시지 표시 시간
+        yield return new WaitForSeconds(stageTransitionDelay);
+
+        // 완료 메시지 숨기기
+        HideStageComplete();
+
+        // 다음 스테이지로 전환
+        AdvanceStage();
+    }
+
+    void AdvanceStage()
+    {
+        StartStage(currentStage + 1);
+    }
+
+    // ========================================
+    // 디버그/HUD용 메서드
+    // ========================================
+
+    /// <summary>
+    /// DebugHUD에서 현재 진행 상황을 표시하기 위한 메서드
+    /// </summary>
+    public string GetCurrentStageInfo()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.T0_Telegraph:
+                return $"Telegraph {telegraphCount}/2";
+            case TutorialStage.T1_Pop:
+                return $"Pop {popCount}/2";
+            case TutorialStage.T2_Catch:
+                return $"Catch {goodOrBetterCount}/2";
+            case TutorialStage.T4_Sync2:
+                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
+            case TutorialStage.T5_Run3:
+                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
+            case TutorialStage.Complete:
+                return "Complete";
+            case TutorialStage.WaitBeforeMain:
+                return "Wait...";
+            default:
+                return "Unknown";
+        }
+    }
+
+    // ========================================
+    // 튜토리얼 종료 및 정리
+    // ========================================
+
+    IEnumerator WaitThenStartMain()
+    {
+        // 자동 패턴 중지
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        // ✅ BGM 중지
+        StopTutorialBGM();
+
+        // ✅ 모든 튜토리얼 물고기 정리
+        CleanupAllTutorialFish();
+
+        // 3초 대기
+        yield return new WaitForSeconds(waitBeforeMainDuration);
+
+        // 튜토리얼 완료 플래그
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        // 튜토리얼 UI 비활성화
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(false);
+
+        // ✅ 튜토리얼 전체 비활성화 (GameFlowController가 처리)
+        gameObject.SetActive(false);
+
+        // 메인 게임 시작
+        GameFlowController_st2.Instance?.TransitionToPlaying();
+    }
+
+    void SkipTutorial()
+    {
+        // 모든 코루틴 중지
+        StopAllCoroutines();
+
+        // ✅ BGM 중지
+        StopTutorialBGM();
+
+        // ✅ 모든 튜토리얼 물고기 정리
+        CleanupAllTutorialFish();
+
+        // 플래그 저장
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        // UI 비활성화
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(false);
+
+        // ✅ 튜토리얼 전체 비활성화
+        gameObject.SetActive(false);
+
+        // 메인 게임 시작
+        GameFlowController_st2.Instance?.TransitionToPlaying();
+    }
+
+    // ✅ 추가: 모든 튜토리얼 물고기 정리
+    void CleanupAllTutorialFish()
+    {
+        // 각 몰드의 활성 물고기 모두 제거
+        foreach (var mold in tutorialMolds)
+        {
+            if (mold != null)
+            {
+                mold.CleanupAllFish();
+            }
+        }
+
+        // 손에 붙은 물고기도 정리 (부모 체크)
+        if (leftSensor != null)
+        {
+            CleanupHandAttachedFish(leftSensor.transform);
+        }
+
+        if (rightSensor != null)
+        {
+            CleanupHandAttachedFish(rightSensor.transform);
+        }
+    }
+
+    // ✅ 추가: 손에 붙은 물고기 강제 제거
+    void CleanupHandAttachedFish(Transform handTransform)
+    {
+        // 손의 자식으로 있는 모든 TutorialFishToken 찾아서 제거
+        var attachedFish = handTransform.GetComponentsInChildren<TutorialFishToken_st2>();
+        foreach (var fish in attachedFish)
+        {
+            // ✅ 안전 체크
+            if (fish != null && fish.gameObject != null && fish.gameObject.activeInHierarchy)
+            {
+                if (fish.ownerMold != null)
+                {
+                    fish.ownerMold.ReleaseFish(fish);
+                }
+            }
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialFishToken_st2.cs (Assets/3_Stage2/Demo/Scripts_/Tuto/TutorialFishToken_st2.cs) ---
+using UnityEngine;
+
+/// <summary>
+/// Ʃ�丮�� ���� ����� ��ū - ���� FishCatchToken�� ����
+/// </summary>
+public class TutorialFishToken_st2 : MonoBehaviour
+{
+    [Header("���� ������")]
+    public double popTime;
+    public bool isResolved = false;
+    public bool isCaught = false;
+
+    [Header("����")]
+    private Rigidbody rb;
+    private bool hasJumped = false;
+
+    // ���� ���
+    public TutorialMoldController_st2 ownerMold;
+
+    // ���� ���� (��Ÿ�ӿ� ����)
+    private float jumpHeight;
+    private float forwardDistance;
+    private float gravity;
+    private LayerMask groundLayer;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
+    public void Initialize(double popDspTime, Transform mold, TutorialMoldController_st2 owner,
+                           float jh, float fd, float grav, LayerMask gl)
+    {
+        popTime = popDspTime;
+        isResolved = false;
+        isCaught = false;
+        ownerMold = owner;
+        hasJumped = false;
+
+        jumpHeight = jh;
+        forwardDistance = fd;
+        gravity = grav;
+        groundLayer = gl;
+
+        transform.position = mold.position;
+        transform.localScale = Vector3.one * 100.0f;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.useGravity = true;
+        rb.isKinematic = false;
+
+        PerformJump();
+
+        // �÷��̾� ���� ����
+        Transform playerCam = Camera.main.transform;
+        Vector3 toPlayer = (playerCam.position - transform.position).normalized;
+        transform.right = toPlayer;
+    }
+
+    void PerformJump()
+    {
+        if (hasJumped) return;
+
+        float jumpVelocityY = Mathf.Sqrt(2f * gravity * jumpHeight);
+        float flightTime = 2f * jumpVelocityY / gravity;
+        float forwardVelocityZ = forwardDistance / flightTime;
+
+        Vector3 velocity = new Vector3(0, jumpVelocityY, -forwardVelocityZ);
+        rb.velocity = velocity;
+
+        Physics.gravity = new Vector3(0, -gravity, 0);
+        hasJumped = true;
+    }
+
+    public void UpdateMovement()
+    {
+        // Rigidbody�� �ڵ����� ���� ó��
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // ���� �������� Ǯ�� ��ȯ
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        {
+            if (ownerMold != null)
+            {
+                ownerMold.ReleaseFish(this);
+            }
+        }
+    }
+
+    public void OnCaught()
+    {
+        isCaught = true;
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    public void OnReturnToPool()
+    {
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+        hasJumped = false;
+        isResolved = false;
+        isCaught = false;
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialHandSensor_st2.cs (Assets/3_Stage2/Demo/Scripts_/Tuto/TutorialHandSensor_st2.cs) ---
+using UnityEngine;
+
+/// <summary>
+/// 튜토리얼 전용 손 센서 - 메인 HandCatchSensor와 독립
+/// </summary>
+public class TutorialHandSensor_st2 : MonoBehaviour
+{
+    [Header("설정")]
+    public OVRInput.Controller handController;
+    public LayerMask fishLayer;
+    public float raycastLength = 0.15f;
+
+    [Header("LineRenderer")]
+    public LineRenderer lineRenderer;
+    public bool showLineRenderer = true;
+
+    [Header("라인 색상")]
+    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);
+    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f);
+
+    [Header("라인 스타일")]
+    public float lineWidth = 0.002f;
+
+    private TutorialFishToken_st2 currentTarget;
+    private RaycastHit[] hits = new RaycastHit[10];
+    private Transform cachedTransform;
+
+    void Awake()
+    {
+        cachedTransform = transform;
+        SetupLineRenderer();
+    }
+
+    public void Initialize(OVRInput.Controller controller)
+    {
+        handController = controller;
+
+        // Awake에서 이미 초기화되었지만 안전하게 재확인
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        SetupLineRenderer();
+    }
+
+    void SetupLineRenderer()
+    {
+        if (lineRenderer == null)
+        {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        }
+
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.positionCount = 2;
+        lineRenderer.useWorldSpace = true;
+
+        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
+        {
+            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+        }
+
+        lineRenderer.startColor = noTargetColor;
+        lineRenderer.endColor = noTargetColor;
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
+    }
+
+    void Update()
+    {
+        // ✅ Null 체크 추가
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        UpdateCurrentTarget();
+        UpdateLineRenderer();
+    }
+
+    void UpdateCurrentTarget()
+    {
+        // ✅ 안전 체크
+        if (cachedTransform == null) return;
+
+        Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
+        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
+
+        TutorialFishToken_st2 closestFish = null;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var fish = hits[i].collider.GetComponent<TutorialFishToken_st2>();
+            if (fish == null) continue;
+            if (fish.isResolved) continue;
+
+            float distance = hits[i].distance;
+
+            // 히스테리시스
+            if (currentTarget != null)
+            {
+                if (fish == currentTarget)
+                {
+                    closestFish = fish;
+                    break;
+                }
+
+                if (distance < closestDistance - 0.03f)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+            else
+            {
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+        }
+
+        currentTarget = closestFish;
+    }
+
+    void UpdateLineRenderer()
+    {
+        if (lineRenderer == null || !showLineRenderer)
+            return;
+
+        // ✅ 안전 체크
+        if (cachedTransform == null) return;
+
+        lineRenderer.enabled = true;
+
+        Vector3 startPos = cachedTransform.position;
+        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
+
+        if (currentTarget != null)
+        {
+            endPos = currentTarget.transform.position;
+        }
+
+        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(1, endPos);
+
+        Color lineColor = GetLineColor();
+        lineRenderer.startColor = lineColor;
+        lineRenderer.endColor = lineColor;
+    }
+
+    Color GetLineColor()
+    {
+        if (currentTarget == null)
+            return noTargetColor;
+        else if (currentTarget.isResolved)
+            return resolvedTargetColor;
+        else
+            return hasTargetColor;
+    }
+
+    public TutorialFishToken_st2 GetCurrentTarget()
+    {
+        return currentTarget;
+    }
+
+    public void SetLineRendererVisible(bool visible)
+    {
+        showLineRenderer = visible;
+        if (lineRenderer != null)
+            lineRenderer.enabled = visible;
+    }
+
+    // ✅ 추가: 튜토리얼 종료 시 정리
+    void OnDisable()
+    {
+        currentTarget = null;
+
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = false;
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialManager_st2.cs (Assets/3_Stage2/Demo/Scripts_/Tuto/TutorialManager_st2.cs) ---
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using static GameState_st2;
+
+public class TutorialManager_st2 : MonoBehaviour
+{
+    public enum TutorialStage
+    {
+        Telegraph,
+        Pop,
+        Catch,
+        BagSwap,
+        Sync2Pattern,
+        Run3Pattern,
+        Complete
+    }
+
+    [Header("현재 상태")]
+    public TutorialStage currentStage = TutorialStage.Telegraph;
+
+    private int telegraphCount = 0;
+    private int popCount = 0;
+    private int goodOrBetterCount = 0; // ✅ 수정: Good 이상만 카운트
+    private bool hasSeenBagSwap = false;
+    private bool hasSuccessSync2 = false;
+    private bool hasSuccessRun3 = false;
+
+    [Header("UI")]
+    public TextMeshProUGUI instructionText;
+    public TextMeshProUGUI progressText;
+    public TextMeshProUGUI skipText;
+
+    private PatternType_st2 currentPatternType;
+
+    void Start()
+    {
+        skipText.text = "[Press A to Skip]";
+        ShowStageInstruction(currentStage);
+    }
+
+    void Update()
+    {
+        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Tutorial) return;
+
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            SkipTutorial();
+            return;
+        }
+
+        CheckStageProgress();
+    }
+
+    void CheckStageProgress()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.Telegraph:
+                if (telegraphCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Pop:
+                if (popCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Catch:
+                // ✅ 수정: Good 이상 2회 요구
+                if (goodOrBetterCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.BagSwap:
+                if (hasSeenBagSwap)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Sync2Pattern:
+                if (hasSuccessSync2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Run3Pattern:
+                if (hasSuccessRun3)
+                    AdvanceToNextStage();
+                break;
+        }
+    }
+
+    void AdvanceToNextStage()
+    {
+        currentStage++;
+
+        if (currentStage == TutorialStage.Complete)
+        {
+            CompleteTutorial();
+        }
+        else
+        {
+            ShowStageInstruction(currentStage);
+        }
+    }
+
+    void ShowStageInstruction(TutorialStage stage)
+    {
+        switch (stage)
+        {
+            case TutorialStage.Telegraph:
+                instructionText.text = "Listen to the 'Telegraph' sound!";
+                progressText.text = $"Progress: {telegraphCount}/2";
+                break;
+
+            case TutorialStage.Pop:
+                instructionText.text = "Watch the fish 'Pop' out!";
+                progressText.text = $"Progress: {popCount}/2";
+                break;
+
+            case TutorialStage.Catch:
+                // ✅ 수정: Good 이상 2회 요구 안내
+                instructionText.text = "Catch fish with Good or Perfect!";
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
+                break;
+
+            case TutorialStage.BagSwap:
+                instructionText.text = "Collect 3 fish to swap bag!";
+                progressText.text = $"Catches needed for swap";
+                break;
+
+            case TutorialStage.Sync2Pattern:
+                instructionText.text = "Try Sync2 pattern! (땡땡)";
+                progressText.text = "Catch at least 1!";
+                break;
+
+            case TutorialStage.Run3Pattern:
+                instructionText.text = "Try Run3 pattern! (딸랑)";
+                progressText.text = "Catch at least 1!";
+                break;
+        }
+    }
+
+    public void OnTelegraphPlayed()
+    {
+        if (currentStage == TutorialStage.Telegraph)
+        {
+            telegraphCount++;
+            progressText.text = $"Progress: {telegraphCount}/2";
+        }
+    }
+
+    public void OnPopPlayed()
+    {
+        if (currentStage == TutorialStage.Pop)
+        {
+            popCount++;
+            progressText.text = $"Progress: {popCount}/2";
+        }
+    }
+
+    public void OnCatchSuccess(JudgeResult_st2 result)
+    {
+        // ✅ 수정: Good 이상만 처리
+        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
+        {
+            if (currentStage == TutorialStage.Catch)
+            {
+                goodOrBetterCount++;
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
+            }
+            else if (currentStage == TutorialStage.BagSwap)
+            {
+                // BagSwap은 OnBagSwapped 이벤트로 처리
+            }
+            else if (currentStage == TutorialStage.Sync2Pattern && currentPatternType == PatternType_st2.Sync2)
+            {
+                hasSuccessSync2 = true;
+                progressText.text = "Sync2 Success!";
+            }
+            else if (currentStage == TutorialStage.Run3Pattern && currentPatternType == PatternType_st2.Run3)
+            {
+                hasSuccessRun3 = true;
+                progressText.text = "Run3 Success!";
+            }
+        }
+    }
+
+    public void OnBagSwapped()
+    {
+        if (currentStage == TutorialStage.BagSwap)
+        {
+            hasSeenBagSwap = true;
+            progressText.text = "Bag Swapped!";
+        }
+    }
+
+    public void OnPatternQueued(PatternType_st2 type)
+    {
+        currentPatternType = type;
+    }
+
+    void SkipTutorial()
+    {
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        GameFlowController_st2.Instance.TransitionToPlaying();
+    }
+
+    void CompleteTutorial()
+    {
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        GameFlowController_st2.Instance.TransitionToPlaying();
+    }
+
+    // ✅ 추가: HUD에서 현재 진행 상황 문자열로 제공
+    public string GetCurrentStageInfo()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.Telegraph:
+                return $"Telegraph {telegraphCount}/2";
+            case TutorialStage.Pop:
+                return $"Pop {popCount}/2";
+            case TutorialStage.Catch:
+                return $"Catch {goodOrBetterCount}/2";
+            case TutorialStage.BagSwap:
+                return "BagSwap Wait";
+            case TutorialStage.Sync2Pattern:
+                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
+            case TutorialStage.Run3Pattern:
+                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
+            case TutorialStage.Complete:
+                return "Complete";
+            default:
+                return "Unknown";
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: TutorialMoldController_st2.cs (Assets/3_Stage2/Demo/Scripts_/Tuto/TutorialMoldController_st2.cs) ---
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Pool;
+
+/// <summary>
+/// 튜토리얼 전용 몰드 - 메인 MoldController와 독립
+/// </summary>
+public class TutorialMoldController_st2 : MonoBehaviour
+{
+    [Header("프리팹")]
+    public GameObject tutorialFishPrefab;
+
+    [Header("애니메이션")]
+    public Animator moldAnimator;
+    public string popAnimationTrigger = "Pop";
+    public float popAnimationLeadTime = 0.2f;
+
+    [Header("점프 설정")]
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
+
+    private ObjectPool<TutorialFishToken_st2> fishPool;
+    private List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
+
+    void Awake()
+    {
+        InitializePool();
+    }
+
+    void InitializePool()
+    {
+        fishPool = new ObjectPool<TutorialFishToken_st2>(
+            createFunc: () => {
+                var obj = Instantiate(tutorialFishPrefab, transform);
+                var fish = obj.GetComponent<TutorialFishToken_st2>();
+                if (fish == null)
+                    fish = obj.AddComponent<TutorialFishToken_st2>();
+                return fish;
+            },
+            actionOnGet: (fish) => {
+                fish.gameObject.SetActive(true);
+            },
+            actionOnRelease: (fish) => {
+                fish.OnReturnToPool();
+                fish.transform.SetParent(transform);
+                fish.transform.localPosition = Vector3.zero;
+                fish.transform.localRotation = Quaternion.identity;
+                fish.transform.localScale = Vector3.one;
+                fish.gameObject.SetActive(false);
+                activeFish.Remove(fish);
+            },
+            actionOnDestroy: (fish) => {
+                if (fish != null && fish.gameObject != null)
+                    Destroy(fish.gameObject);
+            },
+            defaultCapacity: 5
+        );
+    }
+
+    public void SpawnFish(double popTime)
+    {
+        // Pop 애니메이션 (미리 시작)
+        if (moldAnimator != null)
+        {
+            moldAnimator.SetTrigger(popAnimationTrigger);
+        }
+
+        // Fish 생성
+        var fish = fishPool.Get();
+        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
+        activeFish.Add(fish);
+    }
+
+    public void ReleaseFish(TutorialFishToken_st2 fish)
+    {
+        if (fish != null)
+        {
+            fishPool.Release(fish);
+        }
+    }
+
+    void Update()
+    {
+        // 활성 fish 업데이트
+        for (int i = activeFish.Count - 1; i >= 0; i--)
+        {
+            if (activeFish[i] != null && !activeFish[i].isResolved)
+            {
+                activeFish[i].UpdateMovement();
+            }
+        }
+    }
+
+    void OnDisable()
+    {
+        // 비활성화 시 모든 fish 정리
+        CleanupAllFish();
+    }
+
+    // ✅ 추가: 모든 fish 강제 정리
+    public void CleanupAllFish()
+    {
+        foreach (var fish in activeFish.ToArray())
+        {
+            if (fish != null)
+                fishPool.Release(fish);
+        }
+        activeFish.Clear();
+    }
+}
 
 --------------------------------------------------
 
