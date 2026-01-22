@@ -4569,7 +4569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5610658976115249589, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.884
+      value: -4.121
       objectReference: {fileID: 0}
     - target: {fileID: 5610658976115249589, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5483,7 +5483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7017112790163016699, guid: e1451cf3e2919de4d8184851112297d4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.0889997
+      value: -3.3259997
       objectReference: {fileID: 0}
     - target: {fileID: 7017112790163016699, guid: e1451cf3e2919de4d8184851112297d4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5568,7 +5568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669248249691428081, guid: 003c7d53048203a4d9d91b7814cfbca9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.333
+      value: -2.57
       objectReference: {fileID: 0}
     - target: {fileID: 4669248249691428081, guid: 003c7d53048203a4d9d91b7814cfbca9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6178,7 +6178,7 @@ Transform:
   m_GameObject: {fileID: 1618342212}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.7419999, y: 2.18, z: 8.485001}
+  m_LocalPosition: {x: -0.97899985, y: 2.18, z: 8.485001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8075,6 +8075,14 @@ PrefabInstance:
     - target: {fileID: 2936232099418101686, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
       propertyPath: m_Name
       value: Tent_Ass'y
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467048056705852872, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 307.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467048056705852872, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 147.41
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

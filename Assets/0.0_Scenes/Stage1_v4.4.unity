@@ -2315,7 +2315,7 @@ MonoBehaviour:
   saturation: 1
   brightness: 1
   enableIntensityPulse: 1
-  baseIntensity: 6
+  baseIntensity: 3
   pulseAmplitude: 1
   pulseSpeed: 1.5
 --- !u!108 &656487423
@@ -4341,7 +4341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.27
+      value: 0.89
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.w
