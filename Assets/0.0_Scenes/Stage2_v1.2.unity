@@ -4569,7 +4569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5610658976115249589, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.884
+      value: -3.9569998
       objectReference: {fileID: 0}
     - target: {fileID: 5610658976115249589, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5483,7 +5483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7017112790163016699, guid: e1451cf3e2919de4d8184851112297d4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.0889997
+      value: -3.1619997
       objectReference: {fileID: 0}
     - target: {fileID: 7017112790163016699, guid: e1451cf3e2919de4d8184851112297d4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5568,7 +5568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669248249691428081, guid: 003c7d53048203a4d9d91b7814cfbca9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.333
+      value: -2.406
       objectReference: {fileID: 0}
     - target: {fileID: 4669248249691428081, guid: 003c7d53048203a4d9d91b7814cfbca9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5979,9 +5979,9 @@ MonoBehaviour:
   stackSpacingY: 0.12
   stackColumns: 5
   stackSpacingX: 0.12
-  stackSpacingZ: 0.28
+  stackSpacingZ: 0.9
   stackOffsetLocal: {x: 0, y: 0, z: 0}
-  fishVisualPrefab: {fileID: 306578032}
+  fishVisualPrefab: {fileID: 0}
 --- !u!1001 &1610901169
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6178,7 +6178,7 @@ Transform:
   m_GameObject: {fileID: 1618342212}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.7419999, y: 2.18, z: 8.485001}
+  m_LocalPosition: {x: -0.8149998, y: 2.18, z: 8.485001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6576,9 +6576,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lastJudgeResult: 0
   lastHandName: 
-  hub: {fileID: 903122778}
-  leftSensor: {fileID: 1735968145}
-  rightSensor: {fileID: 1735968144}
+  hub: {fileID: 0}
+  leftSensor: {fileID: 0}
+  rightSensor: {fileID: 0}
   triggerThreshold: 0.9
   perHandCooldown: 0.05
 --- !u!114 &1735968143
@@ -6595,8 +6595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lastJudgeResult: 0
   lastHandName: 
-  hub: {fileID: 903122778}
-  leftSensor: {fileID: 1735968145}
+  hub: {fileID: 0}
+  leftSensor: {fileID: 0}
   rightSensor: {fileID: 0}
   triggerThreshold: 0.9
   perHandCooldown: 0.05
@@ -8075,6 +8075,14 @@ PrefabInstance:
     - target: {fileID: 2936232099418101686, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
       propertyPath: m_Name
       value: Tent_Ass'y
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467048056705852872, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 281.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467048056705852872, guid: 741198956277c6841b5f19fdd1e42292, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 149.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
