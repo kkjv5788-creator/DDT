@@ -32,14 +32,20 @@ public class FishCatchToken_st2 : MonoBehaviour
     [SerializeField] private Vector3 catchVfxLocalOffset = Vector3.zero;
     [SerializeField] private Vector3 catchVfxLocalEuler = Vector3.zero;
     [SerializeField] private float catchVfxAutoDestroySeconds = 2.0f;
+
     public double popDspTime => popTime;
+
     private bool catchFxPlayed = false;
 
     private Rigidbody rb;
     private bool hasJumped = false;
 
+    // 바닥 반환 1회 가드
+    private bool _releasedToPoolOnce = false;
+
     // 소유 몰드 추적
     public MoldController_st2 ownerMold;
+
     public void ConsumeToPool(FishConsumeReason_st2 reason)
     {
         // ✅ 성공/미스/타임아웃 등 어떤 이유든 "정상 풀 반환"
@@ -86,14 +92,21 @@ public class FishCatchToken_st2 : MonoBehaviour
         src.PlayOneShot(catchSnapClip, catchSnapVolume);
     }
 
+    // ✅ scale=100이어도 VFX가 튀지 않도록 TransformPoint 대신 "position + rotation * offset" 사용
     private void SpawnCatchVfx()
     {
         if (catchVfxPrefab == null) return;
 
         Transform a = catchVfxAnchor != null ? catchVfxAnchor : transform;
-        Vector3 pos = a.TransformPoint(catchVfxLocalOffset);
+
+        Vector3 pos = a.position + (a.rotation * catchVfxLocalOffset); // 스케일 영향 없음
         Quaternion rot = a.rotation * Quaternion.Euler(catchVfxLocalEuler);
+
         var vfx = Instantiate(catchVfxPrefab, pos, rot);
+
+        // 프리팹이 부모 스케일 가정일 경우(특히 파티클) 안전하게 1로 고정
+        vfx.transform.localScale = Vector3.one;
+
         AutoDestroyVfx(vfx, catchVfxAutoDestroySeconds);
     }
 
@@ -139,10 +152,13 @@ public class FishCatchToken_st2 : MonoBehaviour
         isResolved = false;
         isCaught = false;
         assignedHand = null;
+
         parentMold = mold;
         ownerMold = owner;
+
         hasJumped = false;
         catchFxPlayed = false;
+        _releasedToPoolOnce = false; // ✅ 풀 재사용 시 반드시 리셋
 
         moldPosition = mold.position;
         transform.position = moldPosition;
@@ -156,9 +172,13 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         PerformJump();
 
-        Transform playerCam = Camera.main.transform;
-        Vector3 toPlayer = (playerCam.position - transform.position).normalized;
-        transform.right = toPlayer;
+        // 카메라 없을 수도 있으니 안전 처리
+        if (Camera.main != null)
+        {
+            Transform playerCam = Camera.main.transform;
+            Vector3 toPlayer = (playerCam.position - transform.position).normalized;
+            transform.right = toPlayer;
+        }
     }
 
     void PerformJump()
@@ -201,10 +221,9 @@ public class FishCatchToken_st2 : MonoBehaviour
 
     public void OnCaught()
     {
-        if (isCaught) return;
+        // ✅ isCaught가 이미 true여도(외부에서 먼저 세팅했어도) FX는 1회 보장
         isCaught = true;
 
-        // ✅ 착 사운드 + 착 이펙트 (1회)
         if (!catchFxPlayed)
         {
             catchFxPlayed = true;
@@ -230,10 +249,13 @@ public class FishCatchToken_st2 : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
+
         hasJumped = false;
         catchFxPlayed = false;
+        _releasedToPoolOnce = false; // ✅ 안전 리셋
+        // isResolved/isCaught는 MoldController actionOnRelease에서 OnReturnToPool 호출 후 SetActive(false)라
+        // 다음 Get() 때 Initialize에서 다시 세팅됨
     }
-    private bool _releasedToPoolOnce = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -263,7 +285,6 @@ public class FishCatchToken_st2 : MonoBehaviour
         }
         else
         {
-            // ownerMold가 혹시라도 비어있으면 최소한 씬에 남지 않게 처리
             gameObject.SetActive(false);
         }
     }

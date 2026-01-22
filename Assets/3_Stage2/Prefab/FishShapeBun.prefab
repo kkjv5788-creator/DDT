@@ -144,7 +144,7 @@ MonoBehaviour:
   catchSnapVolume: 1
   catchSnap3D: 1
   catchVfxPrefab: {fileID: 5339739117810204693, guid: 26e1cb216e3635e4a820f58a1118d6b9, type: 3}
-  catchVfxAnchor: {fileID: 5380902050649809436}
+  catchVfxAnchor: {fileID: 5062501557866792105}
   catchVfxLocalOffset: {x: 0, y: 0, z: 0}
   catchVfxLocalEuler: {x: 0, y: 0, z: 0}
   catchVfxAutoDestroySeconds: 2
