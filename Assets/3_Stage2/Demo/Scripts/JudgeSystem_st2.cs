@@ -66,20 +66,31 @@ public class JudgeSystem_st2 : MonoBehaviour
         return result;
     }
 
-    // ✅ 수정: Timeout Miss는 즉시 삭제하지 않고 낙하 유지
+    // ✅ 추가: 바닥에 떨어진 물고기 MISS 확정
+    public void ResolveMissFromGround(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        if (fish.isResolved) return; // 중복 방지
+
+        fish.isResolved = true;
+        fish.isCaught = false;
+        missCount++;
+
+        activeFish.Remove(fish);
+
+        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
+    }
+
     void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
         if (fish.isResolved) return;
 
-        // ✅ Miss 확정만 하고 물리 낙하는 유지
         fish.isResolved = true;
         fish.isCaught = false;
         missCount++;
 
         OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
-        // ✅ 즉시 ReleaseFish 호출 제거 - 바닥에서 제거됨
-        // 단, activeFish에서는 제거
         activeFish.Remove(fish);
     }
 
