@@ -17,7 +17,7 @@ MonoBehaviour:
   triggers:
   - triggerTime: 0
     guideDuration: 1
-    judgeDuration: 3
+    judgeDuration: 2
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
     requiredSliceCount: 1
     minKnifeSpeed: 0.5
@@ -41,7 +41,7 @@ MonoBehaviour:
     visualResistanceMs: 100
   - triggerTime: 0
     guideDuration: 1
-    judgeDuration: 3.75
+    judgeDuration: 3
     guideBeatSound: {fileID: 8300000, guid: b1bd89b072c8ef54db19d707f21feeb3, type: 3}
     requiredSliceCount: 3
     minKnifeSpeed: 0.6

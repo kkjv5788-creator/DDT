@@ -9,16 +9,14 @@ public class TutorialController : MonoBehaviour
     public FeedbackSetSO feedbackSet;
     public RadioClickable radio;
     
-    // ★ 공용 리갈패드 연결
     public MissionBoardUI missionBoard; 
 
-    // ★ 모니터 & 패널 연결
     [Header("UI Groups")]
-    public GameObject salesUIGroup; // Sales_Info_Group
+    public GameObject salesUIGroup; 
 
     [Header("Monitor UI")]
-    public TextMeshProUGUI monitorText; // Text_Feedback
-    public TextMeshProUGUI salesText;   // Text_RealtimeSales
+    public TextMeshProUGUI monitorText; 
+    public TextMeshProUGUI salesText;   
 
     [Header("Final Result UI")]
     public GameObject finalResultPanel;        
@@ -26,12 +24,11 @@ public class TutorialController : MonoBehaviour
     public TextMeshProUGUI finalCommentText;   
 
     [Header("Tutorial Settings")]
-    public RhythmTriggerListSO TutorialData_Scenario;
+    public RhythmTriggerListSO tutorialTriggerList;
     public int requiredSuccessCount = 1; 
 
     [Header("Wage Settings")]
-    public int maxTotalWage = 100000; 
-    private int _wagePerSlice;        
+    public int maxTotalWage = 100000; // (내부 계산용으로만 남겨둠)
     
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FF3333"; 
@@ -39,27 +36,20 @@ public class TutorialController : MonoBehaviour
     // 내부 변수
     int _currentStepIndex = 0;
     int _successCountThisStep = 0; 
-    int _currentEarnedMoney = 0;
-    int _totalPossibleSlices = 0; 
     bool _tutorialCompleted = false;
     bool _isProcessingResult = false;
     float _lastSkipInput = -999f;
     
-    // 🔥 [신규] 마지막 입력 대기용 플래그
+    // 마지막 입력 대기용
     bool _waitForFinalInput = false; 
 
     void OnEnable()
     {
-        Debug.Log("[TutorialController] 튜토리얼 모드 활성화됨");
-
         _currentStepIndex = 0;
         _successCountThisStep = 0;
-        _currentEarnedMoney = 0;
         _tutorialCompleted = false;
         _isProcessingResult = false;
-        _waitForFinalInput = false; // 초기화
-
-        CalculateWageSettings();
+        _waitForFinalInput = false;
 
         if (conductor) 
         {
@@ -81,7 +71,7 @@ public class TutorialController : MonoBehaviour
 
     void Update()
     {
-        // 1. 튜토리얼 도중 스킵 (A 버튼)
+        // 스킵 기능
         if (!_tutorialCompleted && OVRInput.GetDown(OVRInput.Button.One))
         {
             if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
@@ -91,25 +81,25 @@ public class TutorialController : MonoBehaviour
             }
         }
 
-        // 2. 🔥 [추가됨] 합격 화면에서 트리거 입력 대기
+        // 🔥 마지막 트리거 대기 (합격 화면에서)
         if (_waitForFinalInput)
         {
             if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             {
                 _waitForFinalInput = false;
-                FinalizeAndStartGame(); // 진짜 게임 시작!
+                FinalizeAndStartGame();
             }
         }
     }
 
     public void StartTutorial()
     {
-        if (!conductor || !TutorialData_Scenario) return;
+        if (!conductor || !tutorialTriggerList) return;
 
         if (salesUIGroup) salesUIGroup.SetActive(true);
 
         conductor.isTutorialMode = true;
-        conductor.data = TutorialData_Scenario;
+        conductor.data = tutorialTriggerList;
         conductor.StartGame();
 
         if (missionBoard) missionBoard.InitializeUI();
@@ -118,7 +108,7 @@ public class TutorialController : MonoBehaviour
         UpdateSalesUI();
         UpdateMissionUI(); 
 
-        ShowMonitorText("<size=60%>영업 개시\n정산을 시작합니다.</size>", Color.green);
+        ShowMonitorText("<size=60%>면접 실습 시작</size>", Color.green);
         Invoke(nameof(StartFirstTrigger), 1.5f);
     }
 
@@ -145,11 +135,9 @@ public class TutorialController : MonoBehaviour
         if (success)
         {
             _successCountThisStep++;
-            _currentEarnedMoney += _wagePerSlice;
-            if (_currentEarnedMoney > maxTotalWage - 100) _currentEarnedMoney = maxTotalWage;
-
-            UpdateSalesUI();
-            ShowMonitorText($"+ {_wagePerSlice:N0} 원", Color.green);
+            
+            // 🔥 [변경] 돈 액수 대신 '성공!' 메시지
+            ShowMonitorText("성공!", Color.green);
             
             if (_successCountThisStep >= requiredSuccessCount)
             {
@@ -160,7 +148,7 @@ public class TutorialController : MonoBehaviour
                 _currentStepIndex++;
                 _successCountThisStep = 0;
 
-                if (_currentStepIndex >= TutorialData_Scenario.triggers.Length)
+                if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
                 {
                     Invoke(nameof(CompleteTutorial), 2.5f);
                     return;
@@ -175,7 +163,8 @@ public class TutorialController : MonoBehaviour
         }
         else
         {
-            ShowMonitorText("+ 0 원", Color.gray);
+            // 🔥 [변경] 실패 시 '다시!' 메시지
+            ShowMonitorText("다시!", Color.red); // 실패는 빨간색 등 경고색
             Invoke(nameof(RetryCurrentStep), 1.5f);
             Invoke(nameof(ClearMonitorText), 1.0f);
         }
@@ -207,12 +196,13 @@ public class TutorialController : MonoBehaviour
         if (!missionBoard) return;
         
         missionBoard.ShowSuccessStamp(false);
+        // 실습 단계 표시
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
         int targetSliceCount = 0;
-        if (TutorialData_Scenario != null && _currentStepIndex < TutorialData_Scenario.triggers.Length)
+        if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
         {
-            targetSliceCount = TutorialData_Scenario.triggers[_currentStepIndex].requiredSliceCount;
+            targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
         }
 
         int currentSlices = 0;
@@ -255,23 +245,13 @@ public class TutorialController : MonoBehaviour
         return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
     }
 
-    void CalculateWageSettings()
-    {
-        _totalPossibleSlices = 0;
-        if (TutorialData_Scenario != null)
-        {
-            foreach (var trigger in TutorialData_Scenario.triggers)
-                _totalPossibleSlices += trigger.requiredSliceCount;
-        }
-        _wagePerSlice = (_totalPossibleSlices > 0) ? maxTotalWage / _totalPossibleSlices : 500;
-    }
-
+    // 🔥 [변경] 매출 0원 안 뜨게 변경
     void UpdateSalesUI()
     {
-        if (salesText) salesText.text = $"누적 매출\n[ {_currentEarnedMoney:N0}원 ]";
+        if (salesText) salesText.text = "면접 실습\n[ 진행 중 ]";
     }
 
-    void ShowClearMessage() { ShowMonitorText("정산 완료", Color.cyan); }
+    void ShowClearMessage() { ShowMonitorText("통과!", Color.cyan); }
 
     void SkipTutorial()
     {
@@ -281,17 +261,16 @@ public class TutorialController : MonoBehaviour
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
+    // 🔥 [최종 화면 로직]
     void CompleteTutorial()
     {
         _tutorialCompleted = true;
-        
-        // 주의: Cleanup()은 여기서 부르지 않고 트리거 누른 뒤에 부릅니다.
-        // 음악이나 분위기를 유지하기 위함입니다.
 
+        string bigTitle = "합 격"; 
         string finalMessage = "합격이네.\n자 이제 영업을 시작하자.";
-        string startHint = "\n\n<size=80%><color=#FFD700>[오른손 트리거] 영업 시작</color></size>";
+        string startHint = "\n\n<size=70%><color=#FFD700>[오른손 트리거] 영업 시작</color></size>";
 
-        // 1. 리갈패드(주문서) 업데이트
+        // 1. 리갈패드
         if (missionBoard)
         {
             missionBoard.ShowSuccessStamp(true);
@@ -299,32 +278,31 @@ public class TutorialController : MonoBehaviour
             missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
         
-        // 2. 모니터 결과창(분홍 패널) 업데이트
+        // 2. 모니터 결과창
         if (finalResultPanel)
         {
             finalResultPanel.SetActive(true);
-            if (finalTotalText) finalTotalText.text = $"{_currentEarnedMoney:N0}원";
+            
+            // 금액 대신 '합 격'
+            if (finalTotalText) finalTotalText.text = bigTitle;
+            
+            // 설명 멘트 + 트리거 힌트
             if (finalCommentText) 
             { 
-                // 합격 멘트 + 트리거 안내 추가
                 finalCommentText.text = finalMessage + startHint; 
                 finalCommentText.color = Color.white; 
             }
         }
         
-        // 3. 모니터 일반 텍스트 업데이트
         ShowMonitorText(finalMessage, Color.cyan);
 
-        // 🔥 입력 대기 시작!
+        // 입력 대기 시작
         _waitForFinalInput = true;
     }
 
-    // 🔥 [신규] 트리거 누르면 호출되는 최종 함수
     void FinalizeAndStartGame()
     {
         Cleanup();
-
-        // 튜토리얼 완료 이벤트 발생 -> StageManager가 받아서 MODE_GAME으로 전환
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
     }
 

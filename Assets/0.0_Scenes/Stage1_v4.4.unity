@@ -977,8 +977,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075757c3d7a63e34da158a6e9b202dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 1
-  fader: {fileID: 595154082}
+  modeTutorial: {fileID: 1696699492}
+  modeGame: {fileID: 206060677}
+  conductor: {fileID: 463253587}
+  mainGameData: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
+  missionBoard: {fileID: 918129802}
 --- !u!4 &275202588
 Transform:
   m_ObjectHideFlags: 0
@@ -1552,9 +1555,9 @@ MonoBehaviour:
   OnTutorialCompleted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 275202589}
-        m_TargetAssemblyTypeName: StageModeSelector, Assembly-CSharp
-        m_MethodName: OnClick_StartGame
+      - m_Target: {fileID: 275202587}
+        m_TargetAssemblyTypeName: StageManager, Assembly-CSharp
+        m_MethodName: SwitchToMainGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2013,17 +2016,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 463253588}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 180}
---- !u!114 &595154082 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8172878322312613405, guid: 0196eeedc311552429a011a24996afd4, type: 3}
-  m_PrefabInstance: {fileID: 1343686666}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df8e1d778abf442e4bec449c360e9e1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!20 &595154084 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7473939764542390641, guid: 0196eeedc311552429a011a24996afd4, type: 3}
@@ -2314,8 +2306,8 @@ MonoBehaviour:
   rainbowSpeed: 0.25
   saturation: 1
   brightness: 1
-  enableIntensityPulse: 1
-  baseIntensity: 3
+  enableIntensityPulse: 0
+  baseIntensity: 2
   pulseAmplitude: 1
   pulseSpeed: 1.5
 --- !u!108 &656487423
@@ -3088,7 +3080,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC624\uB298\uC758 \uC815\uC0B0"
+  m_text: "\uBA74\uC811\uACB0\uACFC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ff58b3bd72df2ea4c89d46fa0b7e66c5, type: 2}
   m_sharedMaterial: {fileID: 6743187182906668259, guid: ff58b3bd72df2ea4c89d46fa0b7e66c5, type: 2}
@@ -3865,7 +3857,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: -7666003355198411829, guid: 93e75622eadbb95479d235aad5a126d7, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4345,19 +4337,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.95366716
+      value: 0.9996731
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.02438972
+      value: 0.025566306
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.29977542
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0076666563
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4365,7 +4357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -34.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 629071907078379823, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_Name
@@ -5911,7 +5903,7 @@ MonoBehaviour:
   finalResultPanel: {fileID: 1188267593}
   finalTotalText: {fileID: 155217195}
   finalCommentText: {fileID: 1824342089}
-  TutorialData_Scenario: {fileID: 11400000, guid: 71b719ccccca59a4f8477dfc3daca575, type: 2}
+  tutorialTriggerList: {fileID: 11400000, guid: 71b719ccccca59a4f8477dfc3daca575, type: 2}
   requiredSuccessCount: 1
   maxTotalWage: 100000
   highlightTextColor: '#FF3333'
