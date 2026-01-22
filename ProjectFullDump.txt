@@ -1,6 +1,6 @@
 [PROJECT DUMP START]
 Scene: Stage1_v4.4
-Date: 2026-01-22 오후 4:05:18
+Date: 2026-01-22 오후 8:36:41
 ========================================
               SCENE HIERARCHY
 ========================================
@@ -1720,13 +1720,9 @@ Date: 2026-01-22 오후 4:05:18
             > mainTriggerList: mainTriggerList (RhythmTriggerListSO)
             > mainMenuSceneName: Main_v3.0
         - (Component) ResultManager
+            > stageUIManager: 
             > conductor: GameManager (RhythmConductor)
-            > gameFlowManager: MODE_GAME (GameFlowManager)
-            > panel100k: null
-            > panel50k: null
-            > panel0: null
-            > endDelaySeconds: 20
-            > OnProgressUpdate: UnityEngine.Events.UnityEvent`3[System.Int32,System.Int32,System.Single] UnityEngine.Events.UnityEvent`3[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
+            > pricePerSuccess: 5000
         - (Component) DebugHUD
             > knifeSpeedSource: KnifePhysicalRoot (KnifeVelocityEstimator)
         - (Component) FinalResultInputHandler
@@ -1785,37 +1781,7 @@ Date: 2026-01-22 오후 4:05:18
                     - (Component) CanvasRenderer
                     - (Component) TextMeshProUGUI
 
-        [O] Panel_Dialogue (Active: False, Tag: Untagged, Layer: UI)
-            Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) CanvasRenderer
-            - (Component) Image
-
-            [O] Text_Speech (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (-3.91, 3.43, 2.67) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) TextMeshProUGUI
-
-            [O] Text_Hint (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (-3.81, 2.47, 2.57) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) TextMeshProUGUI
-
-        [O] Sales_Info_Group (Active: False, Tag: Untagged, Layer: UI)
-            Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-            - (Component) CanvasRenderer
-            - (Component) Image
-
-            [O] Text_RealtimeSales (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (-3.91, 3.43, 2.67) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) TextMeshProUGUI
-
-            [O] Text_Feedback (Active: True, Tag: Untagged, Layer: UI)
-                Pos: (-3.81, 2.39, 2.56) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
-                - (Component) CanvasRenderer
-                - (Component) TextMeshProUGUI
-
-        [O] Panel_ClosingResult (Active: False, Tag: Untagged, Layer: UI)
+        [O] Panel_ClosingResult (Active: True, Tag: Untagged, Layer: UI)
             Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) Image
@@ -1831,6 +1797,63 @@ Date: 2026-01-22 오후 4:05:18
                 - (Component) TextMeshProUGUI
 
             [O] Text_GradeComment (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.81, 2.39, 2.56) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) TextMeshProUGUI
+
+        [O] Panel_Dialogue (Active: True, Tag: Untagged, Layer: UI)
+            Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) CanvasRenderer
+            - (Component) Image
+
+            [O] Text_Speech (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.91, 3.43, 2.67) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) TextMeshProUGUI
+
+            [O] Text_Hint (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.81, 2.47, 2.57) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) TextMeshProUGUI
+
+        [O] Panel_PlayGame (Active: True, Tag: Untagged, Layer: UI)
+            Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) CanvasRenderer
+            - (Component) Image
+
+            [O] Slider_SongProgress (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.81, 2.39, 2.56) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) Slider
+
+                [O] Background (Active: True, Tag: Untagged, Layer: UI)
+                    Pos: (-3.83, 2.60, 2.58) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                    - (Component) CanvasRenderer
+                    - (Component) Image
+
+                [O] Fill Area (Active: True, Tag: Untagged, Layer: UI)
+                    Pos: (-3.83, 2.60, 2.58) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+
+                    [O] Fill (Active: True, Tag: Untagged, Layer: UI)
+                        Pos: (-4.23, 2.58, 2.19) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                        - (Component) CanvasRenderer
+                        - (Component) Image
+
+            [O] Text_RemainingTime (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.75, 2.84, 2.71) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) TextMeshProUGUI
+
+        [O] Sales_Info_Group (Active: True, Tag: Untagged, Layer: UI)
+            Pos: (-3.86, 2.91, 2.62) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+            - (Component) CanvasRenderer
+            - (Component) Image
+
+            [O] Text_RealtimeSales (Active: True, Tag: Untagged, Layer: UI)
+                Pos: (-3.91, 3.43, 2.67) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
+                - (Component) CanvasRenderer
+                - (Component) TextMeshProUGUI
+
+            [O] Text_Feedback (Active: True, Tag: Untagged, Layer: UI)
                 Pos: (-3.81, 2.39, 2.56) | Rot: (8.60, 316.30, 0.00) | Scale: (1.00, 1.00, 1.00)
                 - (Component) CanvasRenderer
                 - (Component) TextMeshProUGUI
@@ -1877,7 +1900,7 @@ Date: 2026-01-22 오후 4:05:18
             - (Component) CanvasRenderer
             - (Component) TextMeshProUGUI
 
-        [O] Image_Stamp (Active: True, Tag: Untagged, Layer: UI)
+        [O] Image_Stamp (Active: False, Tag: Untagged, Layer: UI)
             Pos: (-2.85, 2.01, 1.59) | Rot: (90.00, 333.35, 0.00) | Scale: (1.00, 1.00, 1.00)
             - (Component) CanvasRenderer
             - (Component) Image
@@ -3365,9 +3388,6 @@ public class GameFlowManager : MonoBehaviour
     [Header("Settings")]
     public string mainMenuSceneName = "Main_v4.1";
 
-    // ❌ [삭제됨] 내부 enum 정의 삭제 -> GameState.cs를 따르게 됨
-    // public enum GameState { Intro, PlayingMain, Paused, FinalResult } 
-
     public GameState CurrentState { get; private set; } = GameState.Intro;
 
     GameState _stateBeforePause;
@@ -3376,9 +3396,9 @@ public class GameFlowManager : MonoBehaviour
     {
         Debug.Log("[GameFlowManager] 실전 모드 활성화됨");
         
-        // GameState.cs에 Intro를 추가했으므로 정상 작동함
         CurrentState = GameState.Intro; 
         
+        // 0.5초 뒤 게임 시작
         Invoke(nameof(StartMainGame), 0.5f);
     }
 
@@ -3389,44 +3409,43 @@ public class GameFlowManager : MonoBehaviour
 
     public void StartMainGame()
     {
-        Debug.Log("[GameFlowManager] 실전 영업 개시!");
+        if (CurrentState == GameState.PlayingMain) return;
+
+        Debug.Log("[GameFlowManager] StartMainGame!");
         CurrentState = GameState.PlayingMain;
 
-        // 1. 주문서 갱신
+        // 1. 도구 칼로 변경
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+
+        // 2. 리갈패드 업데이트
         if (missionBoard)
         {
-            missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("< 점심 주문 >");
-            missionBoard.UpdateText("< 점심 주문 >", "주문이 폭주합니다!\n정신 바짝 차리세요!", "");
-            missionBoard.ShowSuccessStamp(false);
+            missionBoard.UpdateHeader("< 영 업 중 >");
+            missionBoard.UpdateMission("주문이 밀려옵니다!", 0, 0);
         }
 
-        // 2. 하드웨어 세팅
-        if (radio) radio.SetClickable(false);
-        if (toolSwitcher) toolSwitcher.SwitchToKnife();
-        if (plateController) plateController.ResetToEmptyPlate();
-
-        // 3. UI 초기화
-        if (StageUIManager.Instance)
-        {
-            StageUIManager.Instance.UpdateGauge(0, 1);
-            StageUIManager.Instance.SetGuides(false, true);
-        }
-
-        // 4. 리듬 게임 시작
+        // 3. 데이터 로드 및 음악 재생
         if (conductor && mainTriggerList)
         {
-            conductor.isTutorialMode = false;
             conductor.data = mainTriggerList;
-            conductor.StartGame();
+            
+            // PlayBgm 함수가 있다면 실행, 없으면 AudioSource 직접 재생
+            // (RhythmConductor 버전에 따라 다를 수 있어 안전하게 처리)
+            if (conductor.bgmSource)
+            {
+                conductor.bgmSource.clip = mainTriggerList.bgm;
+                conductor.bgmSource.Play();
+            }
+            
+            // 컨덕터 시작 (노트 내려오기 시작)
+            // conductor.Play(); // 필요 시 주석 해제
         }
 
-        if (resultManager && mainTriggerList)
-        {
-            resultManager.StartTracking(mainTriggerList.triggers.Length);
-        }
+        // [삭제됨] resultManager.StartTracking(...) 
+        // -> ResultManager를 단순화하면서 이 기능이 빠졌으므로 삭제해야 에러가 안 남.
     }
 
+    // 일시정지 기능
     public void PauseGame()
     {
         if (CurrentState == GameState.Paused) return;
@@ -3450,6 +3469,7 @@ public class GameFlowManager : MonoBehaviour
         if (pauseManager) pauseManager.HidePauseMenu();
     }
 
+    // 게임 종료 처리
     public void EnterFinalResult(float successRate)
     {
         CurrentState = GameState.FinalResult;
@@ -3467,8 +3487,8 @@ public class GameFlowManager : MonoBehaviour
     public void RestartMainGameOnly()
     {
         Time.timeScale = 1f;
-        gameObject.SetActive(false);
-        gameObject.SetActive(true);
+        // 현재 씬 재로딩 (간단한 재시작 구현)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMainMenu()
@@ -4806,53 +4826,6 @@ public class PlateController : MonoBehaviour
 
 --------------------------------------------------
 
---- FILENAME: ProgressGaugeUI.cs (Assets/2_Stage1/Scripts/ProgressGaugeUI.cs) ---
-using UnityEngine;
-using UnityEngine.UI;
-
-public class ProgressGaugeUI : MonoBehaviour
-{
-    [Header("UI Elements")]
-    public Slider progressSlider;        // 0 ~ 100
-    public Image fillImage;              // Slider�� Fill
-    public Text percentageText;          // "75%"
-    public Text countText;               // "15 / 20"
-
-    [Header("Colors")]
-    public Gradient colorGradient;       // 0% ~ 100% ���� ��ȭ
-
-    public void UpdateProgress(int successCount, int totalTriggers, float percentage)
-    {
-        percentage = Mathf.Clamp(percentage, 0f, 100f);
-
-        // Slider ������Ʈ
-        if (progressSlider)
-        {
-            progressSlider.value = percentage;
-        }
-
-        // Fill ���� ����
-        if (fillImage && colorGradient != null)
-        {
-            fillImage.color = colorGradient.Evaluate(percentage / 100f);
-        }
-
-        // �ۼ�Ʈ �ؽ�Ʈ
-        if (percentageText)
-        {
-            percentageText.text = $"{percentage:F0}%";
-        }
-
-        // ī��Ʈ �ؽ�Ʈ
-        if (countText)
-        {
-            countText.text = $"{successCount} / {totalTriggers}";
-        }
-    }
-}
-
---------------------------------------------------
-
 --- FILENAME: RadioClickable.cs (Assets/2_Stage1/Scripts/RadioClickable.cs) ---
 using UnityEngine;
 using UnityEngine.Events;
@@ -5147,143 +5120,58 @@ public class RadioClickable : MonoBehaviour
 
 --- FILENAME: ResultManager.cs (Assets/2_Stage1/Scripts/ResultManager.cs) ---
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ResultManager : MonoBehaviour
 {
     [Header("Refs")]
-    public RhythmConductor conductor;
-    public GameFlowManager gameFlowManager;
-
-    [Header("Result Panels (3�� �� 1���� Ȱ��ȭ)")]
-    public GameObject panel100k; // 100% ~ 80%
-    public GameObject panel50k;  // 80% ~ 50%
-    public GameObject panel0;    // 50% ~ 0%
+    public StageUIManager stageUIManager;   
+    public RhythmConductor conductor; // [중요] 이벤트를 받기 위해 연결 필요
 
     [Header("Settings")]
-    public float endDelaySeconds = 3f; // ������ Ʈ���� �Ϸ� �� ��� �ð�
+    public int pricePerSuccess = 5000;
 
-    [Header("Events")]
-    public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
-
-    // ��Ÿ�� ������
-    int _totalTriggers;
-    int _successCount;
-    bool _gameEnded;
+    // 내부 변수
+    private int _currentTotalSales = 0;
 
     void OnEnable()
     {
-        if (conductor)
+        // 컨덕터의 성공 이벤트를 구독
+        if (conductor != null)
         {
-            conductor.OnRoundResult.AddListener(HandleRoundResult);
+            conductor.OnRoundResult.AddListener(OnRoundResult);
         }
     }
 
     void OnDisable()
     {
-        if (conductor)
+        if (conductor != null)
         {
-            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
+            conductor.OnRoundResult.RemoveListener(OnRoundResult);
         }
     }
 
-    public void StartTracking(int totalTriggers)
+    // 성공/실패 결과가 나오면 호출됨
+    public void OnRoundResult(bool isSuccess)
     {
-        // 🔥 이전에 예약된 Invoke 취소 (재시작 시 EndGame이 중복 호출되는 것 방지)
-        CancelInvoke(nameof(EndGame));
+        if (isSuccess)
+        {
+            // 돈 더하기
+            _currentTotalSales += pricePerSuccess;
 
-        _totalTriggers = totalTriggers;
-        _successCount = 0;
-        _gameEnded = false;
-
-        Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
-
-        // �ʱ� ������ ������Ʈ
-        OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
+            // UI 매니저에게 표시하라고 시킴
+            if (stageUIManager)
+            {
+                stageUIManager.UpdateSalesUI(_currentTotalSales, pricePerSuccess, true);
+            }
+        }
     }
 
-    void HandleRoundResult(bool success)
+    // 게임 재시작용
+    public void ResetResults()
     {
-        if (_gameEnded) return;
-        if (!gameFlowManager || gameFlowManager.CurrentState != GameState.PlayingMain) return;
-
-        if (success)
-        {
-            _successCount++;
-            Debug.Log($"[ResultManager] Success! ({_successCount}/{_totalTriggers})");
-        }
-        else
-        {
-            Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
-        }
-
-        // ����� ���
-        float percentage = (_successCount / (float)_totalTriggers) * 100f;
-        OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
-
-        // ������ Ʈ���� �Ϸ� Ȯ��
-        if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
-        {
-            Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
-            Invoke(nameof(EndGame), endDelaySeconds);
-        }
+        _currentTotalSales = 0;
+        if (stageUIManager) stageUIManager.UpdateSalesUI(0, 0, false);
     }
-
-    void EndGame()
-    {
-        if (_gameEnded) return;
-        _gameEnded = true;
-
-        Debug.Log("[ResultManager] Game ended. Showing result panel...");
-
-        // ������ ���
-        float successRate = (_successCount / (float)_totalTriggers) * 100f;
-
-        // BGM ����
-        if (conductor && conductor.bgmSource)
-        {
-            conductor.bgmSource.Stop();
-        }
-
-        // ���� ��ȯ
-        if (gameFlowManager)
-        {
-            gameFlowManager.EnterFinalResult(successRate);
-        }
-
-        // �г� Ȱ��ȭ
-        ShowResultPanel(successRate);
-    }
-
-    void ShowResultPanel(float successRate)
-    {
-        // ��� �г� ��Ȱ��ȭ
-        if (panel100k) panel100k.SetActive(false);
-        if (panel50k) panel50k.SetActive(false);
-        if (panel0) panel0.SetActive(false);
-
-        // ���ǿ� �´� �гθ� Ȱ��ȭ
-        if (successRate >= 80f)
-        {
-            if (panel100k) panel100k.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 100k (Success Rate: {successRate:F1}%)");
-        }
-        else if (successRate >= 50f)
-        {
-            if (panel50k) panel50k.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 50k (Success Rate: {successRate:F1}%)");
-        }
-        else
-        {
-            if (panel0) panel0.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 0 (Success Rate: {successRate:F1}%)");
-        }
-    }
-
-    // �ܺο��� ȣ�� ����
-    public int GetSuccessCount() => _successCount;
-    public int GetTotalTriggers() => _totalTriggers;
-    public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
 }
 
 --------------------------------------------------
@@ -5853,62 +5741,73 @@ public class StageModeSelector : MonoBehaviour
 --------------------------------------------------
 
 --- FILENAME: StageUIManager.cs (Assets/2_Stage1/Scripts/StageUIManager.cs) ---
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class StageUIManager : MonoBehaviour
 {
-    public static StageUIManager Instance;
+    [Header("Refs - Managers")]
+    public RhythmConductor conductor; // [필수] RhythmConductor 연결
 
-    [Header("HUD - Judgement")]
-    public TextMeshProUGUI judgeText; // "PERFECT!" 텍스트
+    [Header("UI - Play Game Status")]
+    public Slider sliderSongProgress;        // 곡 진행도 슬라이더
 
-    [Header("HUD - Gauge")]
-    public Slider gaugeSlider;         // 게이지 바
-    public Image gaugeFill;            // 색상 변경용
-    public Gradient gaugeColor;        // 0~100% 색상
+    [Header("UI - Sales Info")]
+    public TextMeshProUGUI txtRealtimeSales; // 매출 텍스트
+    public TextMeshProUGUI txtFeedback;      // 피드백 텍스트 (+5000원)
 
-    [Header("Guides")]
-    public GameObject radioGuide;      // 라디오 위 화살표
-    public GameObject handTooltip;     // 왼손 메뉴 설명
-
-    void Awake()
+    private void Start()
     {
-        Instance = this;
-        if (judgeText) judgeText.gameObject.SetActive(false);
+        if (txtFeedback) txtFeedback.gameObject.SetActive(false);
+        UpdateSalesUI(0, 0, false);
     }
 
-    // 판정 띄우기
-    public void ShowJudgement(string text, Color color)
+    void Update()
     {
-        if (!judgeText) return;
-        judgeText.text = text;
-        judgeText.color = color;
-        judgeText.gameObject.SetActive(true);
+        // 매 프레임 노래 시간을 체크해서 슬라이더 갱신
+        if (conductor != null && sliderSongProgress != null)
+        {
+            // 1. 현재 노래 시간 (BgmTime 변수 사용)
+            float current = conductor.BgmTime;
+            
+            // 2. 노래 전체 길이 (오디오 소스에서 가져옴)
+            float length = 1f;
+            if (conductor.bgmSource != null && conductor.bgmSource.clip != null)
+            {
+                length = conductor.bgmSource.clip.length;
+            }
 
-        // 연출: 커졌다가 사라짐 (임시)
-        judgeText.transform.localScale = Vector3.one * 1.5f;
-        CancelInvoke(nameof(HideJudge));
-        Invoke(nameof(HideJudge), 0.5f);
-    }
-    void HideJudge() => judgeText.gameObject.SetActive(false);
-
-    // 게이지 업데이트
-    public void UpdateGauge(float current, float max)
-    {
-        if (!gaugeSlider) return;
-        float ratio = Mathf.Clamp01(current / max);
-        gaugeSlider.value = ratio;
-        if (gaugeFill && gaugeColor != null) 
-            gaugeFill.color = gaugeColor.Evaluate(ratio);
+            // 3. 슬라이더 값 적용 (0~1 사이)
+            if (length > 0)
+            {
+                sliderSongProgress.value = Mathf.Clamp01(current / length);
+            }
+        }
     }
 
-    // 가이드 끄기
-    public void SetGuides(bool showRadio, bool showHand)
+    // 돈 벌었을 때 호출됨 (ResultManager에서)
+    public void UpdateSalesUI(int totalSales, int addedSales, bool showFeedback = true)
     {
-        if (radioGuide) radioGuide.SetActive(showRadio);
-        if (handTooltip) handTooltip.SetActive(showHand);
+        if (txtRealtimeSales)
+        {
+            txtRealtimeSales.text = string.Format("{0:#,###}원", totalSales);
+        }
+
+        if (showFeedback && txtFeedback && addedSales > 0)
+        {
+            StopAllCoroutines(); 
+            StartCoroutine(CoShowFeedback(addedSales));
+        }
+    }
+
+    IEnumerator CoShowFeedback(int amount)
+    {
+        txtFeedback.text = string.Format("+ {0:#,###}원", amount);
+        txtFeedback.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.0f);
+        txtFeedback.gameObject.SetActive(false);
     }
 }
 
@@ -6232,8 +6131,7 @@ public class TutorialController : MonoBehaviour
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
-    // 🔥 [최종 화면 로직]
-    void CompleteTutorial()
+void CompleteTutorial()
     {
         _tutorialCompleted = true;
 
@@ -6241,7 +6139,11 @@ public class TutorialController : MonoBehaviour
         string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
         string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
 
-        // 1. 리갈패드
+        // 1. 방해되는 기존 텍스트 끄기 (이게 없어서 겹쳤던 것!)
+        if (salesText) salesText.gameObject.SetActive(false); 
+        if (monitorText) monitorText.gameObject.SetActive(false);
+
+        // 2. 리갈패드 도장 쾅
         if (missionBoard)
         {
             missionBoard.ShowSuccessStamp(true);
@@ -6249,15 +6151,13 @@ public class TutorialController : MonoBehaviour
             missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
         
-        // 2. 모니터 결과창
+        // 3. 모니터 결과창 켜기
         if (finalResultPanel)
         {
             finalResultPanel.SetActive(true);
             
-            // 금액 대신 '합 격'
             if (finalTotalText) finalTotalText.text = bigTitle;
             
-            // 설명 멘트 + 트리거 힌트
             if (finalCommentText) 
             { 
                 finalCommentText.text = finalMessage + startHint; 
@@ -6265,8 +6165,6 @@ public class TutorialController : MonoBehaviour
             }
         }
         
-        ShowMonitorText(finalMessage, Color.cyan);
-
         // 입력 대기 시작
         _waitForFinalInput = true;
     }
@@ -6277,13 +6175,21 @@ public class TutorialController : MonoBehaviour
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
     }
 
-    void Cleanup()
+void Cleanup()
     {
+        // 튜토리얼 모드 해제
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
-        if (salesUIGroup) salesUIGroup.SetActive(false);
+        
+        // 결과창 닫기 (이게 없어서 게임 시작해도 화면이 그대로였던 것!)
+        if (finalResultPanel) finalResultPanel.SetActive(false);
+
+        // Sales UI 그룹은 본 게임에서도 써야 하니 끄지 말고, 텍스트만 초기화하거나 켜두기
+        // (GameFlowManager가 어차피 갱신하겠지만 안전하게)
+        if (salesUIGroup) salesUIGroup.SetActive(true);
+        if (salesText) salesText.gameObject.SetActive(true); // 다시 켜줘야 본게임 때 돈이 보임
+
         if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
     }
-
     void ShowMonitorText(string text, Color color)
     {
         if (monitorText) { monitorText.text = text; monitorText.color = color; monitorText.gameObject.SetActive(true); }
