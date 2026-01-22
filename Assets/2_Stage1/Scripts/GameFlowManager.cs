@@ -21,9 +21,6 @@ public class GameFlowManager : MonoBehaviour
     [Header("Settings")]
     public string mainMenuSceneName = "Main_v4.1";
 
-    // ❌ [삭제됨] 내부 enum 정의 삭제 -> GameState.cs를 따르게 됨
-    // public enum GameState { Intro, PlayingMain, Paused, FinalResult } 
-
     public GameState CurrentState { get; private set; } = GameState.Intro;
 
     GameState _stateBeforePause;
@@ -32,9 +29,9 @@ public class GameFlowManager : MonoBehaviour
     {
         Debug.Log("[GameFlowManager] 실전 모드 활성화됨");
         
-        // GameState.cs에 Intro를 추가했으므로 정상 작동함
         CurrentState = GameState.Intro; 
         
+        // 0.5초 뒤 게임 시작
         Invoke(nameof(StartMainGame), 0.5f);
     }
 
@@ -45,44 +42,43 @@ public class GameFlowManager : MonoBehaviour
 
     public void StartMainGame()
     {
-        Debug.Log("[GameFlowManager] 실전 영업 개시!");
+        if (CurrentState == GameState.PlayingMain) return;
+
+        Debug.Log("[GameFlowManager] StartMainGame!");
         CurrentState = GameState.PlayingMain;
 
-        // 1. 주문서 갱신
+        // 1. 도구 칼로 변경
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+
+        // 2. 리갈패드 업데이트
         if (missionBoard)
         {
-            missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("< 점심 주문 >");
-            missionBoard.UpdateText("< 점심 주문 >", "주문이 폭주합니다!\n정신 바짝 차리세요!", "");
-            missionBoard.ShowSuccessStamp(false);
+            missionBoard.UpdateHeader("< 영 업 중 >");
+            missionBoard.UpdateMission("주문이 밀려옵니다!", 0, 0);
         }
 
-        // 2. 하드웨어 세팅
-        if (radio) radio.SetClickable(false);
-        if (toolSwitcher) toolSwitcher.SwitchToKnife();
-        if (plateController) plateController.ResetToEmptyPlate();
-
-        // 3. UI 초기화
-        if (StageUIManager.Instance)
-        {
-            StageUIManager.Instance.UpdateGauge(0, 1);
-            StageUIManager.Instance.SetGuides(false, true);
-        }
-
-        // 4. 리듬 게임 시작
+        // 3. 데이터 로드 및 음악 재생
         if (conductor && mainTriggerList)
         {
-            conductor.isTutorialMode = false;
             conductor.data = mainTriggerList;
-            conductor.StartGame();
+            
+            // PlayBgm 함수가 있다면 실행, 없으면 AudioSource 직접 재생
+            // (RhythmConductor 버전에 따라 다를 수 있어 안전하게 처리)
+            if (conductor.bgmSource)
+            {
+                conductor.bgmSource.clip = mainTriggerList.bgm;
+                conductor.bgmSource.Play();
+            }
+            
+            // 컨덕터 시작 (노트 내려오기 시작)
+            // conductor.Play(); // 필요 시 주석 해제
         }
 
-        if (resultManager && mainTriggerList)
-        {
-            resultManager.StartTracking(mainTriggerList.triggers.Length);
-        }
+        // [삭제됨] resultManager.StartTracking(...) 
+        // -> ResultManager를 단순화하면서 이 기능이 빠졌으므로 삭제해야 에러가 안 남.
     }
 
+    // 일시정지 기능
     public void PauseGame()
     {
         if (CurrentState == GameState.Paused) return;
@@ -106,6 +102,7 @@ public class GameFlowManager : MonoBehaviour
         if (pauseManager) pauseManager.HidePauseMenu();
     }
 
+    // 게임 종료 처리
     public void EnterFinalResult(float successRate)
     {
         CurrentState = GameState.FinalResult;
@@ -123,8 +120,8 @@ public class GameFlowManager : MonoBehaviour
     public void RestartMainGameOnly()
     {
         Time.timeScale = 1f;
-        gameObject.SetActive(false);
-        gameObject.SetActive(true);
+        // 현재 씬 재로딩 (간단한 재시작 구현)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMainMenu()
