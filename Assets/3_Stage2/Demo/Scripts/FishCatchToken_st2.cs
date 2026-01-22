@@ -115,12 +115,7 @@ public class FishCatchToken_st2 : MonoBehaviour
             UnityEngine.Debug.Log($"✅ Fish hit ground - triggering MISS for {gameObject.name}");
 
             // MISS 처리
-            var gf = GameFlowController_st2.Instance;
-            if (gf != null && gf.judgeSystem != null)
-            {
-                gf.judgeSystem.ResolveMissFromGround(this);
-            }
-
+            
             // MISS 피드백
             FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
         }

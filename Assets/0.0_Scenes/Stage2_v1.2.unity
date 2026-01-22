@@ -1450,13 +1450,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285979274}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: -4.4420004, y: 1.936, z: 9.849}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1597276627}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &306578032 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8eb2b2fe8dd190b4199aad784505bb35, type: 3}
@@ -2962,6 +2962,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 903122777}
+  - component: {fileID: 903122778}
+  - component: {fileID: 903122784}
+  - component: {fileID: 903122783}
+  - component: {fileID: 903122782}
+  - component: {fileID: 903122781}
+  - component: {fileID: 903122780}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -2994,6 +3000,91 @@ Transform:
   - {fileID: 1819986217}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &903122778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31253b4cf9925ef46b92663d1001e7c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &903122780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df951a1fccac6a643882ff7f4b18658e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+--- !u!114 &903122781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2d73974e033ccb43b85f74dbd4d4505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+  bag: {fileID: 1597276628}
+  bagFishVisualPrefab: {fileID: 306578032}
+--- !u!114 &903122782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fec2cf4ad35db940b4522bf79768b48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+  snapHoldSeconds: 0.2
+  fadeSeconds: 0.25
+  leftHandSnap: {fileID: 1735968137}
+  rightHandSnap: {fileID: 1735968136}
+--- !u!114 &903122783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f18b7031d4e7f64997cc71a9d6b305e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+  economy: {fileID: 1475210783}
+--- !u!114 &903122784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903122776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 192b718ba41ee734699395c8670df9f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+  judge: {fileID: 873462218}
 --- !u!1 &928722088
 GameObject:
   m_ObjectHideFlags: 0
@@ -3683,12 +3774,29 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 10.000001, y: 2.2204463e-16, z: 10.000001}
   m_Center: {x: 0.000000029802322, y: 0, z: 0}
+--- !u!114 &1123334863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123334853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3e62bacae673346bb42bb093820b1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hub: {fileID: 903122778}
+  judge: {fileID: 873462218}
+  fishLayer:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &1179276669
 GameObject:
   m_ObjectHideFlags: 0
@@ -6110,6 +6218,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1123334858}
+    - targetCorrespondingSourceObject: {fileID: 4879923253712924804, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1123334863}
   m_SourcePrefab: {fileID: 100100000, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
 --- !u!4 &1610901170 stripped
 Transform:
@@ -6542,16 +6653,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensor: {fileID: 1735968144}
-  handController: 2
-  handTransform: {fileID: 2062163475}
-  snapAudioSource: {fileID: 2062163476}
-  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
-  snapHoldSeconds: 0.2
-  bagFishVisualPrefab: {fileID: 306578032}
   lastJudgeResult: 0
   lastHandName: 
-  hasJudgedOnce: 0
+  hub: {fileID: 0}
+  leftHandRoot: {fileID: 0}
+  rightHandRoot: {fileID: 0}
+  leftSensor: {fileID: 0}
+  rightSensor: {fileID: 0}
+  fishLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  catchRadius: 0.12
+  triggerThreshold: 0.9
+  perHandCooldown: 0.05
 --- !u!114 &1735968143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6564,16 +6678,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c352975ea34ef4b819f81282c02707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensor: {fileID: 1735968145}
-  handController: 1
-  handTransform: {fileID: 1735968137}
-  snapAudioSource: {fileID: 1735968141}
-  snapSoundClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
-  snapHoldSeconds: 0.2
-  bagFishVisualPrefab: {fileID: 306578032}
   lastJudgeResult: 0
   lastHandName: 
-  hasJudgedOnce: 0
+  hub: {fileID: 903122778}
+  leftHandRoot: {fileID: 1735968137}
+  rightHandRoot: {fileID: 1735968136}
+  leftSensor: {fileID: 0}
+  rightSensor: {fileID: 0}
+  fishLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  catchRadius: 5
+  triggerThreshold: 0.9
+  perHandCooldown: 0.05
 --- !u!114 &1735968144
 MonoBehaviour:
   m_ObjectHideFlags: 0

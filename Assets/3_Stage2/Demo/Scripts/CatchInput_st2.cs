@@ -1,157 +1,192 @@
-﻿using System.Collections;
+﻿using System.Reflection;
 using UnityEngine;
 using static GameState_st2;
 
 public class CatchInput_st2 : MonoBehaviour
 {
-    [Header("참조")]
-    public HandCatchSensor_st2 sensor;
-    public OVRInput.Controller handController;
-    public Transform handTransform;
-
-    [Header("사운드")]
-    public AudioSource snapAudioSource;
-    public AudioClip snapSoundClip;
-
-    [Header("스냅 연출")]
-    public float snapHoldSeconds = 0.2f;
-
-    [Header("봉투에 넣을 비주얼 프리팹")]
-    public GameObject bagFishVisualPrefab;
-
-    private JudgeSystem_st2 judgeSystem;
-    private BagManager_st2 bagManager;
-    private EconomySystem_st2 economySystem;
-
-    // HUD용
+    // ✅ DebugHUD/GameFlowController 호환용 (기존 스크립트가 읽는 필드)
+    // - 판정 결과는 hub.JudgeResolved 구독으로 "값만" 업데이트됨 (로직 결합 X)
     public JudgeResult_st2 lastJudgeResult = JudgeResult_st2.Miss;
-    public string lastHandName;
-    public bool hasJudgedOnce = false;
+    public string lastHandName = "-";
 
-    public void Initialize(JudgeSystem_st2 judge, BagManager_st2 bag, EconomySystem_st2 economy, MoldController_st2[] moldControllers)
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Hand Roots (required if no sensor)")]
+    public Transform leftHandRoot;
+    public Transform rightHandRoot;
+
+    [Header("Optional Sensors (if you already have HandCatchSensor_st2 or similar)")]
+    public MonoBehaviour leftSensor;
+    public MonoBehaviour rightSensor;
+
+    [Header("Target Search Fallback")]
+    public LayerMask fishLayer = ~0;
+    public float catchRadius = 0.12f;
+
+    [Header("Input")]
+    [Range(0f, 1f)] public float triggerThreshold = 0.9f;
+    public float perHandCooldown = 0.05f;
+
+    private double _lastLeftAttemptDsp = -999;
+    private double _lastRightAttemptDsp = -999;
+    private bool _subscribed = false;
+
+    public void Initialize(Stage2EventHub_st2 eventHub)
     {
-        judgeSystem = judge;
-        bagManager = bag;
-        economySystem = economy;
-
-        lastJudgeResult = JudgeResult_st2.Miss;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
-        hasJudgedOnce = false;
+        hub = eventHub;
+        TryBindHub();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        var gf = GameFlowController_st2.Instance;
-        if (gf == null) return;
-
-        if (gf.CurrentState != GameStatest2.Playing) return;
-        if (gf.isEndingTriggered) return;
-
-        ProcessHandInput();
+        TryBindHub();
     }
 
-    void ProcessHandInput()
+    private void OnDisable()
     {
-        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, handController))
-            return;
+        TryUnbindHub();
+    }
 
-        var target = sensor != null ? sensor.currentTarget : null;
-        if (target == null) return;
-        if (target.isResolved) return;
+    private void TryBindHub()
+    {
+        if (_subscribed) return;
+        if (hub == null) return;
 
-        double catchTime = AudioSettings.dspTime;
+        hub.JudgeResolved += OnJudgeResolved_Debug;
+        _subscribed = true;
+    }
 
-        // ✅ JudgeSystem을 통해 판정 수행 (통계 자동 업데이트 + 이벤트 발행)
-        JudgeResult_st2 result = judgeSystem.PerformJudge(target, catchTime);
+    private void TryUnbindHub()
+    {
+        if (!_subscribed) return;
+        if (hub == null) { _subscribed = false; return; }
 
+        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        _subscribed = false;
+    }
+
+    // ✅ Debug 필드 업데이트 전용 (표시용)
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
         lastJudgeResult = result;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
-        hasJudgedOnce = true;
-
-        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
-            OnCatchSuccess(target, result);
-        else
-            OnCatchMiss(target);
+        lastHandName = HandToName(hand);
     }
 
-    void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
+    private void Update()
     {
-        if (fish == null) return;
+        if (hub == null) return;
 
-        fish.OnCaught();
-
-        Vector3 originalPos = fish.transform.position;
-
-        // 센서(손)로 스냅
-        Transform snapParent = (sensor != null) ? sensor.transform : (handTransform != null ? handTransform : transform);
-
-        fish.transform.position = snapParent.position;
-        fish.transform.SetParent(snapParent, true);
-
-        if (snapAudioSource != null && snapSoundClip != null)
-            snapAudioSource.PlayOneShot(snapSoundClip);
-
-        string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(originalPos, feedbackText);
-
-        // ✅ 튜토리얼과 동일: 0.2초 붙였다가 → 봉투 추가 → 풀 반환
-        StartCoroutine(SnapHoldThenBagAndRelease(fish));
+        ProcessHand(OVRInput.Controller.LTouch, leftHandRoot, leftSensor, ref _lastLeftAttemptDsp);
+        ProcessHand(OVRInput.Controller.RTouch, rightHandRoot, rightSensor, ref _lastRightAttemptDsp);
     }
 
-    // ✅ 튜토리얼과 완전 동일한 로직
-    IEnumerator SnapHoldThenBagAndRelease(FishCatchToken_st2 fish)
+    private void ProcessHand(OVRInput.Controller hand, Transform handRoot, MonoBehaviour sensor, ref double lastAttemptDsp)
     {
-        if (fish == null) yield break;
+        double dsp = AudioSettings.dspTime;
+        if (dsp - lastAttemptDsp < perHandCooldown) return;
 
-        var owner = fish.ownerMold;
+        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
+        bool pressed = axis >= triggerThreshold;
+        if (!pressed) return;
 
-        // ✅ 0.2초 홀드 (튜토리얼과 동일)
-        yield return new WaitForSeconds(snapHoldSeconds);
+        // ✅ HUD가 "마지막 입력 손" 표시할 수 있게 시도 시점에도 갱신(표시용)
+        lastHandName = HandToName(hand);
 
-        // 안전 체크
-        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
-        {
-            UnityEngine.Debug.LogWarning("Fish was destroyed during hold");
-            yield break;
-        }
+        var target = TryGetTargetFromSensor(sensor);
+        if (target == null)
+            target = FindClosestFishByOverlap(handRoot);
 
-        // ✅ 봉투에 비주얼 추가 (BagManager가 3개 제한 자동 처리)
-        if (bagManager != null)
-        {
-            bagManager.AddItem(bagFishVisualPrefab);
-            UnityEngine.Debug.Log($"✅ Visual fish added to bag");
-        }
+        if (target == null) return;
 
-        // ✅ 손에서 떼기
-        fish.transform.SetParent(null, true);
+        lastAttemptDsp = dsp;
 
-        // ✅ 실물 붕어빵은 풀로 반환
-        if (owner != null)
-        {
-            owner.ReleaseFish(fish);
-            UnityEngine.Debug.Log($"✅ Real fish returned to pool");
-        }
-        else
-        {
-            fish.gameObject.SetActive(false);
-            UnityEngine.Debug.LogWarning("Fish has no owner, deactivated instead");
-        }
+        // ✅ 여기서부터가 v6.2 핵심: 판정/봉투/임금 직접 호출 금지
+        hub.PublishCatchAttempted(target, hand, dsp);
     }
 
-    void OnCatchMiss(FishCatchToken_st2 fish)
+    private FishCatchToken_st2 TryGetTargetFromSensor(MonoBehaviour sensor)
     {
-        if (fish == null) return;
+        if (sensor == null) return null;
 
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, "MISS");
-
-        // ✅ 혹시라도 부모에 붙어있을 가능성 대비: 무조건 떨어지는 상태 보장
-        fish.transform.SetParent(null, true);
-
-        var rb = fish.GetComponent<Rigidbody>();
-        if (rb != null)
+        try
         {
-            rb.isKinematic = false;
-            rb.useGravity = true;
+            var t = sensor.GetType();
+
+            // 1) GetCurrentTarget()
+            var mi = t.GetMethod("GetCurrentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (mi != null)
+            {
+                var r = mi.Invoke(sensor, null);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
+
+            // 2) CurrentTarget property
+            var pi = t.GetProperty("CurrentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (pi != null)
+            {
+                var r = pi.GetValue(sensor);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
+
+            // 3) currentTarget field
+            var fi = t.GetField("currentTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (fi != null)
+            {
+                var r = fi.GetValue(sensor);
+                if (r is FishCatchToken_st2 fish) return fish;
+            }
         }
+        catch { /* ignore */ }
+
+        return null;
     }
+
+    private FishCatchToken_st2 FindClosestFishByOverlap(Transform handRoot)
+    {
+        if (handRoot == null) return null;
+
+        Collider[] hits = Physics.OverlapSphere(handRoot.position, catchRadius, fishLayer, QueryTriggerInteraction.Collide);
+        if (hits == null || hits.Length == 0) return null;
+
+        FishCatchToken_st2 best = null;
+        float bestD = float.MaxValue;
+
+        foreach (var c in hits)
+        {
+            if (c == null) continue;
+            var fish = c.GetComponentInParent<FishCatchToken_st2>();
+            if (fish == null) continue;
+
+            float d = (fish.transform.position - handRoot.position).sqrMagnitude;
+            if (d < bestD)
+            {
+                bestD = d;
+                best = fish;
+            }
+        }
+
+        return best;
+    }
+
+    private static string HandToName(OVRInput.Controller hand)
+    {
+        return hand == OVRInput.Controller.LTouch ? "Left" :
+               hand == OVRInput.Controller.RTouch ? "Right" :
+               hand.ToString();
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if (leftHandRoot != null) Gizmos.DrawWireSphere(leftHandRoot.position, catchRadius);
+        if (rightHandRoot != null) Gizmos.DrawWireSphere(rightHandRoot.position, catchRadius);
+    }
+#endif
 }

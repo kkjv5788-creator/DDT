@@ -1,4 +1,7 @@
+using System;
+using System.Reflection;
 using UnityEngine;
+using static GameState_st2;
 
 public class JudgeBridge_st2 : MonoBehaviour
 {
@@ -23,14 +26,62 @@ public class JudgeBridge_st2 : MonoBehaviour
 
     private void OnCatchAttempted(FishCatchToken_st2 fish, OVRInput.Controller hand, double catchDspTime)
     {
-        if (judge == null || fish == null) return;
+        if (hub == null || judge == null || fish == null) return;
 
-        // ? 기존 PerformJudge 로직 그대로 사용
-        JudgeResult_st2 result = judge.PerformJudge(fish, catchDspTime);
+        // PerformJudge(fish, catchDspTime) 호출 (시그니처가 다를 수 있어 reflection 사용)
+        JudgeResult_st2 result = JudgeResult_st2.Miss;
 
-        // delta 계산이 기존 로직(예: fish.popDspTime) 기반이면 그걸 그대로
-        float delta = fish.TryGetDeltaFromPop((float)catchDspTime, out var d) ? d : 0f;
+        try
+        {
+            var mi = judge.GetType().GetMethod("PerformJudge",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
+            if (mi != null)
+            {
+                object r = mi.GetParameters().Length switch
+                {
+                    2 => mi.Invoke(judge, new object[] { fish, catchDspTime }),
+                    1 => mi.Invoke(judge, new object[] { fish }),
+                    _ => mi.Invoke(judge, null)
+                };
+
+                if (r is JudgeResult_st2 jr) result = jr;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[JudgeBridge_st2] PerformJudge invoke failed: {e.Message}");
+            result = JudgeResult_st2.Miss;
+        }
+
+        float delta = ComputeDeltaFromFishPopTime(fish, catchDspTime);
         hub.PublishJudgeResolved(fish, result, hand, delta);
+    }
+
+    private float ComputeDeltaFromFishPopTime(FishCatchToken_st2 fish, double catchDspTime)
+    {
+        // popTime/popDspTime 등의 필드가 있으면 delta 계산, 없으면 0
+        try
+        {
+            var t = fish.GetType();
+            var f1 = t.GetField("popDspTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (f1 != null && f1.GetValue(fish) is double popDsp)
+                return (float)(catchDspTime - popDsp);
+
+            var f2 = t.GetField("popTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (f2 != null && f2.GetValue(fish) is double popTime)
+                return (float)(catchDspTime - popTime);
+
+            var p1 = t.GetProperty("popDspTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (p1 != null && p1.GetValue(fish) is double popDsp2)
+                return (float)(catchDspTime - popDsp2);
+
+            var p2 = t.GetProperty("popTime", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (p2 != null && p2.GetValue(fish) is double popTime2)
+                return (float)(catchDspTime - popTime2);
+        }
+        catch { /* ignore */ }
+
+        return 0f;
     }
 }

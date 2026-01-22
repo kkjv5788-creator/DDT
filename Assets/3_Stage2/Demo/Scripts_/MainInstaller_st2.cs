@@ -1,27 +1,30 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class MainInstaller_st2 : MonoBehaviour
 {
-    [Header("Core Refs")]
-    [SerializeField] private CatchInput_st2[] catchInputs;
-    [SerializeField] private JudgeSystem_st2 judgeSystem;
-    [SerializeField] private EconomySystem_st2 economySystem;
-    [SerializeField] private BagManager_st2 bagManager;
+    [Header("Main Systems (MainRoot)")]
+    public CatchInput_st2[] catchInputs;
+    public JudgeSystem_st2 judgeSystem;
+    public EconomySystem_st2 economySystem;
+    public BagManager_st2 bagManager;
 
     [Header("Optional")]
-    [SerializeField] private GroundMissReporter_st2 groundMissReporter;
+    public GroundMissReporter_st2 groundMissReporter;
 
     private void Awake()
     {
-        // 1) Çãºê´Â MainRoot ¾Æ·¡¿¡¼­¸¸ »ı¼º/ÂüÁ¶
+        // âœ… MainRoot ì•„ë˜ì—ë§Œ í—ˆë¸Œê°€ ì¡´ì¬í•´ì•¼ í•¨
         var hub = GetComponent<Stage2EventHub_st2>();
         if (hub == null) hub = gameObject.AddComponent<Stage2EventHub_st2>();
 
-        // 2) CatchInputÀº Çãºê¸¸ ÁÖÀÔ
-        foreach (var input in catchInputs)
-            if (input != null) input.Initialize(hub);
+        // CatchInputì€ í—ˆë¸Œë§Œ ë°›ìŒ
+        if (catchInputs != null)
+        {
+            foreach (var input in catchInputs)
+                if (input != null) input.Initialize(hub);
+        }
 
-        // 3) ºê¸®Áö/¸®½º³Ê ±¸¼º
+        // ë¸Œë¦¬ì§€/ë¦¬ìŠ¤ë„ˆ/ì •ì±…/ì—°ì¶œ/ì†Œë¹„
         var judgeBridge = gameObject.AddComponent<JudgeBridge_st2>();
         judgeBridge.Construct(hub, judgeSystem);
 
