@@ -1,7 +1,7 @@
-﻿using System;
+﻿// BagManager_st2.cs (Assets/3_Stage2/Demo/Scripts/BagManager_st2.cs)
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class BagManager_st2 : MonoBehaviour
@@ -13,8 +13,22 @@ public class BagManager_st2 : MonoBehaviour
     public int itemsPerBag = 3;
     public int maxFilledBags = 10;
 
-    [Header("스택 배치")]
+    [Header("스택 배치 (Legacy)")]
+    [Tooltip("예전(Y축) 스택 간격. 이제 그리드 배치를 쓰므로 기본적으로 사용하지 않음.")]
     public float stackSpacingY = 0.12f;
+
+    [Header("스택 배치 (Grid)")]
+    [Tooltip("한 줄(가로)로 몇 개 쌓을지. 요청사항: 5")]
+    public int stackColumns = 5;
+
+    [Tooltip("가로(-X) 방향 봉투 간격(로컬 기준)")]
+    public float stackSpacingX = 0.12f;
+
+    [Tooltip("세로(-Z) 방향 줄 간격(로컬 기준)")]
+    public float stackSpacingZ = 0.9f;
+
+    [Tooltip("스택의 시작 오프셋(로컬). 기준 위치 미세조정용")]
+    public Vector3 stackOffsetLocal = Vector3.zero;
 
     [Header("붕어빵 비주얼 프리팹(선택)")]
     public GameObject fishVisualPrefab;
@@ -49,8 +63,7 @@ public class BagManager_st2 : MonoBehaviour
     // (3) 실물 붕어빵을 봉투에 추가 (사용 안 함, 호환용만 남김)
     public void AddItem(FishCatchToken_st2 fish)
     {
-        // 비주얼 방식 사용 시 이 메서드는 호출 안 됨
-        UnityEngine.Debug.LogWarning("AddItem(FishCatchToken) called but using visual mode");
+        Debug.LogWarning("AddItem(FishCatchToken) called but using visual mode");
         AddFishVisual(fishVisualPrefab);
     }
 
@@ -61,7 +74,7 @@ public class BagManager_st2 : MonoBehaviour
     {
         if (currentBag == null)
         {
-            UnityEngine.Debug.LogError("❌ currentBag is null!");
+            Debug.LogError("❌ currentBag is null!");
             return;
         }
 
@@ -69,18 +82,18 @@ public class BagManager_st2 : MonoBehaviour
 
         if (prefab == null)
         {
-            UnityEngine.Debug.LogError("❌ No fish visual prefab assigned!");
+            Debug.LogError("❌ No fish visual prefab assigned!");
             return;
         }
 
         currentBag.AddItem(prefab);
-        UnityEngine.Debug.Log($"✅ Visual added to bag. Count: {currentBag.itemCount}/{itemsPerBag}");
+        Debug.Log($"✅ Visual added to bag. Count: {currentBag.itemCount}/{itemsPerBag}");
 
         OnItemAdded?.Invoke(currentBag.itemCount);
 
         if (currentBag.itemCount >= itemsPerBag)
         {
-            UnityEngine.Debug.Log("✅ Bag full, swapping...");
+            Debug.Log("✅ Bag full, swapping...");
             SwapBag();
         }
     }
@@ -96,7 +109,7 @@ public class BagManager_st2 : MonoBehaviour
     {
         if (bagPrefab == null || currentBagAnchor == null)
         {
-            UnityEngine.Debug.LogError("❌ bagPrefab or currentBagAnchor not assigned!");
+            Debug.LogError("❌ bagPrefab or currentBagAnchor not assigned!");
             return;
         }
 
@@ -108,7 +121,7 @@ public class BagManager_st2 : MonoBehaviour
         if (currentBag == null)
             currentBag = bagObj.AddComponent<BagView_st2>();
 
-        UnityEngine.Debug.Log("✅ New bag created");
+        Debug.Log("✅ New bag created");
 
         StartCoroutine(FadeIn(bagObj, 0.2f));
     }
@@ -131,12 +144,24 @@ public class BagManager_st2 : MonoBehaviour
         RepositionStack();
     }
 
+    // ✅ 핵심 변경: Y축 스택 -> (-X)로 5개씩, 다음 줄은 (-Z)로 이동하는 그리드
     void RepositionStack()
     {
+        int cols = Mathf.Max(1, stackColumns);
+        float dx = Mathf.Abs(stackSpacingX); // 항상 양수로 받아서
+        float dz = Mathf.Abs(stackSpacingZ); // 아래에서 - 부호로 방향 고정
+
         for (int i = 0; i < filledBags.Count; i++)
         {
             if (filledBags[i] == null) continue;
-            filledBags[i].transform.localPosition = new Vector3(0f, -stackSpacingY * i, 0f);
+
+            int col = i % cols;      // 0~4
+            int row = i / cols;      // 0부터 증가
+
+            float x = -dx * col;     // 요청: -X로 진행
+            float z = -dz * row;     // 요청: -Z로 줄바꿈
+
+            filledBags[i].transform.localPosition = stackOffsetLocal + new Vector3(x, 0f, z);
             filledBags[i].transform.localRotation = Quaternion.identity;
         }
     }
@@ -198,7 +223,6 @@ public class BagManager_st2 : MonoBehaviour
     // =========================
     // 외부에서 쓰는 유틸
     // =========================
-
     public void FinalizeBag()
     {
         if (currentBag != null && currentBag.itemCount > 0)
