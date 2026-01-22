@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.Pool;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 
+/// <summary>
+/// 메인 전용 손 센서 - 레이캐스트 기반 타겟 선택 + 라인렌더러 표시
+/// (튜토 TutorialHandSensor_st2 로직을 FishCatchToken_st2로 이식)
+/// </summary>
 public class HandCatchSensor_st2 : MonoBehaviour
 {
     [Header("설정")]
@@ -13,7 +11,7 @@ public class HandCatchSensor_st2 : MonoBehaviour
     public LayerMask fishLayer;
     public float raycastLength = 0.15f;
 
-    [Header("LineRenderer 설정")]
+    [Header("LineRenderer")]
     public LineRenderer lineRenderer;
     public bool showLineRenderer = true;
 
@@ -24,13 +22,11 @@ public class HandCatchSensor_st2 : MonoBehaviour
 
     [Header("라인 스타일")]
     public float lineWidth = 0.002f;
-    public int lineSegments = 20;
-    public AnimationCurve lineWidthCurve = AnimationCurve.Linear(0, 1, 1, 0.3f);
 
-    [Header("상태")]
+    [Header("현재 타겟(읽기용)")]
     public FishCatchToken_st2 currentTarget;
 
-    private RaycastHit[] hits = new RaycastHit[10];
+    private readonly RaycastHit[] hits = new RaycastHit[16];
     private Transform cachedTransform;
 
     void Awake()
@@ -39,84 +35,68 @@ public class HandCatchSensor_st2 : MonoBehaviour
         SetupLineRenderer();
     }
 
-    void Start()
+    public void Initialize(OVRInput.Controller controller)
     {
-        if (lineRenderer != null && !showLineRenderer)
-        {
-            lineRenderer.enabled = false;
-        }
-    }
+        handController = controller;
 
-    // ✅ 추가: 활성화 시 초기화
-    void OnEnable()
-    {
-        currentTarget = null;
+        if (cachedTransform == null)
+            cachedTransform = transform;
 
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = showLineRenderer;
-        }
-    }
-
-    // ✅ 추가: 비활성화 시 정리
-    void OnDisable()
-    {
-        currentTarget = null;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = false;
-        }
-    }
-
-    void Update()
-    {
-        UpdateCurrentTarget();
-        UpdateLineRenderer();
+        SetupLineRenderer();
     }
 
     void SetupLineRenderer()
     {
         if (lineRenderer == null)
-        {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
-        }
 
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
 
-        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
-        {
+        if (lineRenderer.material == null || lineRenderer.material.shader == null || lineRenderer.material.shader.name != "Unlit/Color")
             lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        }
 
         lineRenderer.startColor = noTargetColor;
         lineRenderer.endColor = noTargetColor;
-        lineRenderer.widthCurve = lineWidthCurve;
         lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         lineRenderer.receiveShadows = false;
     }
 
+    void Update()
+    {
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        UpdateCurrentTarget();
+        UpdateLineRenderer();
+    }
+
     void UpdateCurrentTarget()
     {
+        if (cachedTransform == null) return;
+
         Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
-        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
+        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer, QueryTriggerInteraction.Collide);
 
         FishCatchToken_st2 closestFish = null;
         float closestDistance = float.MaxValue;
 
         for (int i = 0; i < hitCount; i++)
         {
-            var fish = hits[i].collider.GetComponent<FishCatchToken_st2>();
+            var col = hits[i].collider;
+            if (col == null) continue;
 
+            // ✅ 자식 콜라이더 대응(메인 붕어빵은 보통 자식에 콜라이더가 있음)
+            var fish = col.GetComponentInParent<FishCatchToken_st2>();
             if (fish == null) continue;
+            if (!fish.gameObject.activeInHierarchy) continue;
             if (fish.isResolved) continue;
 
             float distance = hits[i].distance;
 
-            // 히스테리시스
+            // ✅ 히스테리시스(튜토와 동일): 이미 잡고 있는 타겟이 있으면 쉽게 안 바뀜
             if (currentTarget != null)
             {
                 if (fish == currentTarget)
@@ -146,15 +126,8 @@ public class HandCatchSensor_st2 : MonoBehaviour
 
     void UpdateLineRenderer()
     {
-        if (lineRenderer == null || !showLineRenderer)
-            return;
-
-        // 게임 상태 체크 (Playing 상태에서만 표시)
-        if (GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
-        {
-            lineRenderer.enabled = false;
-            return;
-        }
+        if (lineRenderer == null || !showLineRenderer) return;
+        if (cachedTransform == null) return;
 
         lineRenderer.enabled = true;
 
@@ -162,9 +135,7 @@ public class HandCatchSensor_st2 : MonoBehaviour
         Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
 
         if (currentTarget != null)
-        {
             endPos = currentTarget.transform.position;
-        }
 
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
@@ -176,31 +147,27 @@ public class HandCatchSensor_st2 : MonoBehaviour
 
     Color GetLineColor()
     {
-        if (currentTarget == null)
-            return noTargetColor;
-        else if (currentTarget.isResolved)
-            return resolvedTargetColor;
-        else
-            return hasTargetColor;
+        if (currentTarget == null) return noTargetColor;
+        if (currentTarget.isResolved) return resolvedTargetColor;
+        return hasTargetColor;
     }
 
-    public void ToggleLineRenderer()
+    public FishCatchToken_st2 GetCurrentTarget()
     {
-        showLineRenderer = !showLineRenderer;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = showLineRenderer;
-        }
+        return currentTarget;
     }
 
     public void SetLineRendererVisible(bool visible)
     {
         showLineRenderer = visible;
-
         if (lineRenderer != null)
-        {
             lineRenderer.enabled = visible;
-        }
+    }
+
+    void OnDisable()
+    {
+        currentTarget = null;
+        if (lineRenderer != null)
+            lineRenderer.enabled = false;
     }
 }

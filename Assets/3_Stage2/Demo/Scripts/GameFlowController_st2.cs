@@ -55,7 +55,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
         foreach (var input in catchInputs)
         {
-            input.Initialize(judgeSystem, bagManager, economySystem, molds);
+           
         }
 
         menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);

@@ -1,124 +1,104 @@
 ﻿using UnityEngine;
-using UnityEngine.Pool;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using static GameState_st2;
 
 public class CatchInput_st2 : MonoBehaviour
 {
-    [Header("참조")]
-    public HandCatchSensor_st2 sensor;
-    public OVRInput.Controller handController;
-    public Transform handTransform;
+    // ✅ DebugHUD/GameFlowController 호환용(표시만)
+    public JudgeResult_st2 lastJudgeResult = JudgeResult_st2.Miss;
+    public string lastHandName = "-";
 
-    [Header("사운드")]
-    public AudioSource snapAudioSource;
-    public AudioClip snapSoundClip;
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
 
-    private JudgeSystem_st2 judgeSystem;
-    private BagManager_st2 bagManager;
-    private EconomySystem_st2 economySystem;
+    [Header("Sensors (Required)")]
+    [SerializeField] private HandCatchSensor_st2 leftSensor;
+    [SerializeField] private HandCatchSensor_st2 rightSensor;
 
-    // ✅ 추가: 마지막 판정/손 기록 (HUD용)
-    public JudgeResult_st2 lastJudgeResult;
-    public string lastHandName;
+    [Header("Input")]
+    [Range(0f, 1f)] public float triggerThreshold = 0.9f;
+    public float perHandCooldown = 0.05f;
 
-    public void Initialize(JudgeSystem_st2 judge, BagManager_st2 bag, EconomySystem_st2 economy, MoldController_st2[] moldControllers)
+    private double _lastLeftAttemptDsp = -999;
+    private double _lastRightAttemptDsp = -999;
+    private bool _subscribed = false;
+
+    public void Initialize(Stage2EventHub_st2 eventHub)
     {
-        judgeSystem = judge;
-        bagManager = bag;
-        economySystem = economy;
-
-        // 초기값 설정
-        lastJudgeResult = JudgeResult_st2.Miss;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
+        hub = eventHub;
+        TryBindHub();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing) return;
-        if (GameFlowController_st2.Instance.isEndingTriggered) return;
-
-        ProcessHandInput();
+        TryBindHub();
     }
 
-    void ProcessHandInput()
+    private void OnDisable()
     {
-        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, handController))
-            return;
+        TryUnbindHub();
+    }
 
-        var snapshotTarget = sensor.currentTarget;
-        if (snapshotTarget == null) return;
-        if (snapshotTarget.isResolved) return;
+    private void TryBindHub()
+    {
+        if (_subscribed) return;
+        if (hub == null) return;
 
-        if (snapshotTarget.assignedHand == null)
-        {
-            snapshotTarget.assignedHand = handController;
-        }
+        hub.JudgeResolved += OnJudgeResolved_Debug;
+        _subscribed = true;
+    }
 
-        if (snapshotTarget.assignedHand != handController)
-            return;
+    private void TryUnbindHub()
+    {
+        if (!_subscribed) return;
+        if (hub == null) { _subscribed = false; return; }
 
-        double catchTime = AudioSettings.dspTime;
-        JudgeResult_st2 result = judgeSystem.PerformJudge(snapshotTarget, catchTime);
+        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        _subscribed = false;
+    }
 
-        // ✅ 마지막 판정 기록
+    // ✅ 표시용 값만 업데이트
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
         lastJudgeResult = result;
-        lastHandName = handController == OVRInput.Controller.LTouch ? "L" : "R";
-
-        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
-        {
-            OnCatchSuccess(snapshotTarget, result);
-        }
-        else
-        {
-            OnCatchMiss(snapshotTarget);
-        }
+        lastHandName = HandToName(hand);
     }
 
-    // ✅ 수정: 1프레임 스냅 보장
-    void OnCatchSuccess(FishCatchToken_st2 fish, JudgeResult_st2 result)
+    private void Update()
     {
-        fish.OnCaught();
+        if (hub == null) return;
 
-        // 손으로 스냅
-        fish.transform.position = handTransform.position;
-        fish.transform.SetParent(handTransform);
-
-        // ✅ "착" 사운드 재생
-        if (snapAudioSource != null && snapSoundClip != null)
-        {
-            snapAudioSource.PlayOneShot(snapSoundClip);
-        }
-
-        string feedbackText = result == JudgeResult_st2.Perfect ? "PERFECT" : "GOOD";
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, feedbackText);
-
-        bagManager.AddItem();
-
-        // ✅ 1프레임 후 풀로 반환 (손에 붙은 모습 보장)
-        StartCoroutine(ReleaseFishAfterFrame(fish));
+        ProcessHand(OVRInput.Controller.LTouch, leftSensor, ref _lastLeftAttemptDsp);
+        ProcessHand(OVRInput.Controller.RTouch, rightSensor, ref _lastRightAttemptDsp);
     }
 
-    // ✅ 추가: 1프레임 대기 후 풀 반환
-    IEnumerator ReleaseFishAfterFrame(FishCatchToken_st2 fish)
+    private void ProcessHand(OVRInput.Controller hand, HandCatchSensor_st2 sensor, ref double lastAttemptDsp)
     {
-        yield return null; // 1프레임 대기
+        double dsp = AudioSettings.dspTime;
+        if (dsp - lastAttemptDsp < perHandCooldown) return;
 
-        if (fish.ownerMold != null)
-        {
-            fish.ownerMold.ReleaseFish(fish);
-        }
+        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
+        if (axis < triggerThreshold) return;
+
+        // 표시용
+        lastHandName = HandToName(hand);
+
+        // ✅ 튜토와 동일: 센서 레이 타겟이 없으면 "아무것도 안 함"
+        if (sensor == null) return;
+
+        var target = sensor.GetCurrentTarget();
+        if (target == null) return;
+        if (target.isResolved) return;
+
+        lastAttemptDsp = dsp;
+
+        // ✅ v6.2 원칙 유지: 여기서는 이벤트만 발행(판정/봉투/임금 직접 호출 금지)
+        hub.PublishCatchAttempted(target, hand, dsp);
     }
 
-    void OnCatchMiss(FishCatchToken_st2 fish)
+    private static string HandToName(OVRInput.Controller hand)
     {
-        FeedbackManager_st2.Instance?.ShowJudgeFeedback(fish.transform.position, "MISS");
-
-        // ✅ Miss는 즉시 삭제하지 않고 낙하 유지
-        // ReleaseFish 호출 제거 - 바닥에서 제거됨
+        return hand == OVRInput.Controller.LTouch ? "Left" :
+               hand == OVRInput.Controller.RTouch ? "Right" :
+               hand.ToString();
     }
 }

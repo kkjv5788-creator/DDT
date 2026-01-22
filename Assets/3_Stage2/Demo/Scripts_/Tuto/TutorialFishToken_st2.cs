@@ -1,27 +1,65 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// Æ©Åä¸®¾ó Àü¿ë ¹°°í±â ÅäÅ« - ¸ŞÀÎ FishCatchToken°ú µ¶¸³
+/// íŠœí† ë¦¬ì–¼ ì „ìš© ë¶•ì–´ë¹µ í† í° - ë©”ì¸ FishCatchToken_st2ì™€ ë…ë¦½
 /// </summary>
 public class TutorialFishToken_st2 : MonoBehaviour
 {
-    [Header("ÆÇÁ¤ µ¥ÀÌÅÍ")]
+    [Header("íŒì • ë°ì´í„°")]
     public double popTime;
     public bool isResolved = false;
     public bool isCaught = false;
 
-    [Header("¹°¸®")]
+    [Header("SFX (Catch Success)")]
+    [SerializeField] private AudioSource catchSfxSource; /*[ë³€ê²½ê°€ëŠ¥_ì¡ê¸°ì„±ê³µì˜¤ë””ì˜¤ì†ŒìŠ¤]*/
+    [SerializeField] private AudioClip catchSnapClip;    /*[ë³€ê²½ê°€ëŠ¥_ì°©ì‚¬ìš´ë“œí´ë¦½]*/
+    [SerializeField, Range(0f, 1f)] private float catchSnapVolume = 1f; /*[ë³€ê²½ê°€ëŠ¥_ì°©ë³¼ë¥¨]*/
+    [SerializeField] private bool catchSnap3D = true; /*[ë³€ê²½ê°€ëŠ¥_3Dì‚¬ìš´ë“œ]*/
+
+    [Header("ë¬¼ë¦¬")]
     private Rigidbody rb;
     private bool hasJumped = false;
 
-    // ¼ÒÀ¯ ¸ôµå
+    // ì†Œìœ  ëª°ë“œ ì¶”ì 
     public TutorialMoldController_st2 ownerMold;
 
-    // Á¡ÇÁ ¼³Á¤ (·±Å¸ÀÓ¿¡ ÁÖÀÔ)
+    // ì í”„ ì„¤ì • (ì¸ìŠ¤í™í„°ì—ì„œ ì£¼ì…)
     private float jumpHeight;
     private float forwardDistance;
     private float gravity;
     private LayerMask groundLayer;
+
+    private void Reset()
+    {
+        if (catchSfxSource == null) catchSfxSource = GetComponent<AudioSource>();
+    }
+
+    private AudioSource GetOrCreateCatchSfxSource()
+    {
+        if (catchSfxSource != null) return catchSfxSource;
+
+        catchSfxSource = GetComponent<AudioSource>();
+        if (catchSfxSource == null) catchSfxSource = gameObject.AddComponent<AudioSource>();
+
+        catchSfxSource.playOnAwake = false;
+        catchSfxSource.spatialBlend = catchSnap3D ? 1f : 0f;
+        return catchSfxSource;
+    }
+
+    private void PlayCatchSnapSfx()
+    {
+        if (catchSnapClip == null) return;
+
+        var src = GetOrCreateCatchSfxSource();
+        if (src == null)
+        {
+            AudioSource.PlayClipAtPoint(catchSnapClip, transform.position, catchSnapVolume);
+            return;
+        }
+
+        src.spatialBlend = catchSnap3D ? 1f : 0f;
+        src.PlayOneShot(catchSnapClip, catchSnapVolume);
+    }
 
     void Awake()
     {
@@ -35,6 +73,8 @@ public class TutorialFishToken_st2 : MonoBehaviour
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        if (catchSfxSource == null) catchSfxSource = GetComponent<AudioSource>();
     }
 
     public void Initialize(double popDspTime, Transform mold, TutorialMoldController_st2 owner,
@@ -61,7 +101,7 @@ public class TutorialFishToken_st2 : MonoBehaviour
 
         PerformJump();
 
-        // ÇÃ·¹ÀÌ¾î ¹æÇâ º¸±â
+        // í”Œë ˆì´ì–´ ë°©í–¥ ë°”ë¼ë³´ê¸°
         Transform playerCam = Camera.main.transform;
         Vector3 toPlayer = (playerCam.position - transform.position).normalized;
         transform.right = toPlayer;
@@ -84,12 +124,12 @@ public class TutorialFishToken_st2 : MonoBehaviour
 
     public void UpdateMovement()
     {
-        // Rigidbody°¡ ÀÚµ¿À¸·Î ¹°¸® Ã³¸®
+        // Rigidbodyê°€ ìë™ìœ¼ë¡œ ë¬¼ë¦¬ ì²˜ë¦¬
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // ¶¥¿¡ ¶³¾îÁö¸é Ç®·Î ¹İÈ¯
+        // ë°”ë‹¥ ì¶©ëŒí•˜ë©´ í’€ë¡œ ë°˜í™˜
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
             if (ownerMold != null)
@@ -103,22 +143,29 @@ public class TutorialFishToken_st2 : MonoBehaviour
     {
         isCaught = true;
 
+        // âœ… 'ì°©' ì‚¬ìš´ë“œ (ì„±ê³µ ì‹œ 1íšŒ)
+        PlayCatchSnapSfx();
+
         if (rb != null)
         {
-            rb.isKinematic = true;
+            // âœ… kinematic ë°”ê¾¸ê¸° ì „ì— velocityë¥¼ ë¨¼ì € 0ìœ¼ë¡œ (Unity warning ë°©ì§€)
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
     }
 
     public void OnReturnToPool()
     {
+        if (catchSfxSource != null) catchSfxSource.Stop();
+
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
+
         hasJumped = false;
         isResolved = false;
         isCaught = false;
