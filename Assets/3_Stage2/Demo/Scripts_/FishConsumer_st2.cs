@@ -11,6 +11,11 @@ public class FishConsumer_st2 : MonoBehaviour
         hub = eventHub;
     }
 
+    private void Awake()
+    {
+        if (!hub) hub = FindObjectOfType<Stage2EventHub_st2>(true);
+    }
+
     private void OnEnable()
     {
         if (hub != null) hub.FishConsumeRequested += OnConsume;
@@ -25,12 +30,19 @@ public class FishConsumer_st2 : MonoBehaviour
     {
         if (fish == null) return;
 
-        // ✅ 프로젝트에 이미 풀 반환 함수가 있으면 그걸 우선 호출
+        // 1) 프로젝트에 이미 있으면 우선 사용
         if (TryInvoke(fish, "ConsumeToPool", reason)) return;
         if (TryInvoke(fish, "ReturnToPool")) return;
         if (TryInvoke(fish, "Release")) return;
 
-        // fallback
+        // 2) Stage2 구조상 제일 안전한 풀 반환 루트
+        if (fish.ownerMold != null)
+        {
+            fish.ownerMold.ReleaseFish(fish);
+            return;
+        }
+
+        // 3) fallback
         fish.gameObject.SetActive(false);
     }
 
@@ -49,23 +61,25 @@ public class FishConsumer_st2 : MonoBehaviour
                 mi.Invoke(target, null);
                 return true;
             }
+
             if (ps.Length == 1)
             {
-                // reason 타입이 다를 수도 있어서 변환 시도
                 object param = arg;
+
                 if (arg != null && !ps[0].ParameterType.IsInstanceOfType(arg))
                 {
-                    // enum이면 name 매칭 시도
                     if (ps[0].ParameterType.IsEnum)
                         param = Enum.Parse(ps[0].ParameterType, arg.ToString(), true);
                     else
                         return false;
                 }
+
                 mi.Invoke(target, new object[] { param });
                 return true;
             }
         }
         catch { /* ignore */ }
+
         return false;
     }
 }
