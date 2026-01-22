@@ -19,8 +19,8 @@ MonoBehaviour:
   sfxWrongCut: {fileID: 0}
   vfxSliceSuccessPrefab: {fileID: 0}
   vfxSliceFailPrefab: {fileID: 0}
-  vfxResultSuccessPrefab: {fileID: 4033412786151888123, guid: 49057b33ea71fbb4da4e8f02a8db9f28, type: 3}
-  vfxResultFailPrefab: {fileID: 6403252182692130976, guid: 4e12b3c53c0f8ee4da83655d8d2770d5, type: 3}
+  vfxResultSuccessPrefab: {fileID: 9157105887711914197, guid: c4f829cb7dd4b864caf8832ec5b1ee55, type: 3}
+  vfxResultFailPrefab: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}
   vfxWrongCutPrefab: {fileID: 0}
   platePrefabEmptyStack: {fileID: 7182768268706041304, guid: 57bc8760473dca74b83fcba3837f2460, type: 3}
   platePrefabSuccessNeat: {fileID: 7286858492099668628, guid: b8a4453fd2e4e3d47b75caf668790338, type: 3}

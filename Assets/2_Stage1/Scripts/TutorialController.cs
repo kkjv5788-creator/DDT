@@ -266,9 +266,9 @@ public class TutorialController : MonoBehaviour
     {
         _tutorialCompleted = true;
 
-        string bigTitle = "합 격"; 
-        string finalMessage = "합격이네.\n자 이제 영업을 시작하자.";
-        string startHint = "\n\n<size=70%><color=#FFD700>[오른손 트리거] 영업 시작</color></size>";
+        string bigTitle = "** 합 격 **"; 
+        string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
+        string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
 
         // 1. 리갈패드
         if (missionBoard)

@@ -99,7 +99,7 @@ public class TutorialDialogueController : MonoBehaviour
         {
             missionBoard.InitializeUI(); 
             missionBoard.UpdateHeader("< 면 접 중 >");
-            missionBoard.UpdateMission("사장님 말씀 듣기", 0, 1); 
+            missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
             missionBoard.ShowSuccessStamp(false);
         }
 
