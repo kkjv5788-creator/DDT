@@ -44,6 +44,9 @@ public class TutorialController : MonoBehaviour
     bool _tutorialCompleted = false;
     bool _isProcessingResult = false;
     float _lastSkipInput = -999f;
+    
+    // 🔥 [신규] 마지막 입력 대기용 플래그
+    bool _waitForFinalInput = false; 
 
     void OnEnable()
     {
@@ -54,6 +57,7 @@ public class TutorialController : MonoBehaviour
         _currentEarnedMoney = 0;
         _tutorialCompleted = false;
         _isProcessingResult = false;
+        _waitForFinalInput = false; // 초기화
 
         CalculateWageSettings();
 
@@ -77,14 +81,23 @@ public class TutorialController : MonoBehaviour
 
     void Update()
     {
-        if (_tutorialCompleted) return;
-
-        if (OVRInput.GetDown(OVRInput.Button.One))
+        // 1. 튜토리얼 도중 스킵 (A 버튼)
+        if (!_tutorialCompleted && OVRInput.GetDown(OVRInput.Button.One))
         {
             if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
             {
                 _lastSkipInput = Time.time;
                 SkipTutorial();
+            }
+        }
+
+        // 2. 🔥 [추가됨] 합격 화면에서 트리거 입력 대기
+        if (_waitForFinalInput)
+        {
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+            {
+                _waitForFinalInput = false;
+                FinalizeAndStartGame(); // 진짜 게임 시작!
             }
         }
     }
@@ -268,20 +281,21 @@ public class TutorialController : MonoBehaviour
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
-    // 🔥 [수정됨] 최종 합격 멘트 적용
     void CompleteTutorial()
     {
         _tutorialCompleted = true;
-        Cleanup();
+        
+        // 주의: Cleanup()은 여기서 부르지 않고 트리거 누른 뒤에 부릅니다.
+        // 음악이나 분위기를 유지하기 위함입니다.
 
         string finalMessage = "합격이네.\n자 이제 영업을 시작하자.";
+        string startHint = "\n\n<size=80%><color=#FFD700>[오른손 트리거] 영업 시작</color></size>";
 
         // 1. 리갈패드(주문서) 업데이트
         if (missionBoard)
         {
             missionBoard.ShowSuccessStamp(true);
             missionBoard.UpdateHeader("< 채용 결과 >");
-            // 빨간색 큰 글씨로 '합격!' 표시
             missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
         
@@ -292,14 +306,25 @@ public class TutorialController : MonoBehaviour
             if (finalTotalText) finalTotalText.text = $"{_currentEarnedMoney:N0}원";
             if (finalCommentText) 
             { 
-                finalCommentText.text = finalMessage; 
+                // 합격 멘트 + 트리거 안내 추가
+                finalCommentText.text = finalMessage + startHint; 
                 finalCommentText.color = Color.white; 
             }
         }
         
-        // 3. 모니터 일반 텍스트 업데이트 (혹시 패널이 안 뜰 경우 대비)
+        // 3. 모니터 일반 텍스트 업데이트
         ShowMonitorText(finalMessage, Color.cyan);
-        
+
+        // 🔥 입력 대기 시작!
+        _waitForFinalInput = true;
+    }
+
+    // 🔥 [신규] 트리거 누르면 호출되는 최종 함수
+    void FinalizeAndStartGame()
+    {
+        Cleanup();
+
+        // 튜토리얼 완료 이벤트 발생 -> StageManager가 받아서 MODE_GAME으로 전환
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
     }
 

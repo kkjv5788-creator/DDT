@@ -1551,7 +1551,19 @@ MonoBehaviour:
       m_Calls: []
   OnTutorialCompleted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 275202589}
+        m_TargetAssemblyTypeName: StageModeSelector, Assembly-CSharp
+        m_MethodName: OnClick_StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   resultDisplayDuration: 0.5
   guideBeatInterval: 0.15
   isTutorialMode: 0
@@ -5899,7 +5911,7 @@ MonoBehaviour:
   finalResultPanel: {fileID: 1188267593}
   finalTotalText: {fileID: 155217195}
   finalCommentText: {fileID: 1824342089}
-  tutorialTriggerList: {fileID: 11400000, guid: 71b719ccccca59a4f8477dfc3daca575, type: 2}
+  tutorialTriggerList: {fileID: 0}
   requiredSuccessCount: 1
   maxTotalWage: 100000
   highlightTextColor: '#FF3333'

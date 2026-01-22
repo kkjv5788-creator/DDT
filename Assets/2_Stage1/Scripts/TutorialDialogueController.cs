@@ -386,7 +386,7 @@ public class TutorialDialogueController : MonoBehaviour
         if (conductor != null) { _conductorGameObject = conductor.gameObject; _originalTutorialMode = conductor.isTutorialMode; conductor.enabled = false; _conductorGameObject.SetActive(false); }
     }
     
-    void StartMainTutorial()
+void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
@@ -401,9 +401,11 @@ public class TutorialDialogueController : MonoBehaviour
         
         if (_tutorialControllerGameObject != null && tutorialController != null)
         {
-            _tutorialControllerGameObject.SetActive(true);
+            _tutorialControllerGameObject.SetActive(true); // 1. 여기서 켜지면서 자동으로 시작됨 (OnEnable)
             tutorialController.enabled = true;
-            tutorialController.StartTutorial();
+            
+            // 🚨 [범인 발견!] 이 줄이 한번 더 실행시켜서 1단계를 스킵해버리는 겁니다.
+            // tutorialController.StartTutorial();  <-- 이 줄을 지우세요!
         }
         
         this.enabled = false; 
