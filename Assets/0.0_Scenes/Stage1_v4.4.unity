@@ -305,15 +305,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5911,7 +5911,7 @@ MonoBehaviour:
   finalResultPanel: {fileID: 1188267593}
   finalTotalText: {fileID: 155217195}
   finalCommentText: {fileID: 1824342089}
-  tutorialTriggerList: {fileID: 0}
+  TutorialData_Scenario: {fileID: 11400000, guid: 71b719ccccca59a4f8477dfc3daca575, type: 2}
   requiredSuccessCount: 1
   maxTotalWage: 100000
   highlightTextColor: '#FF3333'

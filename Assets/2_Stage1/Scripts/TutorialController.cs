@@ -26,7 +26,7 @@ public class TutorialController : MonoBehaviour
     public TextMeshProUGUI finalCommentText;   
 
     [Header("Tutorial Settings")]
-    public RhythmTriggerListSO tutorialTriggerList;
+    public RhythmTriggerListSO TutorialData_Scenario;
     public int requiredSuccessCount = 1; 
 
     [Header("Wage Settings")]
@@ -104,12 +104,12 @@ public class TutorialController : MonoBehaviour
 
     public void StartTutorial()
     {
-        if (!conductor || !tutorialTriggerList) return;
+        if (!conductor || !TutorialData_Scenario) return;
 
         if (salesUIGroup) salesUIGroup.SetActive(true);
 
         conductor.isTutorialMode = true;
-        conductor.data = tutorialTriggerList;
+        conductor.data = TutorialData_Scenario;
         conductor.StartGame();
 
         if (missionBoard) missionBoard.InitializeUI();
@@ -160,7 +160,7 @@ public class TutorialController : MonoBehaviour
                 _currentStepIndex++;
                 _successCountThisStep = 0;
 
-                if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
+                if (_currentStepIndex >= TutorialData_Scenario.triggers.Length)
                 {
                     Invoke(nameof(CompleteTutorial), 2.5f);
                     return;
@@ -210,9 +210,9 @@ public class TutorialController : MonoBehaviour
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
         int targetSliceCount = 0;
-        if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
+        if (TutorialData_Scenario != null && _currentStepIndex < TutorialData_Scenario.triggers.Length)
         {
-            targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
+            targetSliceCount = TutorialData_Scenario.triggers[_currentStepIndex].requiredSliceCount;
         }
 
         int currentSlices = 0;
@@ -258,9 +258,9 @@ public class TutorialController : MonoBehaviour
     void CalculateWageSettings()
     {
         _totalPossibleSlices = 0;
-        if (tutorialTriggerList != null)
+        if (TutorialData_Scenario != null)
         {
-            foreach (var trigger in tutorialTriggerList.triggers)
+            foreach (var trigger in TutorialData_Scenario.triggers)
                 _totalPossibleSlices += trigger.requiredSliceCount;
         }
         _wagePerSlice = (_totalPossibleSlices > 0) ? maxTotalWage / _totalPossibleSlices : 500;
