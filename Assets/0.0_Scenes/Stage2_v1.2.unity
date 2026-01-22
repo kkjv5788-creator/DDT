@@ -949,7 +949,7 @@ PrefabInstance:
     - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
       propertyPath: popVfxAnchor
       value: 
-      objectReference: {fileID: 5062501557866792105, guid: 9845a33cc239e1246b7a7ecd83e58c52, type: 3}
+      objectReference: {fileID: 92310525}
     - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
       propertyPath: popVfxPrefab
       value: 
@@ -1889,7 +1889,7 @@ PrefabInstance:
     - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
       propertyPath: popVfxAnchor
       value: 
-      objectReference: {fileID: 5062501557866792105, guid: 13402f40ba5701a44aefaf6e52892174, type: 3}
+      objectReference: {fileID: 410289138}
     - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
       propertyPath: popVfxPrefab
       value: 
@@ -3013,12 +3013,6 @@ MonoBehaviour:
   parentToHand: 1
   setKinematicWhileHeld: 1
   disableCollidersWhileHeld: 1
-  catchSfxSource: {fileID: 903122786}
-  catchSnapClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
-  catchVfxPrefab: {fileID: 0}
-  catchVfxLocalOffset: {x: 0, y: 0, z: 0}
-  catchVfxLocalEuler: {x: 0, y: 0, z: 0}
-  catchVfxAutoDestroySeconds: 2
 --- !u!114 &903122783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4554,7 +4548,7 @@ PrefabInstance:
     - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
       propertyPath: popVfxAnchor
       value: 
-      objectReference: {fileID: 5062501557866792105, guid: 12d4eeebc0d34d94db255d9741478272, type: 3}
+      objectReference: {fileID: 1298712838}
     - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
       propertyPath: popVfxPrefab
       value: 
