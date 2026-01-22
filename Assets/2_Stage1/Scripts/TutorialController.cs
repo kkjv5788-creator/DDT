@@ -1,5 +1,6 @@
 using UnityEngine;
-using TMPro; // 텍스트 UI(TextMeshPro) 사용을 위해 필수
+using TMPro;
+using System.Text.RegularExpressions;
 
 public class TutorialController : MonoBehaviour
 {
@@ -11,34 +12,55 @@ public class TutorialController : MonoBehaviour
     // ★ 공용 리갈패드 연결
     public MissionBoardUI missionBoard; 
 
-    // ★ 모니터 피드백 텍스트 연결
-    [Header("Monitor Text")]
-    public TextMeshProUGUI monitorText; 
+    // ★ 모니터 & 패널 연결
+    [Header("UI Groups")]
+    public GameObject salesUIGroup; // Sales_Info_Group
+
+    [Header("Monitor UI")]
+    public TextMeshProUGUI monitorText; // Text_Feedback
+    public TextMeshProUGUI salesText;   // Text_RealtimeSales
+
+    [Header("Final Result UI")]
+    public GameObject finalResultPanel;        
+    public TextMeshProUGUI finalTotalText;     
+    public TextMeshProUGUI finalCommentText;   
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
-    public int requiredSuccessCount = 3; 
+    public int requiredSuccessCount = 1; 
+
+    [Header("Wage Settings")]
+    public int maxTotalWage = 100000; 
+    private int _wagePerSlice;        
+    
+    [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
+    public string highlightTextColor = "#FF3333"; 
 
     // 내부 변수
     int _currentStepIndex = 0;
-    int _successCountThisStep = 0;
+    int _successCountThisStep = 0; 
+    int _currentEarnedMoney = 0;
+    int _totalPossibleSlices = 0; 
     bool _tutorialCompleted = false;
     bool _isProcessingResult = false;
     float _lastSkipInput = -999f;
 
-    // ★ 활성화될 때 자동 시작
     void OnEnable()
     {
         Debug.Log("[TutorialController] 튜토리얼 모드 활성화됨");
 
         _currentStepIndex = 0;
         _successCountThisStep = 0;
+        _currentEarnedMoney = 0;
         _tutorialCompleted = false;
         _isProcessingResult = false;
+
+        CalculateWageSettings();
 
         if (conductor) 
         {
             conductor.OnRoundResult.AddListener(HandleRoundResult);
+            conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
         }
 
         StartTutorial();
@@ -49,15 +71,14 @@ public class TutorialController : MonoBehaviour
         if (conductor) 
         {
             conductor.OnRoundResult.RemoveListener(HandleRoundResult);
+            conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
         }
-        Debug.Log("[TutorialController] 튜토리얼 모드 종료");
     }
 
     void Update()
     {
         if (_tutorialCompleted) return;
 
-        // A 버튼 스킵
         if (OVRInput.GetDown(OVRInput.Button.One))
         {
             if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
@@ -72,35 +93,35 @@ public class TutorialController : MonoBehaviour
     {
         if (!conductor || !tutorialTriggerList) return;
 
-        // 리듬 게임 설정
+        if (salesUIGroup) salesUIGroup.SetActive(true);
+
         conductor.isTutorialMode = true;
         conductor.data = tutorialTriggerList;
         conductor.StartGame();
 
-        // UI 초기화
-        if (missionBoard)
-        {
-            missionBoard.InitializeUI();
-            UpdateMissionUI();
-        }
+        if (missionBoard) missionBoard.InitializeUI();
+        if (finalResultPanel) finalResultPanel.SetActive(false);
 
-        // 시작 멘트 (모니터)
-        ShowMonitorText("가이드 소리에\n집중하세요!", Color.yellow);
+        UpdateSalesUI();
+        UpdateMissionUI(); 
 
-        // 1초 뒤 첫 트리거 로직 시작
-        Invoke(nameof(StartFirstTrigger), 1.0f);
+        ShowMonitorText("<size=60%>영업 개시\n정산을 시작합니다.</size>", Color.green);
+        Invoke(nameof(StartFirstTrigger), 1.5f);
     }
 
     void StartFirstTrigger()
     {
-        // 컨덕터가 준비되었으면 다음 트리거로 진행
         if (conductor)
         {
             conductor.AdvanceToNextTrigger();
-            UpdateMissionUI();
-            // 준비 멘트 지우기
+            UpdateMissionUI(); 
             ShowMonitorText("", Color.white);
         }
+    }
+
+    void HandleSliceSuccess(Vector3 pos, Vector3 normal, float speed)
+    {
+        UpdateMissionUI();
     }
 
     void HandleRoundResult(bool success)
@@ -111,40 +132,37 @@ public class TutorialController : MonoBehaviour
         if (success)
         {
             _successCountThisStep++;
-            
-            // [핵심] 성공할 때마다 즉시 UI 갱신 (칼 아이콘 줄어들게!)
-            UpdateMissionUI();
+            _currentEarnedMoney += _wagePerSlice;
+            if (_currentEarnedMoney > maxTotalWage - 100) _currentEarnedMoney = maxTotalWage;
 
-            // 성공 피드백 텍스트 (모니터)
-            ShowMonitorText("NICE!!", Color.cyan);
+            UpdateSalesUI();
+            ShowMonitorText($"+ {_wagePerSlice:N0} 원", Color.green);
             
             if (_successCountThisStep >= requiredSuccessCount)
             {
                 if (missionBoard) missionBoard.ShowSuccessStamp(true);
-                ShowMonitorText("완벽합니다!", Color.green);
+                
+                Invoke(nameof(ShowClearMessage), 1.0f);
                 
                 _currentStepIndex++;
                 _successCountThisStep = 0;
 
-                // 모든 단계 완료 체크
                 if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
                 {
-                    Invoke(nameof(CompleteTutorial), 2.0f);
+                    Invoke(nameof(CompleteTutorial), 2.5f);
                     return;
                 }
-                Invoke(nameof(MoveToNextStep), 2.0f);
+                Invoke(nameof(MoveToNextStep), 2.5f);
             }
             else
             {
-                // 아직 횟수가 남았으면 재시도
                 Invoke(nameof(RetryCurrentStep), 1.5f);
-                Invoke(nameof(ClearMonitorText), 1.0f);
+                Invoke(nameof(ClearMonitorText), 1.5f);
             }
         }
         else
         {
-            // 실패 피드백
-            ShowMonitorText("다시 들어보세요!", Color.red);
+            ShowMonitorText("+ 0 원", Color.gray);
             Invoke(nameof(RetryCurrentStep), 1.5f);
             Invoke(nameof(ClearMonitorText), 1.0f);
         }
@@ -166,11 +184,11 @@ public class TutorialController : MonoBehaviour
         if (conductor)
         {
             conductor.RetryCurrentTrigger();
+            UpdateMissionUI();
         }
         _isProcessingResult = false;
     }
 
-    // 노트(리갈패드) UI 갱신 로직 (아이콘 자동화)
     void UpdateMissionUI()
     {
         if (!missionBoard) return;
@@ -178,104 +196,123 @@ public class TutorialController : MonoBehaviour
         missionBoard.ShowSuccessStamp(false);
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
-        // 1. 데이터 가져오기
         int targetSliceCount = 0;
         if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
         {
             targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
         }
 
-        // 2. 남은 횟수 계산 (전체 목표 - 현재 성공 횟수)
-        int remainCount = Mathf.Max(0, targetSliceCount - _successCountThisStep);
-
-        // 3. 칼 아이콘 만들기 (남은 횟수만큼 🔪 반복)
-        string knifeIcons = "";
-        for (int i = 0; i < remainCount; i++)
+        int currentSlices = 0;
+        if (conductor != null && conductor.IsJudgingWindow())
         {
-            knifeIcons += "🔪 "; 
+            currentSlices = conductor.SliceCount;
         }
+        
+        int remainCount = Mathf.Max(0, targetSliceCount - currentSlices);
+        string icons = "";
+        for (int i = 0; i < remainCount; i++) icons += "@ "; 
 
-        // 4. 텍스트 구성
-        string highlightNum = $"<color=#FF3333><size=120%>{targetSliceCount}</size></color>"; 
+        string progressText = $"<color={highlightTextColor}>{currentSlices}</color> / {targetSliceCount}";
+
         string guideText = "";
-
         switch (_currentStepIndex)
         {
             case 0: 
-                guideText = $"👂 소리를 듣고\n{highlightNum}번 썰어보세요!"; 
+                guideText = "망설이지 말고\n[직접] 한번 썰어보게나!"; 
                 break;
+                
             case 1: 
-                guideText = $"👂 리듬을 타고\n{highlightNum}번 연속 썰기!"; 
+                guideText = "잘했네! 감이 좋군.\n이제 [비트]에 맞춰 썰어보자!"; 
                 break;
-            case 2: 
-                guideText = $"👂 빠른 박자입니다.\n{highlightNum}번 집중!"; 
-                break;
-            default:
-                guideText = $"🔪 박자에 맞춰\n{highlightNum}번 써세요!";
+                
+            default: 
+                guideText = "박자에 맞춰\n[정확히] 썰어보게!"; 
                 break;
         }
 
-        // 5. 텍스트 아래에 칼 아이콘 붙이기
-        guideText += $"\n\n<size=150%>{knifeIcons}</size>";
-
-        // 6. UI 적용 (진행도 숫자는 0으로 숨김)
+        guideText = ApplyHighlightColor(guideText);
+        guideText += $"\n\n<size=120%>[ {progressText} ]</size>\n<size=150%>{icons}</size>";
+        
         missionBoard.UpdateMission(guideText, 0, 0);
     }
+    
+    string ApplyHighlightColor(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
+    }
+
+    void CalculateWageSettings()
+    {
+        _totalPossibleSlices = 0;
+        if (tutorialTriggerList != null)
+        {
+            foreach (var trigger in tutorialTriggerList.triggers)
+                _totalPossibleSlices += trigger.requiredSliceCount;
+        }
+        _wagePerSlice = (_totalPossibleSlices > 0) ? maxTotalWage / _totalPossibleSlices : 500;
+    }
+
+    void UpdateSalesUI()
+    {
+        if (salesText) salesText.text = $"누적 매출\n[ {_currentEarnedMoney:N0}원 ]";
+    }
+
+    void ShowClearMessage() { ShowMonitorText("정산 완료", Color.cyan); }
 
     void SkipTutorial()
     {
         _tutorialCompleted = true;
         Cleanup();
-        
-        if (missionBoard)
-        {
-            missionBoard.UpdateText("< 알림 >", "교육 스킵됨", "");
-            missionBoard.ShowSuccessStamp(false);
-        }
-        
-        if (conductor.OnTutorialSkipped != null) 
-            conductor.OnTutorialSkipped.Invoke();
+        if (missionBoard) { missionBoard.UpdateText("< 알림 >", "교육 스킵됨", ""); missionBoard.ShowSuccessStamp(false); }
+        if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
+    // 🔥 [수정됨] 최종 합격 멘트 적용
     void CompleteTutorial()
     {
         _tutorialCompleted = true;
         Cleanup();
-        
+
+        string finalMessage = "합격이네.\n자 이제 영업을 시작하자.";
+
+        // 1. 리갈패드(주문서) 업데이트
         if (missionBoard)
         {
             missionBoard.ShowSuccessStamp(true);
-            missionBoard.UpdateHeader("< 채용 확정 >");
-            missionBoard.UpdateText("< 채용 확정 >", "축하합니다!\n정직원이 되셨습니다.", "");
+            missionBoard.UpdateHeader("< 채용 결과 >");
+            // 빨간색 큰 글씨로 '합격!' 표시
+            missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
         
-        if (conductor.OnTutorialCompleted != null) 
-            conductor.OnTutorialCompleted.Invoke();
+        // 2. 모니터 결과창(분홍 패널) 업데이트
+        if (finalResultPanel)
+        {
+            finalResultPanel.SetActive(true);
+            if (finalTotalText) finalTotalText.text = $"{_currentEarnedMoney:N0}원";
+            if (finalCommentText) 
+            { 
+                finalCommentText.text = finalMessage; 
+                finalCommentText.color = Color.white; 
+            }
+        }
+        
+        // 3. 모니터 일반 텍스트 업데이트 (혹시 패널이 안 뜰 경우 대비)
+        ShowMonitorText(finalMessage, Color.cyan);
+        
+        if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
     }
 
     void Cleanup()
     {
-        if (conductor)
-        {
-            conductor.isTutorialMode = false;
-            conductor.StopAllGuideBeats(); 
-        }
-        if (radio)
-        {
-            radio.SetTutorialCompleted(true);
-            radio.SetClickable(true);
-        }
+        if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
+        if (salesUIGroup) salesUIGroup.SetActive(false);
+        if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
     }
 
-    // ★ 모니터 텍스트 제어 함수
     void ShowMonitorText(string text, Color color)
     {
-        if (monitorText)
-        {
-            monitorText.text = text;
-            monitorText.color = color;
-            monitorText.gameObject.SetActive(true);
-        }
+        if (monitorText) { monitorText.text = text; monitorText.color = color; monitorText.gameObject.SetActive(true); }
     }
 
     void ClearMonitorText()

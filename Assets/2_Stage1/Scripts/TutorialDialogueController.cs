@@ -1,29 +1,24 @@
 using UnityEngine;
+using System.Text.RegularExpressions;
 
-/// <summary>
-/// 튜토리얼 대사 진행 조건 타입
-/// </summary>
 public enum DialogueConditionType
 {
-    None,                           // 조건 없음 (즉시 진행)
-    RightTriggerButtonClick,        // 오른손 트리거 버튼 클릭
-    GazeAtKimbap,                   // kimbap 프리팹 시선 감지
+    None,                           // 조건 없음 (자동 진행)
+    RightTriggerButtonClick,        // (사용 안 함)
+    GazeAtKimbap,                   // 김밥 확인 -> 캔버스 클릭
+    GazeAtNote,                     // 노트 확인 -> 캔버스 클릭
     HandMovement,                   // 손 움직임 감지
-    TimingBefore,                   // 타이밍 직전 (Judging 상태)
+    TimingBefore,                   // 타이밍 직전
     RoundSuccess,                   // 라운드 성공
     RoundFail,                      // 라운드 실패
 }
 
-/// <summary>
-/// 튜토리얼 대사 데이터 구조체
-/// </summary>
 [System.Serializable]
 public class TutorialDialogue
 {
     [TextArea(2, 5)]
-    public string dialogueText;     // 대사 텍스트
-    
-    public DialogueConditionType conditionType; // 진행 조건
+    public string dialogueText;     
+    public DialogueConditionType conditionType; 
     
     [Tooltip("조건이 충족된 후 다음 대사로 넘어가기까지 대기 시간 (초)")]
     public float waitAfterCondition = 0.5f;
@@ -32,36 +27,43 @@ public class TutorialDialogue
     public float autoAdvanceTime = 2f;
 }
 
-/// <summary>
-/// 튜토리얼 대사 컨트롤러 (수정됨: MissionBoardUI 연동 포함)
-/// </summary>
-[DefaultExecutionOrder(-100)] // 다른 스크립트보다 먼저 실행
+[DefaultExecutionOrder(-100)]
 public class TutorialDialogueController : MonoBehaviour
 {
     [Header("References")]
-    public TutorialDialogueUIController dialogueUI; // 대사 전용 UI
-    
-    // 🔥 MissionBoardUI 추가 (주문서 제어용)
-    public MissionBoardUI missionBoard;
+    public TutorialDialogueUIController dialogueUI; 
+    public MissionBoardUI missionBoard;             
     
     public TutorialController tutorialController;
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
     
     [Header("Target Objects")]
-    public GameObject kimbapPrefab;      // 시선 감지 대상
-    public GameObject kimbap010Prefab;   // 특정 대사 후 비활성화할 객체
+    public GameObject kimbapPrefab;      
+    public GameObject kimbap010Prefab;   
+    public GameObject monitorCanvasObject; // 모니터 캔버스 연결
     
     [Header("Dialogue Data")]
     public TutorialDialogue[] dialogues;
     
     [Header("Settings")]
-    public float gazeDetectionDistance = 5f;
-    public float handMovementThreshold = 0.1f;
-    public float gazeAngleThreshold = 30f;
-    public string triggerButtonHintText = "오른손 트리거 버튼을 눌러주세요";
+    public float gazeDetectionDistance = 10f; 
+    public float gazeAngleThreshold = 45f;    
+    public float handMovementThreshold = 0.1f; 
     
-    // 내부 상태 변수
+    [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
+    public string highlightTextColor = "#FFD700"; 
+    
+    // 힌트 텍스트 모음
+    private const string HINT_LOOK_KIMBAP = "김밥을 바라보세요";
+    private const string HINT_LOOK_NOTE = "왼쪽 주문서를 바라보세요";
+    
+    // 🔥 [변경됨] 요청하신 텍스트 포맷 적용
+    // {0} 위치에 "[오른손 트리거] 다음" 텍스트가 들어갑니다.
+    private const string HINT_CONFIRMED_FORMAT = "<color=#00FF00>V 확인완료</color>\n{0}"; 
+    private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음";
+
+    // 내부 변수
     private int _currentDialogueIndex = 0;
     private bool _isWaitingForCondition = false;
     private bool _conditionMet = false;
@@ -69,15 +71,15 @@ public class TutorialDialogueController : MonoBehaviour
     private float _autoAdvanceTimer = 0f;
     private float _lastSkipInput = -999f;
     
-    // 상태 추적용
+    // 상태 추적
+    private bool _hasLookedAtTarget = false; 
+    
     private bool _lastRoundResult = false;
     private bool _roundResultProcessed = false;
     private Vector3 _previousControllerPosition;
     private bool _hasDetectedHandMovement = false;
-    private bool _hasDetectedGaze = false;
     private bool _controllerPositionInitialized = false;
     
-    // 시스템 복구용
     private bool _originalTutorialMode = false;
     private GameObject _tutorialControllerGameObject;
     private GameObject _conductorGameObject;
@@ -91,29 +93,25 @@ public class TutorialDialogueController : MonoBehaviour
     {
         InitializeControllerPosition();
         
-        // 🔥 시작하자마자 주문서에 "면접 중" 표시
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+
         if (missionBoard)
         {
-            missionBoard.InitializeUI();
+            missionBoard.InitializeUI(); 
             missionBoard.UpdateHeader("< 면 접 중 >");
-            missionBoard.UpdateMission("장비 착용하기", 0, 1); // 0/1 진행도
+            missionBoard.UpdateMission("사장님 말씀 듣기", 0, 1); 
+            missionBoard.ShowSuccessStamp(false);
         }
 
-        if (dialogues != null && dialogues.Length > 0)
-        {
-            ShowDialogue(0);
-        }
-        else
-        {
-            StartMainTutorial();
-        }
+        if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
+        else StartMainTutorial();
     }
     
     void Update()
     {
         if (_currentDialogueIndex >= dialogues.Length) return;
         
-        // A 버튼으로 스킵
+        // 스킵 (A 버튼)
         if (OVRInput.GetDown(OVRInput.Button.One))
         {
             if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
@@ -129,31 +127,70 @@ public class TutorialDialogueController : MonoBehaviour
         // 조건 체크
         if (_isWaitingForCondition)
         {
-            if (CheckCondition(currentDialogue.conditionType))
+            bool isConditionFullfilled = false;
+
+            // 1. 시선 감지 타입
+            if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap || 
+                currentDialogue.conditionType == DialogueConditionType.GazeAtNote)
+            {
+                GameObject target = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? kimbapPrefab : missionBoard.gameObject;
+                
+                // 현재 쳐다보고 있는지 확인
+                bool isCurrentlyLooking = CheckGazeAtObject(target);
+                
+                if (isCurrentlyLooking) 
+                {
+                    _hasLookedAtTarget = true;
+                }
+
+                // 봤던 적이 있으면
+                if (_hasLookedAtTarget)
+                {
+                    // 🔥 [변경] 모니터 힌트 텍스트 업데이트 (리갈패드 건드리지 않음)
+                    // 예: 
+                    // V 확인완료
+                    // [오른손 트리거] 다음
+                    string nextAction = ApplyHighlightColor(ACTION_TRIGGER_NEXT);
+                    string finalHint = string.Format(HINT_CONFIRMED_FORMAT, nextAction);
+                    
+                    UpdateHintText(finalHint);
+                    
+                    // 모니터 캔버스 클릭 감지
+                    if (CheckMonitorClick())
+                    {
+                        isConditionFullfilled = true;
+                    }
+                }
+                else
+                {
+                    // 아직 안 봤으면 "쳐다보세요" 힌트
+                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
+                    UpdateHintText(originalHint);
+                }
+            }
+            // 2. 기타 조건들
+            else
+            {
+                if (CheckPassiveCondition(currentDialogue.conditionType))
+                    isConditionFullfilled = true;
+            }
+
+            // 조건 달성 시 처리
+            if (isConditionFullfilled)
             {
                 _conditionMet = true;
                 _conditionMetTime = Time.time;
                 _isWaitingForCondition = false;
-
-                Debug.Log($"[TutorialDialogueController] Condition met: {currentDialogue.conditionType}");
-
-                // 🔥 조건 충족 시 주문서에 "완료" 도장 찍기
-                // if (missionBoard)
-                // {
-                //     missionBoard.UpdateMission("장비 착용하기", 1, 1); // 체크박스 채움
-                //     missionBoard.ShowSuccessStamp(true);
-                // }
+                
+                if (missionBoard) missionBoard.ShowSuccessStamp(true);
             }
         }
         
-        // 자동 진행 및 대기 로직
+        // 다음 진행
         if (currentDialogue.conditionType == DialogueConditionType.None)
         {
             _autoAdvanceTimer += Time.deltaTime;
-            if (_autoAdvanceTimer >= currentDialogue.autoAdvanceTime)
-            {
-                AdvanceToNextDialogue();
-            }
+            if (_autoAdvanceTimer >= currentDialogue.autoAdvanceTime) AdvanceToNextDialogue();
         }
         else if (_conditionMet && Time.time - _conditionMetTime >= currentDialogue.waitAfterCondition)
         {
@@ -162,40 +199,145 @@ public class TutorialDialogueController : MonoBehaviour
         }
     }
     
+    // 모니터 캔버스 클릭 감지
+    bool CheckMonitorClick()
+    {
+        if (monitorCanvasObject == null) return false;
+
+        // 트리거 확인
+        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+            return false;
+
+        // 레이캐스트 확인
+        GameObject controller = GetControllerObject();
+        if (controller == null) return false;
+
+        Vector3 startPos = controller.transform.position;
+        Vector3 direction = controller.transform.forward;
+
+        RaycastHit hit;
+        if (Physics.Raycast(startPos, direction, out hit, 10f))
+        {
+            Transform hitTx = hit.transform;
+            while (hitTx != null)
+            {
+                if (hitTx.gameObject == monitorCanvasObject) return true;
+                if (hitTx.name.Contains("Monitor") || hitTx.name.Contains("Canvas")) return true;
+                hitTx = hitTx.parent;
+            }
+        }
+        return false;
+    }
+
+    bool CheckGazeAtObject(GameObject target)
+    {
+        if (target == null) return false;
+        GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
+        if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
+        if (centerEye == null) return false;
+        
+        Vector3 eyePos = centerEye.transform.position;
+        Vector3 forward = centerEye.transform.forward;
+        Vector3 dirToTarget = (target.transform.position - eyePos).normalized;
+        float angle = Vector3.Angle(forward, dirToTarget);
+        if (angle > gazeAngleThreshold) return false;
+
+        // SphereCast로 조금 두껍게 쏴서 인식률 높임
+        RaycastHit hit;
+        if (Physics.SphereCast(eyePos, 0.15f, forward, out hit, gazeDetectionDistance))
+        {
+            Transform hitTransform = hit.transform;
+            while (hitTransform != null)
+            {
+                if (hitTransform.gameObject == target) return true;
+                if (hitTransform.name.Contains("LegalPad") || hitTransform.name.Contains("Mission") || hitTransform.name.Contains("Kimbap")) return true;
+                hitTransform = hitTransform.parent;
+            }
+        }
+        return false;
+    }
+
+    bool CheckPassiveCondition(DialogueConditionType conditionType)
+    {
+        switch (conditionType)
+        {
+            case DialogueConditionType.HandMovement:
+                if (!_hasDetectedHandMovement && CheckControllerMovement()) { _hasDetectedHandMovement = true; return true; }
+                break;
+            case DialogueConditionType.TimingBefore:
+                if (conductor != null && conductor.State == RhythmConductor.RhythmState.Judging) return true;
+                break;
+            case DialogueConditionType.RoundSuccess:
+                if (!_roundResultProcessed && _lastRoundResult) { _roundResultProcessed = true; return true; }
+                break;
+            case DialogueConditionType.RoundFail:
+                if (!_roundResultProcessed && !_lastRoundResult) { _roundResultProcessed = true; return true; }
+                break;
+        }
+        return false;
+    }
+    
     void ShowDialogue(int index)
     {
-        if (index < 0 || index >= dialogues.Length)
-        {
-            StartMainTutorial();
-            return;
-        }
+        if (index < 0 || index >= dialogues.Length) { StartMainTutorial(); return; }
         
         var dialogue = dialogues[index];
-        
-        // 힌트 텍스트 결정
-        string hint = "";
-        if (dialogue.conditionType == DialogueConditionType.RightTriggerButtonClick)
+        string initialHint = "";
+
+        switch (dialogue.conditionType)
         {
-            hint = triggerButtonHintText;
+            case DialogueConditionType.GazeAtKimbap: initialHint = HINT_LOOK_KIMBAP; break;
+            case DialogueConditionType.GazeAtNote: initialHint = HINT_LOOK_NOTE; break;
         }
         
-        // UI 표시
         if (dialogueUI != null)
         {
-            dialogueUI.ShowDialogue(dialogue.dialogueText, hint);
+            string coloredText = ApplyHighlightColor(dialogue.dialogueText);
+            dialogueUI.ShowDialogue(coloredText, initialHint);
         }
         
         _autoAdvanceTimer = 0f;
         _conditionMet = false;
         _isWaitingForCondition = (dialogue.conditionType != DialogueConditionType.None);
         
-        // 🔥 새 대사가 나오면 도장은 다시 숨김 (다음 미션을 위해)
-        if (_isWaitingForCondition && missionBoard)
+        // 초기화
+        _hasLookedAtTarget = false; 
+        
+        // 새 대사 나오면 리갈패드 도장 초기화
+        if (_isWaitingForCondition && missionBoard) 
         {
             missionBoard.ShowSuccessStamp(false);
         }
-        
-        Debug.Log($"[TutorialDialogueController] Dialogue {index}: {dialogue.dialogueText}");
+    }
+
+    void UpdateHintText(string newHint)
+    {
+        if (dialogueUI != null && dialogueUI.hintText != null)
+        {
+            // "V 확인완료" 텍스트가 들어오면, 이미 색상 태그가 있으므로 ApplyHighlightColor를 거치지 않고 바로 넣거나
+            // ApplyHighlightColor 함수가 태그를 망치지 않게 주의해야 함.
+            
+            if (newHint.Contains("V 확인완료"))
+            {
+                 // 이미 색상 처리된 문자열 그대로 사용
+                 if (dialogueUI.hintText.text != newHint)
+                    dialogueUI.hintText.text = newHint;
+            }
+            else
+            {
+                 string colored = ApplyHighlightColor(newHint);
+                 if (dialogueUI.hintText.text != colored)
+                    dialogueUI.hintText.text = colored;
+            }
+            
+            dialogueUI.hintText.gameObject.SetActive(true);
+        }
+    }
+
+    string ApplyHighlightColor(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
     }
     
     void SkipAllDialogues()
@@ -204,121 +346,21 @@ public class TutorialDialogueController : MonoBehaviour
         StartMainTutorial();
     }
     
-    bool CheckCondition(DialogueConditionType conditionType)
-    {
-        switch (conditionType)
-        {
-            case DialogueConditionType.RightTriggerButtonClick:
-                if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)) 
-                    return true;
-                break;
-                
-            case DialogueConditionType.GazeAtKimbap:
-                if (!_hasDetectedGaze && kimbapPrefab != null)
-                {
-                    if (CheckGazeAtObject(kimbapPrefab))
-                    {
-                        _hasDetectedGaze = true;
-                        return true;
-                    }
-                }
-                break;
-                
-            case DialogueConditionType.HandMovement:
-                if (!_hasDetectedHandMovement)
-                {
-                    if (CheckControllerMovement())
-                    {
-                        _hasDetectedHandMovement = true;
-                        return true;
-                    }
-                }
-                break;
-
-            case DialogueConditionType.TimingBefore:
-                if (conductor != null && conductor.State == RhythmConductor.RhythmState.Judging)
-                    return true;
-                break;
-
-            case DialogueConditionType.RoundSuccess:
-                if (!_roundResultProcessed && _lastRoundResult)
-                {
-                    _roundResultProcessed = true;
-                    return true;
-                }
-                break;
-
-            case DialogueConditionType.RoundFail:
-                if (!_roundResultProcessed && !_lastRoundResult)
-                {
-                    _roundResultProcessed = true;
-                    return true;
-                }
-                break;
-        }
-        return false;
-    }
-    
-    // --- Helper Functions (누락되었던 부분 복원) ---
-
-    bool CheckGazeAtObject(GameObject target)
-    {
-        GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
-        if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
-        if (centerEye == null) return false;
-        
-        Vector3 eyePos = centerEye.transform.position;
-        Vector3 targetPos = target.transform.position;
-        Vector3 direction = (targetPos - eyePos).normalized;
-        float distance = Vector3.Distance(eyePos, targetPos);
-        
-        if (distance > gazeDetectionDistance) return false;
-        
-        Vector3 forward = centerEye.transform.forward;
-        float angle = Vector3.Angle(forward, direction);
-        if (angle > gazeAngleThreshold) return false;
-        
-        RaycastHit hit;
-        if (Physics.Raycast(eyePos, direction, out hit, gazeDetectionDistance))
-        {
-            Transform hitTransform = hit.transform;
-            while (hitTransform != null)
-            {
-                if (hitTransform.gameObject == target || hitTransform.name.ToLower().Contains("kimbap"))
-                    return true;
-                hitTransform = hitTransform.parent;
-            }
-        }
-        return false;
-    }
-    
     void InitializeControllerPosition()
     {
         GameObject controller = GetControllerObject();
-        if (controller != null)
-        {
-            _previousControllerPosition = controller.transform.position;
-            _controllerPositionInitialized = true;
-        }
+        if (controller != null) { _previousControllerPosition = controller.transform.position; _controllerPositionInitialized = true; }
     }
     
     bool CheckControllerMovement()
     {
-        if (!_controllerPositionInitialized)
-        {
-            InitializeControllerPosition();
-            return false;
-        }
-        
+        if (!_controllerPositionInitialized) { InitializeControllerPosition(); return false; }
         GameObject controller = GetControllerObject();
         if (controller == null) return false;
-        
         Vector3 currentPos = controller.transform.position;
         float movement = Vector3.Distance(currentPos, _previousControllerPosition);
         _previousControllerPosition = currentPos;
-        
-        if (movement > handMovementThreshold) return true;
-        return false;
+        return movement > handMovementThreshold;
     }
     
     GameObject GetControllerObject()
@@ -332,50 +374,23 @@ public class TutorialDialogueController : MonoBehaviour
 
     void AdvanceToNextDialogue()
     {
-        // 6번 대사 후 특정 오브젝트 끄기 (옵션)
-        if (_currentDialogueIndex == 6 && kimbap010Prefab != null)
-        {
-            kimbap010Prefab.SetActive(false);
-        }
-        
         _currentDialogueIndex++;
         _roundResultProcessed = false;
-        
-        if (_currentDialogueIndex < dialogues.Length)
-        {
-            ShowDialogue(_currentDialogueIndex);
-        }
-        else
-        {
-            StartMainTutorial();
-        }
+        if (_currentDialogueIndex < dialogues.Length) ShowDialogue(_currentDialogueIndex);
+        else StartMainTutorial();
     }
     
     void DisableExistingSystems()
     {
-        // TutorialController 비활성화
-        if (tutorialController != null)
-        {
-            _tutorialControllerGameObject = tutorialController.gameObject;
-            tutorialController.enabled = false;
-            _tutorialControllerGameObject.SetActive(false);
-        }
-        
-        // Conductor 비활성화
-        if (conductor != null)
-        {
-            _conductorGameObject = conductor.gameObject;
-            _originalTutorialMode = conductor.isTutorialMode;
-            conductor.enabled = false;
-            _conductorGameObject.SetActive(false);
-        }
+        if (tutorialController != null) { _tutorialControllerGameObject = tutorialController.gameObject; tutorialController.enabled = false; _tutorialControllerGameObject.SetActive(false); }
+        if (conductor != null) { _conductorGameObject = conductor.gameObject; _originalTutorialMode = conductor.isTutorialMode; conductor.enabled = false; _conductorGameObject.SetActive(false); }
     }
     
     void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
         
-        // 시스템 재활성화
         if (_conductorGameObject != null && conductor != null)
         {
             _conductorGameObject.SetActive(true);
@@ -388,30 +403,13 @@ public class TutorialDialogueController : MonoBehaviour
         {
             _tutorialControllerGameObject.SetActive(true);
             tutorialController.enabled = true;
-            
-            // 🔥 TutorialController가 MissionBoard를 이어받아 진행
             tutorialController.StartTutorial();
         }
         
-        this.enabled = false; // 대사 컨트롤러 종료
+        this.enabled = false; 
     }
     
-    void OnEnable()
-    {
-        // Conductor가 켜져있을 때만 이벤트 구독
-        if (conductor != null && conductor.enabled)
-             conductor.OnRoundResult.AddListener(OnRoundResult);
-    }
-
-    void OnDisable()
-    {
-        if (conductor != null)
-             conductor.OnRoundResult.RemoveListener(OnRoundResult);
-    }
-    
-    void OnRoundResult(bool success)
-    {
-        _lastRoundResult = success;
-        _roundResultProcessed = false; 
-    }
+    void OnEnable() { if (conductor != null && conductor.enabled) conductor.OnRoundResult.AddListener(OnRoundResult); }
+    void OnDisable() { if (conductor != null) conductor.OnRoundResult.RemoveListener(OnRoundResult); }
+    void OnRoundResult(bool success) { _lastRoundResult = success; _roundResultProcessed = false; }
 }
