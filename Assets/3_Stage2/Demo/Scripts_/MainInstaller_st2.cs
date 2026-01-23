@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// MainInstaller_st2.cs
+using UnityEngine;
 
 public class MainInstaller_st2 : MonoBehaviour
 {
@@ -13,18 +14,15 @@ public class MainInstaller_st2 : MonoBehaviour
 
     private void Awake()
     {
-        // ✅ MainRoot 아래에만 허브가 존재해야 함
         var hub = GetComponent<Stage2EventHub_st2>();
         if (hub == null) hub = gameObject.AddComponent<Stage2EventHub_st2>();
 
-        // CatchInput은 허브만 받음
         if (catchInputs != null)
         {
             foreach (var input in catchInputs)
                 if (input != null) input.Initialize(hub);
         }
 
-        // 브리지/리스너/정책/연출/소비
         var judgeBridge = gameObject.AddComponent<JudgeBridge_st2>();
         judgeBridge.Construct(hub, judgeSystem);
 
@@ -40,7 +38,13 @@ public class MainInstaller_st2 : MonoBehaviour
         var consumer = gameObject.AddComponent<FishConsumer_st2>();
         consumer.Construct(hub);
 
+        // ✅ 추가: 인스펙터에서 빠져도 자동으로 찾아서 연결
+        if (groundMissReporter == null)
+            groundMissReporter = FindObjectOfType<GroundMissReporter_st2>(true);
+
         if (groundMissReporter != null)
             groundMissReporter.Construct(hub, judgeSystem);
+        else
+            Debug.LogWarning("[MainInstaller_st2] GroundMissReporter_st2 not found. Fish won't despawn on ground.");
     }
 }

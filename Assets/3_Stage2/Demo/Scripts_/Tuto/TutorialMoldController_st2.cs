@@ -21,6 +21,13 @@ public class TutorialMoldController_st2 : MonoBehaviour
     public float gravity = 9.81f;
     public LayerMask groundLayer;
 
+    [Header("VFX (Pop / 퐁)")]
+    public GameObject popVfxPrefab;
+    public Transform popVfxAnchor;
+    public Vector3 popVfxLocalOffset = Vector3.zero;
+    public Vector3 popVfxLocalEuler = Vector3.zero;
+    public float popVfxAutoDestroySeconds = 2.0f;
+
     private ObjectPool<TutorialFishToken_st2> fishPool;
     private List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
 
@@ -35,8 +42,7 @@ public class TutorialMoldController_st2 : MonoBehaviour
             createFunc: () => {
                 var obj = Instantiate(tutorialFishPrefab, transform);
                 var fish = obj.GetComponent<TutorialFishToken_st2>();
-                if (fish == null)
-                    fish = obj.AddComponent<TutorialFishToken_st2>();
+                if (fish == null) fish = obj.AddComponent<TutorialFishToken_st2>();
                 return fish;
             },
             actionOnGet: (fish) => {
@@ -61,11 +67,12 @@ public class TutorialMoldController_st2 : MonoBehaviour
 
     public void SpawnFish(double popTime)
     {
-        // Pop 애니메이션 (미리 시작)
+        // Pop 애니메이션
         if (moldAnimator != null)
-        {
             moldAnimator.SetTrigger(popAnimationTrigger);
-        }
+
+        // ✅ 퐁 이펙트
+        SpawnPopVfx();
 
         // Fish 생성
         var fish = fishPool.Get();
@@ -73,33 +80,61 @@ public class TutorialMoldController_st2 : MonoBehaviour
         activeFish.Add(fish);
     }
 
+    void SpawnPopVfx()
+    {
+        if (popVfxPrefab == null) return;
+
+        Transform a = popVfxAnchor != null ? popVfxAnchor : transform;
+        Vector3 pos = a.TransformPoint(popVfxLocalOffset);
+        Quaternion rot = a.rotation * Quaternion.Euler(popVfxLocalEuler);
+        var vfx = Instantiate(popVfxPrefab, pos, rot);
+        AutoDestroyVfx(vfx, popVfxAutoDestroySeconds);
+    }
+
+    static void AutoDestroyVfx(GameObject vfxRoot, float fallbackSeconds)
+    {
+        if (vfxRoot == null) return;
+
+        var ps = vfxRoot.GetComponentInChildren<ParticleSystem>(true);
+        if (ps != null)
+        {
+            var main = ps.main;
+            float lifeMax = 0f;
+
+            var sl = main.startLifetime;
+            if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
+            else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
+            else lifeMax = sl.constantMax;
+
+            float total = Mathf.Max(0.1f, main.duration + lifeMax);
+            UnityEngine.Object.Destroy(vfxRoot, total);
+            return;
+        }
+
+        UnityEngine.Object.Destroy(vfxRoot, Mathf.Max(0.1f, fallbackSeconds));
+    }
+
     public void ReleaseFish(TutorialFishToken_st2 fish)
     {
         if (fish != null)
-        {
             fishPool.Release(fish);
-        }
     }
 
     void Update()
     {
-        // 활성 fish 업데이트
         for (int i = activeFish.Count - 1; i >= 0; i--)
         {
             if (activeFish[i] != null && !activeFish[i].isResolved)
-            {
                 activeFish[i].UpdateMovement();
-            }
         }
     }
 
     void OnDisable()
     {
-        // 비활성화 시 모든 fish 정리
         CleanupAllFish();
     }
 
-    // ✅ 추가: 모든 fish 강제 정리
+    // ✅ StandaloneTutorialController가 호출함(복구)
     public void CleanupAllFish()
     {
         foreach (var fish in activeFish.ToArray())

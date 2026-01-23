@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 튜토리얼 전용 붕어빵 토큰 - 메인 FishCatchToken_st2와 독립
+/// 튜토리얼 전용 붕어빵 토큰 - 메인 FishCatchToken과 독립
 /// </summary>
 public class TutorialFishToken_st2 : MonoBehaviour
 {
@@ -10,24 +10,31 @@ public class TutorialFishToken_st2 : MonoBehaviour
     public bool isResolved = false;
     public bool isCaught = false;
 
-    [Header("SFX (Catch Success)")]
-    [SerializeField] private AudioSource catchSfxSource; /*[변경가능_잡기성공오디오소스]*/
-    [SerializeField] private AudioClip catchSnapClip;    /*[변경가능_착사운드클립]*/
-    [SerializeField, Range(0f, 1f)] private float catchSnapVolume = 1f; /*[변경가능_착볼륨]*/
-    [SerializeField] private bool catchSnap3D = true; /*[변경가능_3D사운드]*/
-
     [Header("물리")]
     private Rigidbody rb;
     private bool hasJumped = false;
 
-    // 소유 몰드 추적
     public TutorialMoldController_st2 ownerMold;
 
-    // 점프 설정 (인스펙터에서 주입)
     private float jumpHeight;
     private float forwardDistance;
     private float gravity;
     private LayerMask groundLayer;
+
+    [Header("SFX (Catch Success)")]
+    [SerializeField] private AudioSource catchSfxSource;
+    [SerializeField] private AudioClip catchSnapClip;
+    [SerializeField, Range(0f, 1f)] private float catchSnapVolume = 1f;
+    [SerializeField] private bool catchSnap3D = true;
+
+    [Header("VFX (Catch Success)")]
+    [SerializeField] private GameObject catchVfxPrefab;
+    [SerializeField] private Transform catchVfxAnchor;
+    [SerializeField] private Vector3 catchVfxLocalOffset = Vector3.zero;
+    [SerializeField] private Vector3 catchVfxLocalEuler = Vector3.zero;
+    [SerializeField] private float catchVfxAutoDestroySeconds = 2.0f;
+
+    private bool catchFxPlayed = false;
 
     private void Reset()
     {
@@ -49,25 +56,49 @@ public class TutorialFishToken_st2 : MonoBehaviour
     private void PlayCatchSnapSfx()
     {
         if (catchSnapClip == null) return;
-
         var src = GetOrCreateCatchSfxSource();
-        if (src == null)
+        src.spatialBlend = catchSnap3D ? 1f : 0f;
+        src.PlayOneShot(catchSnapClip, catchSnapVolume);
+    }
+
+    private void SpawnCatchVfx()
+    {
+        if (catchVfxPrefab == null) return;
+
+        Transform a = catchVfxAnchor != null ? catchVfxAnchor : transform;
+        Vector3 pos = a.TransformPoint(catchVfxLocalOffset);
+        Quaternion rot = a.rotation * Quaternion.Euler(catchVfxLocalEuler);
+        var vfx = Instantiate(catchVfxPrefab, pos, rot);
+        AutoDestroyVfx(vfx, catchVfxAutoDestroySeconds);
+    }
+
+    static void AutoDestroyVfx(GameObject vfxRoot, float fallbackSeconds)
+    {
+        if (vfxRoot == null) return;
+
+        var ps = vfxRoot.GetComponentInChildren<ParticleSystem>(true);
+        if (ps != null)
         {
-            AudioSource.PlayClipAtPoint(catchSnapClip, transform.position, catchSnapVolume);
+            var main = ps.main;
+            float lifeMax = 0f;
+
+            var sl = main.startLifetime;
+            if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
+            else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
+            else lifeMax = sl.constantMax;
+
+            float total = Mathf.Max(0.1f, main.duration + lifeMax);
+            UnityEngine.Object.Destroy(vfxRoot, total);
             return;
         }
 
-        src.spatialBlend = catchSnap3D ? 1f : 0f;
-        src.PlayOneShot(catchSnapClip, catchSnapVolume);
+        UnityEngine.Object.Destroy(vfxRoot, Mathf.Max(0.1f, fallbackSeconds));
     }
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-        }
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
 
         rb.useGravity = true;
         rb.isKinematic = false;
@@ -99,9 +130,10 @@ public class TutorialFishToken_st2 : MonoBehaviour
         rb.useGravity = true;
         rb.isKinematic = false;
 
+        catchFxPlayed = false;
+
         PerformJump();
 
-        // 플레이어 방향 바라보기
         Transform playerCam = Camera.main.transform;
         Vector3 toPlayer = (playerCam.position - transform.position).normalized;
         transform.right = toPlayer;
@@ -129,26 +161,27 @@ public class TutorialFishToken_st2 : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // 바닥 충돌하면 풀로 반환
         if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
             if (ownerMold != null)
-            {
                 ownerMold.ReleaseFish(this);
-            }
         }
     }
 
     public void OnCaught()
     {
+        if (isCaught) return;
         isCaught = true;
 
-        // ✅ '착' 사운드 (성공 시 1회)
-        PlayCatchSnapSfx();
+        if (!catchFxPlayed)
+        {
+            catchFxPlayed = true;
+            PlayCatchSnapSfx();
+            SpawnCatchVfx();
+        }
 
         if (rb != null)
         {
-            // ✅ kinematic 바꾸기 전에 velocity를 먼저 0으로 (Unity warning 방지)
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
@@ -165,9 +198,9 @@ public class TutorialFishToken_st2 : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
-
         hasJumped = false;
         isResolved = false;
         isCaught = false;
+        catchFxPlayed = false;
     }
 }

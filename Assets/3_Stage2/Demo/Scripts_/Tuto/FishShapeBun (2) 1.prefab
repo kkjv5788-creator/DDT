@@ -214,11 +214,16 @@ MonoBehaviour:
   popTime: 1
   isResolved: 0
   isCaught: 0
+  ownerMold: {fileID: 2040701465551103853, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
   catchSfxSource: {fileID: -7991712557744020284}
   catchSnapClip: {fileID: 8300000, guid: 88ea625992d8afe45a1aa8d7852c51e3, type: 3}
   catchSnapVolume: 1
   catchSnap3D: 1
-  ownerMold: {fileID: 2040701465551103853, guid: 04fa3afe5b3e27743a671ae2e1763597, type: 3}
+  catchVfxPrefab: {fileID: 5339739117810204693, guid: 26e1cb216e3635e4a820f58a1118d6b9, type: 3}
+  catchVfxAnchor: {fileID: 0}
+  catchVfxLocalOffset: {x: 0, y: 0, z: 0}
+  catchVfxLocalEuler: {x: 0, y: 0, z: 0}
+  catchVfxAutoDestroySeconds: 2
 --- !u!82 &-7991712557744020284
 AudioSource:
   m_ObjectHideFlags: 0

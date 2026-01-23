@@ -199,7 +199,7 @@ MonoBehaviour:
   - {fileID: 3490999159074946707}
   - {fileID: 42927899762952195}
   - {fileID: 6576005280682230434}
-  itemPrefab: {fileID: 919132149155446097, guid: 8eb2b2fe8dd190b4199aad784505bb35, type: 3}
+  itemPrefab: {fileID: 9166995538719816746, guid: 75520d39edcda3142afa41fd2eebdb23, type: 3}
   itemCount: 0
 --- !u!4 &4359477361678396135 stripped
 Transform:

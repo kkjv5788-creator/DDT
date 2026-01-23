@@ -10,12 +10,6 @@ public class FishCatchToken_st2 : MonoBehaviour
     public bool isCaught = false;
     public OVRInput.Controller? assignedHand = null;
 
-    [Header("SFX (Catch Success)")]
-    [SerializeField] private AudioSource catchSfxSource; /*[변경가능_잡기성공오디오소스]*/
-    [SerializeField] private AudioClip catchSnapClip;    /*[변경가능_착사운드클립]*/
-    [SerializeField, Range(0f, 1f)] private float catchSnapVolume = 1f; /*[변경가능_착볼륨]*/
-    [SerializeField] private bool catchSnap3D = true; /*[변경가능_3D사운드]*/
-
     [Header("이동 데이터")]
     private Vector3 moldPosition;
     private Transform parentMold;
@@ -26,11 +20,51 @@ public class FishCatchToken_st2 : MonoBehaviour
     public float gravity = 9.81f;
     public LayerMask groundLayer;
 
+    [Header("SFX (Catch Success)")]
+    [SerializeField] private AudioSource catchSfxSource; /*[변경가능_잡기성공오디오소스]*/
+    [SerializeField] private AudioClip catchSnapClip;    /*[변경가능_착사운드클립]*/
+    [SerializeField, Range(0f, 1f)] private float catchSnapVolume = 1f; /*[변경가능_착볼륨]*/
+    [SerializeField] private bool catchSnap3D = true;    /*[변경가능_3D사운드]*/
+
+    [Header("VFX (Catch Success)")]
+    [SerializeField] private GameObject catchVfxPrefab;  /*[변경가능_착이펙트프리팹]*/
+    [SerializeField] private Transform catchVfxAnchor;   /*[변경가능_착이펙트기준점] (없으면 fish transform)*/
+    [SerializeField] private Vector3 catchVfxLocalOffset = Vector3.zero;
+    [SerializeField] private Vector3 catchVfxLocalEuler = Vector3.zero;
+    [SerializeField] private float catchVfxAutoDestroySeconds = 2.0f;
+
+    public double popDspTime => popTime;
+
+    private bool catchFxPlayed = false;
+
     private Rigidbody rb;
     private bool hasJumped = false;
 
+    // 바닥 반환 1회 가드
+    private bool _releasedToPoolOnce = false;
+
     // 소유 몰드 추적
     public MoldController_st2 ownerMold;
+
+    public void ConsumeToPool(FishConsumeReason_st2 reason)
+    {
+        // ✅ 성공/미스/타임아웃 등 어떤 이유든 "정상 풀 반환"
+        if (ownerMold != null)
+        {
+            // 손에 붙어있을 수 있으니 분리
+            transform.SetParent(null, true);
+            ownerMold.ReleaseFish(this);
+            return;
+        }
+
+        // fallback
+        gameObject.SetActive(false);
+    }
+
+    public void ReturnToPool()
+    {
+        ConsumeToPool(FishConsumeReason_st2.Despawn);
+    }
 
     private void Reset()
     {
@@ -54,30 +88,61 @@ public class FishCatchToken_st2 : MonoBehaviour
         if (catchSnapClip == null) return;
 
         var src = GetOrCreateCatchSfxSource();
-        if (src == null)
+        src.spatialBlend = catchSnap3D ? 1f : 0f;
+        src.PlayOneShot(catchSnapClip, catchSnapVolume);
+    }
+
+    // ✅ scale=100이어도 VFX가 튀지 않도록 TransformPoint 대신 "position + rotation * offset" 사용
+    private void SpawnCatchVfx()
+    {
+        if (catchVfxPrefab == null) return;
+
+        Transform a = catchVfxAnchor != null ? catchVfxAnchor : transform;
+
+        Vector3 pos = a.position + (a.rotation * catchVfxLocalOffset); // 스케일 영향 없음
+        Quaternion rot = a.rotation * Quaternion.Euler(catchVfxLocalEuler);
+
+        var vfx = Instantiate(catchVfxPrefab, pos, rot);
+
+        // 프리팹이 부모 스케일 가정일 경우(특히 파티클) 안전하게 1로 고정
+        vfx.transform.localScale = Vector3.one;
+
+        AutoDestroyVfx(vfx, catchVfxAutoDestroySeconds);
+    }
+
+    static void AutoDestroyVfx(GameObject vfxRoot, float fallbackSeconds)
+    {
+        if (vfxRoot == null) return;
+
+        var ps = vfxRoot.GetComponentInChildren<ParticleSystem>(true);
+        if (ps != null)
         {
-            AudioSource.PlayClipAtPoint(catchSnapClip, transform.position, catchSnapVolume);
+            var main = ps.main;
+            float lifeMax = 0f;
+
+            var sl = main.startLifetime;
+            if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
+            else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
+            else lifeMax = sl.constantMax;
+
+            float total = Mathf.Max(0.1f, main.duration + lifeMax);
+            UnityEngine.Object.Destroy(vfxRoot, total);
             return;
         }
 
-        src.spatialBlend = catchSnap3D ? 1f : 0f;
-        src.PlayOneShot(catchSnapClip, catchSnapVolume);
+        UnityEngine.Object.Destroy(vfxRoot, Mathf.Max(0.1f, fallbackSeconds));
     }
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-        }
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
 
         rb.useGravity = true;
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-        // SFX 소스 자동 세팅(필요 시)
         if (catchSfxSource == null) catchSfxSource = GetComponent<AudioSource>();
     }
 
@@ -87,9 +152,13 @@ public class FishCatchToken_st2 : MonoBehaviour
         isResolved = false;
         isCaught = false;
         assignedHand = null;
+
         parentMold = mold;
         ownerMold = owner;
+
         hasJumped = false;
+        catchFxPlayed = false;
+        _releasedToPoolOnce = false; // ✅ 풀 재사용 시 반드시 리셋
 
         moldPosition = mold.position;
         transform.position = moldPosition;
@@ -103,9 +172,13 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         PerformJump();
 
-        Transform playerCam = Camera.main.transform;
-        Vector3 toPlayer = (playerCam.position - transform.position).normalized;
-        transform.right = toPlayer;
+        // 카메라 없을 수도 있으니 안전 처리
+        if (Camera.main != null)
+        {
+            Transform playerCam = Camera.main.transform;
+            Vector3 toPlayer = (playerCam.position - transform.position).normalized;
+            transform.right = toPlayer;
+        }
     }
 
     void PerformJump()
@@ -130,53 +203,36 @@ public class FishCatchToken_st2 : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // ✅ 잡아서(Perfect/Good) 손에 붙은 애는 바닥 충돌 무시
         if (isCaught) return;
 
-        // ✅ 바닥 충돌 체크 (레이어 또는 태그로 확인)
         bool isGround = false;
-
-        // 방법 1: LayerMask 사용
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
-        {
-            isGround = true;
-        }
-
-        // 방법 2: 태그 사용 (보조 체크)
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGround = true;
-        }
-
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0) isGround = true;
+        if (collision.gameObject.CompareTag("Ground")) isGround = true;
         if (!isGround) return;
 
-        // ✅ 아직 판정 안 된 상태에서 바닥 = Miss 확정 (기존 유지)
         if (!isResolved)
         {
-            Debug.Log($"✅ Fish hit ground - triggering MISS for {gameObject.name}");
-
-            // MISS 피드백
             FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
         }
 
-        // ✅ 이미 Miss든 판정 전이든 "바닥 닿으면 무조건 사라짐" (풀로 반환)
         if (ownerMold != null)
-        {
             ownerMold.ReleaseFish(this);
-            Debug.Log($"✅ Fish returned to pool after ground collision");
-        }
     }
 
     public void OnCaught()
     {
+        // ✅ isCaught가 이미 true여도(외부에서 먼저 세팅했어도) FX는 1회 보장
         isCaught = true;
 
-        // ✅ '착' 사운드 (성공 시 1회)
-        PlayCatchSnapSfx();
+        if (!catchFxPlayed)
+        {
+            catchFxPlayed = true;
+            PlayCatchSnapSfx();
+            SpawnCatchVfx();
+        }
 
         if (rb != null)
         {
-            // ✅ kinematic 바꾸기 전에 velocity를 먼저 0으로 (Unity warning 방지)
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
@@ -193,6 +249,43 @@ public class FishCatchToken_st2 : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
+
         hasJumped = false;
+        catchFxPlayed = false;
+        _releasedToPoolOnce = false; // ✅ 안전 리셋
+        // isResolved/isCaught는 MoldController actionOnRelease에서 OnReturnToPool 호출 후 SetActive(false)라
+        // 다음 Get() 때 Initialize에서 다시 세팅됨
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        TryReleaseOnGround(other.gameObject);
+    }
+
+    private void TryReleaseOnGround(GameObject otherGo)
+    {
+        if (_releasedToPoolOnce) return;
+        if (otherGo == null) return;
+
+        // 이미 잡혀서 처리 중이면 바닥으로 반환 막기(성공 연출/스냅 중 충돌 방지)
+        if (isCaught) return;
+
+        bool isGround =
+            ((groundLayer.value & (1 << otherGo.layer)) != 0) ||
+            otherGo.CompareTag("Ground");
+
+        if (!isGround) return;
+
+        _releasedToPoolOnce = true;
+
+        // ✅ 여기서 isResolved 여부와 상관없이 "풀 반환"이 목표
+        if (ownerMold != null)
+        {
+            ownerMold.ReleaseFish(this);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
