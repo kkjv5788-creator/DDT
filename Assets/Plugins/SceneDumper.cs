@@ -3,18 +3,18 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Text;
-using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ProjectDumper : MonoBehaviour
 {
-    [MenuItem("Tools/Dump Scene and Scripts")]
+    [MenuItem("Tools/Dump Scene and Active Scripts Only")]
     static void ExportAllInfo()
     {
         StringBuilder sb = new StringBuilder();
         
         // ---------------------------------------------------------
-        // 1. 씬 정보 추출 (기존 기능)
+        // 1. 씬 정보 추출
         // ---------------------------------------------------------
         sb.AppendLine($"[PROJECT DUMP START]");
         sb.AppendLine($"Scene: {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
@@ -24,92 +24,116 @@ public class ProjectDumper : MonoBehaviour
         sb.AppendLine("========================================\n");
 
         GameObject[] rootObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+        
+        // 스크립트 경로를 중복 없이 저장할 HashSet
+        HashSet<string> activeScriptPaths = new HashSet<string>();
+
         foreach (GameObject obj in rootObjects)
         {
-            DumpGameObject(obj, sb, "");
+            DumpGameObject(obj, sb, "", activeScriptPaths);
         }
 
         // ---------------------------------------------------------
-        // 2. 스크립트 코드 추출 (추가된 기능)
+        // 2. 현재 씬에서 사용 중인 스크립트 코드만 추출
         // ---------------------------------------------------------
-        DumpScripts(sb);
+        DumpActiveScripts(sb, activeScriptPaths);
 
         // ---------------------------------------------------------
         // 3. 파일 저장 및 실행
         // ---------------------------------------------------------
-        string path = Path.Combine(Application.dataPath, "../ProjectFullDump.txt");
+        string filename = "ProjectFullDump_ActiveOnly.txt";
+        string path = Path.Combine(Application.dataPath, "..", filename);
+        
         File.WriteAllText(path, sb.ToString());
-
-        EditorUtility.DisplayDialog("완료", $"프로젝트 폴더(Assets 상위)에 'ProjectFullDump.txt'가 생성되었습니다.\n\n경로: {path}", "확인");
-        System.Diagnostics.Process.Start(path);
+        Debug.Log($"Dump saved to: {path}");
+        Application.OpenURL(path);
     }
 
-    // --- [기존] 씬 구조 및 값 추출 함수 ---
-    static void DumpGameObject(GameObject obj, StringBuilder sb, string indent)
+    // 재귀적으로 하이어라키를 탐색하며 정보 기록 + 사용된 스크립트 수집
+    static void DumpGameObject(GameObject obj, StringBuilder sb, string indent, HashSet<string> scriptPaths)
     {
-        sb.AppendLine($"{indent}[O] {obj.name} (Active: {obj.activeSelf}, Tag: {obj.tag}, Layer: {LayerMask.LayerToName(obj.layer)})");
-        sb.AppendLine($"{indent}    Pos: {obj.transform.position} | Rot: {obj.transform.eulerAngles} | Scale: {obj.transform.localScale}");
+        bool isActive = obj.activeInHierarchy;
+        string status = isActive ? "[O]" : "[X]";
+        sb.AppendLine($"{indent}{status} {obj.name} (Tag: {obj.tag}, Layer: {LayerMask.LayerToName(obj.layer)})");
 
+        // 컴포넌트 정보 기록 및 스크립트 경로 수집
         Component[] components = obj.GetComponents<Component>();
         foreach (Component c in components)
         {
-            if (c == null) continue;
-            if (c is Transform) continue;
+            if (c == null) continue; // Missing Script 방지
 
             string compName = c.GetType().Name;
-            sb.AppendLine($"{indent}    - (Component) {compName}");
-
-            // Public 변수 값 긁어오기
-            FieldInfo[] fields = c.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            if (fields.Length > 0)
+            
+            // MonoBehaviour인 경우 실제 스크립트 파일 경로를 찾음
+            if (c is MonoBehaviour mb)
             {
-                foreach (FieldInfo field in fields)
+                MonoScript script = MonoScript.FromMonoBehaviour(mb);
+                if (script != null)
                 {
-                    try {
-                        object value = field.GetValue(c);
-                        sb.AppendLine($"{indent}        > {field.Name}: {value}");
-                    } catch { }
+                    string assetPath = AssetDatabase.GetAssetPath(script);
+                    // "Assets/"로 시작하고, 내부 엔진 코드나 플러그인이 아닌 경우만 수집
+                    if (IsValidScriptPath(assetPath))
+                    {
+                        scriptPaths.Add(assetPath);
+                    }
                 }
             }
-        }
-        sb.AppendLine();
 
+            // (선택) 하이어라키 뷰에 컴포넌트 목록도 간단히 표시하려면 아래 주석 해제
+            // sb.AppendLine($"{indent}    - (Component) {compName}");
+        }
+
+        // 자식 오브젝트 탐색
         foreach (Transform child in obj.transform)
         {
-            DumpGameObject(child.gameObject, sb, indent + "    ");
+            DumpGameObject(child.gameObject, sb, indent + "    ", scriptPaths);
         }
     }
 
-    // --- [신규] 스크립트 코드 수집 함수 ---
-    static void DumpScripts(StringBuilder sb)
+    // 수집된 경로의 스크립트 내용 덤프
+    static void DumpActiveScripts(StringBuilder sb, HashSet<string> paths)
     {
         sb.AppendLine("\n========================================");
-        sb.AppendLine("              SCRIPTS SOURCE CODE");
+        sb.AppendLine("         USED SCRIPTS SOURCE CODE");
+        sb.AppendLine("   (Only scripts attached in this Scene)");
         sb.AppendLine("========================================\n");
 
-        // Assets 폴더 내의 모든 .cs 파일 검색
-        string[] allScriptPaths = Directory.GetFiles(Application.dataPath, "*.cs", SearchOption.AllDirectories);
+        // 경로 알파벳순 정렬
+        var sortedPaths = paths.OrderBy(p => p).ToList();
 
-        foreach (string filePath in allScriptPaths)
+        if (sortedPaths.Count == 0)
         {
-            // 경로 통일 (Windows 역슬래시 문제 방지)
-            string relativePath = "Assets" + filePath.Substring(Application.dataPath.Length).Replace("\\", "/");
-
-            // [필터링] 제외하고 싶은 폴더 키워드 설정
-            // 외부 에셋이나 엔진 관련 코드는 제외하고 내가 짠 코드만 보기 위함
-            if (relativePath.Contains("/Plugins/") || 
-                relativePath.Contains("/Editor/") || 
-                relativePath.Contains("/TextMesh Pro/") ||
-                relativePath.Contains("/Lib/") ||
-                relativePath.Contains("/Standard Assets/"))
-            {
-                continue;
-            }
-
-            sb.AppendLine($"--- FILENAME: {Path.GetFileName(relativePath)} ({relativePath}) ---");
-            sb.AppendLine(File.ReadAllText(filePath));
-            sb.AppendLine("\n--------------------------------------------------\n");
+            sb.AppendLine("No custom scripts found in this scene.");
+            return;
         }
+
+        foreach (string relativePath in sortedPaths)
+        {
+            string fullPath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, relativePath);
+
+            if (File.Exists(fullPath))
+            {
+                sb.AppendLine($"--- FILENAME: {Path.GetFileName(relativePath)} ({relativePath}) ---");
+                sb.AppendLine(File.ReadAllText(fullPath));
+                sb.AppendLine("\n--------------------------------------------------\n");
+            }
+        }
+    }
+
+    // 덤프에서 제외할 경로 필터링
+    static bool IsValidScriptPath(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return false;
+        if (!path.StartsWith("Assets/")) return false; // 패키지나 내부 코드는 제외
+        if (!path.EndsWith(".cs")) return false;
+
+        // 제외하고 싶은 폴더 키워드
+        if (path.Contains("/Plugins/")) return false;
+        if (path.Contains("/Editor/")) return false;
+        if (path.Contains("/TextMesh Pro/")) return false;
+        if (path.Contains("/Oculus/")) return false; // 오큘러스 SDK 코드 제외 (너무 많음)
+
+        return true;
     }
 }
 #endif

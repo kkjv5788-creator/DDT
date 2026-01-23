@@ -950,9 +950,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2167f728eb91e0498ee92bf23d840d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageUIManager: {fileID: 0}
   conductor: {fileID: 463253587}
-  pricePerSuccess: 5000
+  gameFlowManager: {fileID: 0}
+  panel100k: {fileID: 0}
+  panel50k: {fileID: 0}
+  panel0: {fileID: 0}
+  endDelaySeconds: 3
+  OnProgressUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &206060681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,9 +979,6 @@ MonoBehaviour:
   pauseManager: {fileID: 463253590}
   missionBoard: {fileID: 918129802}
   toolSwitcher: {fileID: 0}
-  salesUIGroup: {fileID: 268026783}
-  txtSalesTitle: {fileID: 0}
-  txtSalesValue: {fileID: 787213205}
   mainTriggerList: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
   mainMenuSceneName: Main_v3.0
 --- !u!114 &206060682
@@ -7825,10 +7828,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5920b8bf5f17784abc627c80dacbec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conductor: {fileID: 463253587}
-  sliderSongProgress: {fileID: 991185519}
-  txtRealtimeSales: {fileID: 787213205}
-  txtFeedback: {fileID: 116851612}
+  judgeText: {fileID: 0}
+  gaugeSlider: {fileID: 0}
+  gaugeFill: {fileID: 0}
+  gaugeColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  radioGuide: {fileID: 0}
+  handTooltip: {fileID: 0}
 --- !u!4 &2103903639 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 36788018068779448, guid: d6ddb8c471856d34ebc6b4c2666cf322, type: 3}
