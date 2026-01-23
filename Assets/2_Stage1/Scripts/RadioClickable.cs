@@ -39,14 +39,20 @@ public class RadioClickable : MonoBehaviour
     bool _tutorialCompleted = false;
 
     Material _runtimeMaterial;
+    Material _normalRuntimeMaterial;
+    Material _outlineRuntimeMaterial;
 
     void Start()
     {
         // 런타임 머티리얼 생성
-        if (radioRenderer && normalMaterial)
+        if (radioRenderer)
         {
-            _runtimeMaterial = new Material(normalMaterial);
-            radioRenderer.material = _runtimeMaterial;
+            if (normalMaterial) _normalRuntimeMaterial = new Material(normalMaterial);
+            if (outlineMaterial) _outlineRuntimeMaterial = new Material(outlineMaterial);
+
+            _runtimeMaterial = _normalRuntimeMaterial ? _normalRuntimeMaterial : _outlineRuntimeMaterial;
+            if (_runtimeMaterial)
+                radioRenderer.material = _runtimeMaterial;
         }
 
         UpdateVisuals(false, false);
@@ -167,10 +173,10 @@ public class RadioClickable : MonoBehaviour
         if (!clickable)
         {
             // 🔴 클릭 불가 (튜토리얼 중): normalMaterial, Emission OFF
-            if (normalMaterial && radioRenderer.sharedMaterial != normalMaterial)
+            if (_normalRuntimeMaterial && _runtimeMaterial != _normalRuntimeMaterial)
             {
-                radioRenderer.material = new Material(normalMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _normalRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.DisableKeyword("_EMISSION");
@@ -179,10 +185,10 @@ public class RadioClickable : MonoBehaviour
         else if (clickable && !pointing)
         {
             // 🟡 클릭 가능 + 포인터 안 맞음: outlineMaterial, Emission OFF
-            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            if (_outlineRuntimeMaterial && _runtimeMaterial != _outlineRuntimeMaterial)
             {
-                radioRenderer.material = new Material(outlineMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _outlineRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.DisableKeyword("_EMISSION");
@@ -191,10 +197,10 @@ public class RadioClickable : MonoBehaviour
         else if (clickable && pointing)
         {
             // 🟢 클릭 가능 + 포인터 맞음: outlineMaterial + Emission ON
-            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            if (_outlineRuntimeMaterial && _runtimeMaterial != _outlineRuntimeMaterial)
             {
-                radioRenderer.material = new Material(outlineMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _outlineRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.EnableKeyword("_EMISSION");
@@ -248,10 +254,8 @@ public class RadioClickable : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_runtimeMaterial)
-        {
-            Destroy(_runtimeMaterial);
-        }
+        if (_normalRuntimeMaterial) Destroy(_normalRuntimeMaterial);
+        if (_outlineRuntimeMaterial) Destroy(_outlineRuntimeMaterial);
     }
 
     void OnDrawGizmos()

@@ -1,688 +1,9 @@
-[PROJECT DUMP START]
-Scene: Stage1_v4.4
-Date: 2026-01-23 ì˜¤í›„ 6:18:07
-========================================
-              SCENE HIERARCHY
-========================================
 
-[O] Player_Core (Tag: Untagged, Layer: Default)
-    [O] OVRCameraRig (Tag: MainCamera, Layer: Default)
-        [O] TrackingSpace (Tag: Untagged, Layer: Default)
-            [O] LeftEyeAnchor (Tag: MainCamera, Layer: Default)
-            [O] CenterEyeAnchor (Tag: MainCamera, Layer: Default)
-            [O] RightEyeAnchor (Tag: Untagged, Layer: Default)
-            [O] TrackerAnchor (Tag: Untagged, Layer: Default)
-            [O] LeftHandAnchor (Tag: Untagged, Layer: Default)
-                [O] LaserVisual_L (Tag: Untagged, Layer: Default)
-                [X] LeftControllerAnchor (Tag: Untagged, Layer: Default)
-                    [X] [BuildingBlock] Controller Tracking Left (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
-                            [X] l_controller_ply (Tag: Untagged, Layer: Default)
-                            [X] left_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                            [X] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
-                                [X] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
-                            [X] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
-                                [X] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
-                            [X] r_controller_ply (Tag: Untagged, Layer: Default)
-                            [X] right_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
-                            [X] l_rainier_mesh (Tag: Untagged, Layer: Default)
-                            [X] left_laser_begin (Tag: Untagged, Layer: Default)
-                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
-                            [X] r_rainier_mesh (Tag: Untagged, Layer: Default)
-                            [X] right_laser_begin (Tag: Untagged, Layer: Default)
-                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
-                            [X] left_touch_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button01 (Tag: Untagged, Layer: Default)
-                                [X] b_button02 (Tag: Untagged, Layer: Default)
-                                [X] b_button03 (Tag: Untagged, Layer: Default)
-                                [X] b_hold1 (Tag: Untagged, Layer: Default)
-                                [X] b_stick (Tag: Untagged, Layer: Default)
-                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
-                                [X] b_trigger (Tag: Untagged, Layer: Default)
-                            [X] left_touch_mesh (Tag: Untagged, Layer: Default)
-                        [X] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
-                            [X] right_touch_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button01 (Tag: Untagged, Layer: Default)
-                                [X] b_button02 (Tag: Untagged, Layer: Default)
-                                [X] b_button03 (Tag: Untagged, Layer: Default)
-                                [X] b_hold (Tag: Untagged, Layer: Default)
-                                [X] b_stick (Tag: Untagged, Layer: Default)
-                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
-                                [X] b_trigger (Tag: Untagged, Layer: Default)
-                            [X] right_touch_mesh (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
-                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
-                            [X] left_nub (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] laser_begin (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
-                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
-                            [X] right_nub (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] laser_begin (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
-                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] left_b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] left_b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] left_b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] left_b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] left_laser_begin (Tag: Untagged, Layer: Default)
-                            [X] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
-                            [X] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
-                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] right_b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] right_b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] right_b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] right_b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] right_laser_begin (Tag: Untagged, Layer: Default)
-                [X] LeftControllerInHandAnchor (Tag: Untagged, Layer: Default)
-                    [X] LeftHandOnControllerAnchor (Tag: Untagged, Layer: Default)
-            [O] RightHandAnchor (Tag: Untagged, Layer: Default)
-                [O] LaserVisual_R (Tag: Untagged, Layer: Default)
-                [X] RightControllerAnchor (Tag: Untagged, Layer: Default)
-                    [X] [BuildingBlock] Controller Tracking Right (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
-                            [X] l_controller_ply (Tag: Untagged, Layer: Default)
-                            [X] left_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                            [X] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
-                                [X] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
-                            [X] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
-                                [X] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
-                            [X] r_controller_ply (Tag: Untagged, Layer: Default)
-                            [X] right_monterey_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
-                            [X] l_rainier_mesh (Tag: Untagged, Layer: Default)
-                            [X] left_laser_begin (Tag: Untagged, Layer: Default)
-                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
-                            [X] r_rainier_mesh (Tag: Untagged, Layer: Default)
-                            [X] right_laser_begin (Tag: Untagged, Layer: Default)
-                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                        [X] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
-                            [X] left_touch_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button01 (Tag: Untagged, Layer: Default)
-                                [X] b_button02 (Tag: Untagged, Layer: Default)
-                                [X] b_button03 (Tag: Untagged, Layer: Default)
-                                [X] b_hold1 (Tag: Untagged, Layer: Default)
-                                [X] b_stick (Tag: Untagged, Layer: Default)
-                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
-                                [X] b_trigger (Tag: Untagged, Layer: Default)
-                            [X] left_touch_mesh (Tag: Untagged, Layer: Default)
-                        [X] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
-                            [X] right_touch_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button01 (Tag: Untagged, Layer: Default)
-                                [X] b_button02 (Tag: Untagged, Layer: Default)
-                                [X] b_button03 (Tag: Untagged, Layer: Default)
-                                [X] b_hold (Tag: Untagged, Layer: Default)
-                                [X] b_stick (Tag: Untagged, Layer: Default)
-                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
-                                [X] b_trigger (Tag: Untagged, Layer: Default)
-                            [X] right_touch_mesh (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
-                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
-                            [X] left_nub (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] laser_begin (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
-                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
-                            [X] right_nub (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] laser_begin (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
-                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
-                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_x (Tag: Untagged, Layer: Default)
-                                [X] b_button_y (Tag: Untagged, Layer: Default)
-                                [X] left_b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] left_b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] left_b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] left_b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] left_laser_begin (Tag: Untagged, Layer: Default)
-                            [X] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
-                        [X] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
-                            [X] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
-                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
-                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
-                                [X] b_button_a (Tag: Untagged, Layer: Default)
-                                [X] b_button_b (Tag: Untagged, Layer: Default)
-                                [X] right_b_button_oculus (Tag: Untagged, Layer: Default)
-                                [X] right_b_thumbstick (Tag: Untagged, Layer: Default)
-                                [X] right_b_trigger_front (Tag: Untagged, Layer: Default)
-                                [X] right_b_trigger_grip (Tag: Untagged, Layer: Default)
-                                [X] right_laser_begin (Tag: Untagged, Layer: Default)
-                [X] RightControllerInHandAnchor (Tag: Untagged, Layer: Default)
-                    [X] RightHandOnControllerAnchor (Tag: Untagged, Layer: Default)
-            [O] LeftHandAnchorDetached (Tag: Untagged, Layer: Default)
-            [O] RightHandAnchorDetached (Tag: Untagged, Layer: Default)
-    [O] EventSystem (Tag: Untagged, Layer: Default)
-[O] KnifePhysicalRoot (Tag: Untagged, Layer: KnifePhysical)
-    [O] KnifeSliceTrigger (Tag: Untagged, Layer: KnifeSlice)
-    [O] KnifeVisual (Tag: Untagged, Layer: KnifePhysical)
-    [O] AttachPoint_R (Tag: Untagged, Layer: KnifePhysical)
-[O] Environment (Tag: Untagged, Layer: Default)
-    [O] radio (Tag: Untagged, Layer: Radio)
-    [O] Kitchen_Creation (Tag: Untagged, Layer: World)
-        [O] centerTable_01 (Tag: Untagged, Layer: World)
-        [O] cuttingBoard_01 (Tag: Untagged, Layer: World)
-    [O] Point Light (Tag: Untagged, Layer: Default)
-    [O] microphone (Tag: Untagged, Layer: Default)
-        [O] Circle (Tag: Untagged, Layer: Default)
-        [O] Circle.001 (Tag: Untagged, Layer: Default)
-        [O] Cylinder (Tag: Untagged, Layer: Default)
-        [O] Sphere (Tag: Untagged, Layer: Default)
-    [O] Room (Tag: Untagged, Layer: Default)
-        [O] Inner_Room (Tag: Untagged, Layer: World)
-            [O] Door_01 (Tag: Untagged, Layer: World)
-            [O] Door_01.001 (Tag: Untagged, Layer: World)
-            [O] Door_01.002 (Tag: Untagged, Layer: World)
-            [O] Door_01.003 (Tag: Untagged, Layer: World)
-            [O] Door_01.004 (Tag: Untagged, Layer: World)
-            [O] Door_01.005 (Tag: Untagged, Layer: World)
-            [O] Room (Tag: Untagged, Layer: World)
-        [O] Menu_2 (Tag: Untagged, Layer: World)
-        [X] Menu (Tag: Untagged, Layer: World)
-        [O] club_neon_2 (Tag: Untagged, Layer: Default)
-            [O] club_neon_2 (1) (Tag: Untagged, Layer: Default)
-        [O] 24hour_Neon (Tag: Untagged, Layer: World)
-        [X] Cafe_Neon (Tag: Untagged, Layer: World)
-            [X] 04 (Tag: Untagged, Layer: World)
-            [X] Shadow (Tag: Untagged, Layer: World)
-        [O] Disco_Ball (Tag: Untagged, Layer: Default)
-            [O] Color-lights (Tag: Untagged, Layer: Default)
-            [O] Disco_ball_ext (Tag: Untagged, Layer: Default)
-            [O] Disco_ball_int (Tag: Untagged, Layer: Default)
-            [O] DiscoBall-motor (Tag: Untagged, Layer: Default)
-            [O] Reflection Probe (Tag: Untagged, Layer: Default)
-            [O] Spot Light (Tag: Untagged, Layer: Default)
-            [O] Spot Light_2 (Tag: Untagged, Layer: Default)
-    [O] Fridge (Tag: Untagged, Layer: World)
-        [O] port_frigo (Tag: Untagged, Layer: World)
-    [O] bean_01 (Tag: Untagged, Layer: World)
-    [X] Table02 (Tag: Untagged, Layer: Default)
-    [O] GameObject (Tag: Untagged, Layer: Default)
-        [O] Table01 (Tag: Untagged, Layer: Default)
-            [O] chair_01 (Tag: Untagged, Layer: World)
-            [O] chair_02 (Tag: Untagged, Layer: World)
-            [O] chair_03 (Tag: Untagged, Layer: World)
-            [O] chair_04 (Tag: Untagged, Layer: World)
-        [O] Kimchi_Jjigae (Tag: Untagged, Layer: Default)
-            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
-            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
-            [O] Soup (Tag: Untagged, Layer: Default)
-            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
-        [O] Kimchi_Jjigae2 (Tag: Untagged, Layer: Default)
-            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
-            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
-            [O] Soup (Tag: Untagged, Layer: Default)
-            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
-        [O] Bowl (Tag: Untagged, Layer: Default)
-    [O] GameObject (1) (Tag: Untagged, Layer: Default)
-        [O] Table01 (Tag: Untagged, Layer: Default)
-            [O] chair_01 (Tag: Untagged, Layer: World)
-            [O] chair_02 (Tag: Untagged, Layer: World)
-            [O] chair_03 (Tag: Untagged, Layer: World)
-            [O] chair_04 (Tag: Untagged, Layer: World)
-        [O] Kimchi_Jjigae (Tag: Untagged, Layer: Default)
-            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
-            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
-            [O] Soup (Tag: Untagged, Layer: Default)
-            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
-        [O] Kimchi_Jjigae2 (Tag: Untagged, Layer: Default)
-            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
-            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
-            [O] Soup (Tag: Untagged, Layer: Default)
-            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
-        [O] Bowl (Tag: Untagged, Layer: Default)
-    [X] LightSaber (Tag: Untagged, Layer: Default)
-        [X] Collada visual scene group (Tag: Untagged, Layer: Default)
-            [X] Cylinder (Tag: Untagged, Layer: Default)
-                [X] defaultMaterial (Tag: Untagged, Layer: Default)
-    [X] chair_01 (Tag: Untagged, Layer: World)
-    [O] Kimbap_Bird (Tag: Untagged, Layer: Default)
-    [O] cute_gorani (Tag: Untagged, Layer: Default)
-        [O] Armature (Tag: Untagged, Layer: Default)
-            [O] Root (Tag: Untagged, Layer: Default)
-                [O] Hip (Tag: Untagged, Layer: Default)
-                    [O] Pelvis (Tag: Untagged, Layer: Default)
-                        [O] L_Thigh (Tag: Untagged, Layer: Default)
-                            [O] L_Calf (Tag: Untagged, Layer: Default)
-                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
-                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
-                                [O] L_Foot (Tag: Untagged, Layer: Default)
-                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
-                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
-                        [O] R_Thigh (Tag: Untagged, Layer: Default)
-                            [O] R_Calf (Tag: Untagged, Layer: Default)
-                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
-                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
-                                [O] R_Foot (Tag: Untagged, Layer: Default)
-                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
-                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
-                    [O] Waist (Tag: Untagged, Layer: Default)
-                        [O] Spine01 (Tag: Untagged, Layer: Default)
-                            [O] Spine02 (Tag: Untagged, Layer: Default)
-                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
-                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
-                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
-                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
-                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
-                                            [O] L_Hand (Tag: Untagged, Layer: Default)
-                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
-                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
-                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
-                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
-                                        [O] Head (Tag: Untagged, Layer: Default)
-                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
-                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
-                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
-                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
-                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
-                                            [O] R_Hand (Tag: Untagged, Layer: Default)
-                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
-                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
-        [O] tripo_node_1641414e (Tag: Untagged, Layer: Default)
-[O] StageManager (Tag: Untagged, Layer: Default)
-    [O] GameManager (Tag: Untagged, Layer: Default)
-        [O] spawnpoint(kimbap) (Tag: Untagged, Layer: World)
-        [O] spawn point(dish) (Tag: Untagged, Layer: World)
-        [O] spawn point(dish) VFXwin (Tag: Untagged, Layer: World)
-        [O] spawnpoint(kimbap) VFX (Tag: Untagged, Layer: World)
-        [O] spawn point(dish) VFX (Tag: Untagged, Layer: World)
-    [O] MODE_TUTORIAL (Tag: Untagged, Layer: Default)
-        [X] Kimbap.010 (Tag: Untagged, Layer: KimbapSliceable)
-            [X] MainMesh (Tag: Untagged, Layer: KimbapSliceable)
-                [X] SliceTrigger (Tag: Untagged, Layer: KimbapSliceable)
-                [X] BlockCollider (Tag: Untagged, Layer: KimbapBlocked)
-            [X] SliceTrigger (Tag: Untagged, Layer: KimbapSliceable)
-            [X] BlockCollider (Tag: Untagged, Layer: KimbapBlocked)
-    [X] MODE_GAME (Tag: Untagged, Layer: Default)
-[O] Monitor_Group (Tag: Untagged, Layer: Default)
-    [O] Monitor (Tag: Untagged, Layer: Default)
-    [O] Monitor_Canvas (Tag: Untagged, Layer: UI)
-        [O] Panel_SelectMode (Tag: Untagged, Layer: UI)
-            [O] BG (Tag: Untagged, Layer: UI)
-            [O] Text_Title (Tag: Untagged, Layer: UI)
-            [O] Btn_Tutorial (Tag: Untagged, Layer: UI)
-                [O] Text (TMP) (Tag: Untagged, Layer: UI)
-            [O] Btn_Game (Tag: Untagged, Layer: UI)
-                [O] Text (TMP) (Tag: Untagged, Layer: UI)
-        [X] Panel_Dialogue (Tag: Untagged, Layer: UI)
-            [X] Text_Speech (Tag: Untagged, Layer: UI)
-            [X] Text_Hint (Tag: Untagged, Layer: UI)
-        [X] Panel_PlayGame (Tag: Untagged, Layer: UI)
-            [X] Slider_SongProgress (Tag: Untagged, Layer: UI)
-                [X] Background (Tag: Untagged, Layer: UI)
-                [X] Fill Area (Tag: Untagged, Layer: UI)
-                    [X] Fill (Tag: Untagged, Layer: UI)
-            [X] Text_RemainingTime (Tag: Untagged, Layer: UI)
-        [X] Sales_Info_Group (Tag: Untagged, Layer: UI)
-            [X] Text_RealtimeSales (Tag: Untagged, Layer: UI)
-            [X] Text_Feedback (Tag: Untagged, Layer: UI)
-        [X] Panel_ClosingResult (Tag: Untagged, Layer: UI)
-            [X] Text_Title (Tag: Untagged, Layer: UI)
-            [X] Text_FinalTotal (Tag: Untagged, Layer: UI)
-            [X] Text_GradeComment (Tag: Untagged, Layer: UI)
-            [X] Btn_Restart (Tag: Untagged, Layer: UI)
-                [X] Text (TMP) (Tag: Untagged, Layer: UI)
-            [X] Btn_MainMenu (Tag: Untagged, Layer: UI)
-                [X] Text (TMP) (Tag: Untagged, Layer: UI)
-        [X] Panel_Pause (Tag: Untagged, Layer: UI)
-            [X] Text_Pause (Tag: Untagged, Layer: UI)
-            [X] Btn_ResumePause (Tag: Untagged, Layer: UI)
-                [X] Text (TMP) (Tag: Untagged, Layer: UI)
-            [X] Btn_RestartPause (Tag: Untagged, Layer: UI)
-                [X] Text (TMP) (Tag: Untagged, Layer: UI)
-            [X] Btn_MainPause (Tag: Untagged, Layer: UI)
-                [X] Text (TMP) (Tag: Untagged, Layer: UI)
-[O] LegalPad_Group (Tag: Untagged, Layer: Default)
-    [O] LegalPad (Tag: Untagged, Layer: Default)
-    [O] LegalPad_Canvas (Tag: Untagged, Layer: UI)
-        [O] Text_Header (Tag: Untagged, Layer: UI)
-        [X] Text_Mission (Tag: Untagged, Layer: UI)
-        [O] Text_MissionName (Tag: Untagged, Layer: UI)
-        [O] Text_Progress (Tag: Untagged, Layer: UI)
-        [X] Image_Stamp (Tag: Untagged, Layer: UI)
 
 ========================================
-         USED SCRIPTS SOURCE CODE
-   (Only scripts attached in this Scene)
+ FILE: BlockHitDetector.cs 
 ========================================
-
---- FILENAME: SimpleLaserPointer.cs (Assets/1_Main/Scripts/SimpleLaserPointer.cs) ---
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-
-[RequireComponent(typeof(LineRenderer))]
-[RequireComponent(typeof(AudioSource))]
-public class SimpleLaserPointer : MonoBehaviour
-{
-    [Header("1. ë ˆì´ì € ì„¤ì •")]
-    public float maxDistance = 5.0f;
-    public float laserWidth = 0.005f;
-
-    [Header("2. ìƒ‰ìƒ ì„¤ì •")]
-    public Color normalLaserColor = Color.white; // í‰ì†Œ ë ˆì´ì € ìƒ‰ (í°ìƒ‰)
-    public Color hoverLaserColor = Color.green;  // ë‹¿ì•˜ì„ ë•Œ ë ˆì´ì €/ì•„ì›ƒë¼ì¸ ìƒ‰ (ì´ˆë¡)
-
-    [Header("3. ì‚¬ìš´ë“œ & ì§„ë™")]
-    public AudioClip hoverSound;
-    public AudioClip clickSound;
-    [Range(0, 1)] public float vibrationStrength = 0.2f;
-
-    private LineRenderer lr;
-    private AudioSource audioSource;
-    private OVRInput.Controller controllerType = OVRInput.Controller.None;
-    private GameFlowManager gameFlowManager;
-
-    // --- ìƒíƒœ ê´€ë¦¬ ë³€ìˆ˜ ---
-    private GameObject currentHitObject; // í˜„ì¬ ê°€ë¦¬í‚¤ê³  ìˆëŠ” ì˜¤ë¸Œì íŠ¸
-    private Outline currentOutline;      // í˜„ì¬ ì¼œì§„ ì•„ì›ƒë¼ì¸
-    private CanvasGroup currentCanvas;   // í˜„ì¬ ì¼œì§„ ì •ë³´ì°½
-
-    void Start()
-    {
-        lr = GetComponent<LineRenderer>();
-        audioSource = GetComponent<AudioSource>();
-        gameFlowManager = FindObjectOfType<GameFlowManager>();
-
-        lr.useWorldSpace = true;
-        lr.positionCount = 2;
-        lr.startWidth = laserWidth;
-        lr.endWidth = laserWidth;
-        if (!lr.material) lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0.5f;
-
-        DisableLaser(); // ì‹œì‘ ì‹œ ë„ê¸°
-
-        if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
-            controllerType = OVRInput.Controller.LTouch;
-        else
-            controllerType = OVRInput.Controller.RTouch;
-    }
-
-    private void OnDisable()
-    {
-        DisableLaser();
-    }
-
-    void LateUpdate()
-    {
-        if (!lr) return;
-
-        // // [1] ê²Œì„ ìƒíƒœ ì²´í¬ (ë©”ë‰´/ëŒ€ê¸° ìƒíƒœê°€ ì•„ë‹ˆë©´ ë ˆì´ì € ë„ê¸°)
-        // if (gameFlowManager != null)
-        // {
-        //     bool isMenuState =
-        //         gameFlowManager.CurrentState == GameState.WaitForRadio ||
-        //         gameFlowManager.CurrentState == GameState.Paused ||
-        //         gameFlowManager.CurrentState == GameState.FinalResult;
-
-        //     if (!isMenuState)
-        //     {
-        //         DisableLaser();
-        //         return;
-        //     }
-        // }
-
-        // [2] ë ˆì´ì € ë¡œì§ ì‹œì‘
-        if (!lr.enabled) lr.enabled = true; // ë ˆì´ì € ì¼œê¸°
-        lr.SetPosition(0, transform.position); // ì‹œì‘ì 
-
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-
-        // ì¶©ëŒ ê°ì§€
-        if (Physics.Raycast(ray, out hit, maxDistance))
-        {
-            lr.SetPosition(1, hit.point); // ëì ì€ ë‹¿ì€ ê³³
-            GameObject hitObj = hit.collider.gameObject;
-
-            // [A] ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ë¬¼ì²´ì¸ê°€? (ë²„íŠ¼, ë¬¸ ë“±)
-            if (IsInteractable(hitObj))
-            {
-                // ë ˆì´ì € ìƒ‰ìƒ -> ì´ˆë¡ìƒ‰
-                SetLaserColor(hoverLaserColor);
-
-                // ìƒˆë¡œìš´ ë¬¼ì²´ì— ë‹¿ì•˜ì„ ë•Œë§Œ ì²˜ë¦¬ (ìµœì í™”)
-                if (currentHitObject != hitObj)
-                {
-                    ResetPreviousEffects(); // ì´ì „ íš¨ê³¼ ë„ê¸°
-                    
-                    currentHitObject = hitObj;
-                    PlayFeedback(); // ì†Œë¦¬/ì§„ë™
-
-                    // // 1. ì•„ì›ƒë¼ì¸ ì¼œê¸°
-                    // var outline = hitObj.GetComponentInParent<Outline>();
-                    // if (outline != null)
-                    // {
-                    //     outline.enabled = true;
-                    //     outline.OutlineColor = hoverLaserColor;
-                    //     outline.OutlineWidth = 5f; // ë‘ê»˜ ì¡°ì ˆ ê°€ëŠ¥
-                    //     currentOutline = outline;
-                    // }
-
-                    // 2. ì •ë³´ì°½(Canvas) ì¼œê¸° (ìì‹ ì˜¤ë¸Œì íŠ¸ ê²€ìƒ‰)
-                    var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
-                    if (canvasGroup != null)
-                    {
-                        canvasGroup.alpha = 1f; // ë³´ì´ê²Œ ì„¤ì •
-                        currentCanvas = canvasGroup;
-                    }
-                }
-            }
-            else
-            {
-                // [B] ë²½ì´ë‚˜ ë°”ë‹¥ (ìƒí˜¸ì‘ìš© ë¶ˆê°€)
-                SetLaserColor(normalLaserColor); // ë ˆì´ì € í°ìƒ‰
-                ResetPreviousEffects();          // ì•„ì›ƒë¼ì¸/ì •ë³´ì°½ ë„ê¸°
-            }
-        }
-        else
-        {
-            // [C] í—ˆê³µ
-            lr.SetPosition(1, transform.position + (transform.forward * maxDistance)); // ê¸¸ê²Œ ë»—ê¸°
-            SetLaserColor(normalLaserColor); // ë ˆì´ì € í°ìƒ‰
-            ResetPreviousEffects();          // ì•„ì›ƒë¼ì¸/ì •ë³´ì°½ ë„ê¸°
-        }
-
-        // íŠ¸ë¦¬ê±° í´ë¦­ ì…ë ¥
-        HandleInput();
-    }
-
-    // --- ê¸°ëŠ¥ í•¨ìˆ˜ë“¤ ---
-
-    void ResetPreviousEffects()
-    {
-        // ì•„ì›ƒë¼ì¸ ë„ê¸°
-        if (currentOutline != null)
-        {
-            currentOutline.enabled = false;
-            currentOutline = null;
-        }
-
-        // ì •ë³´ì°½ ìˆ¨ê¸°ê¸°
-        if (currentCanvas != null)
-        {
-            currentCanvas.alpha = 0f; // íˆ¬ëª…í•˜ê²Œ
-            currentCanvas = null;
-        }
-
-        currentHitObject = null;
-    }
-
-    void SetLaserColor(Color c)
-    {
-        lr.startColor = c;
-        lr.endColor = c;
-    }
-
-    void HandleInput()
-    {
-        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
-        {
-            if (currentHitObject != null)
-            {
-                if (clickSound) audioSource.PlayOneShot(clickSound);
-
-                // UI ë²„íŠ¼ í´ë¦­
-                var button = currentHitObject.GetComponentInParent<Button>();
-                if (button != null) button.onClick.Invoke();
-
-                // ì¼ë°˜ ìƒí˜¸ì‘ìš©
-                var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
-                if (clickHandler != null)
-                {
-                    PointerEventData data = new PointerEventData(EventSystem.current);
-                    clickHandler.OnPointerClick(data);
-                }
-            }
-        }
-    }
-void DisableLaser()
-    {
-        // lrì´ ì¡´ì¬í•˜ëŠ”ì§€ ë¨¼ì € í™•ì¸ (ì•ˆì „ì¥ì¹˜ ì¶”ê°€)
-        if (lr != null && lr.enabled)
-        {
-            lr.enabled = false;
-            ResetPreviousEffects();
-        }
-    }
-    bool IsInteractable(GameObject obj)
-    {
-        if (obj.GetComponentInParent<Button>() != null) return true;
-        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
-        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
-        
-        // Outlineì´ ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë„ ìƒí˜¸ì‘ìš© ëŒ€ìƒìœ¼ë¡œ ê°„ì£¼ (ë¬¸ ë“±)
-        if (obj.GetComponentInParent<Outline>() != null) return true; 
-        
-        return false;
-    }
-
-    void PlayFeedback()
-    {
-        if (hoverSound)
-        {
-            audioSource.pitch = Random.Range(0.95f, 1.05f);
-            audioSource.PlayOneShot(hoverSound);
-        }
-
-        if (controllerType != OVRInput.Controller.None)
-        {
-            OVRInput.SetControllerVibration(vibrationStrength, vibrationStrength, controllerType);
-            Invoke("StopVibration", 0.1f);
-        }
-    }
-
-    void StopVibration()
-    {
-        OVRInput.SetControllerVibration(0, 0, controllerType);
-    }
-}
-
---------------------------------------------------
-
---- FILENAME: BlockHitDetector.cs (Assets/2_Stage1/Scripts/BlockHitDetector.cs) ---
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BlockHitDetector : MonoBehaviour
 {
@@ -714,9 +35,9 @@ public class BlockHitDetector : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: DebugHUD.cs (Assets/2_Stage1/Scripts/DebugHUD.cs) ---
+========================================
+ FILE: DebugHUD.cs 
+========================================
 using System.Diagnostics;
 using UnityEngine;
 
@@ -769,9 +90,9 @@ public class DebugHUD : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: DiscoLightController.cs (Assets/2_Stage1/Scripts/DiscoLightController.cs) ---
+========================================
+ FILE: DiscoLightController.cs 
+========================================
 using UnityEngine;
 
 [RequireComponent(typeof(Light))]
@@ -779,12 +100,12 @@ public class DiscoLightController : MonoBehaviour
 {
     [Header("Rotation")]
     public bool enableRotation = true;
-    public Vector3 rotationAxis = new Vector3(0f, 1f, 0f); // Yï¿½ï¿½ È¸ï¿½ï¿½ ï¿½âº»
+    public Vector3 rotationAxis = new Vector3(0f, 1f, 0f); // YÃà È¸Àü ±âº»
     public float rotationSpeed = 25f;
 
     [Header("Rainbow Color")]
     public bool enableRainbow = true;
-    public float rainbowSpeed = 0.25f;   // 0.1~1.0 ï¿½ï¿½Ãµ
+    public float rainbowSpeed = 0.25f;   // 0.1~1.0 ÃßÃµ
     [Range(0f, 1f)] public float saturation = 1f;
     [Range(0f, 1f)] public float brightness = 1f;
 
@@ -800,27 +121,27 @@ public class DiscoLightController : MonoBehaviour
     {
         _light = GetComponent<Light>();
 
-        // ï¿½Ê±â°ª ï¿½ï¿½ï¿½ï¿½
+        // ÃÊ±â°ª ¼¼ÆÃ
         if (enableIntensityPulse)
             _light.intensity = baseIntensity;
     }
 
     void Update()
     {
-        // 1) È¸ï¿½ï¿½
+        // 1) È¸Àü
         if (enableRotation)
         {
             transform.Rotate(rotationAxis.normalized, rotationSpeed * Time.deltaTime, Space.Self);
         }
 
-        // 2) ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ ï¿½ï¿½È­
+        // 2) ·¹ÀÎº¸¿ì ÄÃ·¯ º¯È­
         if (enableRainbow)
         {
             float h = Mathf.Repeat(Time.time * rainbowSpeed, 1f);
             _light.color = Color.HSVToRGB(h, saturation, brightness);
         }
 
-        // 3) (ï¿½É¼ï¿½) ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // 3) (¿É¼Ç) ¹à±â ¼û½¬±â
         if (enableIntensityPulse)
         {
             float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f; // 0~1
@@ -830,34 +151,34 @@ public class DiscoLightController : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: FeedbackRouter.cs (Assets/2_Stage1/Scripts/FeedbackRouter.cs) ---
+========================================
+ FILE: FeedbackRouter.cs 
+========================================
 using UnityEngine;
 
 public class FeedbackRouter : MonoBehaviour
 {
     [Header("Refs")]
     public RhythmConductor conductor;
-    public KnifeSlicer knifeSlicer; // (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    public KnifeSlicer knifeSlicer; // (ÇÁ·ÎÁ§Æ®¿¡¼­ ÂüÁ¶ °É·ÁÀÖÀ» ¼ö ÀÖ¾î À¯Áö)
     public AudioSource sfxSource;
     public FeedbackSetSO feedbackSet;
     public PlateController plateController;
 
     [Header("VFX Spawn Override")]
-    [Tooltip("Ã¼Å©ï¿½Ï¸ï¿½, Slice ï¿½ï¿½ï¿½ï¿½ VFXï¿½ï¿½ hitPos ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.")]
+    [Tooltip("Ã¼Å©ÇÏ¸é, Slice ¼º°ø VFX¸¦ hitPos ´ë½Å ÁöÁ¤ÇÑ À§Ä¡¿¡¼­ ½ºÆùÇÕ´Ï´Ù.")]
     public bool overrideSliceSuccessVfxSpawn = false;
 
-    [Tooltip("Slice ï¿½ï¿½ï¿½ï¿½ VFX ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(Transform). ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®(transform)ï¿½ï¿½ ï¿½ï¿½ï¿½.")]
+    [Tooltip("Slice ¼º°ø VFX ½ºÆù À§Ä¡(Transform). ºñ¾îÀÖÀ¸¸é ÀÌ ¿ÀºêÁ§Æ®(transform)¸¦ »ç¿ë.")]
     public Transform sliceSuccessVfxSpawnPoint;
 
-    [Tooltip("Ã¼Å©ï¿½Ï¸ï¿½, Result(ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½) VFXï¿½ï¿½ transform.position ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.")]
+    [Tooltip("Ã¼Å©ÇÏ¸é, Result(¼º°ø/½ÇÆĞ) VFX¸¦ transform.position ´ë½Å ÁöÁ¤ÇÑ À§Ä¡¿¡¼­ ½ºÆùÇÕ´Ï´Ù.")]
     public bool overrideResultVfxSpawn = false;
 
-    [Tooltip("Result ï¿½ï¿½ï¿½ï¿½ VFX ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(Transform). ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®(transform)ï¿½ï¿½ ï¿½ï¿½ï¿½.")]
+    [Tooltip("Result ¼º°ø VFX ½ºÆù À§Ä¡(Transform). ºñ¾îÀÖÀ¸¸é ÀÌ ¿ÀºêÁ§Æ®(transform)¸¦ »ç¿ë.")]
     public Transform resultSuccessVfxSpawnPoint;
 
-    [Tooltip("Result ï¿½ï¿½ï¿½ï¿½ VFX ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(Transform). ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®(transform)ï¿½ï¿½ ï¿½ï¿½ï¿½.")]
+    [Tooltip("Result ½ÇÆĞ VFX ½ºÆù À§Ä¡(Transform). ºñ¾îÀÖÀ¸¸é ÀÌ ¿ÀºêÁ§Æ®(transform)¸¦ »ç¿ë.")]
     public Transform resultFailVfxSpawnPoint;
 
     float _lastFailFeedbackTime = -999f;
@@ -871,7 +192,7 @@ public class FeedbackRouter : MonoBehaviour
 
     void OnEnable()
     {
-        // RhythmConductorï¿½ï¿½ UnityEventï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // RhythmConductor°¡ UnityEvent·Î ¹ßÇàÇÏ´Â ÀÌº¥Æ®¸¦ ±¸µ¶
         if (conductor)
         {
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
@@ -911,7 +232,7 @@ public class FeedbackRouter : MonoBehaviour
             Destroy(vfx, 2f);
         }
 
-        // ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+        // ÇÃ·¹ÀÌÆÃ Á¶°¢ Ãß°¡
         if (plateController)
             plateController.AddPlatingPiece();
     }
@@ -920,7 +241,7 @@ public class FeedbackRouter : MonoBehaviour
     {
         if (!feedbackSet) return;
 
-        // Spam ï¿½ï¿½ï¿½ï¿½ (FeedbackSetSOï¿½ï¿½ failCooldown ï¿½ï¿½ï¿½)
+        // Spam ¹æÁö (FeedbackSetSOÀÇ failCooldown »ç¿ë)
         if (Time.time - _lastFailFeedbackTime < feedbackSet.failCooldown)
             return;
         _lastFailFeedbackTime = Time.time;
@@ -929,7 +250,7 @@ public class FeedbackRouter : MonoBehaviour
         if (feedbackSet.sfxSliceFail && sfxSource)
             sfxSource.PlayOneShot(feedbackSet.sfxSliceFail);
 
-        // VFX (ï¿½ï¿½ï¿½Ğ´ï¿½ ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ hitPosï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // VFX (½ÇÆĞ´Â ±âÁ¸Ã³·³ hitPos¿¡ À¯Áö)
         if (feedbackSet.vfxSliceFailPrefab)
         {
             var vfx = Instantiate(feedbackSet.vfxSliceFailPrefab, hitPos, Quaternion.identity);
@@ -960,7 +281,7 @@ public class FeedbackRouter : MonoBehaviour
                 Destroy(vfx, 3f);
             }
 
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
+            // Á¢½Ã ±³Ã¼
             if (plateController)
                 plateController.ShowSuccessPlate();
         }
@@ -983,7 +304,7 @@ public class FeedbackRouter : MonoBehaviour
                 Destroy(vfx, 3f);
             }
 
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
+            // Á¢½Ã ±³Ã¼
             if (plateController)
                 plateController.ShowFailPlate();
         }
@@ -1004,15 +325,51 @@ public class FeedbackRouter : MonoBehaviour
             Destroy(vfx, 1.5f);
         }
 
-        // Âªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ÂªÀº ¾àÁøµ¿
         XRHaptics.SendHaptic(true, 0.2f, 0.08f);
     }
 }
 
 
---------------------------------------------------
+========================================
+ FILE: FeedbackSetSO.cs 
+========================================
+using UnityEngine;
 
---- FILENAME: FinalResultInputHandler.cs (Assets/2_Stage1/Scripts/FinalResultInputHandler.cs) ---
+[CreateAssetMenu(menuName = "KimbapRhythm/Feedback Set", fileName = "FeedbackSet")]
+public class FeedbackSetSO : ScriptableObject
+{
+    [Header("SFX")]
+    public AudioClip sfxSliceSuccess;
+    public AudioClip sfxSliceFail;
+    public AudioClip sfxResultSuccess;
+    public AudioClip sfxResultFail;
+    public AudioClip sfxWrongCut;
+
+    [Header("VFX Prefabs")]
+    public GameObject vfxSliceSuccessPrefab;
+    public GameObject vfxSliceFailPrefab;
+    public GameObject vfxResultSuccessPrefab;
+    public GameObject vfxResultFailPrefab;
+    public GameObject vfxWrongCutPrefab;
+
+    [Header("Plate Prefabs")]
+    public GameObject platePrefabEmptyStack;
+    public GameObject platePrefabSuccessNeat;
+    public GameObject platePrefabFailExplode;
+
+    [Header("Plating Piece")]
+    public GameObject platingPiecePrefab;
+    public int maxPlatingPiecesPerRound = 12;
+
+    [Header("Input Defaults")]
+    public float failCooldown = 0.2f;
+    public float skipInputCooldown = 0.5f;
+}
+
+========================================
+ FILE: FinalResultInputHandler.cs 
+========================================
 using UnityEngine;
 
 public class FinalResultInputHandler : MonoBehaviour
@@ -1051,10 +408,10 @@ public class FinalResultInputHandler : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: GameFlowManager.cs (Assets/2_Stage1/Scripts/GameFlowManager.cs) ---
-using UnityEngine;
+========================================
+ FILE: GameFlowManager.cs 
+========================================
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -1289,9 +646,25 @@ public void ResetAndRestartMainGame()
 public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
 }
 
---------------------------------------------------
+========================================
+ FILE: GameState.cs 
+========================================
+ï»¿using UnityEngine;
 
---- FILENAME: HandToolSwitcher.cs (Assets/2_Stage1/Scripts/HandToolSwitcher.cs) ---
+public enum GameState
+{
+    Intro,           // â˜… [ì¶”ê°€í•„ìˆ˜] ì´ê±° ì—†ìœ¼ë©´ GameFlowManagerì—ì„œ ì—ëŸ¬ë‚¨
+    Tutorial,
+    WaitForRadio,
+    PlayingMain,
+    Paused,
+    EndingDelay,
+    FinalResult
+}
+
+========================================
+ FILE: HandToolSwitcher.cs 
+========================================
 using UnityEngine;
 
 public class HandToolSwitcher : MonoBehaviour
@@ -1312,9 +685,9 @@ public class HandToolSwitcher : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: KimbapController.cs (Assets/2_Stage1/Scripts/KimbapController.cs) ---
+========================================
+ FILE: KimbapController.cs 
+========================================
 using System.Diagnostics;
 using UnityEngine;
 
@@ -1326,8 +699,8 @@ public class KimbapController : MonoBehaviour
 {
     public enum AxisMode
     {
-        WorldX,             // ï¿½ï¿½ï¿½ï¿½ +X (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì°É·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì°¡ ï¿½ï¿½ï¿½ï¿½)
-        WorldZ,             // ï¿½ï¿½ï¿½ï¿½ +Z
+        WorldX,             // ¿ùµå +X (»çÁø ±âÁØ µ¿ÂÊÀ» ÀÌ°É·Î ¾²´Â °æ¿ì°¡ ¸¹À½)
+        WorldZ,             // ¿ùµå +Z
         ReferenceRight,     // axisReference.right
         ReferenceForward    // axisReference.forward
     }
@@ -1339,12 +712,12 @@ public class KimbapController : MonoBehaviour
     [Header("Refs")]
     public Collider sliceTrigger;     // Trigger collider (KimbapSliceable layer)
     public Collider blockCollider;    // Solid collider (KimbapBlocked layer)
-    public Transform mainMeshRoot;    // Mesh-only object (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½Ó¿ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½Ğ¸ï¿½)
+    public Transform mainMeshRoot;    // Mesh-only object (¾øÀ¸¸é ·±Å¸ÀÓ¿¡ ÀÚµ¿ »ı¼º/ºĞ¸®)
     public Material crossSectionMaterial;
 
     [Header("Slice Direction")]
     public AxisMode axisMode = AxisMode.WorldX;
-    public Transform axisReference;   // ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Transform (Reference ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½)
+    public Transform axisReference;   // Å×ÀÌºí °°Àº ±âÁØ Transform (Reference ¸ğµå¿¡¼­ »ç¿ë)
     public bool invertAxis = false;
 
     [Header("Debug")]
@@ -1356,17 +729,17 @@ public class KimbapController : MonoBehaviour
 
     RhythmTriggerListSO.Trigger _trigger;
 
-    // current mesh GO (ï¿½×»ï¿½ "ï¿½Ş½ï¿½ ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    // current mesh GO (Ç×»ó "¸Ş½¬ Àü¿ë" ¿ÀºêÁ§Æ®¸¦ °¡¸®Å°°Ô À¯Áö)
     GameObject _currentMeshGO;
 
     int _activeThinPieces;
 
     void Awake()
     {
-        // ï¿½âº»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ±âº»Àº ¸·Èû
         SetSliceable(false);
 
-        // ï¿½ï¿½Æ®ï¿½ï¿½ Meshï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½Ó¿ï¿½ ï¿½Ş½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ¸ï¿½
+        // ·çÆ®¿¡ Mesh°¡ ºÙ¾îÀÖÀ¸¸é ·±Å¸ÀÓ¿¡ ¸Ş½¬ Àü¿ë ÀÚ½ÄÀ¸·Î ºĞ¸®
         EnsureMeshRoot();
 
         _currentMeshGO = FindMeshGameObject(mainMeshRoot);
@@ -1427,8 +800,8 @@ public class KimbapController : MonoBehaviour
     }
 
     /// <summary>
-    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ "ï¿½ï¿½ï¿½ï¿½(=Axis)"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½å¾¿ ï¿½ï¿½ï¿½î³»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
-    /// sliceIndex0Basedï¿½ï¿½ thin thickness curveï¿½ï¿½.
+    /// »çÁø ±âÁØ "µ¿ÂÊ(=Axis)"¿¡¼­ ¾ã°Ô ÇÑ Àå¾¿ ¶¼¾î³»´Â Àı´Ü.
+    /// sliceIndex0Based´Â thin thickness curve¿ë.
     /// </summary>
     public bool ExecuteRightThinSlice(int sliceIndex0Based)
     {
@@ -1461,10 +834,10 @@ public class KimbapController : MonoBehaviour
             return false;
         }
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // Àı´Ü Ãà(»çÁø ±âÁØ µ¿ÂÊ)
         Vector3 axis = GetCutAxis();
 
-        // thickness ï¿½ï¿½ï¿½
+        // thickness °è»ê
         float tNorm = _trigger.thinSliceThicknessNorm;
         if (_trigger.thinThicknessCurve != null && _trigger.thinThicknessCurve.length > 0 && _trigger.requiredSliceCount > 1)
         {
@@ -1475,19 +848,19 @@ public class KimbapController : MonoBehaviour
 
         Bounds wb = rend.bounds;
 
-        // bounds cornersï¿½ï¿½ axisï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // bounds corners¸¦ axis¿¡ Åõ¿µÇØ¼­ ±æÀÌ ÃøÁ¤
         GetMinMaxAlongDir(wb, axis, out float minD, out float maxD);
         float lengthAlongAxis = Mathf.Max(0.0001f, maxD - minD);
 
         float thinWorld = Mathf.Max(lengthAlongAxis * tNorm, _trigger.minThinThicknessWorld);
 
-        // "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½" (axis ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ max ï¿½ï¿½)
-        // AABBï¿½ï¿½ axis ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ center ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Äªï¿½Ì¹Ç·ï¿½ ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // "µ¿ÂÊ ³¡" (axis ¹æÇâÀÇ max ÂÊ)
+        // AABB´Â axis ¹æÇâÀ¸·Î center ±âÁØ ´ëÄªÀÌ¹Ç·Î ¾Æ·¡ ¹æ½ÄÀÌ ¾ÈÁ¤Àû
         Vector3 axisEnd = wb.center + axis * (lengthAlongAxis * 0.5f);
 
-        // axisEndï¿½ï¿½ï¿½ï¿½ thinWorldï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // axisEnd¿¡¼­ thinWorld¸¸Å­ ¾ÈÂÊÀ¸·Î µé¾î¿Â ÁöÁ¡¿¡ Àı´Ü Æò¸é »ı¼º
         Vector3 planePoint = axisEnd - axis * thinWorld;
-        Vector3 planeNormal = axis; // normalï¿½ï¿½ axis ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ axisEnd ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        Vector3 planeNormal = axis; // normalÀÌ axis ÂÊÀ» ÇâÇÏ¸é axisEnd ÂÊ Á¶°¢ÀÌ ¾ã°Ô ¶³¾îÁü
 
         if (debugDrawPlane)
         {
@@ -1495,17 +868,17 @@ public class KimbapController : MonoBehaviour
             UnityEngine.Debug.DrawRay(planePoint, -planeNormal * 0.2f, Color.red, debugDrawSeconds);
         }
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ "ï¿½Ş½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
-        // (ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Destroy ï¿½Ï¸ï¿½ ï¿½ï¿½ ï¿½ï¿½)
+        // ½½¶óÀÌ½º´Â "¸Ş½¬ Àü¿ë ¿ÀºêÁ§Æ®"¸¸ ´ë»óÀ¸·Î!
+        // (·çÆ®´Â Àı´ë Destroy ÇÏ¸é ¾È µÊ)
         Transform meshT = _currentMeshGO.transform;
 
-        // ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // ·çÆ® ±âÁØ ·ÎÄÃ Æ÷Áî ÀúÀå(½½¶óÀÌ½º ÈÄ¿¡µµ µ¿ÀÏ Æ÷Áî À¯Áö)
         Transform root = transform;
         Vector3 localPos = root.InverseTransformPoint(meshT.position);
         Quaternion localRot = Quaternion.Inverse(root.rotation) * meshT.rotation;
         Vector3 localScale = meshT.localScale;
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½
+        // ½ÇÁ¦ ½½¶óÀÌ½º
         var hull = _currentMeshGO.Slice(planePoint, planeNormal, crossSectionMaterial);
         if (hull == null)
         {
@@ -1524,16 +897,16 @@ public class KimbapController : MonoBehaviour
             return false;
         }
 
-        // big/small ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ Å« ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼)
+        // big/small ¼±ÅÃ(´õ Å« ÂÊÀÌ º»Ã¼)
         float vu = BoundsVolume(upper);
         float vl = BoundsVolume(lower);
         GameObject big = (vu >= vl) ? upper : lower;
         GameObject small = (big == upper) ? lower : upper;
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        // ±âÁ¸ ¸Ş½¬ ¿ÀºêÁ§Æ® Á¦°Å
         Destroy(_currentMeshGO);
 
-        // big/smallï¿½ï¿½ ï¿½ï¿½Æ® ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // big/smallÀ» ·çÆ® ¾Æ·¡·Î ºÙÀÌ°í ·ÎÄÃ Æ÷Áî º¹¿ø
         big.name = "MainMeshRuntime";
         big.transform.SetParent(root, false);
         big.transform.localPosition = localPos;
@@ -1545,18 +918,18 @@ public class KimbapController : MonoBehaviour
         small.transform.localRotation = localRot;
         small.transform.localScale = localScale;
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ÇöÀç ¸Ş½¬ °»½Å
         mainMeshRoot = big.transform;
         _currentMeshGO = big;
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ¾ãÀº Á¶°¢ ¿¬Ãâ
         if (CanSpawnThinPiece())
         {
             NotifyThinPieceSpawned();
 
             var tp = small.AddComponent<ThinPieceAutoCleanup>();
             tp.owner = this;
-            tp.flyDirection = axis;     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ Æ¨ï¿½ï¿½ï¿½
+            tp.flyDirection = axis;     // µ¿ÂÊÀ¸·Î »ìÂ¦ Æ¨±â±â
             tp.flySeconds = 0.22f;
             tp.lifeSeconds = 1.2f;
 
@@ -1572,12 +945,12 @@ public class KimbapController : MonoBehaviour
 #endif
     }
 
-    // --- ï¿½Ù½ï¿½: ï¿½ï¿½Æ®ï¿½ï¿½ Meshï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ¸ï¿½ï¿½Ø¼ï¿½ "ï¿½ï¿½Æ® ï¿½Ä±ï¿½" ï¿½ï¿½ï¿½ï¿½ ---
+    // --- ÇÙ½É: ·çÆ®¿¡ Mesh°¡ ºÙ¾îÀÖÀ¸¸é ¸Ş½¬¸¸ ÀÚ½ÄÀ¸·Î ºĞ¸®ÇØ¼­ "·çÆ® ÆÄ±«" ¹æÁö ---
     void EnsureMeshRoot()
     {
         if (mainMeshRoot && FindMeshGameObject(mainMeshRoot)) return;
 
-        // ï¿½ï¿½Æ®ï¿½ï¿½ Meshï¿½ï¿½ ï¿½Ù¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ¸ï¿½
+        // ·çÆ®¿¡ Mesh°¡ ºÙ¾î ÀÖÀ¸¸é ·±Å¸ÀÓ º¹Á¦ÇØ¼­ ÀÚ½ÄÀ¸·Î ºĞ¸®
         var mf = GetComponent<MeshFilter>();
         var mr = GetComponent<MeshRenderer>();
         if (mf && mr)
@@ -1594,7 +967,7 @@ public class KimbapController : MonoBehaviour
             var newMr = go.AddComponent<MeshRenderer>();
             newMr.sharedMaterials = mr.sharedMaterials;
 
-            // ï¿½ï¿½Æ® MeshRendererï¿½ï¿½ ï¿½ï¿½ï¿½Î±ï¿½(ï¿½İ¶ï¿½ï¿½Ì´ï¿½/ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+            // ·çÆ® MeshRenderer´Â ²¨µÎ±â(Äİ¶óÀÌ´õ/½ºÅ©¸³Æ®´Â À¯Áö)
             mr.enabled = false;
             mf.mesh = null;
 
@@ -1603,8 +976,8 @@ public class KimbapController : MonoBehaviour
             return;
         }
 
-        // ï¿½ï¿½Æ®ï¿½ï¿½ Meshï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½(ï¿½Ì¹ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
-        // mainMeshRootï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Î°ï¿½ ï¿½Ë»ï¿½
+        // ·çÆ®¿¡ Mesh°¡ ¾ø´Ù¸é(ÀÌ¹Ì ÀÚ½Ä ±¸Á¶ÀÏ ¼öµµ)
+        // mainMeshRoot¸¦ ·çÆ®·Î µÎ°í °Ë»ö
         if (!mainMeshRoot) mainMeshRoot = transform;
     }
 
@@ -1656,9 +1029,9 @@ public class KimbapController : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: KimbapSliceTarget.cs (Assets/2_Stage1/Scripts/KimbapSliceTarget.cs) ---
+========================================
+ FILE: KimbapSliceTarget.cs 
+========================================
 using UnityEngine;
 
 public class KimbapSliceTarget : MonoBehaviour
@@ -1672,10 +1045,10 @@ public class KimbapSliceTarget : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: KimbapSpawner.cs (Assets/2_Stage1/Scripts/KimbapSpawner.cs) ---
-using System.Diagnostics;
+========================================
+ FILE: KimbapSpawner.cs 
+========================================
+ï»¿using System.Diagnostics;
 using UnityEngine;
 
 public class KimbapSpawner : MonoBehaviour
@@ -1716,9 +1089,9 @@ public class KimbapSpawner : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: KnifePhysicsFollowerOVR.cs (Assets/2_Stage1/Scripts/KnifePhysicsFollowerOVR.cs) ---
+========================================
+ FILE: KnifePhysicsFollowerOVR.cs 
+========================================
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -1779,10 +1152,10 @@ public class KnifePhysicsFollowerOVR : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: KnifeSlicer.cs (Assets/2_Stage1/Scripts/KnifeSlicer.cs) ---
-using UnityEngine;
+========================================
+ FILE: KnifeSlicer.cs 
+========================================
+ï»¿using UnityEngine;
 
 public class KnifeSlicer : MonoBehaviour
 {
@@ -1982,9 +1355,9 @@ public class KnifeSlicer : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: KnifeVelocityEstimator.cs (Assets/2_Stage1/Scripts/KnifeVelocityEstimator.cs) ---
+========================================
+ FILE: KnifeVelocityEstimator.cs 
+========================================
 using UnityEngine;
 
 public class KnifeVelocityEstimator : MonoBehaviour
@@ -2014,9 +1387,9 @@ public class KnifeVelocityEstimator : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: KnifeVisualResistance.cs (Assets/2_Stage1/Scripts/KnifeVisualResistance.cs) ---
+========================================
+ FILE: KnifeVisualResistance.cs 
+========================================
 using UnityEngine;
 
 public class KnifeVisualResistance : MonoBehaviour
@@ -2061,9 +1434,9 @@ public class KnifeVisualResistance : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: MissionBoardUI.cs (Assets/2_Stage1/Scripts/MissionBoardUI.cs) ---
+========================================
+ FILE: MissionBoardUI.cs 
+========================================
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -2147,10 +1520,10 @@ public class MissionBoardUI : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: PauseManager.cs (Assets/2_Stage1/Scripts/PauseManager.cs) ---
-using UnityEngine;
+========================================
+ FILE: PauseManager.cs 
+========================================
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -2206,10 +1579,10 @@ if (inputPause)
     public void HidePauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(false); }
 }
 
---------------------------------------------------
-
---- FILENAME: PlateController.cs (Assets/2_Stage1/Scripts/PlateController.cs) ---
-using System;
+========================================
+ FILE: PlateController.cs 
+========================================
+ï»¿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -2496,9 +1869,56 @@ public class PlateController : MonoBehaviour
 }
 
 
---------------------------------------------------
+========================================
+ FILE: ProgressGaugeUI.cs 
+========================================
+using UnityEngine;
+using UnityEngine.UI;
 
---- FILENAME: RadioClickable.cs (Assets/2_Stage1/Scripts/RadioClickable.cs) ---
+public class ProgressGaugeUI : MonoBehaviour
+{
+    [Header("UI Elements")]
+    public Slider progressSlider;        // 0 ~ 100
+    public Image fillImage;              // SliderÀÇ Fill
+    public Text percentageText;          // "75%"
+    public Text countText;               // "15 / 20"
+
+    [Header("Colors")]
+    public Gradient colorGradient;       // 0% ~ 100% »ö»ó º¯È­
+
+    public void UpdateProgress(int successCount, int totalTriggers, float percentage)
+    {
+        percentage = Mathf.Clamp(percentage, 0f, 100f);
+
+        // Slider ¾÷µ¥ÀÌÆ®
+        if (progressSlider)
+        {
+            progressSlider.value = percentage;
+        }
+
+        // Fill »ö»ó º¯°æ
+        if (fillImage && colorGradient != null)
+        {
+            fillImage.color = colorGradient.Evaluate(percentage / 100f);
+        }
+
+        // ÆÛ¼¾Æ® ÅØ½ºÆ®
+        if (percentageText)
+        {
+            percentageText.text = $"{percentage:F0}%";
+        }
+
+        // Ä«¿îÆ® ÅØ½ºÆ®
+        if (countText)
+        {
+            countText.text = $"{successCount} / {totalTriggers}";
+        }
+    }
+}
+
+========================================
+ FILE: RadioClickable.cs 
+========================================
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -2770,10 +2190,28 @@ public class RadioClickable : MonoBehaviour
     }
 }
 
---------------------------------------------------
+========================================
+ FILE: RadioOutlineController.cs 
+========================================
+// public class RadioOutlineController : MonoBehaviour
+// {
+//     public GameFlowManager gameFlowManager;
+//     public VRRayInteractable radioInteractable;
 
---- FILENAME: ResultManager.cs (Assets/2_Stage1/Scripts/ResultManager.cs) ---
-using UnityEngine;
+//     void Update()
+//     {
+//         if (!gameFlowManager || !radioInteractable) return;
+
+//         bool canClick = (gameFlowManager.CurrentState == GameState.WaitForRadio);
+//         radioInteractable.SetInteractable(canClick);
+//     }
+// }
+
+
+========================================
+ FILE: ResultManager.cs 
+========================================
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -2834,10 +2272,10 @@ public class ResultManager : MonoBehaviour
     void GoToMain() { Time.timeScale = 1f; gameFlowManager.GoToMainMenu(); }
 }
 
---------------------------------------------------
-
---- FILENAME: RhythmConductor.cs (Assets/2_Stage1/Scripts/RhythmConductor.cs) ---
-using System.Collections;
+========================================
+ FILE: RhythmConductor.cs 
+========================================
+ï»¿using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -3246,10 +2684,58 @@ public class RhythmConductor : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: StageManager.cs (Assets/2_Stage1/Scripts/StageManager.cs) ---
+========================================
+ FILE: RhythmTriggerListSO.cs 
+========================================
 using UnityEngine;
+
+[CreateAssetMenu(menuName = "KimbapRhythm/Rhythm Trigger List", fileName = "RhythmTriggerList")]
+public class RhythmTriggerListSO : ScriptableObject
+{
+    public AudioClip bgm;
+    public float timingOffsetMs = 0f;
+
+    public Trigger[] triggers;
+
+    [System.Serializable]
+    public class Trigger
+    {
+        [Header("Time")]
+        public float triggerTime;      // seconds on BGM timeline
+        public float guideDuration = 0.4f;
+        public float judgeDuration = 0.6f;
+        public AudioClip guideBeatSound;
+
+        [Header("Counts")]
+        public int requiredSliceCount = 5;
+
+        [Header("Judgement (simple)")]
+        public float minKnifeSpeed = 1.0f; // m/s-ish (depends on scale)
+        public float minContactMs = 10f;
+
+        [Header("RightThin Slice (fixed)")]
+        public float thinSliceThicknessNorm = 0.08f;
+        public AnimationCurve thinThicknessCurve; // optional
+        public float minThinThicknessWorld = 0.01f;
+        public int maxActiveThinPieces = 6;
+
+        [Header("Feedback")]
+        [Range(0f, 1f)] public float hapticHitBase = 0.25f;
+        [Range(0f, 1f)] public float hapticHitMax = 0.75f;
+        public int hapticDurationMs = 25;
+        public AudioClip impactSound;
+        public AudioClip swishSound;
+        public GameObject cutVfxPrefab;
+        [Range(0f, 1f)] public float visualResistanceStrength = 0.6f;
+        public int visualResistanceMs = 80;
+    }
+}
+
+
+========================================
+ FILE: StageManager.cs 
+========================================
+ï»¿using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
@@ -3286,10 +2772,10 @@ public class StageManager : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: StageModeSelector.cs (Assets/2_Stage1/Scripts/StageModeSelector.cs) ---
-using UnityEngine;
+========================================
+ FILE: StageModeSelector.cs 
+========================================
+ï»¿using UnityEngine;
 
 public class StageModeSelector : MonoBehaviour
 {
@@ -3400,9 +2886,9 @@ public class StageModeSelector : MonoBehaviour
 }
 
 
---------------------------------------------------
-
---- FILENAME: StageUIManager.cs (Assets/2_Stage1/Scripts/StageUIManager.cs) ---
+========================================
+ FILE: StageUIManager.cs 
+========================================
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -3462,10 +2948,64 @@ public class StageUIManager : MonoBehaviour
     }
 }
 
---------------------------------------------------
-
---- FILENAME: TutorialController.cs (Assets/2_Stage1/Scripts/TutorialController.cs) ---
+========================================
+ FILE: ThinPieceAutoCleanup.cs 
+========================================
 using UnityEngine;
+
+public class ThinPieceAutoCleanup : MonoBehaviour
+{
+    public KimbapController owner;
+    public Vector3 flyDirection = Vector3.right;
+
+    public float flySeconds = 0.2f;
+    public float lifeSeconds = 1.2f;
+
+    Vector3 _startPos;
+    Quaternion _startRot;
+    float _t;
+
+    void Start()
+    {
+        _startPos = transform.position;
+        _startRot = transform.rotation;
+
+        // Remove heavy physics by default
+        var rb = GetComponent<Rigidbody>();
+        if (rb) Destroy(rb);
+
+        // You can add a light collider if you want, but prototype ok without.
+        // Disable colliders to avoid unexpected physics
+        foreach (var c in GetComponentsInChildren<Collider>())
+            c.enabled = false;
+    }
+
+    void Update()
+    {
+        _t += Time.deltaTime;
+
+        // Fly animation
+        if (_t <= flySeconds && flySeconds > 0f)
+        {
+            float u = _t / flySeconds;
+            float ease = 1f - Mathf.Pow(1f - u, 3f);
+            transform.position = _startPos + flyDirection.normalized * (0.06f * ease) + Vector3.up * (0.02f * ease);
+            transform.rotation = _startRot * Quaternion.Euler(0f, 0f, 18f * ease);
+        }
+
+        if (_t >= lifeSeconds)
+        {
+            if (owner) owner.NotifyThinPieceDespawned();
+            Destroy(gameObject);
+        }
+    }
+}
+
+
+========================================
+ FILE: TutorialController.cs 
+========================================
+ï»¿using UnityEngine;
 using TMPro;
 using System.Text.RegularExpressions;
 
@@ -3745,10 +3285,10 @@ _waitForFinalInput = false;        // Mark tutorial state for global systems (e.
     void ClearMonitorText() { if (monitorText) monitorText.text = ""; }
 }
 
---------------------------------------------------
-
---- FILENAME: TutorialDialogueController.cs (Assets/2_Stage1/Scripts/TutorialDialogueController.cs) ---
-using UnityEngine;
+========================================
+ FILE: TutorialDialogueController.cs 
+========================================
+ï»¿using UnityEngine;
 using System.Text.RegularExpressions;
 
 public enum DialogueConditionType
@@ -4178,9 +3718,9 @@ public class TutorialDialogueController : MonoBehaviour
     void OnRoundResult(bool success) { _lastRoundResult = success; _roundResultProcessed = false; }
 }
 
---------------------------------------------------
-
---- FILENAME: TutorialDialogueUIController.cs (Assets/2_Stage1/Scripts/TutorialDialogueUIController.cs) ---
+========================================
+ FILE: TutorialDialogueUIController.cs 
+========================================
 using UnityEngine;
 using TMPro;
 
@@ -4317,5 +3857,36 @@ public class TutorialDialogueUIController : MonoBehaviour
     }
 }
 
---------------------------------------------------
+========================================
+ FILE: XRHaptics.cs 
+========================================
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR;
 
+public static class XRHaptics
+{
+    public static void SendHaptic(bool rightHand, float amplitude01, float durationSeconds)
+    {
+        amplitude01 = Mathf.Clamp01(amplitude01);
+        durationSeconds = Mathf.Clamp(durationSeconds, 0.01f, 0.25f);
+
+        var desired = rightHand ? InputDeviceCharacteristics.Right : InputDeviceCharacteristics.Left;
+        desired |= InputDeviceCharacteristics.Controller;
+
+        var devices = new List<InputDevice>();
+        InputDevices.GetDevicesWithCharacteristics(desired, devices);
+
+        foreach (var d in devices)
+        {
+            if (!d.isValid) continue;
+            if (d.TryGetHapticCapabilities(out var caps) && caps.supportsImpulse)
+            {
+                // channel 0 is common
+                d.SendHapticImpulse(0u, amplitude01, durationSeconds);
+                return;
+            }
+        }
+        // Simulator/Editor may not support haptics; that's okay.
+    }
+}

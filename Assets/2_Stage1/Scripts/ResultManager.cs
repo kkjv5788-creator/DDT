@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -41,6 +41,12 @@ public class ResultManager : MonoBehaviour
     void ShowResult()
     {
         if (panelClosingResult) panelClosingResult.SetActive(true);
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+
         int totalSales = gameFlowManager.GetCurrentSales(); 
         
         if (textTitle) textTitle.text = "< 영 업 정 산 >";
@@ -55,6 +61,25 @@ public class ResultManager : MonoBehaviour
         gameFlowManager.EnterFinalResult(0); 
     }
 
-    void RestartGame() { Time.timeScale = 1f; gameFlowManager.RestartMainGameOnly(); }
-    void GoToMain() { Time.timeScale = 1f; gameFlowManager.GoToMainMenu(); }
+    void RestartGame()
+    {
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+        Time.timeScale = 1f;
+        gameFlowManager.ResetAndRestartMainGame();
+    }
+
+    void GoToMain()
+    {
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+        Time.timeScale = 1f;
+        gameFlowManager.GoToMainMenu();
+    }
 }

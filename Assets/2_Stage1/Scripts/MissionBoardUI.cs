@@ -19,7 +19,9 @@ public class MissionBoardUI : MonoBehaviour
     public void InitializeUI()
     {
         if (stampObject) stampObject.SetActive(false);
-        UpdateText("", "", "");
+        if (textHeader) textHeader.text = "";
+        if (textMissionName) textMissionName.text = "";
+        if (textProgress) textProgress.text = "";
     }
 
     // ★ [추가됨] 헤더만 변경 (매니저들이 호출함)

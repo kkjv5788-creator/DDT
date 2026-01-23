@@ -1,14 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Text.RegularExpressions;
 
 public class TutorialController : MonoBehaviour
-{
+    {
     [Header("Refs")]
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
-    public RadioClickable radio;
     public MissionBoardUI missionBoard; 
+    public StageModeSelector modeSelector;
 
     [Header("UI Groups")]
     public GameObject salesUIGroup; 
@@ -36,8 +36,6 @@ public class TutorialController : MonoBehaviour
     int _successCountThisStep = 0; 
     bool _tutorialCompleted = false;
     bool _isProcessingResult = false;
-    float _lastSkipInput = -999f;
-    bool _waitForFinalInput = false; 
 
     void OnEnable()
     {
@@ -45,7 +43,6 @@ public class TutorialController : MonoBehaviour
         _successCountThisStep = 0;
         _tutorialCompleted = false;
         _isProcessingResult = false;
-        _waitForFinalInput = false;
 
         if (conductor) 
         {
@@ -53,7 +50,8 @@ public class TutorialController : MonoBehaviour
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
         }
 
-        StartTutorial();
+        // StartTutorial is triggered explicitly by StageModeSelector.
+
     }
 
     void OnDisable()
@@ -64,30 +62,17 @@ public class TutorialController : MonoBehaviour
             conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
         }
     }
-
-    void Update()
-    {
-        if (!_tutorialCompleted && OVRInput.GetDown(OVRInput.Button.One))
-        {
-            if (Time.timeScale > 0.1f && Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
-            {
-                _lastSkipInput = Time.time;
-                SkipTutorial();
-            }
-        }
-
-        if (_waitForFinalInput)
-        {
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
-            {
-                _waitForFinalInput = false;
-                FinalizeAndStartGame();
-            }
-        }
-    }
-
     public void StartTutorial()
     {
+// Reset tutorial runtime state (since we no longer auto-start on OnEnable)
+_currentStepIndex = 0;
+_successCountThisStep = 0;
+_tutorialCompleted = false;
+_isProcessingResult = false;
+        // Mark tutorial state for global systems (e.g., Pause block)
+        var gf = FindObjectOfType<GameFlowManager>();
+        if (gf) gf.EnterTutorialState();
+
         if (!conductor || !tutorialTriggerList) return;
 
         if (salesUIGroup) salesUIGroup.SetActive(true);
@@ -98,8 +83,6 @@ public class TutorialController : MonoBehaviour
         conductor.StartGame();
         
         // [중요] StartGame 호출 후에 Loop를 켜야 안전합니다.
-        if (conductor.bgmSource) conductor.bgmSource.loop = true; 
-
         if (missionBoard) missionBoard.InitializeUI();
         if (finalResultPanel) finalResultPanel.SetActive(false);
 
@@ -246,26 +229,34 @@ public class TutorialController : MonoBehaviour
         
         if (finalResultPanel)
         {
-            finalResultPanel.SetActive(true);
+            finalResultPanel.SetActive(false);
             if (finalTotalText) finalTotalText.text = bigTitle;
             if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
         }
         
         ShowMonitorText(finalMessage, Color.cyan);
-        _waitForFinalInput = true;
+        Invoke(nameof(FinalizeAndStartGame), 1.0f);
     }
 
     void FinalizeAndStartGame()
     {
         Cleanup();
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
+        if (!modeSelector) modeSelector = FindObjectOfType<StageModeSelector>();
+        if (modeSelector)
+        {
+            modeSelector.OnClick_StartGame();
+        }
+        else
+        {
+            Debug.LogError("[TutorialController] StageModeSelector not found. Cannot start main game.");
+        }
     }
 
     void Cleanup()
     {
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
         if (salesUIGroup) salesUIGroup.SetActive(false);
-        if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
         
         if (finalResultPanel) finalResultPanel.SetActive(false);
         ClearMonitorText();
