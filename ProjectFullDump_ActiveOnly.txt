@@ -1,0 +1,5634 @@
+[PROJECT DUMP START]
+Scene: Stage2_v1.2
+Date: 2026-01-23 오후 4:02:31
+========================================
+              SCENE HIERARCHY
+========================================
+
+[O] Player_Core  (Tag: Untagged, Layer: Default)
+    [O] OVRCameraRig (Tag: MainCamera, Layer: Default)
+        [O] TrackingSpace (Tag: Untagged, Layer: Default)
+            [O] LeftEyeAnchor (Tag: MainCamera, Layer: Default)
+            [O] CenterEyeAnchor (Tag: MainCamera, Layer: Default)
+            [O] RightEyeAnchor (Tag: Untagged, Layer: Default)
+            [O] TrackerAnchor (Tag: Untagged, Layer: Default)
+            [O] LeftHandAnchor (Tag: Untagged, Layer: Default)
+                [O] LaserVisual_L (Tag: Untagged, Layer: Default)
+                [O] LeftControllerAnchor (Tag: Untagged, Layer: Default)
+                    [O] [BuildingBlock] Controller Tracking Left (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
+                            [O] l_controller_ply (Tag: Untagged, Layer: Default)
+                            [O] left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                            [O] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [O] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [O] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
+                            [O] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [O] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [O] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                            [O] r_controller_ply (Tag: Untagged, Layer: Default)
+                            [O] right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
+                            [O] l_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [O] left_laser_begin (Tag: Untagged, Layer: Default)
+                                [O] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
+                            [O] r_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [O] right_laser_begin (Tag: Untagged, Layer: Default)
+                                [O] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [O] left_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button01 (Tag: Untagged, Layer: Default)
+                                [O] b_button02 (Tag: Untagged, Layer: Default)
+                                [O] b_button03 (Tag: Untagged, Layer: Default)
+                                [O] b_hold1 (Tag: Untagged, Layer: Default)
+                                [O] b_stick (Tag: Untagged, Layer: Default)
+                                    [O] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [O] b_trigger (Tag: Untagged, Layer: Default)
+                            [O] left_touch_mesh (Tag: Untagged, Layer: Default)
+                        [O] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [O] right_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button01 (Tag: Untagged, Layer: Default)
+                                [O] b_button02 (Tag: Untagged, Layer: Default)
+                                [O] b_button03 (Tag: Untagged, Layer: Default)
+                                [O] b_hold (Tag: Untagged, Layer: Default)
+                                [O] b_stick (Tag: Untagged, Layer: Default)
+                                    [O] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [O] b_trigger (Tag: Untagged, Layer: Default)
+                            [O] right_touch_mesh (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] left_nub (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] laser_begin (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] right_nub (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] laser_begin (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] left_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] left_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] left_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] left_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] left_laser_begin (Tag: Untagged, Layer: Default)
+                            [O] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
+                            [O] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] right_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] right_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] right_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] right_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] right_laser_begin (Tag: Untagged, Layer: Default)
+                [O] LeftControllerInHandAnchor (Tag: Untagged, Layer: Default)
+                    [O] LeftHandOnControllerAnchor (Tag: Untagged, Layer: Default)
+                [O] tutoLHand (Tag: Untagged, Layer: Default)
+                [O] LeftHand (Tag: Untagged, Layer: Default)
+            [O] RightHandAnchor (Tag: Untagged, Layer: Default)
+                [O] LaserVisual_R (Tag: Untagged, Layer: Default)
+                [O] RightControllerAnchor (Tag: Untagged, Layer: Default)
+                    [O] [BuildingBlock] Controller Tracking Right (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
+                            [O] l_controller_ply (Tag: Untagged, Layer: Default)
+                            [O] left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                            [O] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [O] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [O] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
+                            [O] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [O] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [O] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                            [O] r_controller_ply (Tag: Untagged, Layer: Default)
+                            [O] right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
+                            [O] l_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [O] left_laser_begin (Tag: Untagged, Layer: Default)
+                                [O] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
+                            [O] r_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [O] right_laser_begin (Tag: Untagged, Layer: Default)
+                                [O] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [O] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [O] left_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button01 (Tag: Untagged, Layer: Default)
+                                [O] b_button02 (Tag: Untagged, Layer: Default)
+                                [O] b_button03 (Tag: Untagged, Layer: Default)
+                                [O] b_hold1 (Tag: Untagged, Layer: Default)
+                                [O] b_stick (Tag: Untagged, Layer: Default)
+                                    [O] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [O] b_trigger (Tag: Untagged, Layer: Default)
+                            [O] left_touch_mesh (Tag: Untagged, Layer: Default)
+                        [O] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [O] right_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button01 (Tag: Untagged, Layer: Default)
+                                [O] b_button02 (Tag: Untagged, Layer: Default)
+                                [O] b_button03 (Tag: Untagged, Layer: Default)
+                                [O] b_hold (Tag: Untagged, Layer: Default)
+                                [O] b_stick (Tag: Untagged, Layer: Default)
+                                    [O] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [O] b_trigger (Tag: Untagged, Layer: Default)
+                            [O] right_touch_mesh (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] left_nub (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] laser_begin (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] right_nub (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] laser_begin (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [O] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_x (Tag: Untagged, Layer: Default)
+                                [O] b_button_y (Tag: Untagged, Layer: Default)
+                                [O] left_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] left_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] left_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] left_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] left_laser_begin (Tag: Untagged, Layer: Default)
+                            [O] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
+                        [O] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
+                            [O] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [O] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [O] b_button_a (Tag: Untagged, Layer: Default)
+                                [O] b_button_b (Tag: Untagged, Layer: Default)
+                                [O] right_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [O] right_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [O] right_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [O] right_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [O] right_laser_begin (Tag: Untagged, Layer: Default)
+                [O] RightControllerInHandAnchor (Tag: Untagged, Layer: Default)
+                    [O] RightHandOnControllerAnchor (Tag: Untagged, Layer: Default)
+                [O] tutoRHand (Tag: Untagged, Layer: Default)
+                [O] RightHand (Tag: Untagged, Layer: Default)
+            [O] LeftHandAnchorDetached (Tag: Untagged, Layer: Default)
+            [O] RightHandAnchorDetached (Tag: Untagged, Layer: Default)
+    [O] EventSystem (Tag: Untagged, Layer: Default)
+[O] Directional Light (Tag: Untagged, Layer: Default)
+[O] Gorani (Tag: Untagged, Layer: Default)
+    [O] Gorani (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_2bb1cc42 (Tag: Untagged, Layer: Default)
+    [O] Gorani2 (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_cf52e004 (Tag: Untagged, Layer: Default)
+    [O] Gorani3 (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_9e6230ab (Tag: Untagged, Layer: Default)
+    [O] babari_gorani (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_bc3072c9 (Tag: Untagged, Layer: Default)
+    [O] pirate_gorani (Tag: Untagged, Layer: Default)
+    [O] thief_gorani (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_bba0f795 (Tag: Untagged, Layer: Default)
+    [O] hanbok_gorani (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] L_CalfTwist02_end (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                                    [O] L_Foot_end (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                                    [O] L_ThighTwist02_end (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] R_CalfTwist02_end (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                                    [O] R_Foot_end (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                                    [O] R_ThighTwist02_end (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                                    [O] L_ForearmTwist02_end (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                                [O] L_Hand_end (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                                [O] L_UpperarmTwist02_end (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                            [O] Head_end (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                                    [O] R_ForearmTwist02_end (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                                [O] R_Hand_end (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                                [O] R_UpperarmTwist02_end (Tag: Untagged, Layer: Default)
+        [O] tripo_node_dacaa1ea (Tag: Untagged, Layer: Default)
+[O] Environment (Tag: Untagged, Layer: Default)
+    [O] Arcade (Tag: Untagged, Layer: Default)
+        [O] Directional Light (Tag: Untagged, Layer: Default)
+        [O] Directional Light (Tag: Untagged, Layer: Default)
+    [O] Machine (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [X] Table (Tag: Untagged, Layer: Default)
+    [X] Chair (Tag: Untagged, Layer: Default)
+    [X] Chair (Tag: Untagged, Layer: Default)
+    [O] Pole (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Pole_1 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Pole_2 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Lamp _1 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Lamp _4 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Lamp _2 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Lamp _3 (Tag: Untagged, Layer: Default)
+    [O] DogHouse (Tag: Untagged, Layer: Default)
+    [O] Plane (Tag: Ground, Layer: Ground)
+    [O] Korean_Store (Tag: Untagged, Layer: Default)
+        [O] door (Tag: Untagged, Layer: Door)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light (1) (Tag: Untagged, Layer: Default)
+        [O] Point Light (2) (Tag: Untagged, Layer: Default)
+        [O] Point Light (3) (Tag: Untagged, Layer: Default)
+    [O] Korean_House (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+        [O] Point Light_3 (Tag: Untagged, Layer: Default)
+    [O] Korean_House_2 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+    [O] Korean_House_1 (Tag: Untagged, Layer: Default)
+    [O] Hope (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+    [O] Hardware_Store (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+    [O] Tower (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light (1) (Tag: Untagged, Layer: Default)
+        [O] Point Light (2) (Tag: Untagged, Layer: Default)
+    [O] bakery (Tag: Untagged, Layer: Default)
+    [O] Korean_House2 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light (1) (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+    [O] Korean_House2_1 (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+        [O] Point Light_2 (Tag: Untagged, Layer: Default)
+        [O] Point Light_3 (Tag: Untagged, Layer: Default)
+    [O] StoneWall_Set (Tag: Untagged, Layer: Default)
+        [O] StoneWall (Tag: Untagged, Layer: Default)
+        [O] StoneWall (4) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (6) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (5) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (9) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (10) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (11) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (7) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (8) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (1) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (3) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (12) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (13) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (14) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (15) (Tag: Untagged, Layer: Default)
+        [O] StoneWall (2) (Tag: Untagged, Layer: Default)
+    [O] Disco_Ball (Tag: Untagged, Layer: Default)
+        [O] Color-lights (Tag: Untagged, Layer: Default)
+        [O] Disco_ball_ext (Tag: Untagged, Layer: Default)
+        [O] Disco_ball_int (Tag: Untagged, Layer: Default)
+        [O] DiscoBall-motor (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+        [O] Spot Light_1 (Tag: Untagged, Layer: Default)
+[O] Tent_Ass'y (Tag: Untagged, Layer: Default)
+    [O] Bottom (Tag: Ground, Layer: Ground)
+    [O] Caster (Tag: Untagged, Layer: Default)
+    [O] Frame (Tag: Untagged, Layer: Default)
+    [O] Plane (Tag: Untagged, Layer: Default)
+    [O] Top (Tag: Untagged, Layer: Default)
+    [O] Top.001 (Tag: Untagged, Layer: Default)
+    [O] Point Light (Tag: Untagged, Layer: Default)
+[O] hodu_frame (Tag: Untagged, Layer: Default)
+    [O] Hodu (Tag: Untagged, Layer: Default)
+        [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] Logo (Tag: Untagged, Layer: Default)
+        [O] Point Light1 (Tag: Untagged, Layer: Default)
+[O] Hodu (Tag: Untagged, Layer: Default)
+    [O] Quad (Tag: Untagged, Layer: Default)
+    [O] Quad2 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad3 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad4 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad5 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad6 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Spot Light (Tag: Untagged, Layer: Default)
+[O] Thunder (Tag: Untagged, Layer: Default)
+    [O] Quad (Tag: Untagged, Layer: Default)
+    [O] Quad2 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad3 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad4 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad5 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Quad6 (Tag: Untagged, Layer: Default)
+        [O] Spot Light (Tag: Untagged, Layer: Default)
+    [O] Spot Light (Tag: Untagged, Layer: Default)
+[O] Tuto (Tag: Untagged, Layer: Default)
+    [O] TutorialCanvas (Tag: Untagged, Layer: Default)
+        [O] Text (TMP) (Tag: Untagged, Layer: Default)
+        [O] Text (TMP) (Tag: Untagged, Layer: Default)
+        [O] Text (TMP) (Tag: Untagged, Layer: Default)
+        [O] Text (TMP) (Tag: Untagged, Layer: Default)
+    [O] FishShapeBun_Mold_tuto (Tag: Untagged, Layer: Default)
+        [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+        [O] Mold_Top (Tag: Untagged, Layer: Default)
+        [O] smoke_thin (1) (Tag: Untagged, Layer: Default)
+            [O] Particle System (Tag: Untagged, Layer: Default)
+    [O] FishShapeBun_Mold_tuto (1) (Tag: Untagged, Layer: Default)
+        [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+        [O] Mold_Top (Tag: Untagged, Layer: Default)
+        [O] smoke_thin (2) (Tag: Untagged, Layer: Default)
+            [O] Particle System (Tag: Untagged, Layer: Default)
+    [O] FishShapeBun_Mold)tuto (2) (Tag: Untagged, Layer: Default)
+        [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+        [O] Mold_Top (Tag: Untagged, Layer: Default)
+        [O] smoke_thin (3) (Tag: Untagged, Layer: Default)
+            [O] Particle System (Tag: Untagged, Layer: Default)
+[O] Systems (Tag: Untagged, Layer: Default)
+    [O] GameFlowController (Tag: Untagged, Layer: Default)
+    [O] JudgeSystem (Tag: Untagged, Layer: Default)
+    [O] EconomySystem (Tag: Untagged, Layer: Default)
+    [O] PatternDirector (Tag: Untagged, Layer: Default)
+    [O] BagManager (Tag: Untagged, Layer: Default)
+        [O] bagancor (Tag: Untagged, Layer: Default)
+        [O] filledbag (Tag: Untagged, Layer: Default)
+    [O] Audio (Tag: Untagged, Layer: Default)
+        [O] BGM_Source (Tag: Untagged, Layer: Default)
+        [O] Cue_Source (Tag: Untagged, Layer: Default)
+    [O] Molds (Tag: Untagged, Layer: Default)
+        [O] FishShapeBun_Mold (Tag: Untagged, Layer: Default)
+            [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+            [O] Mold_Top (Tag: Untagged, Layer: Default)
+            [O] smoke_thin (Tag: Untagged, Layer: Default)
+                [O] Particle System (Tag: Untagged, Layer: Default)
+        [O] FishShapeBun_Mold (1) (Tag: Untagged, Layer: Default)
+            [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+            [O] Mold_Top (Tag: Untagged, Layer: Default)
+            [O] smoke_thin (1) (Tag: Untagged, Layer: Default)
+                [O] Particle System (Tag: Untagged, Layer: Default)
+        [O] FishShapeBun_Mold (2) (Tag: Untagged, Layer: Default)
+            [O] Mold_Bottom (Tag: Untagged, Layer: Default)
+            [O] Mold_Top (Tag: Untagged, Layer: Default)
+            [O] smoke_thin (2) (Tag: Untagged, Layer: Default)
+                [O] Particle System (Tag: Untagged, Layer: Default)
+        [O] moldtable (Tag: Untagged, Layer: Default)
+    [O] Crowd (Tag: Untagged, Layer: Default)
+[O] UI (Tag: Untagged, Layer: Default)
+    [O] MenuMonitorCanvas (Tag: Untagged, Layer: Default)
+    [O] DebugHUD (Tag: Untagged, Layer: Default)
+
+========================================
+         USED SCRIPTS SOURCE CODE
+   (Only scripts attached in this Scene)
+========================================
+
+--- FILENAME: RandomColorPointLight.cs (Assets/1_Main/Scripts/RandomColorPointLight.cs) ---
+using UnityEngine;
+
+[RequireComponent(typeof(Light))]
+public class SmoothRainbowLight : MonoBehaviour
+{
+    [Header("Color Settings")]
+    [Range(0f, 1f)] public float saturation = 0.9f;
+    [Range(0f, 1f)] public float value = 1.0f;
+
+    [Header("Speed")]
+    public float hueSpeed = 0.1f; // ���� �������� �� �ε巯��
+
+    private Light pointLight;
+    private float hue;
+
+    void Start()
+    {
+        pointLight = GetComponent<Light>();
+        pointLight.type = LightType.Point;
+    }
+
+    void Update()
+    {
+        hue += Time.deltaTime * hueSpeed;
+        hue = Mathf.Repeat(hue, 1f);
+
+        pointLight.color = Color.HSVToRGB(hue, saturation, value);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: SimpleLaserPointer.cs (Assets/1_Main/Scripts/SimpleLaserPointer.cs) ---
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(AudioSource))]
+public class SimpleLaserPointer : MonoBehaviour
+{
+    [Header("1. 레이저 설정")]
+    public float maxDistance = 5.0f;
+    public float laserWidth = 0.005f;
+
+    [Header("2. 색상 설정")]
+    public Color normalLaserColor = Color.white; // 평소 레이저 색 (흰색)
+    public Color hoverLaserColor = Color.green;  // 닿았을 때 레이저/아웃라인 색 (초록)
+
+    [Header("3. 사운드 & 진동")]
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
+    [Range(0, 1)] public float vibrationStrength = 0.2f;
+
+    private LineRenderer lr;
+    private AudioSource audioSource;
+    private OVRInput.Controller controllerType = OVRInput.Controller.None;
+    private GameFlowManager gameFlowManager;
+
+    // --- 상태 관리 변수 ---
+    private GameObject currentHitObject; // 현재 가리키고 있는 오브젝트
+    private Outline currentOutline;      // 현재 켜진 아웃라인
+    private CanvasGroup currentCanvas;   // 현재 켜진 정보창
+
+    void Start()
+    {
+        lr = GetComponent<LineRenderer>();
+        audioSource = GetComponent<AudioSource>();
+        gameFlowManager = FindObjectOfType<GameFlowManager>();
+
+        lr.useWorldSpace = true;
+        lr.positionCount = 2;
+        lr.startWidth = laserWidth;
+        lr.endWidth = laserWidth;
+        if (!lr.material) lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.5f;
+
+        DisableLaser(); // 시작 시 끄기
+
+        if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
+            controllerType = OVRInput.Controller.LTouch;
+        else
+            controllerType = OVRInput.Controller.RTouch;
+    }
+
+    private void OnDisable()
+    {
+        DisableLaser();
+    }
+
+    void LateUpdate()
+    {
+        if (!lr) return;
+
+        // // [1] 게임 상태 체크 (메뉴/대기 상태가 아니면 레이저 끄기)
+        // if (gameFlowManager != null)
+        // {
+        //     bool isMenuState =
+        //         gameFlowManager.CurrentState == GameState.WaitForRadio ||
+        //         gameFlowManager.CurrentState == GameState.Paused ||
+        //         gameFlowManager.CurrentState == GameState.FinalResult;
+
+        //     if (!isMenuState)
+        //     {
+        //         DisableLaser();
+        //         return;
+        //     }
+        // }
+
+        // [2] 레이저 로직 시작
+        if (!lr.enabled) lr.enabled = true; // 레이저 켜기
+        lr.SetPosition(0, transform.position); // 시작점
+
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        // 충돌 감지
+        if (Physics.Raycast(ray, out hit, maxDistance))
+        {
+            lr.SetPosition(1, hit.point); // 끝점은 닿은 곳
+            GameObject hitObj = hit.collider.gameObject;
+
+            // [A] 상호작용 가능한 물체인가? (버튼, 문 등)
+            if (IsInteractable(hitObj))
+            {
+                // 레이저 색상 -> 초록색
+                SetLaserColor(hoverLaserColor);
+
+                // 새로운 물체에 닿았을 때만 처리 (최적화)
+                if (currentHitObject != hitObj)
+                {
+                    ResetPreviousEffects(); // 이전 효과 끄기
+                    
+                    currentHitObject = hitObj;
+                    PlayFeedback(); // 소리/진동
+
+                    // // 1. 아웃라인 켜기
+                    // var outline = hitObj.GetComponentInParent<Outline>();
+                    // if (outline != null)
+                    // {
+                    //     outline.enabled = true;
+                    //     outline.OutlineColor = hoverLaserColor;
+                    //     outline.OutlineWidth = 5f; // 두께 조절 가능
+                    //     currentOutline = outline;
+                    // }
+
+                    // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
+                    var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
+                    if (canvasGroup != null)
+                    {
+                        canvasGroup.alpha = 1f; // 보이게 설정
+                        currentCanvas = canvasGroup;
+                    }
+                }
+            }
+            else
+            {
+                // [B] 벽이나 바닥 (상호작용 불가)
+                SetLaserColor(normalLaserColor); // 레이저 흰색
+                ResetPreviousEffects();          // 아웃라인/정보창 끄기
+            }
+        }
+        else
+        {
+            // [C] 허공
+            lr.SetPosition(1, transform.position + (transform.forward * maxDistance)); // 길게 뻗기
+            SetLaserColor(normalLaserColor); // 레이저 흰색
+            ResetPreviousEffects();          // 아웃라인/정보창 끄기
+        }
+
+        // 트리거 클릭 입력
+        HandleInput();
+    }
+
+    // --- 기능 함수들 ---
+
+    void ResetPreviousEffects()
+    {
+        // 아웃라인 끄기
+        if (currentOutline != null)
+        {
+            currentOutline.enabled = false;
+            currentOutline = null;
+        }
+
+        // 정보창 숨기기
+        if (currentCanvas != null)
+        {
+            currentCanvas.alpha = 0f; // 투명하게
+            currentCanvas = null;
+        }
+
+        currentHitObject = null;
+    }
+
+    void SetLaserColor(Color c)
+    {
+        lr.startColor = c;
+        lr.endColor = c;
+    }
+
+    void HandleInput()
+    {
+        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
+        {
+            if (currentHitObject != null)
+            {
+                if (clickSound) audioSource.PlayOneShot(clickSound);
+
+                // UI 버튼 클릭
+                var button = currentHitObject.GetComponentInParent<Button>();
+                if (button != null) button.onClick.Invoke();
+
+                // 일반 상호작용
+                var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
+                if (clickHandler != null)
+                {
+                    PointerEventData data = new PointerEventData(EventSystem.current);
+                    clickHandler.OnPointerClick(data);
+                }
+            }
+        }
+    }
+void DisableLaser()
+    {
+        // lr이 존재하는지 먼저 확인 (안전장치 추가)
+        if (lr != null && lr.enabled)
+        {
+            lr.enabled = false;
+            ResetPreviousEffects();
+        }
+    }
+    bool IsInteractable(GameObject obj)
+    {
+        if (obj.GetComponentInParent<Button>() != null) return true;
+        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
+        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
+        
+        // Outline이 있는 오브젝트도 상호작용 대상으로 간주 (문 등)
+        if (obj.GetComponentInParent<Outline>() != null) return true; 
+        
+        return false;
+    }
+
+    void PlayFeedback()
+    {
+        if (hoverSound)
+        {
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            audioSource.PlayOneShot(hoverSound);
+        }
+
+        if (controllerType != OVRInput.Controller.None)
+        {
+            OVRInput.SetControllerVibration(vibrationStrength, vibrationStrength, controllerType);
+            Invoke("StopVibration", 0.1f);
+        }
+    }
+
+    void StopVibration()
+    {
+        OVRInput.SetControllerVibration(0, 0, controllerType);
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: BagManager_st2.cs (Assets/3_Stage2/Scripts/Bag/BagManager_st2.cs) ---
+// BagManager_st2.cs (Assets/3_Stage2/Demo/Scripts/BagManager_st2.cs)
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BagManager_st2 : MonoBehaviour
+{
+    [Header("현재 봉투/스택")]
+    public Transform currentBagAnchor;
+    public Transform filledBagStackAnchor;
+    public GameObject bagPrefab;
+    public int itemsPerBag = 3;
+    public int maxFilledBags = 10;
+
+    [Header("스택 배치 (Legacy)")]
+    [Tooltip("예전(Y축) 스택 간격. 이제 그리드 배치를 쓰므로 기본적으로 사용하지 않음.")]
+    public float stackSpacingY = 0.12f;
+
+    [Header("스택 배치 (Grid)")]
+    [Tooltip("한 줄(가로)로 몇 개 쌓을지. 요청사항: 5")]
+    public int stackColumns = 5;
+
+    [Tooltip("가로(-X) 방향 봉투 간격(로컬 기준)")]
+    public float stackSpacingX = 0.12f;
+
+    [Tooltip("세로(-Z) 방향 줄 간격(로컬 기준)")]
+    public float stackSpacingZ = 0.9f;
+
+    [Tooltip("스택의 시작 오프셋(로컬). 기준 위치 미세조정용")]
+    public Vector3 stackOffsetLocal = Vector3.zero;
+
+    [Header("붕어빵 비주얼 프리팹(선택)")]
+    public GameObject fishVisualPrefab;
+
+    private BagView_st2 currentBag;
+    private readonly List<BagView_st2> filledBags = new List<BagView_st2>();
+
+    public event Action OnBagSwapped;
+    public event Action<int> OnItemAdded;
+
+    void Start()
+    {
+        CreateNewCurrentBag();
+    }
+
+    // =========================
+    // 호환용 AddItem 오버로드
+    // =========================
+
+    // (1) 기존 호환: 그냥 비주얼 1개 추가
+    public void AddItem()
+    {
+        AddItem((GameObject)null);
+    }
+
+    // (2) ✅ 비주얼 프리팹을 봉투에 추가 (이게 메인 방식)
+    public void AddItem(GameObject overrideVisualPrefab)
+    {
+        AddFishVisual(overrideVisualPrefab);
+    }
+
+    // (3) 실물 붕어빵을 봉투에 추가 (사용 안 함, 호환용만 남김)
+    public void AddItem(FishCatchToken_st2 fish)
+    {
+        Debug.LogWarning("AddItem(FishCatchToken) called but using visual mode");
+        AddFishVisual(fishVisualPrefab);
+    }
+
+    // =========================
+    // ✅ 비주얼 쌓기 (메인 로직)
+    // =========================
+    public void AddFishVisual(GameObject overrideVisualPrefab)
+    {
+        if (currentBag == null)
+        {
+            Debug.LogError("❌ currentBag is null!");
+            return;
+        }
+
+        var prefab = overrideVisualPrefab != null ? overrideVisualPrefab : fishVisualPrefab;
+
+        if (prefab == null)
+        {
+            Debug.LogError("❌ No fish visual prefab assigned!");
+            return;
+        }
+
+        currentBag.AddItem(prefab);
+        Debug.Log($"✅ Visual added to bag. Count: {currentBag.itemCount}/{itemsPerBag}");
+
+        OnItemAdded?.Invoke(currentBag.itemCount);
+
+        if (currentBag.itemCount >= itemsPerBag)
+        {
+            Debug.Log("✅ Bag full, swapping...");
+            SwapBag();
+        }
+    }
+
+    void SwapBag()
+    {
+        AddFilledBagToStack(currentBag);
+        CreateNewCurrentBag();
+        OnBagSwapped?.Invoke();
+    }
+
+    void CreateNewCurrentBag()
+    {
+        if (bagPrefab == null || currentBagAnchor == null)
+        {
+            Debug.LogError("❌ bagPrefab or currentBagAnchor not assigned!");
+            return;
+        }
+
+        var bagObj = Instantiate(bagPrefab, currentBagAnchor);
+        bagObj.transform.localPosition = Vector3.zero;
+        bagObj.transform.localRotation = Quaternion.identity;
+
+        currentBag = bagObj.GetComponent<BagView_st2>();
+        if (currentBag == null)
+            currentBag = bagObj.AddComponent<BagView_st2>();
+
+        Debug.Log("✅ New bag created");
+
+        StartCoroutine(FadeIn(bagObj, 0.2f));
+    }
+
+    void AddFilledBagToStack(BagView_st2 completedBag)
+    {
+        if (completedBag == null || filledBagStackAnchor == null) return;
+
+        // 스택 꽉 차면 가장 오래된 것 제거
+        if (filledBags.Count >= maxFilledBags)
+        {
+            var oldest = filledBags[0];
+            filledBags.RemoveAt(0);
+            if (oldest != null) StartCoroutine(FadeOutAndDestroy(oldest.gameObject, 0.2f));
+        }
+
+        filledBags.Add(completedBag);
+
+        completedBag.transform.SetParent(filledBagStackAnchor, true);
+        RepositionStack();
+    }
+
+    // ✅ 핵심 변경: Y축 스택 -> (-X)로 5개씩, 다음 줄은 (-Z)로 이동하는 그리드
+    void RepositionStack()
+    {
+        int cols = Mathf.Max(1, stackColumns);
+        float dx = Mathf.Abs(stackSpacingX); // 항상 양수로 받아서
+        float dz = Mathf.Abs(stackSpacingZ); // 아래에서 - 부호로 방향 고정
+
+        for (int i = 0; i < filledBags.Count; i++)
+        {
+            if (filledBags[i] == null) continue;
+
+            int col = i % cols;      // 0~4
+            int row = i / cols;      // 0부터 증가
+
+            float x = -dx * col;     // 요청: -X로 진행
+            float z = -dz * row;     // 요청: -Z로 줄바꿈
+
+            filledBags[i].transform.localPosition = stackOffsetLocal + new Vector3(x, 0f, z);
+            filledBags[i].transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    IEnumerator FadeIn(GameObject obj, float duration)
+    {
+        if (obj == null) yield break;
+
+        var renderers = obj.GetComponentsInChildren<Renderer>();
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsed / duration);
+
+            foreach (var renderer in renderers)
+            {
+                foreach (var mat in renderer.materials)
+                {
+                    Color color = mat.color;
+                    color.a = alpha;
+                    mat.color = color;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
+    {
+        if (obj == null) yield break;
+
+        var renderers = obj.GetComponentsInChildren<Renderer>();
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = 1f - (elapsed / duration);
+
+            foreach (var renderer in renderers)
+            {
+                foreach (var mat in renderer.materials)
+                {
+                    Color color = mat.color;
+                    color.a = alpha;
+                    mat.color = color;
+                }
+            }
+
+            yield return null;
+        }
+
+        Destroy(obj);
+    }
+
+    // =========================
+    // 외부에서 쓰는 유틸
+    // =========================
+    public void FinalizeBag()
+    {
+        if (currentBag != null && currentBag.itemCount > 0)
+        {
+            AddFilledBagToStack(currentBag);
+            currentBag = null;
+        }
+    }
+
+    public int GetFilledBagCount()
+    {
+        return filledBags.Count;
+    }
+
+    public void Reset()
+    {
+        for (int i = filledBags.Count - 1; i >= 0; i--)
+        {
+            if (filledBags[i] != null) Destroy(filledBags[i].gameObject);
+        }
+        filledBags.Clear();
+
+        if (currentBag != null)
+            Destroy(currentBag.gameObject);
+
+        CreateNewCurrentBag();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: BagPolicy_st2.cs (Assets/3_Stage2/Scripts/Bag/BagPolicy_st2.cs) ---
+using UnityEngine;
+using static GameState_st2;
+
+/// <summary>
+/// Consume 결과를 보고 "성공이면 봉투에 비주얼만 추가"만 담당.
+/// </summary>
+[DisallowMultipleComponent]
+public class BagPolicy_st2 : MonoBehaviour
+{
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Bag Manager")]
+    [SerializeField] private BagManager_st2 bag;
+
+    [Header("Fish Visual Prefab (required)")]
+    public GameObject bagFishVisualPrefab;
+
+    private bool _bound;
+
+    public void Construct(Stage2EventHub_st2 eventHub, BagManager_st2 bagManager)
+    {
+        hub = eventHub;
+        bag = bagManager;
+        TryAutoWire();
+        Bind();
+    }
+
+    private void Awake()
+    {
+        TryAutoWire();
+    }
+
+    private void OnEnable()
+    {
+        TryAutoWire();
+        Bind();
+    }
+
+    private void OnDisable()
+    {
+        Unbind();
+    }
+
+    private void TryAutoWire()
+    {
+        if (hub == null)
+            hub = GetComponent<Stage2EventHub_st2>();
+
+        if (bag == null)
+            bag = FindObjectOfType<BagManager_st2>();
+    }
+
+    private void Bind()
+    {
+        if (_bound) return;
+        if (hub == null) return;
+
+        hub.FishConsumeRequested += OnFishConsumeRequested;
+        _bound = true;
+    }
+
+    private void Unbind()
+    {
+        if (!_bound) return;
+
+        if (hub != null)
+            hub.FishConsumeRequested -= OnFishConsumeRequested;
+
+        _bound = false;
+    }
+
+    private void OnFishConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (reason != FishConsumeReason_st2.Success) return;
+        if (bag == null) return;
+
+        if (bagFishVisualPrefab == null)
+        {
+            Debug.LogWarning("[BagPolicy_st2] bagFishVisualPrefab이 비어있어서 봉투에 추가할 수 없습니다.");
+            return;
+        }
+
+        bag.AddItem(bagFishVisualPrefab);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: CatchInput_st2.cs (Assets/3_Stage2/Scripts/Catch/CatchInput_st2.cs) ---
+using UnityEngine;
+using static GameState_st2;
+
+public class CatchInput_st2 : MonoBehaviour
+{
+    // ✅ DebugHUD/GameFlowController 호환용(표시만)
+    public JudgeResult_st2 lastJudgeResult = JudgeResult_st2.Miss;
+    public string lastHandName = "-";
+
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Sensors (Required)")]
+    [SerializeField] private HandCatchSensor_st2 leftSensor;
+    [SerializeField] private HandCatchSensor_st2 rightSensor;
+
+    [Header("Input")]
+    [Range(0f, 1f)] public float triggerThreshold = 0.9f;
+    public float perHandCooldown = 0.05f;
+
+    private double _lastLeftAttemptDsp = -999;
+    private double _lastRightAttemptDsp = -999;
+    private bool _subscribed = false;
+
+    public void Initialize(Stage2EventHub_st2 eventHub)
+    {
+        hub = eventHub;
+        TryBindHub();
+    }
+
+    private void OnEnable()
+    {
+        TryBindHub();
+    }
+
+    private void OnDisable()
+    {
+        TryUnbindHub();
+    }
+
+    private void TryBindHub()
+    {
+        if (_subscribed) return;
+        if (hub == null) return;
+
+        hub.JudgeResolved += OnJudgeResolved_Debug;
+        _subscribed = true;
+    }
+
+    private void TryUnbindHub()
+    {
+        if (!_subscribed) return;
+        if (hub == null) { _subscribed = false; return; }
+
+        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        _subscribed = false;
+    }
+
+    // ✅ 표시용 값만 업데이트
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
+        lastJudgeResult = result;
+        lastHandName = HandToName(hand);
+    }
+
+    private void Update()
+    {
+        if (hub == null) return;
+
+        ProcessHand(OVRInput.Controller.LTouch, leftSensor, ref _lastLeftAttemptDsp);
+        ProcessHand(OVRInput.Controller.RTouch, rightSensor, ref _lastRightAttemptDsp);
+    }
+
+    private void ProcessHand(OVRInput.Controller hand, HandCatchSensor_st2 sensor, ref double lastAttemptDsp)
+    {
+        double dsp = AudioSettings.dspTime;
+        if (dsp - lastAttemptDsp < perHandCooldown) return;
+
+        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
+        if (axis < triggerThreshold) return;
+
+        // 표시용
+        lastHandName = HandToName(hand);
+
+        // ✅ 튜토와 동일: 센서 레이 타겟이 없으면 "아무것도 안 함"
+        if (sensor == null) return;
+
+        var target = sensor.GetCurrentTarget();
+        if (target == null) return;
+        if (target.isResolved) return;
+
+        lastAttemptDsp = dsp;
+
+        // ✅ v6.2 원칙 유지: 여기서는 이벤트만 발행(판정/봉투/임금 직접 호출 금지)
+        hub.PublishCatchAttempted(target, hand, dsp);
+    }
+
+    private static string HandToName(OVRInput.Controller hand)
+    {
+        return hand == OVRInput.Controller.LTouch ? "Left" :
+               hand == OVRInput.Controller.RTouch ? "Right" :
+               hand.ToString();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: CatchVfx_st2.cs (Assets/3_Stage2/Scripts/Catch/CatchVfx_st2.cs) ---
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using static GameState_st2;
+
+/// <summary>
+/// JudgeResolved(성공) 시: fish.OnCaught() 호출 → 손 스냅에 0.2초 붙임 → Success consume 요청
+/// (FX는 FishCatchToken_st2.OnCaught() 내부에서만 처리)
+/// </summary>
+public class CatchVfx_st2 : MonoBehaviour
+{
+    [Header("Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Hand Snap (붙는 위치)")]
+    public Transform leftHandSnap;
+    public Transform rightHandSnap;
+    public bool autoFindHandSnapsIfNull = true;
+
+    [Header("Timing")]
+    [Min(0f)] public float snapHoldSeconds = 0.2f;
+    [Min(0f)] public float fadeSeconds = 0f;
+
+    [Header("Hold Behavior")]
+    public bool parentToHand = true;
+    public bool setKinematicWhileHeld = true;
+    public bool disableCollidersWhileHeld = true;
+
+    private readonly HashSet<int> processing = new HashSet<int>();
+
+    public void Construct(Stage2EventHub_st2 eventHub)
+    {
+        hub = eventHub;
+    }
+
+    private void OnEnable()
+    {
+        if (hub != null) hub.JudgeResolved += OnJudgeResolved;
+    }
+
+    private void OnDisable()
+    {
+        if (hub != null) hub.JudgeResolved -= OnJudgeResolved;
+        processing.Clear();
+    }
+
+    private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
+        if (fish == null) return;
+        if (result != JudgeResult_st2.Good && result != JudgeResult_st2.Perfect) return;
+
+        int id = fish.GetInstanceID();
+        if (processing.Contains(id)) return;
+        processing.Add(id);
+
+        StartCoroutine(CoSuccess(fish, hand));
+    }
+
+    private IEnumerator CoSuccess(FishCatchToken_st2 fish, OVRInput.Controller hand)
+    {
+        if (fish == null) yield break;
+
+        if (autoFindHandSnapsIfNull && (leftHandSnap == null || rightHandSnap == null))
+            AutoFindHandSnaps();
+
+        // 1) 잡힘 처리 (SFX/VFX는 fish.OnCaught() 안에서만)
+        fish.OnCaught();
+
+        // 2) 손에 붙이기
+        Transform snap = ResolveHandSnap(hand);
+        Transform tr = fish.transform;
+
+        Collider[] cols = null;
+        bool[] colEnabled = null;
+
+        if (disableCollidersWhileHeld)
+        {
+            cols = fish.GetComponentsInChildren<Collider>(true);
+            colEnabled = new bool[cols.Length];
+            for (int i = 0; i < cols.Length; i++)
+            {
+                colEnabled[i] = cols[i].enabled;
+                cols[i].enabled = false;
+            }
+        }
+
+        Rigidbody rb = fish.GetComponent<Rigidbody>();
+        bool hadRb = rb != null;
+        bool prevKinematic = false;
+        bool prevUseGravity = false;
+
+        if (hadRb && setKinematicWhileHeld)
+        {
+            prevKinematic = rb.isKinematic;
+            prevUseGravity = rb.useGravity;
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
+        Transform prevParent = tr.parent;
+
+        if (parentToHand && snap != null)
+        {
+            tr.SetParent(snap, worldPositionStays: false);
+            tr.localPosition = Vector3.zero;
+            tr.localRotation = Quaternion.identity;
+        }
+        else if (snap != null)
+        {
+            tr.position = snap.position;
+            tr.rotation = snap.rotation;
+        }
+
+        if (snapHoldSeconds > 0f)
+            yield return new WaitForSeconds(snapHoldSeconds);
+
+        if (fadeSeconds > 0f && fish != null && fish.gameObject.activeInHierarchy)
+            yield return FadeOutRenderers(fish.gameObject, fadeSeconds);
+
+        // 콜라이더 원복
+        if (disableCollidersWhileHeld && cols != null)
+        {
+            for (int i = 0; i < cols.Length; i++)
+                if (cols[i] != null) cols[i].enabled = colEnabled[i];
+        }
+
+        if (hadRb && setKinematicWhileHeld)
+        {
+            rb.isKinematic = prevKinematic;
+            rb.useGravity = prevUseGravity;
+        }
+
+        if (tr != null)
+            tr.SetParent(prevParent, worldPositionStays: true);
+
+        // 3) 성공 consume 요청
+        if (hub != null)
+            hub.PublishFishConsumeRequested(fish, FishConsumeReason_st2.Success);
+
+        // 안전장치
+        yield return null;
+        if (fish != null && fish.gameObject.activeInHierarchy)
+            fish.ConsumeToPool(FishConsumeReason_st2.Success);
+
+        processing.Remove(fish != null ? fish.GetInstanceID() : 0);
+    }
+
+    private Transform ResolveHandSnap(OVRInput.Controller hand)
+    {
+        if ((hand & OVRInput.Controller.LTouch) != 0) return leftHandSnap;
+        if ((hand & OVRInput.Controller.RTouch) != 0) return rightHandSnap;
+
+        string hs = hand.ToString();
+        if (hs.Contains("LHand") || hs.Contains("HandLeft")) return leftHandSnap;
+        if (hs.Contains("RHand") || hs.Contains("HandRight")) return rightHandSnap;
+
+        if (rightHandSnap != null) return rightHandSnap;
+        return leftHandSnap;
+    }
+
+    private void AutoFindHandSnaps()
+    {
+        var sensors = FindObjectsOfType<HandCatchSensor_st2>(true);
+        foreach (var s in sensors)
+        {
+            if (s == null) continue;
+
+            if (leftHandSnap == null && (s.handController & OVRInput.Controller.LTouch) != 0)
+                leftHandSnap = s.transform;
+
+            if (rightHandSnap == null && (s.handController & OVRInput.Controller.RTouch) != 0)
+                rightHandSnap = s.transform;
+        }
+
+        if (leftHandSnap == null) leftHandSnap = FindTransformByNameHints(true);
+        if (rightHandSnap == null) rightHandSnap = FindTransformByNameHints(false);
+    }
+
+    private Transform FindTransformByNameHints(bool left)
+    {
+        string[] hints = left
+            ? new[] { "LeftHandAnchor", "LeftControllerAnchor", "LeftHand", "L_Hand", "LeftHandSnap" }
+            : new[] { "RightHandAnchor", "RightControllerAnchor", "RightHand", "R_Hand", "RightHandSnap" };
+
+        var all = Resources.FindObjectsOfTypeAll<Transform>();
+        foreach (var t in all)
+        {
+            if (t == null) continue;
+            for (int i = 0; i < hints.Length; i++)
+                if (t.name == hints[i]) return t;
+        }
+        return null;
+    }
+
+    private IEnumerator FadeOutRenderers(GameObject root, float seconds)
+    {
+        if (root == null || seconds <= 0f) yield break;
+
+        var renderers = root.GetComponentsInChildren<Renderer>(true);
+        if (renderers == null || renderers.Length == 0) yield break;
+
+        var mats = new List<Material>();
+        var colors = new List<Color>();
+
+        foreach (var r in renderers)
+        {
+            if (r == null) continue;
+            foreach (var m in r.materials)
+            {
+                if (m != null && m.HasProperty("_Color"))
+                {
+                    mats.Add(m);
+                    colors.Add(m.color);
+                }
+            }
+        }
+
+        float t = 0f;
+        while (t < seconds)
+        {
+            float a = 1f - (t / seconds);
+            for (int i = 0; i < mats.Count; i++)
+            {
+                var c = colors[i];
+                c.a *= a;
+                mats[i].color = c;
+            }
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: HandCatchSensor_st2.cs (Assets/3_Stage2/Scripts/Catch/HandCatchSensor_st2.cs) ---
+using UnityEngine;
+
+/// <summary>
+/// 메인 전용 손 센서 - 레이캐스트 기반 타겟 선택 + 라인렌더러 표시
+/// (튜토 TutorialHandSensor_st2 로직을 FishCatchToken_st2로 이식)
+/// </summary>
+public class HandCatchSensor_st2 : MonoBehaviour
+{
+    [Header("설정")]
+    public OVRInput.Controller handController;
+    public LayerMask fishLayer;
+    public float raycastLength = 0.15f;
+
+    [Header("LineRenderer")]
+    public LineRenderer lineRenderer;
+    public bool showLineRenderer = true;
+
+    [Header("라인 색상")]
+    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);
+    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f);
+
+    [Header("라인 스타일")]
+    public float lineWidth = 0.002f;
+
+    [Header("현재 타겟(읽기용)")]
+    public FishCatchToken_st2 currentTarget;
+
+    private readonly RaycastHit[] hits = new RaycastHit[16];
+    private Transform cachedTransform;
+
+    void Awake()
+    {
+        cachedTransform = transform;
+        SetupLineRenderer();
+    }
+
+    public void Initialize(OVRInput.Controller controller)
+    {
+        handController = controller;
+
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        SetupLineRenderer();
+    }
+
+    void SetupLineRenderer()
+    {
+        if (lineRenderer == null)
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.positionCount = 2;
+        lineRenderer.useWorldSpace = true;
+
+        if (lineRenderer.material == null || lineRenderer.material.shader == null || lineRenderer.material.shader.name != "Unlit/Color")
+            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+
+        lineRenderer.startColor = noTargetColor;
+        lineRenderer.endColor = noTargetColor;
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
+    }
+
+    void Update()
+    {
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        UpdateCurrentTarget();
+        UpdateLineRenderer();
+    }
+
+    void UpdateCurrentTarget()
+    {
+        if (cachedTransform == null) return;
+
+        Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
+        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer, QueryTriggerInteraction.Collide);
+
+        FishCatchToken_st2 closestFish = null;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var col = hits[i].collider;
+            if (col == null) continue;
+
+            // ✅ 자식 콜라이더 대응(메인 붕어빵은 보통 자식에 콜라이더가 있음)
+            var fish = col.GetComponentInParent<FishCatchToken_st2>();
+            if (fish == null) continue;
+            if (!fish.gameObject.activeInHierarchy) continue;
+            if (fish.isResolved) continue;
+
+            float distance = hits[i].distance;
+
+            // ✅ 히스테리시스(튜토와 동일): 이미 잡고 있는 타겟이 있으면 쉽게 안 바뀜
+            if (currentTarget != null)
+            {
+                if (fish == currentTarget)
+                {
+                    closestFish = fish;
+                    break;
+                }
+
+                if (distance < closestDistance - 0.03f)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+            else
+            {
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+        }
+
+        currentTarget = closestFish;
+    }
+
+    void UpdateLineRenderer()
+    {
+        if (lineRenderer == null || !showLineRenderer) return;
+        if (cachedTransform == null) return;
+
+        lineRenderer.enabled = true;
+
+        Vector3 startPos = cachedTransform.position;
+        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
+
+        if (currentTarget != null)
+            endPos = currentTarget.transform.position;
+
+        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(1, endPos);
+
+        Color lineColor = GetLineColor();
+        lineRenderer.startColor = lineColor;
+        lineRenderer.endColor = lineColor;
+    }
+
+    Color GetLineColor()
+    {
+        if (currentTarget == null) return noTargetColor;
+        if (currentTarget.isResolved) return resolvedTargetColor;
+        return hasTargetColor;
+    }
+
+    public FishCatchToken_st2 GetCurrentTarget()
+    {
+        return currentTarget;
+    }
+
+    public void SetLineRendererVisible(bool visible)
+    {
+        showLineRenderer = visible;
+        if (lineRenderer != null)
+            lineRenderer.enabled = visible;
+    }
+
+    void OnDisable()
+    {
+        currentTarget = null;
+        if (lineRenderer != null)
+            lineRenderer.enabled = false;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: FishConsumer_st2.cs (Assets/3_Stage2/Scripts/Fish&mold/FishConsumer_st2.cs) ---
+using System;
+using System.Reflection;
+using UnityEngine;
+
+public class FishConsumer_st2 : MonoBehaviour
+{
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    public void Construct(Stage2EventHub_st2 eventHub)
+    {
+        hub = eventHub;
+    }
+
+    private void Awake()
+    {
+        if (!hub) hub = FindObjectOfType<Stage2EventHub_st2>(true);
+    }
+
+    private void OnEnable()
+    {
+        if (hub != null) hub.FishConsumeRequested += OnConsume;
+    }
+
+    private void OnDisable()
+    {
+        if (hub != null) hub.FishConsumeRequested -= OnConsume;
+    }
+
+    private void OnConsume(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (fish == null) return;
+
+        // 1) 프로젝트에 이미 있으면 우선 사용
+        if (TryInvoke(fish, "ConsumeToPool", reason)) return;
+        if (TryInvoke(fish, "ReturnToPool")) return;
+        if (TryInvoke(fish, "Release")) return;
+
+        // 2) Stage2 구조상 제일 안전한 풀 반환 루트
+        if (fish.ownerMold != null)
+        {
+            fish.ownerMold.ReleaseFish(fish);
+            return;
+        }
+
+        // 3) fallback
+        fish.gameObject.SetActive(false);
+    }
+
+    private static bool TryInvoke(object target, string methodName, object arg = null)
+    {
+        try
+        {
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var t = target.GetType();
+            var mi = t.GetMethod(methodName, flags);
+            if (mi == null) return false;
+
+            var ps = mi.GetParameters();
+            if (ps.Length == 0)
+            {
+                mi.Invoke(target, null);
+                return true;
+            }
+
+            if (ps.Length == 1)
+            {
+                object param = arg;
+
+                if (arg != null && !ps[0].ParameterType.IsInstanceOfType(arg))
+                {
+                    if (ps[0].ParameterType.IsEnum)
+                        param = Enum.Parse(ps[0].ParameterType, arg.ToString(), true);
+                    else
+                        return false;
+                }
+
+                mi.Invoke(target, new object[] { param });
+                return true;
+            }
+        }
+        catch { /* ignore */ }
+
+        return false;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: MoldController_st2.cs (Assets/3_Stage2/Scripts/Fish&mold/MoldController_st2.cs) ---
+using UnityEngine;
+using UnityEngine.Pool;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+
+public class MoldController_st2 : MonoBehaviour
+{
+    [Header("참조")]
+    public GameObject fishPrefab;
+    public AudioSource telegraphSource;
+    public AudioSource popSource;
+    public AudioClip telegraphClip;
+    public AudioClip popClip;
+
+    [Header("시각 효과")]
+    public Animator moldAnimator;
+
+    [Header("퐁 애니메이션 (뚜껑 열림)")]
+    public string popAnimationTrigger = "Pop";
+    public float popAnimationLeadTime = 0.2f;
+
+    [Header("달그락 애니메이션 (코드 흔들림)")]
+    public bool useTelegraphShake = true;
+    public float shakeIntensity = 0.02f;
+    public float shakeDuration = 0.3f;
+    public int shakeCount = 8;
+
+    [Header("VFX (Pop / 퐁)")]
+    public GameObject popVfxPrefab;                 /*[변경가능_퐁이펙트프리팹]*/
+    public Transform popVfxAnchor;                  /*[변경가능_퐁이펙트기준점] (없으면 mold transform)*/
+    public Vector3 popVfxLocalOffset = Vector3.zero;/*[변경가능_퐁이펙트오프셋]*/
+    public Vector3 popVfxLocalEuler = Vector3.zero; /*[변경가능_퐁이펙트회전]*/
+    public float popVfxAutoDestroySeconds = 2.0f;   /*[변경가능_퐁이펙트자동삭제]*/
+
+    private ObjectPool<FishCatchToken_st2> fishPool;
+    private JudgeSystem_st2 judgeSystem;
+
+    // 이벤트
+    public event Action OnTelegraphPlayed;
+    public event Action OnPopPlayed;
+
+    // 활성 fish 추적
+    private List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
+
+    // 예약된 코루틴 추적
+    private List<Coroutine> scheduledSpawns = new List<Coroutine>();
+
+    // 틀 원본 위치 (흔들림 복원용)
+    private Vector3 originalMoldPosition;
+
+    void Awake()
+    {
+        originalMoldPosition = transform.localPosition;
+
+        fishPool = new ObjectPool<FishCatchToken_st2>(
+            createFunc: () => {
+                var obj = Instantiate(fishPrefab, transform);
+                var fish = obj.GetComponent<FishCatchToken_st2>();
+                if (fish == null) fish = obj.AddComponent<FishCatchToken_st2>();
+                return fish;
+            },
+            actionOnGet: (fish) => {
+                fish.gameObject.SetActive(true);
+            },
+            actionOnRelease: (fish) => {
+                fish.OnReturnToPool();
+                fish.transform.SetParent(transform);
+                fish.transform.localPosition = Vector3.zero;
+                fish.transform.localRotation = Quaternion.identity;
+                fish.transform.localScale = Vector3.one;
+                fish.gameObject.SetActive(false);
+                activeFish.Remove(fish);
+            },
+            actionOnDestroy: (fish) => Destroy(fish.gameObject),
+            defaultCapacity: 10
+        );
+    }
+
+    // ✅ GameFlowController가 호출함(복구)
+    public void Initialize(JudgeSystem_st2 judge)
+    {
+        judgeSystem = judge;
+    }
+
+    void Update()
+    {
+        for (int i = 0; i < activeFish.Count; i++)
+        {
+            if (activeFish[i] != null && !activeFish[i].isResolved)
+            {
+                activeFish[i].UpdateMovement();
+            }
+        }
+    }
+
+    public void ScheduleTelegraph(double dspTime)
+    {
+        if (telegraphSource != null && telegraphClip != null)
+        {
+            telegraphSource.clip = telegraphClip;
+            telegraphSource.PlayScheduled(dspTime);
+        }
+
+        double delay = dspTime - AudioSettings.dspTime;
+        StartCoroutine(PlayTelegraphVisual((float)delay));
+    }
+
+    public void SchedulePop(double dspTime)
+    {
+        if (popSource != null && popClip != null)
+        {
+            popSource.clip = popClip;
+            popSource.PlayScheduled(dspTime);
+        }
+
+        // ✅ 애니메이션은 퐁 소리보다 먼저 시작
+        double animationDelay = dspTime - AudioSettings.dspTime - popAnimationLeadTime;
+        if (animationDelay > 0)
+        {
+            StartCoroutine(PlayPopAnimation((float)animationDelay));
+        }
+
+        // ✅ fish 생성은 퐁 소리 타이밍에 맞춤
+        double fishDelay = dspTime - AudioSettings.dspTime;
+        var spawnRoutine = StartCoroutine(SpawnFishDelayed((float)fishDelay, dspTime));
+        scheduledSpawns.Add(spawnRoutine);
+    }
+
+    IEnumerator PlayTelegraphVisual(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (useTelegraphShake)
+        {
+            StartCoroutine(ShakeMold());
+        }
+
+        OnTelegraphPlayed?.Invoke();
+    }
+
+    IEnumerator ShakeMold()
+    {
+        int currentShake = 0;
+        float shakeInterval = shakeDuration / Mathf.Max(1, shakeCount);
+
+        while (currentShake < shakeCount)
+        {
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
+                0,
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
+            );
+
+            transform.localPosition = originalMoldPosition + randomOffset;
+
+            yield return new WaitForSeconds(shakeInterval);
+            currentShake++;
+        }
+
+        transform.localPosition = originalMoldPosition;
+    }
+
+    IEnumerator PlayPopAnimation(float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (moldAnimator != null)
+            moldAnimator.SetTrigger(popAnimationTrigger);
+    }
+
+    IEnumerator SpawnFishDelayed(float delay, double popTime)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // Ending/Result 체크 (기존 유지)
+        if (GameFlowController_st2.Instance != null)
+        {
+            if (GameFlowController_st2.Instance.isEndingTriggered ||
+                GameFlowController_st2.Instance.CurrentState != GameState_st2.GameStatest2.Playing)
+            {
+                yield break;
+            }
+        }
+
+        // DSP 시간 재확인 (PAUSE로 인한 지연 감지)
+        double actualDsp = AudioSettings.dspTime;
+        if (actualDsp > popTime + 1.0f)
+            yield break;
+
+        // ✅ fish 생성
+        var fish = fishPool.Get();
+        fish.Initialize(popTime, transform, this);
+
+        // ✅ 퐁 이펙트 생성 (퐁 소리/스폰 타이밍)
+        SpawnPopVfx();
+
+        activeFish.Add(fish);
+
+        if (judgeSystem != null)
+        {
+            judgeSystem.RegisterFish(fish);
+        }
+
+        OnPopPlayed?.Invoke();
+
+        // 안전 정리
+        scheduledSpawns.RemoveAll(c => c == null);
+    }
+
+    void SpawnPopVfx()
+    {
+        if (popVfxPrefab == null) return;
+
+        Transform a = popVfxAnchor != null ? popVfxAnchor : transform;
+        Vector3 pos = a.TransformPoint(popVfxLocalOffset);
+        Quaternion rot = a.rotation * Quaternion.Euler(popVfxLocalEuler);
+
+        var vfx = Instantiate(popVfxPrefab, pos, rot);
+        AutoDestroyVfx(vfx, popVfxAutoDestroySeconds);
+    }
+
+    static void AutoDestroyVfx(GameObject vfxRoot, float fallbackSeconds)
+    {
+        if (vfxRoot == null) return;
+
+        var ps = vfxRoot.GetComponentInChildren<ParticleSystem>(true);
+        if (ps != null)
+        {
+            var main = ps.main;
+            float lifeMax = 0f;
+
+            var sl = main.startLifetime;
+            if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
+            else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
+            else lifeMax = sl.constantMax;
+
+            float total = Mathf.Max(0.1f, main.duration + lifeMax);
+            UnityEngine.Object.Destroy(vfxRoot, total);
+            return;
+        }
+
+        UnityEngine.Object.Destroy(vfxRoot, Mathf.Max(0.1f, fallbackSeconds));
+    }
+
+    public void ReleaseFish(FishCatchToken_st2 fish)
+    {
+        if (fish != null)
+            fishPool.Release(fish);
+    }
+
+    // ✅ GameFlowController가 호출함(복구)
+    public void CancelAllScheduledSpawns()
+    {
+        foreach (var routine in scheduledSpawns)
+        {
+            if (routine != null) StopCoroutine(routine);
+        }
+        scheduledSpawns.Clear();
+
+        foreach (var fish in activeFish.ToList())
+        {
+            if (fish != null) fishPool.Release(fish);
+        }
+        activeFish.Clear();
+    }
+
+    public int GetActiveFishCount() => activeFish.Count;
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: FlipbookNeonBright.cs (Assets/3_Stage2/Scripts/Right/FlipbookNeonBright.cs) ---
+using UnityEngine;
+
+public class FlipbookNeonBright : MonoBehaviour
+{
+    [Header("Frames (Quads)")]
+    public GameObject[] frames;
+
+    [Header("Playback")]
+    public float fps = 5f;
+    public bool loop = true;
+
+    [Header("Rainbow Color")]
+    public float hueSpeed = 0.08f;
+    [Range(0f, 1f)] public float saturation = 1f;
+
+    [Tooltip("�ּ� ��� ���� (��ο����� �ʰ�)")]
+    [Range(0.6f, 2.5f)] public float minValue = 1.2f;
+
+    [Tooltip("�ִ� ���(�׿� ����). Additive�� 1.5~2.5 ��õ")]
+    [Range(0.8f, 4f)] public float maxValue = 2.0f;
+
+    [Header("Smooth Pulse (������ ��ȭ)")]
+    public bool smoothPulse = true;
+    public float pulseSpeed = 1.5f;
+    [Range(0f, 1f)] public float pulseMin = 0.35f;
+    [Range(0f, 1f)] public float pulseMax = 1.0f;
+    public AnimationCurve pulseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    [Header("Alpha Lock (���� �״� ���� ����)")]
+    public bool lockAlpha = true;
+    [Range(0.1f, 1f)] public float fixedAlpha = 1.0f;
+
+    int index = 0;
+    float frameTimer = 0f;
+    Material currentMat;
+
+    void Awake()
+    {
+        if (frames == null || frames.Length == 0)
+        {
+            frames = new GameObject[transform.childCount];
+            for (int i = 0; i < transform.childCount; i++)
+                frames[i] = transform.GetChild(i).gameObject;
+        }
+
+        if (frames.Length == 0) return;
+
+        ShowOnly(index);
+        CacheMaterial();
+    }
+
+    void Update()
+    {
+        if (frames == null || frames.Length == 0) return;
+
+        // 1) Flipbook ������ ��ȯ
+        float frameTime = 1f / Mathf.Max(1f, fps);
+        frameTimer += Time.deltaTime;
+        while (frameTimer >= frameTime)
+        {
+            frameTimer -= frameTime;
+            index = (index + 1) % frames.Length;
+            ShowOnly(index);
+            CacheMaterial();
+        }
+
+        if (currentMat == null) return;
+
+        // 2) �޽� (0~1)
+        float p = 1f;
+        if (smoothPulse)
+        {
+            float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
+            float eased = pulseCurve.Evaluate(wave);
+            p = Mathf.Lerp(pulseMin, pulseMax, eased);
+        }
+
+        // 3) ���(value)�� �ּ� �����ϸ鼭 �޽��� ���� ����
+        float v = Mathf.Lerp(minValue, maxValue, p); // �׻� minValue �̻�
+
+        // 4) ���κ��� �÷� ����
+        float h = Mathf.Repeat(Time.time * hueSpeed, 1f);
+        Color col = Color.HSVToRGB(h, saturation, v);
+
+        // 5) ���Ĵ� ����(��ο� ���̴� ���� ����)
+        if (lockAlpha) col.a = fixedAlpha;
+
+        currentMat.color = col;
+    }
+
+    void ShowOnly(int i)
+    {
+        for (int k = 0; k < frames.Length; k++)
+            frames[k].SetActive(k == i);
+    }
+
+    void CacheMaterial()
+    {
+        var r = frames[index].GetComponent<Renderer>();
+        currentMat = (r != null) ? r.material : null;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: RainbowDecalAndLight.cs (Assets/3_Stage2/Scripts/Right/RainbowDecalAndLight.cs) ---
+using UnityEngine;
+
+public class RainbowDecalAndLight : MonoBehaviour
+{
+    [Header("Targets")]
+    public Renderer decalRenderer;   // ����(��Į) Renderer
+    public Light spotLight;         // Spot Light
+
+    [Header("Rainbow")]
+    [Tooltip("���� ��ȭ �ӵ�(1 = 1�ʿ� �� ���� ���� ����).")]
+    public float hueSpeed = 0.15f;
+
+    [Range(0f, 1f)] public float saturation = 1f;
+    [Tooltip("1 �̻��̸� �� ¸�ϰ� ����(Ư�� Additive).")]
+    public float value = 1.2f;
+
+    [Header("Decal Intensity")]
+    [Tooltip("��Ƽ���� �÷� ����(Transparent �迭�̸� �����, Additive�� ���� ����).")]
+    [Range(0f, 1f)] public float decalAlpha = 1f;
+
+    [Header("Optional: Blink (�޽�)")]
+    public bool pulse = false;
+    public float pulseSpeed = 6f;
+    [Range(0f, 1f)] public float pulseMin = 0.35f;
+    [Range(0f, 1f)] public float pulseMax = 1.0f;
+
+    [Header("Light Intensity (optional pulse)")]
+    public bool pulseLightIntensity = false;
+    public float lightMinIntensity = 0.3f;
+    public float lightMaxIntensity = 1.2f;
+
+    Material _decalMat;
+
+    void Awake()
+    {
+        if (decalRenderer != null)
+        {
+            // renderer.material: �ν��Ͻ� ����(��Ÿ�ӿ��� ���� ���� ����)
+            _decalMat = decalRenderer.material;
+        }
+    }
+
+    void Update()
+    {
+        // 1) ���κ��� �÷� ���� (HSV)
+        float h = Mathf.Repeat(Time.time * hueSpeed, 1f);
+        Color rainbow = Color.HSVToRGB(h, saturation, value);
+
+        // 2) �޽�(����)
+        float p = 1f;
+        if (pulse)
+        {
+            float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f; // 0~1
+            p = Mathf.Lerp(pulseMin, pulseMax, wave);
+        }
+
+        // 3) ��Į ��Ƽ���� �÷� ����
+        if (_decalMat != null)
+        {
+            Color c = rainbow;
+            c.a = Mathf.Clamp01(decalAlpha * p);
+            _decalMat.color = c;
+        }
+
+        // 4) ���̶���Ʈ �÷� ����
+        if (spotLight != null)
+        {
+            spotLight.color = Color.HSVToRGB(h, saturation, 1f); // ����Ʈ�� value 1 ��õ
+
+            if (pulseLightIntensity)
+            {
+                float wave = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
+                spotLight.intensity = Mathf.Lerp(lightMinIntensity, lightMaxIntensity, wave);
+            }
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: SubmeshMaterialBlink.cs (Assets/3_Stage2/Scripts/Right/SubmeshMaterialBlink.cs) ---
+using UnityEngine;
+
+public class SignBulbBlinkPro : MonoBehaviour
+{
+    public enum BlinkMode
+    {
+        Sequential,     // ��-��-��-�� ����(�Ǵ� ���� ����)
+        RandomFlicker,  // ���� ����
+        AllOnOff        // ��ü ���� -> ��ü �ҵ� �ݺ�
+    }
+
+    [Header("Target")]
+    public Renderer target;
+    public int[] materialIndices = new int[] { 1, 2, 3, 4 }; // Red, Yellow, Green, Blue
+
+    [Header("Mode")]
+    public BlinkMode mode = BlinkMode.Sequential;
+
+    [Header("Timing")]
+    [Tooltip("��ü �ӵ� (Ŀ������ ����)")]
+    public float speed = 6f;
+
+    [Tooltip("Sequential�� �� ���Ժ� �ð���")]
+    public float phaseOffset = 0.6f;
+
+    [Tooltip("AllOnOff�� �� ON ���� ���� (0~1)")]
+    [Range(0f, 1f)] public float allOnDuty = 0.55f;
+
+    [Header("Emission")]
+    public float minEmission = 0f;     // OFF�� �߱� (0 ��õ)
+    public float maxEmission = 4.5f;   // ON�� �߱� (3~8 ��õ)
+
+    [Header("Base Color dim (OFF ��Ӱ�)")]
+    [Tooltip("OFF�� �� ���̽� �� �� (0.08~0.2 ��õ)")]
+    public float offBaseDim = 0.12f;
+
+    [Tooltip("ON�� �� ���̽� �� �� (���� 1)")]
+    public float onBaseDim = 1f;
+
+    [Header("Optional: Beat ����(��ܽ� ����)")]
+    public bool stepLikeBeat = false;
+    [Range(1, 16)] public int stepsPerCycle = 4; // 4�� 4�� ����
+
+    static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
+    static readonly int ColorId = Shader.PropertyToID("_Color");
+
+    Material[] mats;
+    Color[] originalBase;
+
+    void Awake()
+    {
+        if (!target) target = GetComponent<Renderer>();
+        if (!target) { enabled = false; return; }
+
+        mats = target.materials; // �ν��Ͻ� ������
+        originalBase = new Color[mats.Length];
+        for (int i = 0; i < mats.Length; i++)
+            originalBase[i] = mats[i].color;
+
+        foreach (int idx in materialIndices)
+        {
+            if (idx < 0 || idx >= mats.Length) continue;
+            mats[idx].EnableKeyword("_EMISSION");
+        }
+    }
+
+    void Update()
+    {
+        float t = Time.time;
+
+        for (int i = 0; i < materialIndices.Length; i++)
+        {
+            int idx = materialIndices[i];
+            if (idx < 0 || idx >= mats.Length) continue;
+
+            float v = Evaluate(i, t); // 0~1
+            ApplyToMaterial(idx, v);
+        }
+    }
+
+    float Evaluate(int slotIndex, float time)
+    {
+        float v = 0f;
+
+        switch (mode)
+        {
+            case BlinkMode.Sequential:
+                {
+                    v = (Mathf.Sin((time * speed) - slotIndex * phaseOffset) + 1f) * 0.5f; // 0~1
+                    break;
+                }
+            case BlinkMode.RandomFlicker:
+                {
+                    v = Mathf.PerlinNoise(time * speed * 0.35f, slotIndex * 0.37f); // 0~1
+                    break;
+                }
+            case BlinkMode.AllOnOff:
+                {
+                    // 0~1 �ݺ� ��ȣ
+                    float cycle = Mathf.Repeat(time * (speed * 0.25f), 1f);
+                    v = (cycle < allOnDuty) ? 1f : 0f;
+                    break;
+                }
+        }
+
+        if (stepLikeBeat)
+        {
+            // ��ܽ�(����ó�� ���� �����)
+            float step = Mathf.Floor(v * stepsPerCycle) / Mathf.Max(1, stepsPerCycle - 1);
+            v = Mathf.Clamp01(step);
+        }
+
+        return Mathf.Clamp01(v);
+    }
+
+    void ApplyToMaterial(int idx, float v)
+    {
+        // OFF�� �� ���̽��� ��Ӱ�
+        float baseMul = Mathf.Lerp(offBaseDim, onBaseDim, v);
+        Color baseCol = originalBase[idx] * baseMul;
+        mats[idx].SetColor(ColorId, baseCol);
+
+        // Emission
+        float e = Mathf.Lerp(minEmission, maxEmission, v);
+        Color emission = originalBase[idx] * e;
+        mats[idx].SetColor(EmissionId, emission);
+    }
+
+    // �ܺο��� ��� �ٲٰ� ���� �� ȣ���
+    public void SetMode(int modeIndex)
+    {
+        mode = (BlinkMode)Mathf.Clamp(modeIndex, 0, 2);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: EconomyListener_st2.cs (Assets/3_Stage2/Scripts/System/EconomyListener_st2.cs) ---
+using UnityEngine;
+using static GameState_st2;
+
+[DisallowMultipleComponent]
+public class EconomyListener_st2 : MonoBehaviour
+{
+    [Header("Optional Hub (legacy wiring)")]
+    [SerializeField] private Stage2EventHub_st2 hub; // 호환용. 실제로는 안 써도 됨.
+
+    [Header("Judge System")]
+    [SerializeField] private JudgeSystem_st2 judge;
+
+    [Header("Economy System")]
+    [SerializeField] private EconomySystem_st2 economy;
+
+    private bool _bound;
+
+    // ✅ 신규: Judge 직접 주입
+    public void Construct(JudgeSystem_st2 judgeSystem, EconomySystem_st2 economySystem)
+    {
+        judge = judgeSystem;
+        economy = economySystem;
+        Bind();
+    }
+
+    // ✅ 레거시 호환: MainInstaller가 (hub, economy)로 호출하던 형태 유지
+    public void Construct(Stage2EventHub_st2 eventHub, EconomySystem_st2 economySystem)
+    {
+        hub = eventHub;
+        economy = economySystem;
+
+        // judge는 여기서 자동으로 찾거나, 필요하면 hub를 통해 찾는 로직을 추가할 수도 있음
+        if (judge == null) judge = FindObjectOfType<JudgeSystem_st2>(true);
+
+        Bind();
+    }
+
+    // ✅ 레거시+명시 주입: (hub, judge, economy)도 지원
+    public void Construct(Stage2EventHub_st2 eventHub, JudgeSystem_st2 judgeSystem, EconomySystem_st2 economySystem)
+    {
+        hub = eventHub;
+        judge = judgeSystem;
+        economy = economySystem;
+        Bind();
+    }
+
+    private void Awake()
+    {
+        if (judge == null) judge = FindObjectOfType<JudgeSystem_st2>(true);
+        if (economy == null) economy = FindObjectOfType<EconomySystem_st2>(true);
+    }
+
+    private void OnEnable() => Bind();
+    private void OnDisable() => Unbind();
+
+    private void Bind()
+    {
+        if (_bound) return;
+        if (judge == null || economy == null) return;
+
+        judge.OnJudgeResult += OnJudgeResult;
+        _bound = true;
+    }
+
+    private void Unbind()
+    {
+        if (!_bound) return;
+        if (judge != null) judge.OnJudgeResult -= OnJudgeResult;
+        _bound = false;
+    }
+
+    private void OnJudgeResult(JudgeResult_st2 result, float delta)
+    {
+        economy.ApplyJudgeResult(result);
+        // Debug.Log($"[EconomyListener] result={result} wage={economy.currentWage}");
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: EconomySystem_st2.cs (Assets/3_Stage2/Scripts/System/EconomySystem_st2.cs) ---
+using System;
+using UnityEngine;
+using static GameState_st2;
+
+public class EconomySystem_st2 : MonoBehaviour
+{
+    [Header("일급 설정")]
+    public int baseWage = 10000;
+
+    [Header("보너스/패널티")]
+    public int perfectBonus = 100;
+    public int goodBonus = 50;     // ✅ 추가: Good 보너스
+    public int missPenalty = 50;
+
+    [Header("옵션")]
+    public bool penalizeOnMiss = false; // ✅ 미스 감봉 여부(요구사항: 기본 false)
+
+    [Header("최대 임금")]
+    public int maxWage = 30000;
+
+    [Header("현재 상태")]
+    public int currentWage;
+
+    public event Action<int> OnWageChanged;
+
+    private void Awake()
+    {
+        // Start 순서 이슈 방지
+        if (currentWage <= 0) currentWage = baseWage;
+    }
+
+    private void Start()
+    {
+        currentWage = baseWage;
+        OnWageChanged?.Invoke(currentWage);
+    }
+
+    public void ApplyJudgeResult(JudgeResult_st2 result)
+    {
+        bool changed = false;
+
+        switch (result)
+        {
+            case JudgeResult_st2.Perfect:
+                currentWage = Mathf.Min(currentWage + perfectBonus, maxWage);
+                changed = true;
+                break;
+
+            case JudgeResult_st2.Good:
+                currentWage = Mathf.Min(currentWage + goodBonus, maxWage); // ✅ Good도 돈 벌림
+                changed = true;
+                break;
+
+            case JudgeResult_st2.Miss:
+                if (penalizeOnMiss) // ✅ 기본 false라 감봉 안 됨
+                {
+                    currentWage = Mathf.Max(currentWage - missPenalty, 0);
+                    changed = true;
+                }
+                break;
+        }
+
+        if (changed)
+            OnWageChanged?.Invoke(currentWage);
+    }
+
+    public void Reset()
+    {
+        currentWage = baseWage;
+        OnWageChanged?.Invoke(currentWage);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: GameFlowController_st2.cs (Assets/3_Stage2/Scripts/System/GameFlowController_st2.cs) ---
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using static GameState_st2;
+
+public class GameFlowController_st2 : MonoBehaviour
+{
+    public static GameFlowController_st2 Instance { get; private set; }
+
+    [Header("게임 상태")]
+    public GameStatest2 CurrentState = GameStatest2.MainMenu;
+    public bool isEndingTriggered = false;
+
+    [Header("오디오")]
+    public AudioSource bgmSource;
+    public AudioClip bgmClip;
+
+    [Header("BGM 루프 설정")]
+    public bool bgmLoopEnabled = true;
+    [Min(1)] public int bgmLoopCount = 4;   // 18초 클립을 4번 재생 후 종료
+
+    [Header("시스템 참조")]
+    public JudgeSystem_st2 judgeSystem;
+    public EconomySystem_st2 economySystem;
+    public BagManager_st2 bagManager;
+    public PatternDirector_st2 patternDirector;
+    public MenuMonitorUI_st2 menuMonitorUI;
+    public MoldController_st2[] molds;
+    public CatchInput_st2[] catchInputs;
+
+    [Header("튜토리얼 (옵션)")]
+    public StandaloneTutorialController_st2 tutorialController; // ✅ 추가
+
+    [Header("타이밍")]
+    private double songStartDspTime;
+    private double songEndDspTime;
+    private double pausedDspAccum = 0.0;
+    private double pauseStartDspTime = 0.0;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    void Start()
+    {
+        // 시스템 초기화
+        foreach (var mold in molds)
+        {
+            mold.Initialize(judgeSystem);
+        }
+
+        foreach (var input in catchInputs)
+        {
+            // (필요 시 초기화 코드)
+        }
+
+        menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
+
+        // ✅ 중앙 이벤트 연결
+        judgeSystem.OnJudgeResult += OnJudgeResult;
+        bagManager.OnBagSwapped += OnBagSwapped;
+        patternDirector.OnPatternQueued += OnPatternQueued;
+
+        // ✅ 개발용: 매 실행마다 튜토리얼 강제
+        PlayerPrefs.SetInt("TutorialCompleted", 0);
+        PlayerPrefs.Save();
+
+        // ✅ 튜토리얼 체크
+        bool hasCompletedTutorial = PlayerPrefs.GetInt("TutorialCompleted", 0) == 1;
+
+        if (!hasCompletedTutorial && tutorialController != null)
+        {
+            // 튜토리얼 활성화, 메인 게임 비활성화
+            TransitionToTutorial();
+        }
+        else
+        {
+            // 튜토리얼 비활성화, 메인 게임 시작
+            if (tutorialController != null)
+            {
+                tutorialController.gameObject.SetActive(false);
+            }
+            TransitionToPlaying();
+        }
+    }
+
+    void Update()
+    {
+        // ✅ Tutorial 상태일 때는 메인 게임 로직 실행 안 함
+        if (CurrentState == GameStatest2.Tutorial) return;
+
+        // PAUSE 입력
+        if (CurrentState == GameStatest2.Playing)
+        {
+            if (OVRInput.GetDown(OVRInput.Button.Start))
+            {
+                if (bgmSource != null && bgmSource.time > 0.1f)
+                {
+                    PauseGame();
+                }
+            }
+        }
+
+        // 곡 종료 체크 (총 루프 횟수 기준 / Pause 보정 포함)
+        if (CurrentState == GameStatest2.Playing && !isEndingTriggered)
+        {
+            double effectiveElapsed = (AudioSettings.dspTime - songStartDspTime) - pausedDspAccum;
+            double totalDuration = (songEndDspTime - songStartDspTime);
+
+            if (effectiveElapsed >= totalDuration)
+            {
+                TriggerEnding();
+            }
+        }
+
+        // UI 업데이트 (루프 포함 전체 진행시간으로 표시)
+        if (CurrentState == GameStatest2.Playing)
+        {
+            float effectiveElapsed = (float)((AudioSettings.dspTime - songStartDspTime) - pausedDspAccum);
+            float totalDuration = (float)(songEndDspTime - songStartDspTime);
+
+            menuMonitorUI.UpdateSongTime(effectiveElapsed, totalDuration);
+            menuMonitorUI.UpdateFilledBags(bagManager.GetFilledBagCount());
+        }
+    }
+
+    // ✅ 추가: 튜토리얼 전환
+    public void TransitionToTutorial()
+    {
+        CurrentState = GameStatest2.Tutorial;
+        menuMonitorUI.UpdateState(CurrentState);
+
+        // 메인 게임 몰드 비활성화
+        foreach (var mold in molds)
+        {
+            mold.gameObject.SetActive(false);
+        }
+
+        // 메인 게임 입력 비활성화
+        foreach (var input in catchInputs)
+        {
+            input.enabled = false;
+        }
+
+        // 튜토리얼 활성화
+        if (tutorialController != null)
+        {
+            tutorialController.gameObject.SetActive(true);
+        }
+    }
+
+    public void TransitionToPlaying()
+    {
+        CurrentState = GameStatest2.Playing;
+        isEndingTriggered = false;
+        menuMonitorUI.UpdateState(CurrentState);
+
+        // ✅ 튜토리얼 완전 비활성화
+        if (tutorialController != null)
+        {
+            tutorialController.gameObject.SetActive(false);
+        }
+
+        // ✅ 메인 게임 몰드 활성화 및 초기화
+        foreach (var mold in molds)
+        {
+            mold.gameObject.SetActive(true);
+            mold.CancelAllScheduledSpawns(); // 혹시 모를 이전 스폰 정리
+        }
+
+        // ✅ 메인 게임 입력 활성화 및 초기화
+        foreach (var input in catchInputs)
+        {
+            input.enabled = true;
+            // 혹시 이전 판정 기록 초기화
+            input.lastJudgeResult = JudgeResult_st2.Miss;
+        }
+
+        // ✅ 메인 게임 시스템 초기화
+        judgeSystem.ResetStats();
+        economySystem.Reset();
+        bagManager.Reset();
+
+        // ===== BGM 시작 (루프 N회 후 종료) =====
+        songStartDspTime = AudioSettings.dspTime;
+        pausedDspAccum = 0.0;
+        pauseStartDspTime = 0.0;
+
+        if (bgmSource != null)
+        {
+            bgmSource.clip = bgmClip;
+
+            // 실제 루프 동작은 AudioSource.loop로 처리
+            bgmSource.loop = bgmLoopEnabled;
+
+            // "총 재생 목표 시간" 계산 (루프 미사용이면 1회 재생)
+            int loops = (bgmLoopEnabled ? Mathf.Max(1, bgmLoopCount) : 1);
+            double totalDuration = (bgmClip != null ? bgmClip.length : 0.0) * loops;
+
+            songEndDspTime = songStartDspTime + totalDuration;
+
+            bgmSource.Play();
+        }
+        else
+        {
+            // bgmSource가 없다면 즉시 종료되지 않게 최소값 설정
+            songEndDspTime = songStartDspTime + 0.1;
+        }
+
+        // 시스템 시작
+        patternDirector.StartPatternSystem(songStartDspTime);
+
+        Debug.Log("✅ Main game started - Tutorial cleanup complete");
+    }
+
+    void PauseGame()
+    {
+        CurrentState = GameStatest2.Paused;
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+
+        if (bgmSource != null) bgmSource.Pause();
+
+        // ✅ DSP 시간 보정용
+        pauseStartDspTime = AudioSettings.dspTime;
+
+        menuMonitorUI.UpdateState(CurrentState);
+    }
+
+    public void ResumeGame()
+    {
+        CurrentState = GameStatest2.Playing;
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        if (bgmSource != null) bgmSource.UnPause();
+
+        // ✅ Pause 동안 흐른 dspTime 누적 보정
+        pausedDspAccum += (AudioSettings.dspTime - pauseStartDspTime);
+
+        menuMonitorUI.UpdateState(CurrentState);
+    }
+
+    public void RestartGame()
+    {
+        // 예약 이벤트 정리
+        patternDirector.ClearAllScheduledEvents();
+
+        // Mold 스폰 취소
+        foreach (var mold in molds)
+        {
+            mold.CancelAllScheduledSpawns();
+        }
+
+        // PAUSE 해제
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // 오디오 정지
+        if (bgmSource != null) bgmSource.Stop();
+
+        // 게임 상태 초기화
+        ResetGameState();
+
+        // 재시작
+        TransitionToPlaying();
+    }
+
+    void ResetGameState()
+    {
+        judgeSystem.ResetStats();
+        economySystem.Reset();
+        bagManager.Reset();
+        isEndingTriggered = false;
+
+        // 타이밍 초기화
+        songStartDspTime = 0.0;
+        songEndDspTime = 0.0;
+        pausedDspAccum = 0.0;
+        pauseStartDspTime = 0.0;
+    }
+
+    void TriggerEnding()
+    {
+        isEndingTriggered = true;
+
+        // Mold 스폰 취소
+        foreach (var mold in molds)
+        {
+            mold.CancelAllScheduledSpawns();
+        }
+
+        // 남은 fish 강제 Miss 처리
+        judgeSystem.ForceResolveAll();
+
+        // 현재 봉투 완성
+        bagManager.FinalizeBag();
+
+        // Result로 전환
+        StartCoroutine(TransitionToResultDelayed(0.5f));
+    }
+
+    IEnumerator TransitionToResultDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TransitionToResult();
+    }
+
+    void TransitionToResult()
+    {
+        CurrentState = GameStatest2.Result;
+        menuMonitorUI.UpdateState(CurrentState);
+    }
+
+    // ✅ 중앙 이벤트 핸들러 (튜토리얼과 무관)
+    void OnJudgeResult(JudgeResult_st2 result, float delta)
+    {
+        economySystem.ApplyJudgeResult(result);
+    }
+
+    void OnBagSwapped()
+    {
+        // 메인 게임에서만 사용
+    }
+
+    void OnPatternQueued(PatternType_st2 type)
+    {
+        // 메인 게임에서만 사용
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: GroundMissReporter_st2.cs (Assets/3_Stage2/Scripts/System/GroundMissReporter_st2.cs) ---
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GroundMissReporter_st2 : MonoBehaviour
+{
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Filter (Fish ROOT Layer)")]
+    [Tooltip("FishCatchToken_st2가 붙은 '루트 오브젝트'의 Layer를 포함하세요.")]
+    public LayerMask fishLayer;
+
+    [Header("Options")]
+    [Tooltip("접촉점/다중 콜라이더로 인한 중복 호출 억제(초)")]
+    public float duplicateCooldown = 0.05f;
+
+    private readonly Dictionary<int, float> _lastHitTime = new Dictionary<int, float>(256);
+    private readonly HashSet<int> _groundRequested = new HashSet<int>(256);
+
+    public void Construct(Stage2EventHub_st2 eventHub)
+    {
+        hub = eventHub;
+    }
+
+    private void Awake()
+    {
+        if (!hub) hub = FindObjectOfType<Stage2EventHub_st2>(true);
+    }
+
+    private void OnTriggerEnter(Collider other) => HandleHit(other);
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null) return;
+        HandleHit(collision.collider);
+    }
+
+    private void HandleHit(Collider hit)
+    {
+        if (hit == null) return;
+
+        // 1) 토큰 탐색 (Parent / Self / Rigidbody)
+        FishCatchToken_st2 fish = hit.GetComponentInParent<FishCatchToken_st2>();
+        if (fish == null) fish = hit.GetComponent<FishCatchToken_st2>();
+        if (fish == null && hit.attachedRigidbody != null)
+            fish = hit.attachedRigidbody.GetComponent<FishCatchToken_st2>();
+
+        if (fish == null) return;
+        if (!fish.gameObject.activeInHierarchy) return;
+
+        // 2) 레이어 필터는 fish "루트" 기준
+        var fishRoot = fish.transform.root.gameObject;
+        if (((1 << fishRoot.layer) & fishLayer) == 0) return;
+
+        int id = fish.GetInstanceID();
+        float now = Time.time;
+
+        // 3) 짧은 시간 중복 억제
+        if (_lastHitTime.TryGetValue(id, out float last) && (now - last) < duplicateCooldown) return;
+        _lastHitTime[id] = now;
+
+        // 4) 바닥 미스 요청은 1회만
+        if (_groundRequested.Contains(id)) return;
+        _groundRequested.Add(id);
+
+        // ✅ 판정은 여기서 하지 않음!
+        // ✅ "풀 되는 순간" 미스 확정은 FishConsumer_st2가 담당
+
+        if (hub != null)
+        {
+            hub.PublishFishConsumeRequested(fish, FishConsumeReason_st2.GroundMiss);
+        }
+        else
+        {
+            fish.gameObject.SetActive(false);
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: JudgeBridge_st2.cs (Assets/3_Stage2/Scripts/System/JudgeBridge_st2.cs) ---
+using System;
+using System.Reflection;
+using UnityEngine;
+using static GameState_st2;
+
+/// <summary>
+/// CatchAttempted �� JudgeSystem.PerformJudge �� JudgeResolved ����
+/// </summary>
+[DisallowMultipleComponent]
+public class JudgeBridge_st2 : MonoBehaviour
+{
+    [Header("Event Hub")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+
+    [Header("Judge System")]
+    [SerializeField] private JudgeSystem_st2 judge;
+
+    private MethodInfo _performJudgeMi;
+    private bool _bound;
+
+    public void Construct(Stage2EventHub_st2 eventHub, JudgeSystem_st2 judgeSystem)
+    {
+        hub = eventHub;
+        judge = judgeSystem;
+
+        CacheReflection();
+        TryAutoWire();
+        Bind();
+    }
+
+    private void Awake()
+    {
+        CacheReflection();
+        TryAutoWire();
+    }
+
+    private void OnEnable()
+    {
+        TryAutoWire();
+        Bind();
+    }
+
+    private void OnDisable()
+    {
+        Unbind();
+    }
+
+    private void TryAutoWire()
+    {
+        if (hub == null)
+            hub = GetComponent<Stage2EventHub_st2>();
+
+        if (judge == null)
+            judge = FindObjectOfType<JudgeSystem_st2>();
+    }
+
+    private void CacheReflection()
+    {
+        if (judge == null) return;
+
+        _performJudgeMi = judge.GetType().GetMethod(
+            "PerformJudge",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            null,
+            new Type[] { typeof(FishCatchToken_st2), typeof(double) },
+            null);
+    }
+
+    private void Bind()
+    {
+        if (_bound) return;
+        if (hub == null) return;
+
+        hub.CatchAttempted += OnCatchAttempted;
+        _bound = true;
+    }
+
+    private void Unbind()
+    {
+        if (!_bound) return;
+
+        if (hub != null)
+            hub.CatchAttempted -= OnCatchAttempted;
+
+        _bound = false;
+    }
+
+    private void OnCatchAttempted(FishCatchToken_st2 fish, OVRInput.Controller hand, double catchDspTime)
+    {
+        if (judge == null || fish == null || _performJudgeMi == null)
+        {
+            if (judge == null) TryAutoWire();
+            if (judge != null && _performJudgeMi == null) CacheReflection();
+            if (judge == null || _performJudgeMi == null) return;
+        }
+
+        JudgeResult_st2 result;
+
+        try
+        {
+            object ret = _performJudgeMi.Invoke(judge, new object[] { fish, catchDspTime });
+            result = (JudgeResult_st2)ret;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[JudgeBridge_st2] PerformJudge invoke failed: {e.Message}");
+            return;
+        }
+
+        float delta = (float)(catchDspTime - fish.popDspTime);
+
+        if (hub != null)
+            hub.PublishJudgeResolved(fish, result, hand, delta);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: JudgeSystem_st2.cs (Assets/3_Stage2/Scripts/System/JudgeSystem_st2.cs) ---
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using static GameState_st2;
+
+public class JudgeSystem_st2 : MonoBehaviour
+{
+    [Header("판정 윈도우")]
+    public float perfectHalfWindow = 0.04f;
+    public float goodHalfWindow = 0.075f;
+
+    [Tooltip("팝(popTime) 이후 이 시간(초)이 지나면 자동 Miss 확정")]
+    public float fishCatchableDuration = 1.0f;
+
+    [Header("타임아웃 처리 옵션")]
+    [Tooltip("true면 타임아웃 Miss 확정과 동시에 소비(풀 반환)도 요청함. (Stage2EventHub + FishConsumer가 있을 때만 의미 있음)")]
+    public bool consumeOnTimeout = false;
+
+    [SerializeField] private Stage2EventHub_st2 hub; // optional
+
+    [Header("통계")]
+    public int perfectCount = 0;
+    public int goodCount = 0;
+    public int missCount = 0;
+
+    // 이벤트
+    public event Action<JudgeResult_st2, float> OnJudgeResult;
+
+    private readonly HashSet<FishCatchToken_st2> activeFish = new HashSet<FishCatchToken_st2>();
+    private readonly List<FishCatchToken_st2> _timeoutBuffer = new List<FishCatchToken_st2>(128);
+
+    private void Awake()
+    {
+        if (consumeOnTimeout && hub == null)
+            hub = FindObjectOfType<Stage2EventHub_st2>(true);
+    }
+
+    private void Update()
+    {
+        // 자동 Miss 확정(타임아웃)
+        if (activeFish.Count == 0) return;
+
+        double now = AudioSettings.dspTime;
+        _timeoutBuffer.Clear();
+
+        // HashSet은 순회 중 제거 불가 → 버퍼에 모아서 처리
+        foreach (var fish in activeFish)
+        {
+            if (fish == null) { _timeoutBuffer.Add(fish); continue; }
+            if (fish.isResolved) { _timeoutBuffer.Add(fish); continue; }
+
+            // popTime 기준으로 catchableDuration 초 지나면 Miss 확정
+            if (now - fish.popTime >= fishCatchableDuration)
+            {
+                _timeoutBuffer.Add(fish);
+            }
+        }
+
+        for (int i = 0; i < _timeoutBuffer.Count; i++)
+        {
+            var fish = _timeoutBuffer[i];
+            if (fish == null)
+            {
+                // null은 그냥 active에서 제거
+                activeFish.Remove(fish);
+                continue;
+            }
+
+            // 이미 다른 루트(잡기/바닥 등)에서 해결됐으면 제거만
+            if (fish.isResolved)
+            {
+                activeFish.Remove(fish);
+                continue;
+            }
+
+            // ✅ 타임아웃 Miss 확정
+            ProcessTimeoutMiss(fish);
+
+            // ✅ 원하면 여기서 바로 소비(풀 반환)까지 요청
+            if (consumeOnTimeout && hub != null)
+            {
+                hub.PublishFishConsumeRequested(fish, FishConsumeReason_st2.Timeout);
+            }
+        }
+    }
+
+    public void RegisterFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        activeFish.Add(fish);
+    }
+
+    public void UnregisterFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        activeFish.Remove(fish);
+    }
+
+    public JudgeResult_st2 PerformJudge(FishCatchToken_st2 fish, double catchTime)
+    {
+        if (fish == null) return JudgeResult_st2.Miss;
+        if (fish.isResolved) return JudgeResult_st2.Miss;
+
+        float delta = (float)(catchTime - fish.popTime);
+        float absDelta = Mathf.Abs(delta);
+
+        JudgeResult_st2 result;
+
+        if (absDelta <= perfectHalfWindow)
+        {
+            result = JudgeResult_st2.Perfect;
+            perfectCount++;
+        }
+        else if (absDelta <= goodHalfWindow)
+        {
+            result = JudgeResult_st2.Good;
+            goodCount++;
+        }
+        else
+        {
+            result = JudgeResult_st2.Miss;
+            missCount++;
+        }
+
+        fish.isResolved = true;
+        fish.isCaught = (result != JudgeResult_st2.Miss);
+
+        activeFish.Remove(fish);
+        OnJudgeResult?.Invoke(result, delta);
+
+        return result;
+    }
+
+    private void ProcessTimeoutMiss(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        if (fish.isResolved) return;
+
+        fish.isResolved = true;
+        fish.isCaught = false;
+        missCount++;
+
+        activeFish.Remove(fish);
+
+        // 타임아웃 미스는 delta 의미 없으니 0
+        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
+    }
+
+    public void ResetStats()
+    {
+        perfectCount = 0;
+        goodCount = 0;
+        missCount = 0;
+        activeFish.Clear();
+        _timeoutBuffer.Clear();
+    }
+
+    public void ForceResolveAll()
+    {
+        _timeoutBuffer.Clear();
+        foreach (var fish in activeFish)
+        {
+            if (fish != null && !fish.isResolved)
+                _timeoutBuffer.Add(fish);
+        }
+
+        for (int i = 0; i < _timeoutBuffer.Count; i++)
+        {
+            var fish = _timeoutBuffer[i];
+            if (fish != null && !fish.isResolved)
+                ProcessTimeoutMiss(fish);
+        }
+
+        activeFish.Clear();
+        _timeoutBuffer.Clear();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: PatternDirector_st2.cs (Assets/3_Stage2/Scripts/System/PatternDirector_st2.cs) ---
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using static GameState_st2;
+using UnityEngine.Pool;
+
+public class PatternDirector_st2 : MonoBehaviour
+{
+    [Header("BPM ����")]
+    public float BPM = 120f;
+    public float telegraphLeadTime = 0.4f;
+    public float cueLeadTime = 0.35f;
+    public float runStep = 0.25f;
+
+    [Header("���� ����")]
+    public int patternIntervalBeats = 3;
+    public float minPatternInterval = 0.5f;
+    public float initialDelay = 5.0f;
+
+    [Header("Ư�� ���� ����")]
+    public int specialCooldownBeats = 4;
+    public int maxBeatsWithoutSpecial = 12;
+    public float sync2Chance = 30f;
+    public float run3Chance = 30f;
+
+    [Header("����")]
+    public MoldController_st2[] molds = new MoldController_st2[3];
+    public AudioSource cueAudioSource;
+    public AudioClip sync2Cue;
+    public AudioClip run3Cue;
+
+    private double songStartDspTime;
+    private double patternLockUntilDspTime;
+    private double nextPatternTime;
+    private double lastPatternTime;
+    private int beatsSinceLastSpecial = 0;
+    private bool isInCooldown = false;
+
+    private List<AudioSource> scheduledSources = new List<AudioSource>();
+    private List<Coroutine> scheduledCoroutines = new List<Coroutine>();
+
+    public event Action<PatternType_st2> OnPatternQueued;
+
+    public void StartPatternSystem(double startDspTime)
+    {
+        songStartDspTime = startDspTime;
+        patternLockUntilDspTime = startDspTime + initialDelay;
+        nextPatternTime = startDspTime + initialDelay;
+        lastPatternTime = 0;
+        beatsSinceLastSpecial = 0;
+        isInCooldown = false;
+    }
+
+    void Update()
+    {
+        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing) return;
+
+        double currentDsp = AudioSettings.dspTime;
+
+        if (CanSelectNewPattern(currentDsp))
+        {
+            SelectAndExecutePattern(currentDsp);
+        }
+    }
+
+    bool CanSelectNewPattern(double dspTime)
+    {
+        // 1����: �� üũ
+        if (dspTime < patternLockUntilDspTime) return false;
+
+        // 2����: �ּ� ����
+        if (dspTime < lastPatternTime + minPatternInterval) return false;
+
+        // 3����: �׸��� üũ
+        if (dspTime < nextPatternTime) return false;
+
+        // �� ���� �� 5�� ����
+        AudioSource bgm = GameFlowController_st2.Instance.bgmSource;
+        if (bgm.clip.length - bgm.time < 5.0f) return false;
+
+        return true;
+    }
+
+    void SelectAndExecutePattern(double currentDsp)
+    {
+        PatternType_st2 selectedPattern = SelectPattern();
+        ExecutePattern(selectedPattern, currentDsp);
+
+        // ���� ���� �ð� ���
+        float beatDuration = 60f / BPM;
+        nextPatternTime = currentDsp + patternIntervalBeats * beatDuration;
+        lastPatternTime = currentDsp;
+
+        // ��/�׸��� �浹 �� ���� ����
+        if (nextPatternTime < patternLockUntilDspTime + minPatternInterval)
+        {
+            nextPatternTime = patternLockUntilDspTime + minPatternInterval;
+        }
+
+        OnPatternQueued?.Invoke(selectedPattern);
+    }
+
+    PatternType_st2 SelectPattern()
+    {
+        // 1. ��ٿ� üũ
+        if (isInCooldown)
+        {
+            beatsSinceLastSpecial++;
+            if (beatsSinceLastSpecial >= specialCooldownBeats)
+            {
+                isInCooldown = false;
+                beatsSinceLastSpecial = 0;
+            }
+            else
+            {
+                return PatternType_st2.Normal;
+            }
+        }
+
+        // 2. ���� üũ (��ٿ�� �켱)
+        if (beatsSinceLastSpecial >= maxBeatsWithoutSpecial)
+        {
+            beatsSinceLastSpecial = 0;
+            isInCooldown = true;
+
+            return UnityEngine.Random.value < 0.5f ? PatternType_st2.Sync2 : PatternType_st2.Run3;
+        }
+
+        // 3. Ȯ�� ����
+        float roll = UnityEngine.Random.Range(0f, 100f);
+
+        if (roll < sync2Chance)
+        {
+            beatsSinceLastSpecial = 0;
+            isInCooldown = true;
+            return PatternType_st2.Sync2;
+        }
+        else if (roll < sync2Chance + run3Chance)
+        {
+            beatsSinceLastSpecial = 0;
+            isInCooldown = true;
+            return PatternType_st2.Run3;
+        }
+        else
+        {
+            beatsSinceLastSpecial++;
+            return PatternType_st2.Normal;
+        }
+    }
+
+    void ExecutePattern(PatternType_st2 type, double startTime)
+    {
+        switch (type)
+        {
+            case PatternType_st2.Normal:
+                ExecuteNormalPattern(startTime);
+                break;
+            case PatternType_st2.Sync2:
+                ExecuteSync2Pattern(startTime);
+                break;
+            case PatternType_st2.Run3:
+                ExecuteRun3Pattern(startTime);
+                break;
+        }
+    }
+
+    void ExecuteNormalPattern(double t0)
+    {
+        int moldId = UnityEngine.Random.Range(0, 3);
+
+        double telegraphTime = t0;
+        double popTime = t0 + telegraphLeadTime;
+
+        molds[moldId].ScheduleTelegraph(telegraphTime);
+        molds[moldId].SchedulePop(popTime);
+
+        patternLockUntilDspTime = popTime + 1.0 + 0.1;
+    }
+
+    void ExecuteSync2Pattern(double t0)
+    {
+        // Ʋ ����: {0,1}, {1,2}, {0,2}
+        int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
+        int[] selectedPair = pairs[UnityEngine.Random.Range(0, 3)];
+
+        double cueTime = t0 - cueLeadTime;
+        double telegraphTime = t0;
+        double popTime = t0 + telegraphLeadTime;
+
+        // ť ����
+        ScheduleCueSound(sync2Cue, cueTime);
+
+        // �� Ʋ ���� ����
+        foreach (int moldId in selectedPair)
+        {
+            molds[moldId].ScheduleTelegraph(telegraphTime);
+            molds[moldId].SchedulePop(popTime);
+        }
+
+        patternLockUntilDspTime = popTime + 1.0 + 0.1;
+    }
+
+    void ExecuteRun3Pattern(double t0)
+    {
+        double cueTime = t0 - cueLeadTime;
+
+        // ť ����
+        ScheduleCueSound(run3Cue, cueTime);
+
+        double lastPopTime = 0;
+
+        // 3�� ���� ����
+        for (int i = 0; i < 3; i++)
+        {
+            double telegraphTime = t0 + runStep * i;
+            double popTime = t0 + telegraphLeadTime + runStep * i;
+
+            molds[i].ScheduleTelegraph(telegraphTime);
+            molds[i].SchedulePop(popTime);
+
+            lastPopTime = popTime;
+        }
+
+        patternLockUntilDspTime = lastPopTime + 1.0 + 0.1;
+    }
+
+    void ScheduleCueSound(AudioClip clip, double dspTime)
+    {
+        cueAudioSource.clip = clip;
+        cueAudioSource.PlayScheduled(dspTime);
+        scheduledSources.Add(cueAudioSource);
+    }
+
+    public void ClearAllScheduledEvents()
+    {
+        // AudioSource ����
+        foreach (var source in scheduledSources)
+        {
+            if (source != null)
+            {
+                source.Stop();
+            }
+        }
+        scheduledSources.Clear();
+
+        // Coroutine ����
+        foreach (var routine in scheduledCoroutines)
+        {
+            if (routine != null)
+            {
+                StopCoroutine(routine);
+            }
+        }
+        scheduledCoroutines.Clear();
+
+        CancelInvoke();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: Stage2EventHub_st2.cs (Assets/3_Stage2/Scripts/System/Stage2EventHub_st2.cs) ---
+using System;
+using UnityEngine;
+using static GameState_st2;
+
+public enum FishConsumeReason_st2
+{
+    Success,
+    GroundMiss,
+    Timeout,
+    Despawn
+}
+
+public class Stage2EventHub_st2 : MonoBehaviour
+{
+    public event Action<FishCatchToken_st2, OVRInput.Controller, double> CatchAttempted;
+    public event Action<FishCatchToken_st2, JudgeResult_st2, OVRInput.Controller, float> JudgeResolved;
+    public event Action<FishCatchToken_st2, FishConsumeReason_st2> FishConsumeRequested;
+
+    public void PublishCatchAttempted(FishCatchToken_st2 fish, OVRInput.Controller hand, double dspTime)
+        => CatchAttempted?.Invoke(fish, hand, dspTime);
+
+    public void PublishJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+        => JudgeResolved?.Invoke(fish, result, hand, delta);
+
+    public void PublishFishConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+        => FishConsumeRequested?.Invoke(fish, reason);
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: StandaloneTutorialController_st2.cs (Assets/3_Stage2/Scripts/Tuto/StandaloneTutorialController_st2.cs) ---
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using static GameState_st2;
+
+public class StandaloneTutorialController_st2 : MonoBehaviour
+{
+    public enum TutorialStage
+    {
+        T0_Telegraph,   // 텔레그래프 + 달그락만
+        T1_Pop,         // 구경(잡기 불가)
+        T2_Catch,       // 잡기 가능
+        T4_Sync2,       // 2개 동시: 2개 모두 잡아야 성공
+        T5_Run3,        // 3개 연속: 3개 모두 잡아야 성공
+        Complete,
+        WaitBeforeMain
+    }
+
+    [Header("현재 스테이지")]
+    public TutorialStage currentStage = TutorialStage.T0_Telegraph;
+
+    [Header("튜토리얼 전용 몰드 (메인과 별도)")]
+    public TutorialMoldController_st2[] tutorialMolds = new TutorialMoldController_st2[3];
+
+    [Header("튜토리얼 전용 손 센서")]
+    public TutorialHandSensor_st2 leftSensor;
+    public TutorialHandSensor_st2 rightSensor;
+
+    [Header("UI")]
+    public TextMeshProUGUI instructionText;
+    public TextMeshProUGUI progressText;
+    public TextMeshProUGUI skipText;
+    public TextMeshProUGUI stageCompleteText;
+    public GameObject tutorialCanvas;
+
+    [Header("오디오")]
+    public AudioSource telegraphSource;
+    public AudioSource popSource;
+    public AudioSource cueSource;
+    public AudioClip telegraphClip;
+    public AudioClip popClip;
+    public AudioClip sync2Cue;
+    public AudioClip run3Cue;
+
+    [Header("튜토리얼 BGM")]
+    public AudioSource tutorialBGMSource;
+    public AudioClip tutorialBGMClip;
+    public float bgmVolume = 0.5f;
+
+    [Header("타이밍 설정")]
+    public float telegraphToPopDelay = 0.4f;
+    public float manualPatternInterval = 2.0f;
+    public float runStepInterval = 0.25f;
+    public float waitBeforeMainDuration = 3.0f;
+
+    [Header("스테이지 전환 설정")]
+    public float stageTransitionDelay = 2.0f;
+    public bool showStageCompleteMessage = true;
+
+    [Header("판정 설정")]
+    public float perfectWindow = 0.04f;
+    public float goodWindow = 0.075f;
+
+    [Header("스냅 연출(튜토리얼)")]
+    public float snapHoldSeconds = 0.2f;
+
+    [Header("Pop 애니 리드타임 (퐁 소리보다 먼저 열기)")]
+    public float popAnimLeadSeconds = 0.25f;
+
+    [Header("특수 패턴 재시도")]
+    public float specialAttemptTimeout = 3.0f;   // 이 시간 안에 다 못 잡으면 리셋 후 재시도
+    public float specialRetryDelay = 0.5f;
+
+    // 진행 카운터
+    private int telegraphCount = 0;
+    private int popCount = 0;
+    private int goodOrBetterCount = 0;
+
+    // 특수 패턴 목표/진행
+    private int specialTargetCount = 0;   // 2 또는 3
+    private int specialCaughtCount = 0;   // 현재 시도에서 잡은 개수
+    private bool specialStageCompleted = false;
+
+    private PatternType_st2 currentPatternType = PatternType_st2.Normal;
+    private bool hasSuccessSync2 = false;
+    private bool hasSuccessRun3 = false;
+
+    private Coroutine autoPatternRoutine;
+
+    void Start()
+    {
+        InitializeUI();
+        InitializeSensors();
+        StartTutorialBGM();
+        StartStage(currentStage);
+    }
+
+    void Update()
+    {
+        // A 버튼 스킵
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+            SkipTutorial();
+
+        // ✅ 스테이지별로 잡기 허용
+        if (IsCatchingEnabled())
+        {
+            ProcessHandInput(leftSensor, OVRInput.Controller.LTouch);
+            ProcessHandInput(rightSensor, OVRInput.Controller.RTouch);
+        }
+    }
+
+    bool IsCatchingEnabled()
+    {
+        return currentStage == TutorialStage.T2_Catch
+            || currentStage == TutorialStage.T4_Sync2
+            || currentStage == TutorialStage.T5_Run3;
+    }
+
+    void InitializeUI()
+    {
+        if (skipText != null)
+            skipText.text = "[Press A to Skip Tutorial]";
+
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(true);
+
+        if (stageCompleteText != null)
+            stageCompleteText.gameObject.SetActive(false);
+    }
+
+    void InitializeSensors()
+    {
+        if (leftSensor != null)
+            leftSensor.Initialize(OVRInput.Controller.LTouch);
+
+        if (rightSensor != null)
+            rightSensor.Initialize(OVRInput.Controller.RTouch);
+    }
+
+    void StartTutorialBGM()
+    {
+        if (tutorialBGMSource != null && tutorialBGMClip != null)
+        {
+            tutorialBGMSource.clip = tutorialBGMClip;
+            tutorialBGMSource.loop = true;
+            tutorialBGMSource.volume = bgmVolume;
+            tutorialBGMSource.Play();
+        }
+    }
+
+    void StopTutorialBGM()
+    {
+        if (tutorialBGMSource != null)
+            tutorialBGMSource.Stop();
+    }
+
+    void StartStage(TutorialStage stage)
+    {
+        currentStage = stage;
+
+        // 이전 루틴 중지
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        HideStageComplete();
+
+        // 특수 패턴 상태 초기화
+        specialStageCompleted = false;
+        specialTargetCount = 0;
+        specialCaughtCount = 0;
+
+        switch (stage)
+        {
+            case TutorialStage.T0_Telegraph:
+                currentPatternType = PatternType_st2.Normal;
+                ShowInstruction("Listen to the 'Telegraph' sound!", $"Progress: {telegraphCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoTelegraphOnly());
+                break;
+
+            case TutorialStage.T1_Pop:
+                currentPatternType = PatternType_st2.Normal;
+                ShowInstruction("Watch the fish 'Pop' out! (Can't catch yet)", $"Progress: {popCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoPopWatchOnly());
+                break;
+
+            case TutorialStage.T2_Catch:
+                currentPatternType = PatternType_st2.Normal;
+                ShowInstruction("Now catch fish with Good or Perfect!", $"Good+ Catches: {goodOrBetterCount}/2");
+                autoPatternRoutine = StartCoroutine(AutoCatchNormal());
+                break;
+
+            case TutorialStage.T4_Sync2:
+                currentPatternType = PatternType_st2.Sync2;
+                ShowInstruction("Sync2 Pattern: Catch BOTH fish!", "Caught: 0/2");
+                autoPatternRoutine = StartCoroutine(RunSync2UntilSuccess());
+                break;
+
+            case TutorialStage.T5_Run3:
+                currentPatternType = PatternType_st2.Run3;
+                ShowInstruction("Run3 Pattern: Catch ALL THREE fish!", "Caught: 0/3");
+                autoPatternRoutine = StartCoroutine(RunRun3UntilSuccess());
+                break;
+
+            case TutorialStage.Complete:
+                ShowInstruction("Tutorial Complete!", "Starting main game...");
+                StartCoroutine(WaitThenStartMain());
+                break;
+        }
+    }
+
+    void ShowInstruction(string instruction, string progress)
+    {
+        if (instructionText != null) instructionText.text = instruction;
+        if (progressText != null) progressText.text = progress;
+    }
+
+    void UpdateProgress(string text)
+    {
+        if (progressText != null) progressText.text = text;
+    }
+
+    // =========================================================
+    // Stage 0: Telegraph Only (Shake only, no pop, no fish)
+    // =========================================================
+    IEnumerator AutoTelegraphOnly()
+    {
+        while (true)
+        {
+            int moldIndex = Random.Range(0, 3);
+            yield return StartCoroutine(PlayTelegraphOnly(moldIndex));
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    IEnumerator PlayTelegraphOnly(int moldIndex)
+    {
+        if (tutorialMolds[moldIndex] == null) yield break;
+
+        // 텔레그래프 사운드
+        if (telegraphSource != null && telegraphClip != null)
+        {
+            telegraphSource.PlayOneShot(telegraphClip);
+        }
+
+        // 달그락(흔들림) 비주얼
+        tutorialMolds[moldIndex].PlayTelegraphVisual();
+
+        OnTelegraphPlayed();
+        yield return null;
+    }
+
+    // =========================================================
+    // Stage 1: Pop Watch Only (spawn but catching disabled by Update gating)
+    // =========================================================
+    IEnumerator AutoPopWatchOnly()
+    {
+        while (true)
+        {
+            int moldIndex = Random.Range(0, 3);
+            yield return StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    // =========================================================
+    // Stage 2: Normal Catch
+    // =========================================================
+    IEnumerator AutoCatchNormal()
+    {
+        while (true)
+        {
+            int moldIndex = Random.Range(0, 3);
+            yield return StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
+            yield return new WaitForSeconds(manualPatternInterval);
+        }
+    }
+
+    // =========================================================
+    // Special: Sync2 (catch both)
+    // =========================================================
+    IEnumerator RunSync2UntilSuccess()
+    {
+        specialTargetCount = 2;
+
+        while (!specialStageCompleted && currentStage == TutorialStage.T4_Sync2)
+        {
+            // 새 시도 시작
+            specialCaughtCount = 0;
+            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
+
+            CleanupAllTutorialFish(); // 이전 시도 잔여 제거
+
+            // 큐
+            if (cueSource != null && sync2Cue != null)
+                cueSource.PlayOneShot(sync2Cue);
+
+            yield return new WaitForSeconds(0.35f);
+
+            // 2개 몰드 선택
+            int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
+            int[] selectedPair = pairs[Random.Range(0, 3)];
+
+            // 2개 동시 스폰
+            foreach (int moldIndex in selectedPair)
+                StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
+
+            // 제한 시간 안에 둘 다 잡으면 성공
+            float t = 0f;
+            while (t < specialAttemptTimeout && !specialStageCompleted && currentStage == TutorialStage.T4_Sync2)
+            {
+                if (specialCaughtCount >= specialTargetCount)
+                    break;
+
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            if (specialCaughtCount >= specialTargetCount)
+            {
+                hasSuccessSync2 = true;
+                CompleteStageWithMessage("Sync2 Complete!");
+                yield break;
+            }
+
+            // 실패 → 재시도
+            yield return new WaitForSeconds(specialRetryDelay);
+        }
+    }
+
+    // =========================================================
+    // Special: Run3 (catch all three)
+    // =========================================================
+    IEnumerator RunRun3UntilSuccess()
+    {
+        specialTargetCount = 3;
+
+        while (!specialStageCompleted && currentStage == TutorialStage.T5_Run3)
+        {
+            specialCaughtCount = 0;
+            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
+
+            CleanupAllTutorialFish();
+
+            // 큐
+            if (cueSource != null && run3Cue != null)
+                cueSource.PlayOneShot(run3Cue);
+
+            yield return new WaitForSeconds(0.35f);
+
+            // 3개 순차 스폰
+            for (int i = 0; i < 3; i++)
+            {
+                StartCoroutine(SpawnTelegraphToPopFish(i));
+                yield return new WaitForSeconds(runStepInterval);
+            }
+
+            float t = 0f;
+            while (t < specialAttemptTimeout && !specialStageCompleted && currentStage == TutorialStage.T5_Run3)
+            {
+                if (specialCaughtCount >= specialTargetCount)
+                    break;
+
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            if (specialCaughtCount >= specialTargetCount)
+            {
+                hasSuccessRun3 = true;
+                CompleteStageWithMessage("Run3 Complete!");
+                yield break;
+            }
+
+            yield return new WaitForSeconds(specialRetryDelay);
+        }
+    }
+
+    // =========================================================
+    // Common Spawn: Telegraph -> (Pop anim lead) -> Pop sound -> Spawn fish
+    // =========================================================
+    IEnumerator SpawnTelegraphToPopFish(int moldIndex)
+    {
+        if (tutorialMolds[moldIndex] == null) yield break;
+
+        // Telegraph 사운드 + 달그락
+        if (telegraphSource != null && telegraphClip != null)
+            telegraphSource.PlayOneShot(telegraphClip);
+
+        tutorialMolds[moldIndex].PlayTelegraphVisual();
+
+        // (T0에서만 카운트 올라가도록 OnTelegraphPlayed 내부에서 스테이지 체크)
+        OnTelegraphPlayed();
+
+        // Pop 애니가 퐁 소리보다 먼저 열리도록
+        float lead = Mathf.Max(0f, popAnimLeadSeconds);
+        float pre = Mathf.Max(0f, telegraphToPopDelay - lead);
+        yield return new WaitForSeconds(pre);
+
+        tutorialMolds[moldIndex].TriggerPopAnimation();
+
+        if (lead > 0f) yield return new WaitForSeconds(lead);
+
+        // Pop 사운드
+        if (popSource != null && popClip != null)
+            popSource.PlayOneShot(popClip);
+
+        // 스폰
+        double popTime = AudioSettings.dspTime;
+        tutorialMolds[moldIndex].SpawnFish(popTime);
+
+        OnPopPlayed();
+    }
+
+    // =========================================================
+    // Hand Input (catching)
+    // =========================================================
+    void ProcessHandInput(TutorialHandSensor_st2 sensor, OVRInput.Controller controller)
+    {
+        if (sensor == null) return;
+        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controller)) return;
+
+        var target = sensor.GetCurrentTarget();
+        if (target == null) return;
+
+        // ✅ 이미 잡힌 애만 중복 방지
+        if (target.isResolved) return;
+
+        double catchTime = AudioSettings.dspTime;
+        float delta = Mathf.Abs((float)(catchTime - target.popTime));
+
+        JudgeResult_st2 result;
+        if (delta <= perfectWindow) result = JudgeResult_st2.Perfect;
+        else if (delta <= goodWindow) result = JudgeResult_st2.Good;
+        else result = JudgeResult_st2.Miss;
+
+        if (result != JudgeResult_st2.Miss)
+        {
+            // ✅ 성공일 때만 resolved 처리
+            target.isResolved = true;
+
+            target.OnCaught();
+
+            // 손 스냅
+            target.transform.position = sensor.transform.position;
+            target.transform.SetParent(sensor.transform, true);
+
+            StartCoroutine(SnapHoldThenRelease(target));
+
+            OnCatchSuccess(result);
+        }
+        else
+        {
+            // Miss는 resolved 처리 안 함 (계속 떨어지거나 다시 시도 가능)
+            OnCatchMiss();
+        }
+    }
+
+    IEnumerator SnapHoldThenRelease(TutorialFishToken_st2 fish)
+    {
+        yield return new WaitForSeconds(snapHoldSeconds);
+
+        if (fish == null || fish.gameObject == null || !fish.gameObject.activeInHierarchy)
+            yield break;
+
+        fish.transform.SetParent(null, true);
+
+        if (fish.ownerMold != null)
+            fish.ownerMold.ReleaseFish(fish);
+    }
+
+    // =========================================================
+    // Progress Events
+    // =========================================================
+    void OnTelegraphPlayed()
+    {
+        if (currentStage == TutorialStage.T0_Telegraph)
+        {
+            telegraphCount++;
+            UpdateProgress($"Progress: {telegraphCount}/2");
+
+            if (telegraphCount >= 2)
+            {
+                CompleteStageWithMessage("Telegraph Stage Complete!");
+            }
+        }
+    }
+
+    void OnPopPlayed()
+    {
+        if (currentStage == TutorialStage.T1_Pop)
+        {
+            popCount++;
+            UpdateProgress($"Progress: {popCount}/2");
+
+            if (popCount >= 2)
+            {
+                CompleteStageWithMessage("Pop Watch Stage Complete!");
+            }
+        }
+    }
+
+    void OnCatchSuccess(JudgeResult_st2 result)
+    {
+        if (result != JudgeResult_st2.Perfect && result != JudgeResult_st2.Good)
+            return;
+
+        if (currentStage == TutorialStage.T2_Catch)
+        {
+            goodOrBetterCount++;
+            UpdateProgress($"Good+ Catches: {goodOrBetterCount}/2");
+
+            if (goodOrBetterCount >= 2)
+                CompleteStageWithMessage("Catch Stage Complete!");
+        }
+        else if (currentStage == TutorialStage.T4_Sync2 && currentPatternType == PatternType_st2.Sync2)
+        {
+            // ✅ 2개 모두 잡아야 성공
+            specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
+            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
+        }
+        else if (currentStage == TutorialStage.T5_Run3 && currentPatternType == PatternType_st2.Run3)
+        {
+            // ✅ 3개 모두 잡아야 성공
+            specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
+            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
+        }
+    }
+
+    void OnCatchMiss()
+    {
+        // 필요하면 여기서 Miss 카운트/피드백 추가 가능
+    }
+
+    // =========================================================
+    // Stage Completion Helper
+    // =========================================================
+    void CompleteStageWithMessage(string message)
+    {
+        if (specialStageCompleted) return; // 중복 방지
+        specialStageCompleted = true;
+
+        ShowStageComplete(message);
+
+        // 자동 루틴 중지
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        StartCoroutine(AdvanceStageDelayed());
+    }
+
+    void ShowStageComplete(string message)
+    {
+        if (!showStageCompleteMessage || stageCompleteText == null)
+            return;
+
+        stageCompleteText.text = message;
+        stageCompleteText.gameObject.SetActive(true);
+    }
+
+    void HideStageComplete()
+    {
+        if (stageCompleteText != null)
+            stageCompleteText.gameObject.SetActive(false);
+    }
+
+    IEnumerator AdvanceStageDelayed()
+    {
+        yield return new WaitForSeconds(stageTransitionDelay);
+        HideStageComplete();
+        AdvanceStage();
+    }
+
+    void AdvanceStage()
+    {
+        StartStage(currentStage + 1);
+    }
+
+    // =========================================================
+    // Debug HUD
+    // =========================================================
+    public string GetCurrentStageInfo()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.T0_Telegraph: return $"Telegraph {telegraphCount}/2";
+            case TutorialStage.T1_Pop: return $"Pop {popCount}/2";
+            case TutorialStage.T2_Catch: return $"Catch {goodOrBetterCount}/2";
+            case TutorialStage.T4_Sync2: return hasSuccessSync2 ? "Sync2 Done" : $"Sync2 {specialCaughtCount}/2";
+            case TutorialStage.T5_Run3: return hasSuccessRun3 ? "Run3 Done" : $"Run3 {specialCaughtCount}/3";
+            case TutorialStage.Complete: return "Complete";
+            case TutorialStage.WaitBeforeMain: return "Wait...";
+            default: return "Unknown";
+        }
+    }
+
+    // =========================================================
+    // Tutorial End / Cleanup
+    // =========================================================
+    IEnumerator WaitThenStartMain()
+    {
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
+
+        StopTutorialBGM();
+        CleanupAllTutorialFish();
+
+        yield return new WaitForSeconds(waitBeforeMainDuration);
+
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(false);
+
+        gameObject.SetActive(false);
+
+        GameFlowController_st2.Instance?.TransitionToPlaying();
+    }
+
+    void SkipTutorial()
+    {
+        StopAllCoroutines();
+
+        StopTutorialBGM();
+        CleanupAllTutorialFish();
+
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        if (tutorialCanvas != null)
+            tutorialCanvas.SetActive(false);
+
+        gameObject.SetActive(false);
+
+        GameFlowController_st2.Instance?.TransitionToPlaying();
+    }
+
+    void CleanupAllTutorialFish()
+    {
+        foreach (var mold in tutorialMolds)
+        {
+            if (mold != null)
+                mold.CleanupAllFish();
+        }
+
+        if (leftSensor != null) CleanupHandAttachedFish(leftSensor.transform);
+        if (rightSensor != null) CleanupHandAttachedFish(rightSensor.transform);
+    }
+
+    void CleanupHandAttachedFish(Transform handTransform)
+    {
+        var attachedFish = handTransform.GetComponentsInChildren<TutorialFishToken_st2>();
+        foreach (var fish in attachedFish)
+        {
+            if (fish != null && fish.gameObject != null && fish.gameObject.activeInHierarchy)
+            {
+                if (fish.ownerMold != null)
+                    fish.ownerMold.ReleaseFish(fish);
+            }
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: TutorialHandSensor_st2.cs (Assets/3_Stage2/Scripts/Tuto/TutorialHandSensor_st2.cs) ---
+using UnityEngine;
+
+/// <summary>
+/// 튜토리얼 전용 손 센서 - 메인 HandCatchSensor와 독립
+/// </summary>
+public class TutorialHandSensor_st2 : MonoBehaviour
+{
+    [Header("설정")]
+    public OVRInput.Controller handController;
+    public LayerMask fishLayer;
+    public float raycastLength = 0.15f;
+
+    [Header("LineRenderer")]
+    public LineRenderer lineRenderer;
+    public bool showLineRenderer = true;
+
+    [Header("라인 색상")]
+    public Color noTargetColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+    public Color hasTargetColor = new Color(0f, 1f, 0f, 0.8f);
+    public Color resolvedTargetColor = new Color(1f, 0f, 0f, 0.5f);
+
+    [Header("라인 스타일")]
+    public float lineWidth = 0.002f;
+
+    private TutorialFishToken_st2 currentTarget;
+    private RaycastHit[] hits = new RaycastHit[10];
+    private Transform cachedTransform;
+
+    void Awake()
+    {
+        cachedTransform = transform;
+        SetupLineRenderer();
+    }
+
+    public void Initialize(OVRInput.Controller controller)
+    {
+        handController = controller;
+
+        // Awake에서 이미 초기화되었지만 안전하게 재확인
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        SetupLineRenderer();
+    }
+
+    void SetupLineRenderer()
+    {
+        if (lineRenderer == null)
+        {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        }
+
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.positionCount = 2;
+        lineRenderer.useWorldSpace = true;
+
+        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
+        {
+            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+        }
+
+        lineRenderer.startColor = noTargetColor;
+        lineRenderer.endColor = noTargetColor;
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
+    }
+
+    void Update()
+    {
+        // ✅ Null 체크 추가
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        UpdateCurrentTarget();
+        UpdateLineRenderer();
+    }
+
+    void UpdateCurrentTarget()
+    {
+        // ✅ 안전 체크
+        if (cachedTransform == null) return;
+
+        Ray ray = new Ray(cachedTransform.position, cachedTransform.forward);
+        int hitCount = Physics.RaycastNonAlloc(ray, hits, raycastLength, fishLayer);
+
+        TutorialFishToken_st2 closestFish = null;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var fish = hits[i].collider.GetComponent<TutorialFishToken_st2>();
+            if (fish == null) continue;
+            if (fish.isResolved) continue;
+
+            float distance = hits[i].distance;
+
+            // 히스테리시스
+            if (currentTarget != null)
+            {
+                if (fish == currentTarget)
+                {
+                    closestFish = fish;
+                    break;
+                }
+
+                if (distance < closestDistance - 0.03f)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+            else
+            {
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestFish = fish;
+                }
+            }
+        }
+
+        currentTarget = closestFish;
+    }
+
+    void UpdateLineRenderer()
+    {
+        if (lineRenderer == null || !showLineRenderer)
+            return;
+
+        // ✅ 안전 체크
+        if (cachedTransform == null) return;
+
+        lineRenderer.enabled = true;
+
+        Vector3 startPos = cachedTransform.position;
+        Vector3 endPos = startPos + cachedTransform.forward * raycastLength;
+
+        if (currentTarget != null)
+        {
+            endPos = currentTarget.transform.position;
+        }
+
+        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(1, endPos);
+
+        Color lineColor = GetLineColor();
+        lineRenderer.startColor = lineColor;
+        lineRenderer.endColor = lineColor;
+    }
+
+    Color GetLineColor()
+    {
+        if (currentTarget == null)
+            return noTargetColor;
+        else if (currentTarget.isResolved)
+            return resolvedTargetColor;
+        else
+            return hasTargetColor;
+    }
+
+    public TutorialFishToken_st2 GetCurrentTarget()
+    {
+        return currentTarget;
+    }
+
+    public void SetLineRendererVisible(bool visible)
+    {
+        showLineRenderer = visible;
+        if (lineRenderer != null)
+            lineRenderer.enabled = visible;
+    }
+
+    // ✅ 추가: 튜토리얼 종료 시 정리
+    void OnDisable()
+    {
+        currentTarget = null;
+
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = false;
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialManager_st2.cs (Assets/3_Stage2/Scripts/Tuto/TutorialManager_st2.cs) ---
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using static GameState_st2;
+
+public class TutorialManager_st2 : MonoBehaviour
+{
+    public enum TutorialStage
+    {
+        Telegraph,
+        Pop,
+        Catch,
+        BagSwap,
+        Sync2Pattern,
+        Run3Pattern,
+        Complete
+    }
+
+    [Header("현재 상태")]
+    public TutorialStage currentStage = TutorialStage.Telegraph;
+
+    private int telegraphCount = 0;
+    private int popCount = 0;
+    private int goodOrBetterCount = 0; // ✅ 수정: Good 이상만 카운트
+    private bool hasSeenBagSwap = false;
+    private bool hasSuccessSync2 = false;
+    private bool hasSuccessRun3 = false;
+
+    [Header("UI")]
+    public TextMeshProUGUI instructionText;
+    public TextMeshProUGUI progressText;
+    public TextMeshProUGUI skipText;
+
+    private PatternType_st2 currentPatternType;
+
+    void Start()
+    {
+        skipText.text = "[Press A to Skip]";
+        ShowStageInstruction(currentStage);
+    }
+
+    void Update()
+    {
+        if (GameFlowController_st2.Instance.CurrentState != GameStatest2.Tutorial) return;
+
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            SkipTutorial();
+            return;
+        }
+
+        CheckStageProgress();
+    }
+
+    void CheckStageProgress()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.Telegraph:
+                if (telegraphCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Pop:
+                if (popCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Catch:
+                // ✅ 수정: Good 이상 2회 요구
+                if (goodOrBetterCount >= 2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.BagSwap:
+                if (hasSeenBagSwap)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Sync2Pattern:
+                if (hasSuccessSync2)
+                    AdvanceToNextStage();
+                break;
+
+            case TutorialStage.Run3Pattern:
+                if (hasSuccessRun3)
+                    AdvanceToNextStage();
+                break;
+        }
+    }
+
+    void AdvanceToNextStage()
+    {
+        currentStage++;
+
+        if (currentStage == TutorialStage.Complete)
+        {
+            CompleteTutorial();
+        }
+        else
+        {
+            ShowStageInstruction(currentStage);
+        }
+    }
+
+    void ShowStageInstruction(TutorialStage stage)
+    {
+        switch (stage)
+        {
+            case TutorialStage.Telegraph:
+                instructionText.text = "Listen to the 'Telegraph' sound!";
+                progressText.text = $"Progress: {telegraphCount}/2";
+                break;
+
+            case TutorialStage.Pop:
+                instructionText.text = "Watch the fish 'Pop' out!";
+                progressText.text = $"Progress: {popCount}/2";
+                break;
+
+            case TutorialStage.Catch:
+                // ✅ 수정: Good 이상 2회 요구 안내
+                instructionText.text = "Catch fish with Good or Perfect!";
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
+                break;
+
+            case TutorialStage.BagSwap:
+                instructionText.text = "Collect 3 fish to swap bag!";
+                progressText.text = $"Catches needed for swap";
+                break;
+
+            case TutorialStage.Sync2Pattern:
+                instructionText.text = "Try Sync2 pattern! (땡땡)";
+                progressText.text = "Catch at least 1!";
+                break;
+
+            case TutorialStage.Run3Pattern:
+                instructionText.text = "Try Run3 pattern! (딸랑)";
+                progressText.text = "Catch at least 1!";
+                break;
+        }
+    }
+
+    public void OnTelegraphPlayed()
+    {
+        if (currentStage == TutorialStage.Telegraph)
+        {
+            telegraphCount++;
+            progressText.text = $"Progress: {telegraphCount}/2";
+        }
+    }
+
+    public void OnPopPlayed()
+    {
+        if (currentStage == TutorialStage.Pop)
+        {
+            popCount++;
+            progressText.text = $"Progress: {popCount}/2";
+        }
+    }
+
+    public void OnCatchSuccess(JudgeResult_st2 result)
+    {
+        // ✅ 수정: Good 이상만 처리
+        if (result == JudgeResult_st2.Perfect || result == JudgeResult_st2.Good)
+        {
+            if (currentStage == TutorialStage.Catch)
+            {
+                goodOrBetterCount++;
+                progressText.text = $"Good+ Catches: {goodOrBetterCount}/2";
+            }
+            else if (currentStage == TutorialStage.BagSwap)
+            {
+                // BagSwap은 OnBagSwapped 이벤트로 처리
+            }
+            else if (currentStage == TutorialStage.Sync2Pattern && currentPatternType == PatternType_st2.Sync2)
+            {
+                hasSuccessSync2 = true;
+                progressText.text = "Sync2 Success!";
+            }
+            else if (currentStage == TutorialStage.Run3Pattern && currentPatternType == PatternType_st2.Run3)
+            {
+                hasSuccessRun3 = true;
+                progressText.text = "Run3 Success!";
+            }
+        }
+    }
+
+    public void OnBagSwapped()
+    {
+        if (currentStage == TutorialStage.BagSwap)
+        {
+            hasSeenBagSwap = true;
+            progressText.text = "Bag Swapped!";
+        }
+    }
+
+    public void OnPatternQueued(PatternType_st2 type)
+    {
+        currentPatternType = type;
+    }
+
+    void SkipTutorial()
+    {
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        GameFlowController_st2.Instance.TransitionToPlaying();
+    }
+
+    void CompleteTutorial()
+    {
+        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        PlayerPrefs.Save();
+
+        GameFlowController_st2.Instance.TransitionToPlaying();
+    }
+
+    // ✅ 추가: HUD에서 현재 진행 상황 문자열로 제공
+    public string GetCurrentStageInfo()
+    {
+        switch (currentStage)
+        {
+            case TutorialStage.Telegraph:
+                return $"Telegraph {telegraphCount}/2";
+            case TutorialStage.Pop:
+                return $"Pop {popCount}/2";
+            case TutorialStage.Catch:
+                return $"Catch {goodOrBetterCount}/2";
+            case TutorialStage.BagSwap:
+                return "BagSwap Wait";
+            case TutorialStage.Sync2Pattern:
+                return hasSuccessSync2 ? "Sync2 Done" : "Sync2 Try";
+            case TutorialStage.Run3Pattern:
+                return hasSuccessRun3 ? "Run3 Done" : "Run3 Try";
+            case TutorialStage.Complete:
+                return "Complete";
+            default:
+                return "Unknown";
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: TutorialMoldController_st2.cs (Assets/3_Stage2/Scripts/Tuto/TutorialMoldController_st2.cs) ---
+// ===============================
+// TutorialMoldController_st2.cs
+// (달그락 비주얼 + Pop 애니 트리거 분리 / SpawnFish에서는 애니 제거)
+// ===============================
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Pool;
+
+public class TutorialMoldController_st2 : MonoBehaviour
+{
+    [Header("프리팹")]
+    public GameObject tutorialFishPrefab;
+
+    [Header("애니메이션")]
+    public Animator moldAnimator;
+    public string popAnimationTrigger = "Pop";
+    public float popAnimationLeadTime = 0.25f; // ✅ 퐁 소리보다 먼저 열리는 리드타임(기본 0.25)
+
+    [Header("달그락 애니메이션 (코드 흔들림)")]
+    public bool useTelegraphShake = true;
+    public float shakeIntensity = 0.02f;
+    public float shakeDuration = 0.3f;
+    public int shakeCount = 8;
+
+    [Header("점프 설정")]
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
+
+    [Header("VFX (Pop / 퐁)")]
+    public GameObject popVfxPrefab;
+    public Transform popVfxAnchor;
+    public Vector3 popVfxLocalOffset = Vector3.zero;
+    public Vector3 popVfxLocalEuler = Vector3.zero;
+    public float popVfxAutoDestroySeconds = 2.0f;
+
+    private ObjectPool<TutorialFishToken_st2> fishPool;
+    private readonly List<TutorialFishToken_st2> activeFish = new List<TutorialFishToken_st2>();
+
+    public event Action OnTelegraphVisualPlayed;
+
+    private Vector3 originalMoldPosition;
+    private Coroutine shakeRoutine;
+
+    void Awake()
+    {
+        originalMoldPosition = transform.localPosition;
+        InitializePool();
+    }
+
+    void InitializePool()
+    {
+        fishPool = new ObjectPool<TutorialFishToken_st2>(
+            createFunc: () =>
+            {
+                var obj = Instantiate(tutorialFishPrefab, transform);
+                var fish = obj.GetComponent<TutorialFishToken_st2>();
+                if (fish == null) fish = obj.AddComponent<TutorialFishToken_st2>();
+                return fish;
+            },
+            actionOnGet: (fish) =>
+            {
+                fish.gameObject.SetActive(true);
+            },
+            actionOnRelease: (fish) =>
+            {
+                fish.OnReturnToPool();
+                fish.transform.SetParent(transform);
+                fish.transform.localPosition = Vector3.zero;
+                fish.transform.localRotation = Quaternion.identity;
+                fish.transform.localScale = Vector3.one;
+                fish.gameObject.SetActive(false);
+                activeFish.Remove(fish);
+            },
+            actionOnDestroy: (fish) =>
+            {
+                if (fish != null && fish.gameObject != null)
+                    Destroy(fish.gameObject);
+            },
+            defaultCapacity: 5
+        );
+    }
+
+    // ✅ 컨트롤러가 사운드 재생한 직후 호출 (달그락 비주얼)
+    public void PlayTelegraphVisual()
+    {
+        if (!useTelegraphShake) return;
+
+        if (shakeRoutine != null) StopCoroutine(shakeRoutine);
+        shakeRoutine = StartCoroutine(ShakeMold());
+
+        OnTelegraphVisualPlayed?.Invoke();
+    }
+
+    // ✅ Pop 애니메이션 트리거를 SpawnFish와 분리 (소리보다 먼저 열기 위해)
+    public void TriggerPopAnimation()
+    {
+        if (moldAnimator != null)
+            moldAnimator.SetTrigger(popAnimationTrigger);
+    }
+
+    IEnumerator ShakeMold()
+    {
+        int currentShake = 0;
+        float shakeInterval = shakeDuration / Mathf.Max(1, shakeCount);
+
+        while (currentShake < shakeCount)
+        {
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
+                0f,
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
+            );
+
+            transform.localPosition = originalMoldPosition + randomOffset;
+
+            float elapsed = 0f;
+            while (elapsed < shakeInterval)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            currentShake++;
+        }
+
+        transform.localPosition = originalMoldPosition;
+        shakeRoutine = null;
+    }
+
+    // ✅ SpawnFish에서는 Pop 애니메이션을 트리거하지 않음 (컨트롤러가 리드타임 제어)
+    public void SpawnFish(double popTime)
+    {
+        // ✅ 퐁 이펙트
+        SpawnPopVfx();
+
+        // Fish 생성
+        var fish = fishPool.Get();
+        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
+        activeFish.Add(fish);
+    }
+
+    void SpawnPopVfx()
+    {
+        if (popVfxPrefab == null) return;
+
+        Transform a = popVfxAnchor != null ? popVfxAnchor : transform;
+        Vector3 pos = a.TransformPoint(popVfxLocalOffset);
+        Quaternion rot = a.rotation * Quaternion.Euler(popVfxLocalEuler);
+        var vfx = Instantiate(popVfxPrefab, pos, rot);
+        AutoDestroyVfx(vfx, popVfxAutoDestroySeconds);
+    }
+
+    static void AutoDestroyVfx(GameObject vfxRoot, float fallbackSeconds)
+    {
+        if (vfxRoot == null) return;
+
+        var ps = vfxRoot.GetComponentInChildren<ParticleSystem>(true);
+        if (ps != null)
+        {
+            var main = ps.main;
+            float lifeMax = 0f;
+
+            var sl = main.startLifetime;
+            if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
+            else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
+            else lifeMax = sl.constantMax;
+
+            float total = Mathf.Max(0.1f, main.duration + lifeMax);
+            UnityEngine.Object.Destroy(vfxRoot, total);
+            return;
+        }
+
+        UnityEngine.Object.Destroy(vfxRoot, Mathf.Max(0.1f, fallbackSeconds));
+    }
+
+    public void ReleaseFish(TutorialFishToken_st2 fish)
+    {
+        if (fish != null)
+            fishPool.Release(fish);
+    }
+
+    void Update()
+    {
+        for (int i = activeFish.Count - 1; i >= 0; i--)
+        {
+            if (activeFish[i] != null && !activeFish[i].isResolved)
+                activeFish[i].UpdateMovement();
+        }
+    }
+
+    void OnDisable()
+    {
+        CleanupAllFish();
+        transform.localPosition = originalMoldPosition;
+
+        if (shakeRoutine != null) StopCoroutine(shakeRoutine);
+        shakeRoutine = null;
+    }
+
+    public void CleanupAllFish()
+    {
+        foreach (var fish in activeFish.ToArray())
+        {
+            if (fish != null)
+                fishPool.Release(fish);
+        }
+        activeFish.Clear();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: DebugHUD_st2.cs (Assets/3_Stage2/Scripts/UI/DebugHUD_st2.cs) ---
+using UnityEngine;
+using static GameState_st2;
+
+public class DebugHUD_st2 : MonoBehaviour
+{
+    [Header("설정")]
+    public bool alwaysOn = true;
+    public KeyCode toggleKey = KeyCode.F1;
+
+    [Header("참조")]
+    public GameFlowController_st2 gameFlow;
+    public JudgeSystem_st2 judgeSystem;
+    public EconomySystem_st2 economySystem;
+    public HandCatchSensor_st2 leftSensor;
+    public HandCatchSensor_st2 rightSensor;
+    public CatchInput_st2 leftInput;
+    public CatchInput_st2 rightInput;
+    public MoldController_st2[] molds;
+
+    [Header("튜토리얼 (옵션)")]
+    public StandaloneTutorialController_st2 tutorialController; // ✅ 추가
+
+    private bool isVisible = true;
+
+    void Start()
+    {
+        if (alwaysOn)
+        {
+            Debug.Log($"[HUD] judgeSystem={judgeSystem?.name} id={judgeSystem?.GetInstanceID()}");
+            Debug.Log($"[HUD] economySystem={economySystem?.name} id={economySystem?.GetInstanceID()}");
+            isVisible = true;
+        }
+    }
+
+    void Update()
+    {
+        if (!alwaysOn && Input.GetKeyDown(toggleKey))
+        {
+            isVisible = !isVisible;
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!isVisible) return;
+
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        labelStyle.fontSize = 16;
+        labelStyle.normal.textColor = Color.white;
+        labelStyle.padding = new RectOffset(5, 5, 2, 2);
+
+        GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+        boxStyle.normal.background = MakeTex(2, 2, new Color(0, 0, 0, 0.7f));
+
+        float x = 10;
+        float y = 10;
+        float width = 350;
+        float lineHeight = 22;
+
+        GUI.Box(new Rect(x, y, width, 280), "", boxStyle);
+
+        y += 10;
+
+        // === 게임 상태 ===
+        GUI.Label(new Rect(x, y, width, lineHeight),
+            $"<b>STATE:</b> {gameFlow.CurrentState}", labelStyle);
+        y += lineHeight;
+
+        // ✅ 튜토리얼 진행도 (Tutorial 모드일 때만)
+        if (gameFlow.CurrentState == GameStatest2.Tutorial && tutorialController != null)
+        {
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Tutorial:</b> {tutorialController.GetCurrentStageInfo()}", labelStyle);
+            y += lineHeight;
+        }
+
+        // ✅ 메인 게임 정보는 Playing 상태일 때만 표시
+        if (gameFlow.CurrentState == GameStatest2.Playing)
+        {
+            // === 누적 카운트 ===
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Perfect:</b> {judgeSystem.perfectCount}  <b>Good:</b> {judgeSystem.goodCount}  <b>Miss:</b> {judgeSystem.missCount}",
+                labelStyle);
+            y += lineHeight;
+
+            // === 마지막 판정 + 손 ===
+            string lastJudge = "None";
+            string lastHand = "-";
+
+            if (leftInput != null && leftInput.lastJudgeResult != JudgeResult_st2.Miss)
+            {
+                lastJudge = leftInput.lastJudgeResult.ToString();
+                lastHand = leftInput.lastHandName;
+            }
+            else if (rightInput != null && rightInput.lastJudgeResult != JudgeResult_st2.Miss)
+            {
+                lastJudge = rightInput.lastJudgeResult.ToString();
+                lastHand = rightInput.lastHandName;
+            }
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Last Judge:</b> {lastJudge} ({lastHand})", labelStyle);
+            y += lineHeight;
+
+            // === 일급 ===
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Wage:</b> {economySystem.currentWage:N0}원", labelStyle);
+            y += lineHeight;
+
+            // === 타겟 여부 ===
+            bool leftHasTarget = leftSensor != null && leftSensor.currentTarget != null;
+            bool rightHasTarget = rightSensor != null && rightSensor.currentTarget != null;
+
+            string leftStatus = leftHasTarget ? "TARGET" : "-";
+            string rightStatus = rightHasTarget ? "TARGET" : "-";
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>L Hand:</b> {leftStatus}  <b>R Hand:</b> {rightStatus}", labelStyle);
+            y += lineHeight;
+
+            // === ActiveFish 수 ===
+            int totalActiveFish = 0;
+            if (molds != null)
+            {
+                foreach (var mold in molds)
+                {
+                    if (mold != null)
+                    {
+                        totalActiveFish += mold.GetActiveFishCount();
+                    }
+                }
+            }
+
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"<b>Active Fish:</b> {totalActiveFish}", labelStyle);
+            y += lineHeight;
+
+            // === 시간 정보 ===
+            if (gameFlow.bgmSource != null)
+            {
+                float currentTime = gameFlow.bgmSource.time;
+                float totalTime = gameFlow.bgmSource.clip != null ? gameFlow.bgmSource.clip.length : 0;
+
+                int currMin = (int)(currentTime / 60);
+                int currSec = (int)(currentTime % 60);
+                int totalMin = (int)(totalTime / 60);
+                int totalSec = (int)(totalTime % 60);
+
+                GUI.Label(new Rect(x, y, width, lineHeight),
+                    $"<b>Time:</b> {currMin:00}:{currSec:00} / {totalMin:00}:{totalSec:00}", labelStyle);
+                y += lineHeight;
+            }
+        }
+
+        // === 토글 안내 ===
+        if (!alwaysOn)
+        {
+            y += 10;
+            GUI.Label(new Rect(x, y, width, lineHeight),
+                $"[{toggleKey}] Toggle HUD", labelStyle);
+        }
+    }
+
+    private Texture2D MakeTex(int width, int height, Color col)
+    {
+        Color[] pix = new Color[width * height];
+        for (int i = 0; i < pix.Length; i++)
+        {
+            pix[i] = col;
+        }
+
+        Texture2D result = new Texture2D(width, height);
+        result.SetPixels(pix);
+        result.Apply();
+        return result;
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: GoraniDanceSpeedController_st2.cs (Assets/3_Stage2/Scripts/UI/GoraniDanceSpeedController_st2.cs) ---
+using System.Collections.Generic;
+using UnityEngine;
+using static GameState_st2;
+
+public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private Stage2EventHub_st2 hub;
+    [SerializeField] private Transform goraniRoot;
+    [SerializeField] private Animator[] goraniAnimators;
+
+    [Header("Speed Range")]
+    [SerializeField, Range(0f, 20f)] private float minSpeed = 0.4f;
+    [SerializeField, Range(0f, 20f)] private float maxSpeed = 20.0f;
+    [SerializeField, Range(0f, 20f)] private float startSpeed = 1.0f;
+
+    [Header("Smoothing")]
+    [SerializeField, Range(0f, 30f)] private float smooth = 8f;
+
+    [Header("Success Gain (Add only)")]
+    [SerializeField] private float goodBaseGain = 0.18f;
+    [SerializeField] private float perfectBaseGain = 0.28f;
+
+    [Tooltip("연속 성공 가중치(선형 더하기). 예: 3연속이면 base + bonus*(3-1)")]
+    [SerializeField] private float goodStreakBonus = 0.07f;
+    [SerializeField] private float perfectStreakBonus = 0.10f;
+
+    [Header("Miss Penalty (Add only)")]
+    [SerializeField] private float missBaseLoss = 0.22f;
+
+    [Tooltip("연속 미스 가중치(선형 더하기). 예: 4연속이면 base + bonus*(4-1)")]
+    [SerializeField] private float missStreakBonus = 0.12f;
+
+    [Header("Miss Source")]
+    [Tooltip("GroundMiss/Timeout도 미스로 속도 하락에 반영할지")]
+    [SerializeField] private bool countGroundMissAsMiss = true;
+
+    [Tooltip("성공한 fish는 이 시간 동안 GroundMiss/Timeout로 미스 처리하지 않음(중복 방지 핵심)")]
+    [SerializeField] private float ignoreGroundMissAfterSuccessSeconds = 10f;
+
+    [Header("Duplicate Guard")]
+    [SerializeField] private float judgedCacheSeconds = 0.8f;
+
+    [Header("Apply")]
+    [Tooltip("다른 스크립트가 speed=1 덮어써도 이기려면 TRUE")]
+    [SerializeField] private bool forceApplyInLateUpdate = true;
+
+    [Header("Debug (Read Only)")]
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private float targetSpeed;
+    [SerializeField] private int successStreak;
+    [SerializeField] private int missStreak;
+    [SerializeField] private int animatorCount;
+
+    // fish id -> last judge time(중복 방지)
+    private readonly Dictionary<int, float> _recentJudged = new();
+    // fish id -> last success time(성공 후 GroundMiss 무시)
+    private readonly Dictionary<int, float> _recentSuccess = new();
+    private readonly List<int> _removeKeys = new();
+
+    private void Reset()
+    {
+        if (!hub) hub = GetComponent<Stage2EventHub_st2>();
+        AutoCollectAnimators();
+    }
+
+    private void Awake()
+    {
+        if (!hub) hub = GetComponent<Stage2EventHub_st2>();
+        AutoCollectAnimators();
+
+        currentSpeed = ClampSpeed(startSpeed);
+        targetSpeed = currentSpeed;
+        ApplySpeed(currentSpeed);
+    }
+
+    private void OnEnable()
+    {
+        if (hub == null) return;
+        hub.JudgeResolved += OnJudgeResolved;
+        hub.FishConsumeRequested += OnFishConsumeRequested;
+    }
+
+    private void OnDisable()
+    {
+        if (hub == null) return;
+        hub.JudgeResolved -= OnJudgeResolved;
+        hub.FishConsumeRequested -= OnFishConsumeRequested;
+    }
+
+    private void Update()
+    {
+        CleanupDict(_recentJudged, judgedCacheSeconds);
+        CleanupDict(_recentSuccess, ignoreGroundMissAfterSuccessSeconds);
+
+        // ✅ 속도는 targetSpeed가 “유지”되고, currentSpeed가 부드럽게 따라감
+        float k = 1f - Mathf.Exp(-smooth * Time.deltaTime);
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, k);
+
+        if (!forceApplyInLateUpdate)
+            ApplySpeed(currentSpeed);
+
+        animatorCount = (goraniAnimators == null) ? 0 : goraniAnimators.Length;
+    }
+
+    private void LateUpdate()
+    {
+        if (forceApplyInLateUpdate)
+            ApplySpeed(currentSpeed);
+    }
+
+    private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
+    {
+        MarkRecent(_recentJudged, fish);
+
+        if (result == JudgeResult_st2.Perfect)
+        {
+            MarkRecent(_recentSuccess, fish);
+            ApplySuccess(isPerfect: true);
+        }
+        else if (result == JudgeResult_st2.Good)
+        {
+            MarkRecent(_recentSuccess, fish);
+            ApplySuccess(isPerfect: false);
+        }
+        else if (result == JudgeResult_st2.Miss)
+        {
+            ApplyMiss();
+        }
+    }
+
+    private void OnFishConsumeRequested(FishCatchToken_st2 fish, FishConsumeReason_st2 reason)
+    {
+        if (!countGroundMissAsMiss) return;
+
+        if (reason != FishConsumeReason_st2.GroundMiss &&
+            reason != FishConsumeReason_st2.Timeout)
+            return;
+
+        // ✅ 방금 성공한 fish면 GroundMiss/Timeout은 무시
+        if (IsRecent(_recentSuccess, fish, ignoreGroundMissAfterSuccessSeconds))
+            return;
+
+        // ✅ JudgeResolved(Miss)와 겹치는 케이스 방지
+        if (IsRecent(_recentJudged, fish, judgedCacheSeconds))
+            return;
+
+        ApplyMiss();
+    }
+
+    // =========================
+    // ✅ Add-only 핵심 로직
+    // =========================
+    private void ApplySuccess(bool isPerfect)
+    {
+        successStreak++;
+        missStreak = 0;
+
+        int s = Mathf.Max(1, successStreak);
+        float baseGain = isPerfect ? perfectBaseGain : goodBaseGain;
+        float bonus = isPerfect ? perfectStreakBonus : goodStreakBonus;
+
+        // ✅ 선형 더하기: base + bonus*(streak-1)
+        float gain = baseGain + bonus * (s - 1);
+
+        targetSpeed = ClampSpeed(targetSpeed + gain);
+    }
+
+    private void ApplyMiss()
+    {
+        missStreak++;
+        successStreak = 0;
+
+        int m = Mathf.Max(1, missStreak);
+
+        // ✅ 선형 더하기: base + bonus*(streak-1)
+        float loss = missBaseLoss + missStreakBonus * (m - 1);
+
+        targetSpeed = ClampSpeed(targetSpeed - loss);
+    }
+
+    private float ClampSpeed(float s)
+    {
+        s = Mathf.Max(0f, s);
+        return Mathf.Clamp(s, minSpeed, maxSpeed);
+    }
+
+    private void AutoCollectAnimators()
+    {
+        if (goraniAnimators != null && goraniAnimators.Length > 0) return;
+        if (goraniRoot == null) return;
+
+        goraniAnimators = goraniRoot.GetComponentsInChildren<Animator>(true);
+    }
+
+    private void ApplySpeed(float speed)
+    {
+        if (goraniAnimators == null || goraniAnimators.Length == 0) return;
+
+        float clamped = ClampSpeed(speed);
+        for (int i = 0; i < goraniAnimators.Length; i++)
+        {
+            var a = goraniAnimators[i];
+            if (!a) continue;
+
+            // ✅ 너가 준 예시처럼 Animator.speed 직접 세팅
+            a.speed = clamped;
+        }
+    }
+
+    private static void MarkRecent(Dictionary<int, float> dict, FishCatchToken_st2 fish)
+    {
+        if (!fish) return;
+        dict[fish.GetInstanceID()] = Time.time;
+    }
+
+    private static bool IsRecent(Dictionary<int, float> dict, FishCatchToken_st2 fish, float window)
+    {
+        if (!fish) return false;
+        int id = fish.GetInstanceID();
+        return dict.TryGetValue(id, out float t) && (Time.time - t) <= window;
+    }
+
+    private void CleanupDict(Dictionary<int, float> dict, float window)
+    {
+        if (dict.Count == 0) return;
+
+        float now = Time.time;
+        _removeKeys.Clear();
+
+        foreach (var kv in dict)
+        {
+            if (now - kv.Value > window)
+                _removeKeys.Add(kv.Key);
+        }
+
+        for (int i = 0; i < _removeKeys.Count; i++)
+            dict.Remove(_removeKeys[i]);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: MenuMonitorUI_st2.cs (Assets/3_Stage2/Scripts/UI/MenuMonitorUI_st2.cs) ---
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using static GameState_st2;
+using UnityEngine.Pool;
+using System;
+
+public class MenuMonitorUI_st2 : MonoBehaviour
+{
+    [Header("UI 요소")]
+    public TextMeshProUGUI wageText;
+    public TextMeshProUGUI stateText;
+    public TextMeshProUGUI nextPatternText;
+    public TextMeshProUGUI judgeFeedbackText;
+    public TextMeshProUGUI bagCountText;
+    public TextMeshProUGUI bagSwapText;
+    public TextMeshProUGUI songTimeText;
+    public TextMeshProUGUI filledBagsText;
+
+    private Coroutine judgeFeedbackCoroutine;
+    private Coroutine bagSwapCoroutine;
+
+    public void Initialize(
+        EconomySystem_st2 economy,
+        BagManager_st2 bag,
+        PatternDirector_st2 pattern,
+        JudgeSystem_st2 judge)
+    {
+        economy.OnWageChanged += UpdateWage;
+        bag.OnBagSwapped += ShowBagSwap;
+        bag.OnItemAdded += UpdateBagCount;
+        pattern.OnPatternQueued += UpdateNextPattern;
+        judge.OnJudgeResult += ShowJudgeFeedback;
+    }
+
+    void UpdateWage(int wage)
+    {
+        if (wageText != null)
+            wageText.text = $"오늘 일급: {wage:N0}원";
+    }
+
+    void UpdateNextPattern(PatternType_st2 type)
+    {
+        if (nextPatternText == null) return;
+
+        string patternName = type switch
+        {
+            PatternType_st2.Normal => "NORMAL",
+            PatternType_st2.Sync2 => "SYNC2 (띠링)",
+            PatternType_st2.Run3 => "RUN3 (딸랑)",
+            _ => "NORMAL"
+        };
+
+        nextPatternText.text = $"NEXT: {patternName}";
+    }
+
+    void ShowJudgeFeedback(JudgeResult_st2 result, float delta)
+    {
+        if (judgeFeedbackText == null) return;
+
+        string text = result switch
+        {
+            JudgeResult_st2.Perfect => "+100",
+            JudgeResult_st2.Good => "+0",
+            JudgeResult_st2.Miss => "MISS",
+            _ => ""
+        };
+
+        if (judgeFeedbackCoroutine != null)
+            StopCoroutine(judgeFeedbackCoroutine);
+
+        judgeFeedbackCoroutine = StartCoroutine(ShowTemporaryText(judgeFeedbackText, text, 0.4f));
+    }
+
+    void UpdateBagCount(int count)
+    {
+        if (bagCountText != null)
+            bagCountText.text = $"BAG: {count} / 3";
+    }
+
+    void ShowBagSwap()
+    {
+        if (bagSwapText == null) return;
+
+        if (bagSwapCoroutine != null)
+            StopCoroutine(bagSwapCoroutine);
+
+        bagSwapCoroutine = StartCoroutine(ShowTemporaryText(bagSwapText, "BAG SWAP!", 0.6f));
+    }
+
+    public void UpdateSongTime(float current, float total)
+    {
+        if (songTimeText == null) return;
+
+        int currMin = (int)(current / 60);
+        int currSec = (int)(current % 60);
+        int totalMin = (int)(total / 60);
+        int totalSec = (int)(total % 60);
+
+        songTimeText.text = $"SONG: {currMin:00}:{currSec:00} / {totalMin:00}:{totalSec:00}";
+    }
+
+    public void UpdateFilledBags(int count)
+    {
+        if (filledBagsText != null)
+            filledBagsText.text = $"FILLED BAGS: {count}";
+    }
+
+    // ✅ 수정: 정상 구현으로 교체
+    public void UpdateState(GameStatest2 currentState)
+    {
+        if (stateText == null) return;
+
+        string stateName = currentState switch
+        {
+            GameStatest2.MainMenu => "MAIN MENU",
+            GameStatest2.Tutorial => "TUTORIAL",
+            GameStatest2.Playing => "PLAYING",
+            GameStatest2.Paused => "PAUSED",
+            GameStatest2.Result => "RESULT",
+            _ => "UNKNOWN"
+        };
+
+        stateText.text = $"STATE: {stateName}";
+    }
+
+    IEnumerator ShowTemporaryText(TextMeshProUGUI textElement, string message, float duration)
+    {
+        textElement.text = message;
+        textElement.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(duration);
+
+        textElement.gameObject.SetActive(false);
+    }
+}
+
+--------------------------------------------------
+
