@@ -26,6 +26,8 @@ public class DebugHUD_st2 : MonoBehaviour
     {
         if (alwaysOn)
         {
+            Debug.Log($"[HUD] judgeSystem={judgeSystem?.name} id={judgeSystem?.GetInstanceID()}");
+            Debug.Log($"[HUD] economySystem={economySystem?.name} id={economySystem?.GetInstanceID()}");
             isVisible = true;
         }
     }

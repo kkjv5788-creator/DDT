@@ -43,7 +43,7 @@ public class MainInstaller_st2 : MonoBehaviour
             groundMissReporter = FindObjectOfType<GroundMissReporter_st2>(true);
 
         if (groundMissReporter != null)
-            groundMissReporter.Construct(hub, judgeSystem);
+            groundMissReporter.Construct(hub);
         else
             Debug.LogWarning("[MainInstaller_st2] GroundMissReporter_st2 not found. Fish won't despawn on ground.");
     }

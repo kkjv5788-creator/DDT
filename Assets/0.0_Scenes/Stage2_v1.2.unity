@@ -386,7 +386,7 @@ MonoBehaviour:
   popSource: {fileID: 55775285}
   cueSource: {fileID: 55775284}
   telegraphClip: {fileID: 8300000, guid: 16dfeb62544291d4aadd8432ebb61c78, type: 3}
-  popClip: {fileID: 8300000, guid: 19a7f60544395b94395bd6819adbe39d, type: 3}
+  popClip: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
   sync2Cue: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
   run3Cue: {fileID: 8300000, guid: da9da6c6d94bb6b48acb7dd8f0784f6e, type: 3}
   tutorialBGMSource: {fileID: 749518925}
@@ -402,6 +402,8 @@ MonoBehaviour:
   goodWindow: 1.3
   snapHoldSeconds: 0.2
   popAnimLeadSeconds: 0.25
+  specialAttemptTimeout: 3
+  specialRetryDelay: 0.5
 --- !u!82 &55775284
 AudioSource:
   m_ObjectHideFlags: 0
@@ -949,6 +951,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
+      propertyPath: popClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
       propertyPath: moldAnimator
       value: 
@@ -1824,6 +1830,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
+      propertyPath: popClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
       propertyPath: moldAnimator
       value: 
@@ -3206,6 +3216,8 @@ MonoBehaviour:
   perfectHalfWindow: 1.5
   goodHalfWindow: 2.9
   fishCatchableDuration: 3
+  consumeOnTimeout: 0
+  hub: {fileID: 903122778}
   perfectCount: 0
   goodCount: 0
   missCount: 0
@@ -3330,6 +3342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hub: {fileID: 903122778}
+  judge: {fileID: 873462218}
   economy: {fileID: 1475210783}
 --- !u!114 &903122784
 MonoBehaviour:
@@ -4183,11 +4196,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hub: {fileID: 903122778}
-  judge: {fileID: 873462218}
   fishLayer:
     serializedVersion: 2
     m_Bits: 4096
-  avoidDoubleResolve: 1
   duplicateCooldown: 0.15
 --- !u!1001 &1153509168
 PrefabInstance:
@@ -5079,6 +5090,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FishShapeBun_Mold (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
+      propertyPath: popClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
       propertyPath: moldAnimator
       value: 
@@ -6086,8 +6101,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseWage: 10000
   perfectBonus: 1000
+  goodBonus: 500
   missPenalty: 1000
-  maxWage: 50000
+  penalizeOnMiss: 0
+  maxWage: 100000
   currentWage: 10000
 --- !u!4 &1476692735 stripped
 Transform:
