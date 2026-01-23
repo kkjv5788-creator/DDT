@@ -305,7 +305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2189932122111784579, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.x
@@ -7128,8 +7128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conductor: {fileID: 463253587}
   feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
-  radio: {fileID: 1105228972}
   missionBoard: {fileID: 918129802}
+  modeSelector: {fileID: 275202589}
   salesUIGroup: {fileID: 268026783}
   monitorText: {fileID: 116851612}
   salesText: {fileID: 787213205}
@@ -7152,7 +7152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a622d8762fa230843aac8f8eb3530839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 0
+  autoStart: 1
   dialogueUI: {fileID: 1696699495}
   missionBoard: {fileID: 918129802}
   tutorialController: {fileID: 1696699493}

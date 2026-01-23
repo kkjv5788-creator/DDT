@@ -1458,7 +1458,9 @@ public class MissionBoardUI : MonoBehaviour
     public void InitializeUI()
     {
         if (stampObject) stampObject.SetActive(false);
-        UpdateText("", "", "");
+        if (textHeader) textHeader.text = "";
+        if (textMissionName) textMissionName.text = "";
+        if (textProgress) textProgress.text = "";
     }
 
     // ★ [추가됨] 헤더만 변경 (매니저들이 호출함)
@@ -1520,6 +1522,7 @@ public class MissionBoardUI : MonoBehaviour
     }
 }
 
+
 ========================================
  FILE: PauseManager.cs 
 ========================================
@@ -1559,14 +1562,10 @@ public class PauseManager : MonoBehaviour
 
         // [수정] 오른손 A 버튼(One) 또는 ESC 키
                 bool inputPause = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch);
-if (inputPause)
+        if (inputPause && gameFlowManager != null)
         {
-            if (gameFlowManager != null && gameFlowManager.CurrentState != GameState.Intro && 
-                gameFlowManager.CurrentState != GameState.FinalResult)
-            {
-                _lastPauseInputTime = Time.unscaledTime;
-                TogglePause();
-            }
+            _lastPauseInputTime = Time.unscaledTime;
+            TogglePause();
         }
     }
 
@@ -1578,6 +1577,7 @@ if (inputPause)
     public void ShowPauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(true); }
     public void HidePauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(false); }
 }
+
 
 ========================================
  FILE: PlateController.cs 
@@ -1960,14 +1960,20 @@ public class RadioClickable : MonoBehaviour
     bool _tutorialCompleted = false;
 
     Material _runtimeMaterial;
+    Material _normalRuntimeMaterial;
+    Material _outlineRuntimeMaterial;
 
     void Start()
     {
         // 런타임 머티리얼 생성
-        if (radioRenderer && normalMaterial)
+        if (radioRenderer)
         {
-            _runtimeMaterial = new Material(normalMaterial);
-            radioRenderer.material = _runtimeMaterial;
+            if (normalMaterial) _normalRuntimeMaterial = new Material(normalMaterial);
+            if (outlineMaterial) _outlineRuntimeMaterial = new Material(outlineMaterial);
+
+            _runtimeMaterial = _normalRuntimeMaterial ? _normalRuntimeMaterial : _outlineRuntimeMaterial;
+            if (_runtimeMaterial)
+                radioRenderer.material = _runtimeMaterial;
         }
 
         UpdateVisuals(false, false);
@@ -2088,10 +2094,10 @@ public class RadioClickable : MonoBehaviour
         if (!clickable)
         {
             // 🔴 클릭 불가 (튜토리얼 중): normalMaterial, Emission OFF
-            if (normalMaterial && radioRenderer.sharedMaterial != normalMaterial)
+            if (_normalRuntimeMaterial && _runtimeMaterial != _normalRuntimeMaterial)
             {
-                radioRenderer.material = new Material(normalMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _normalRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.DisableKeyword("_EMISSION");
@@ -2100,10 +2106,10 @@ public class RadioClickable : MonoBehaviour
         else if (clickable && !pointing)
         {
             // 🟡 클릭 가능 + 포인터 안 맞음: outlineMaterial, Emission OFF
-            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            if (_outlineRuntimeMaterial && _runtimeMaterial != _outlineRuntimeMaterial)
             {
-                radioRenderer.material = new Material(outlineMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _outlineRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.DisableKeyword("_EMISSION");
@@ -2112,10 +2118,10 @@ public class RadioClickable : MonoBehaviour
         else if (clickable && pointing)
         {
             // 🟢 클릭 가능 + 포인터 맞음: outlineMaterial + Emission ON
-            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            if (_outlineRuntimeMaterial && _runtimeMaterial != _outlineRuntimeMaterial)
             {
-                radioRenderer.material = new Material(outlineMaterial);
-                _runtimeMaterial = radioRenderer.material;
+                _runtimeMaterial = _outlineRuntimeMaterial;
+                radioRenderer.material = _runtimeMaterial;
             }
 
             _runtimeMaterial.EnableKeyword("_EMISSION");
@@ -2169,10 +2175,8 @@ public class RadioClickable : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_runtimeMaterial)
-        {
-            Destroy(_runtimeMaterial);
-        }
+        if (_normalRuntimeMaterial) Destroy(_normalRuntimeMaterial);
+        if (_outlineRuntimeMaterial) Destroy(_outlineRuntimeMaterial);
     }
 
     void OnDrawGizmos()
@@ -2189,6 +2193,7 @@ public class RadioClickable : MonoBehaviour
         }
     }
 }
+
 
 ========================================
  FILE: RadioOutlineController.cs 
@@ -2254,6 +2259,12 @@ public class ResultManager : MonoBehaviour
     void ShowResult()
     {
         if (panelClosingResult) panelClosingResult.SetActive(true);
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+
         int totalSales = gameFlowManager.GetCurrentSales(); 
         
         if (textTitle) textTitle.text = "< 영 업 정 산 >";
@@ -2268,9 +2279,29 @@ public class ResultManager : MonoBehaviour
         gameFlowManager.EnterFinalResult(0); 
     }
 
-    void RestartGame() { Time.timeScale = 1f; gameFlowManager.ResetAndRestartMainGame(); }
-    void GoToMain() { Time.timeScale = 1f; gameFlowManager.GoToMainMenu(); }
+    void RestartGame()
+    {
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+        Time.timeScale = 1f;
+        gameFlowManager.ResetAndRestartMainGame();
+    }
+
+    void GoToMain()
+    {
+        if (!gameFlowManager)
+        {
+            Debug.LogError("[ResultManager] gameFlowManager not assigned.");
+            return;
+        }
+        Time.timeScale = 1f;
+        gameFlowManager.GoToMainMenu();
+    }
 }
+
 
 ========================================
  FILE: RhythmConductor.cs 
@@ -2344,6 +2375,8 @@ public class RhythmConductor : MonoBehaviour
             UnityEngine.Debug.LogError("[RhythmConductor] Missing data.");
             return;
         }
+
+        _offsetSec = (data ? data.timingOffsetMs : 0f) / 1000f;
 
         // 🔥 BGM 재생 (튜토리얼/메인 모두)
         if (data.bgm)
@@ -2684,6 +2717,7 @@ public class RhythmConductor : MonoBehaviour
     }
 }
 
+
 ========================================
  FILE: RhythmTriggerListSO.cs 
 ========================================
@@ -2794,7 +2828,7 @@ public class StageModeSelector : MonoBehaviour
     public RhythmConductor conductor;
     public RhythmTriggerListSO mainGameData;
 
-    [Header("Tutorial Refs (choose one)")]
+    [Header("Tutorial Refs (one of these)")]
     public TutorialDialogueController tutorialDialogueController;
     public TutorialController tutorialController;
 
@@ -2803,7 +2837,6 @@ public class StageModeSelector : MonoBehaviour
 
     void Start()
     {
-        // Default view: show selection panel only
         if (selectionPanel) selectionPanel.SetActive(true);
         if (tutorialGroup) tutorialGroup.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(false);
@@ -2811,8 +2844,15 @@ public class StageModeSelector : MonoBehaviour
         if (missionBoard)
         {
             missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("[메모]");
-            missionBoard.UpdateMission("모드 선택: 튜토리얼 / 실전", 0, 1);
+            missionBoard.UpdateHeader("< 대 기 중 >");
+            missionBoard.UpdateText("< 대 기 중 >", "모니터에서\n모드를 선택하세요", "");
+            missionBoard.ShowSuccessStamp(false);
+        }
+
+        if (ambientSource && !ambientSource.isPlaying)
+        {
+            ambientSource.loop = true;
+            ambientSource.Play();
         }
     }
 
@@ -2822,27 +2862,25 @@ public class StageModeSelector : MonoBehaviour
         StopAmbience();
 
         if (selectionPanel) selectionPanel.SetActive(false);
-        if (tutorialGroup) tutorialGroup.SetActive(true);
         if (mainGameGroup) mainGameGroup.SetActive(false);
+        if (tutorialGroup) tutorialGroup.SetActive(true);
 
-        // Start tutorial explicitly (no auto-start anywhere else)
+        // (optional) keep state consistent
+        if (gameFlowManager) gameFlowManager.EnterTutorialState();
+
+        // Auto-find if not wired
         if (!tutorialDialogueController && tutorialGroup)
-        {
             tutorialDialogueController = tutorialGroup.GetComponentInChildren<TutorialDialogueController>(true);
-        }
+        if (!tutorialController && tutorialGroup)
+            tutorialController = tutorialGroup.GetComponentInChildren<TutorialController>(true);
 
+        // Start dialogue first; if no dialogue controller, start tutorial directly
         if (tutorialDialogueController)
-        {
             tutorialDialogueController.BeginTutorialFlow();
-        }
         else if (tutorialController)
-        {
             tutorialController.StartTutorial();
-        }
         else
-        {
-            Debug.LogError("[StageModeSelector] tutorialDialogueController/tutorialController not assigned.");
-        }
+            Debug.LogError("[StageModeSelector] TutorialDialogueController/TutorialController not assigned or found.");
     }
 
     public void OnClick_StartGame()
@@ -2854,34 +2892,21 @@ public class StageModeSelector : MonoBehaviour
         if (tutorialGroup) tutorialGroup.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(true);
 
-        // Resolve gameFlowManager if not assigned
-        if (!gameFlowManager && mainGameGroup)
-        {
-            gameFlowManager = mainGameGroup.GetComponentInChildren<GameFlowManager>(true);
-        }
-
-        // Ensure main data is assigned
         if (conductor && mainGameData)
-        {
             conductor.data = mainGameData;
-        }
+
+        if (!gameFlowManager && mainGameGroup)
+            gameFlowManager = mainGameGroup.GetComponentInChildren<GameFlowManager>(true);
 
         if (gameFlowManager)
-        {
             gameFlowManager.StartMainGame();
-        }
         else
-        {
             Debug.LogError("[StageModeSelector] gameFlowManager not assigned/found.");
-        }
     }
 
     void StopAmbience()
     {
-        if (ambientSource && ambientSource.isPlaying)
-        {
-            ambientSource.Stop();
-        }
+        if (ambientSource) ambientSource.Stop();
     }
 }
 
@@ -2934,7 +2959,7 @@ public class StageUIManager : MonoBehaviour
     public void UpdateGauge(float current, float max)
     {
         if (!gaugeSlider) return;
-        float ratio = Mathf.Clamp01(current / max);
+        float ratio = max > 0f ? Mathf.Clamp01(current / max) : 0f;
         gaugeSlider.value = ratio;
         if (gaugeFill && gaugeColor != null) 
             gaugeFill.color = gaugeColor.Evaluate(ratio);
@@ -2947,6 +2972,7 @@ public class StageUIManager : MonoBehaviour
         if (handTooltip) handTooltip.SetActive(showHand);
     }
 }
+
 
 ========================================
  FILE: ThinPieceAutoCleanup.cs 
@@ -3014,8 +3040,8 @@ public class TutorialController : MonoBehaviour
     [Header("Refs")]
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
-    public RadioClickable radio;
     public MissionBoardUI missionBoard; 
+    public StageModeSelector modeSelector;
 
     [Header("UI Groups")]
     public GameObject salesUIGroup; 
@@ -3042,7 +3068,7 @@ public class TutorialController : MonoBehaviour
     int _currentStepIndex = 0;
     int _successCountThisStep = 0; 
     bool _tutorialCompleted = false;
-    bool _isProcessingResult = false;    bool _waitForFinalInput = false; 
+    bool _isProcessingResult = false;
 
     void OnEnable()
     {
@@ -3050,7 +3076,6 @@ public class TutorialController : MonoBehaviour
         _successCountThisStep = 0;
         _tutorialCompleted = false;
         _isProcessingResult = false;
-        _waitForFinalInput = false;
 
         if (conductor) 
         {
@@ -3070,21 +3095,6 @@ public class TutorialController : MonoBehaviour
             conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
         }
     }
-        void Update()
-    {
-        // Tutorial skip is disabled.
-        // Only listen for the final confirmation input when tutorial is completed.
-        if (_waitForFinalInput)
-        {
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
-        {
-        _waitForFinalInput = false;
-        FinalizeAndStartGame();
-    }
-
-        }
-    }
-
     public void StartTutorial()
     {
 // Reset tutorial runtime state (since we no longer auto-start on OnEnable)
@@ -3092,7 +3102,7 @@ _currentStepIndex = 0;
 _successCountThisStep = 0;
 _tutorialCompleted = false;
 _isProcessingResult = false;
-_waitForFinalInput = false;        // Mark tutorial state for global systems (e.g., Pause block)
+        // Mark tutorial state for global systems (e.g., Pause block)
         var gf = FindObjectOfType<GameFlowManager>();
         if (gf) gf.EnterTutorialState();
 
@@ -3252,26 +3262,34 @@ _waitForFinalInput = false;        // Mark tutorial state for global systems (e.
         
         if (finalResultPanel)
         {
-            finalResultPanel.SetActive(true);
+            finalResultPanel.SetActive(false);
             if (finalTotalText) finalTotalText.text = bigTitle;
             if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
         }
         
         ShowMonitorText(finalMessage, Color.cyan);
-        _waitForFinalInput = true;
+        Invoke(nameof(FinalizeAndStartGame), 1.0f);
     }
 
     void FinalizeAndStartGame()
     {
         Cleanup();
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
+        if (!modeSelector) modeSelector = FindObjectOfType<StageModeSelector>();
+        if (modeSelector)
+        {
+            modeSelector.OnClick_StartGame();
+        }
+        else
+        {
+            Debug.LogError("[TutorialController] StageModeSelector not found. Cannot start main game.");
+        }
     }
 
     void Cleanup()
     {
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
         if (salesUIGroup) salesUIGroup.SetActive(false);
-        if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
         
         if (finalResultPanel) finalResultPanel.SetActive(false);
         ClearMonitorText();
@@ -3284,6 +3302,7 @@ _waitForFinalInput = false;        // Mark tutorial state for global systems (e.
 
     void ClearMonitorText() { if (monitorText) monitorText.text = ""; }
 }
+
 
 ========================================
  FILE: TutorialDialogueController.cs 
@@ -3379,38 +3398,60 @@ public class TutorialDialogueController : MonoBehaviour
         DisableExistingSystems();
     }
     
-    void Start()
+void Start()
 {
+    // 자동 시작 금지: StageModeSelector에서만 시작
     if (autoStart)
     {
         BeginTutorialFlow();
     }
 }
 
-    public void BeginTutorialFlow()
+
+public void BeginTutorialFlow()
+{
+    InitializeControllerPosition();
+
+    // 씬에서 꺼둔 튜토리얼 김밥을 다시 켜지 않음(중복/겹침 방지)
+    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false);
+
+    // 모니터 캔버스가 꺼져있으면 켬
+    if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
+
+    // dialogueUI 자동 탐색
+    if (dialogueUI == null)
+        dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
+
+    if (missionBoard)
     {
-        InitializeControllerPosition();
-        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+        missionBoard.InitializeUI();
+        missionBoard.UpdateHeader("< 면 접 중 >");
+        missionBoard.UpdateMission("모니터를 보세요", 0, 1);
+    }
 
-        // ✅ [수정됨] conductor 초기화 제거
-        // TutorialController.OnEnable()에서 자동으로 StartTutorial()이 호출되므로
-        // 여기서는 conductor를 건드리지 않음
-
-        if (missionBoard)
+    // 대사부터 시작
+    if (dialogues != null && dialogues.Length > 0)
+    {
+        if (dialogueUI == null)
         {
-            missionBoard.InitializeUI(); 
-            missionBoard.UpdateHeader("< 면 접 중 >");
-            missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
+            Debug.LogError("[TutorialDialogueController] dialogueUI not assigned/found. Falling back to StartMainTutorial().");
+            StartMainTutorial();
+            return;
         }
 
-        if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
-        else StartMainTutorial();
-    
+        ShowDialogue(0);
     }
+    else
+    {
+        StartMainTutorial();
+    }
+}
+
 
     
     void Update()
     {
+        if (dialogues == null || dialogues.Length == 0) return;
         if (_currentDialogueIndex >= dialogues.Length) return;
 
         var currentDialogue = dialogues[_currentDialogueIndex];
@@ -3424,7 +3465,13 @@ public class TutorialDialogueController : MonoBehaviour
             if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap || 
                 currentDialogue.conditionType == DialogueConditionType.GazeAtNote)
             {
-                GameObject target = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? kimbapPrefab : missionBoard.gameObject;
+                GameObject target = null;
+                if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
+                    target = kimbapPrefab;
+                else if (missionBoard)
+                    target = missionBoard.gameObject;
+
+                if (!target) return;
                 
                 // 현재 쳐다보고 있는지 확인
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
@@ -3702,13 +3749,15 @@ public class TutorialDialogueController : MonoBehaviour
             conductor.OnRoundResult.AddListener(OnRoundResult);
         }
         
-        if (_tutorialControllerGameObject != null && tutorialController != null)
-        {
-            _tutorialControllerGameObject.SetActive(true);
-            tutorialController.enabled = true;
-            // ✅ [수정됨] GameObject.SetActive(true)가 OnEnable()을 호출하므로
-            // 여기서 StartTutorial()을 다시 호출하지 않음
-        }
+if (_tutorialControllerGameObject != null && tutorialController != null)
+{
+    _tutorialControllerGameObject.SetActive(true);
+    tutorialController.enabled = true;
+
+    // 자동 시작( OnEnable )에 의존하지 않음: 명시 호출
+    tutorialController.StartTutorial();
+}
+
         
         this.enabled = false; 
     }
@@ -3717,6 +3766,7 @@ public class TutorialDialogueController : MonoBehaviour
     void OnDisable() { if (conductor != null) conductor.OnRoundResult.RemoveListener(OnRoundResult); }
     void OnRoundResult(bool success) { _lastRoundResult = success; _roundResultProcessed = false; }
 }
+
 
 ========================================
  FILE: TutorialDialogueUIController.cs 

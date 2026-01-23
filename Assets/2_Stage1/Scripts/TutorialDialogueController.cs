@@ -103,12 +103,13 @@ public void BeginTutorialFlow()
 {
     InitializeControllerPosition();
 
-    // 씬에서 꺼둔 튜토리얼 김밥을 다시 켜지 않음(중복/겹침 방지)
-    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false);
+// 🔥 [수정] 대화 진행 중에는 플레이어가 쳐다봐야 하므로 켜둬야 합니다(true).
+    // 나중에 StartMainTutorial()에서 다시 끄게 됩니다.
+    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
 
     // 모니터 캔버스가 꺼져있으면 켬
     if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
-
+    
     // dialogueUI 자동 탐색
     if (dialogueUI == null)
         dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
