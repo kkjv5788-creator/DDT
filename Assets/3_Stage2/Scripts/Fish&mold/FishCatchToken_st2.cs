@@ -212,7 +212,7 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         if (!isResolved)
         {
-            FeedbackManager_st2.Instance?.ShowJudgeFeedback(transform.position, "MISS");
+            
         }
 
         if (ownerMold != null)

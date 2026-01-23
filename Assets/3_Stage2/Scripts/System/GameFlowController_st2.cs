@@ -20,7 +20,6 @@ public class GameFlowController_st2 : MonoBehaviour
     public JudgeSystem_st2 judgeSystem;
     public EconomySystem_st2 economySystem;
     public BagManager_st2 bagManager;
-    public CrowdManager_st2 crowdManager;
     public PatternDirector_st2 patternDirector;
     public MenuMonitorUI_st2 menuMonitorUI;
     public MoldController_st2[] molds;
@@ -185,7 +184,7 @@ public class GameFlowController_st2 : MonoBehaviour
         bgmSource.Play();
 
         // 시스템 시작
-        crowdManager.Initialize(bgmSource, bgmClip);
+       
         patternDirector.StartPatternSystem(songStartDspTime);
 
         Debug.Log("✅ Main game started - Tutorial cleanup complete");
@@ -242,7 +241,6 @@ public class GameFlowController_st2 : MonoBehaviour
         judgeSystem.ResetStats();
         economySystem.Reset();
         bagManager.Reset();
-        crowdManager.Reset();
         isEndingTriggered = false;
     }
 
