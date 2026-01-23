@@ -12,7 +12,7 @@ public class ProjectDumper : MonoBehaviour
     static void ExportAllInfo()
     {
         StringBuilder sb = new StringBuilder();
-        
+
         // ---------------------------------------------------------
         // 1. 씬 정보 추출
         // ---------------------------------------------------------
@@ -24,7 +24,7 @@ public class ProjectDumper : MonoBehaviour
         sb.AppendLine("========================================\n");
 
         GameObject[] rootObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
-        
+
         // 스크립트 경로를 중복 없이 저장할 HashSet
         HashSet<string> activeScriptPaths = new HashSet<string>();
 
@@ -43,7 +43,7 @@ public class ProjectDumper : MonoBehaviour
         // ---------------------------------------------------------
         string filename = "ProjectFullDump_ActiveOnly.txt";
         string path = Path.Combine(Application.dataPath, "..", filename);
-        
+
         File.WriteAllText(path, sb.ToString());
         Debug.Log($"Dump saved to: {path}");
         Application.OpenURL(path);
@@ -63,7 +63,7 @@ public class ProjectDumper : MonoBehaviour
             if (c == null) continue; // Missing Script 방지
 
             string compName = c.GetType().Name;
-            
+
             // MonoBehaviour인 경우 실제 스크립트 파일 경로를 찾음
             if (c is MonoBehaviour mb)
             {
