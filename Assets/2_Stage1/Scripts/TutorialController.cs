@@ -93,6 +93,19 @@ _isProcessingResult = false;
         Invoke(nameof(StartFirstTrigger), 1.5f);
     }
 
+    void Update()
+{
+    // 튜토리얼이 끝났고, 결과창이 떠 있는 상태일 때만 입력을 받음
+    if (_tutorialCompleted && finalResultPanel != null && finalResultPanel.activeSelf)
+    {
+        // 오른손 검지 트리거 입력 감지
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+        {
+            FinalizeAndStartGame(); // 게임 시작으로 이동
+        }
+    }
+}
+
     void StartFirstTrigger()
     {
         if (conductor)
@@ -212,31 +225,36 @@ _isProcessingResult = false;
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
-    void CompleteTutorial()
+void CompleteTutorial()
+{
+    _tutorialCompleted = true; // 플래그 설정
+    string bigTitle = "** 합 격 **"; 
+    string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
+    string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
+
+    if (missionBoard)
     {
-        _tutorialCompleted = true;
-
-        string bigTitle = "** 합 격 **"; 
-        string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
-        string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
-
-        if (missionBoard)
-        {
-            missionBoard.ShowSuccessStamp(true);
-            missionBoard.UpdateHeader("< 채용 결과 >");
-            missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
-        }
-        
-        if (finalResultPanel)
-        {
-            finalResultPanel.SetActive(false);
-            if (finalTotalText) finalTotalText.text = bigTitle;
-            if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
-        }
-        
-        ShowMonitorText(finalMessage, Color.cyan);
-        Invoke(nameof(FinalizeAndStartGame), 1.0f);
+        missionBoard.ShowSuccessStamp(true);
+        missionBoard.UpdateHeader("< 채용 결과 >");
+        missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
     }
+    
+    if (finalResultPanel)
+    {
+        finalResultPanel.SetActive(true); // ✅ 수정: 패널을 켭니다.
+        if (finalTotalText) finalTotalText.text = bigTitle;
+        if (finalCommentText) 
+        { 
+            finalCommentText.text = finalMessage + startHint; 
+            finalCommentText.color = Color.white;
+        }
+    }
+    
+    ShowMonitorText(finalMessage, Color.cyan);
+    
+    // ❌ 삭제: Invoke(nameof(FinalizeAndStartGame), 1.0f); 
+    // (자동으로 넘어가지 않고 입력을 기다리게 둡니다.)
+}
 
     void FinalizeAndStartGame()
     {
