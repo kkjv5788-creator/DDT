@@ -21,23 +21,16 @@ public class StageManager : MonoBehaviour
         // 1. 튜토리얼 모드 끄기
         if (modeTutorial != null) modeTutorial.SetActive(false);
 
-        // 2. 본 게임 모드 켜기
+        // 2. 본 게임 모드 켜기 (GameFlowManager가 깨어남)
         if (modeGame != null) modeGame.SetActive(true);
 
-        // 3. 리갈패드(주문서) 초기화 (합격 도장 지우기)
-        if (missionBoard != null)
-        {
-            missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("< 영업 개시 >");
-            missionBoard.UpdateMission("손님들이 몰려옵니다!\n정확하게 서빙하세요.", 0, 0);
-        }
+        // ▼▼▼ [삭제] GameFlowManager가 할 일이므로 StageManager에서는 삭제했습니다. ▼▼▼
+        /*
+        // 3. 리갈패드(주문서) 초기화
+        if (missionBoard != null) { ... }
 
-        // 4. 리듬 컨덕터 설정 변경 (튜토리얼 -> 본 게임)
-        if (conductor != null)
-        {
-            conductor.isTutorialMode = false; // 튜토리얼 모드 해제
-            conductor.data = mainGameData;    // 데이터 교체 (Tutorial -> Main)
-            conductor.StartGame();            // 게임 시작!
-        }
+        // 4. 리듬 컨덕터 설정 변경
+        if (conductor != null) { ... }
+        */
     }
 }

@@ -1,6 +1,6 @@
 [PROJECT DUMP START]
 Scene: Stage1_v4.4
-Date: 2026-01-23 오후 12:19:33
+Date: 2026-01-23 오후 3:52:56
 ========================================
               SCENE HIERARCHY
 ========================================
@@ -402,22 +402,34 @@ Date: 2026-01-23 오후 12:19:33
                 [O] Text (TMP) (Tag: Untagged, Layer: UI)
             [O] Btn_Game (Tag: Untagged, Layer: UI)
                 [O] Text (TMP) (Tag: Untagged, Layer: UI)
-        [O] Panel_Dialogue (Tag: Untagged, Layer: UI)
-            [O] Text_Speech (Tag: Untagged, Layer: UI)
-            [O] Text_Hint (Tag: Untagged, Layer: UI)
-        [O] Panel_PlayGame (Tag: Untagged, Layer: UI)
-            [O] Slider_SongProgress (Tag: Untagged, Layer: UI)
-                [O] Background (Tag: Untagged, Layer: UI)
-                [O] Fill Area (Tag: Untagged, Layer: UI)
-                    [O] Fill (Tag: Untagged, Layer: UI)
-            [O] Text_RemainingTime (Tag: Untagged, Layer: UI)
-        [O] Sales_Info_Group (Tag: Untagged, Layer: UI)
-            [O] Text_RealtimeSales (Tag: Untagged, Layer: UI)
-            [O] Text_Feedback (Tag: Untagged, Layer: UI)
-        [O] Panel_ClosingResult (Tag: Untagged, Layer: UI)
-            [O] Text_Title (Tag: Untagged, Layer: UI)
-            [O] Text_FinalTotal (Tag: Untagged, Layer: UI)
-            [O] Text_GradeComment (Tag: Untagged, Layer: UI)
+        [X] Panel_Dialogue (Tag: Untagged, Layer: UI)
+            [X] Text_Speech (Tag: Untagged, Layer: UI)
+            [X] Text_Hint (Tag: Untagged, Layer: UI)
+        [X] Panel_PlayGame (Tag: Untagged, Layer: UI)
+            [X] Slider_SongProgress (Tag: Untagged, Layer: UI)
+                [X] Background (Tag: Untagged, Layer: UI)
+                [X] Fill Area (Tag: Untagged, Layer: UI)
+                    [X] Fill (Tag: Untagged, Layer: UI)
+            [X] Text_RemainingTime (Tag: Untagged, Layer: UI)
+        [X] Sales_Info_Group (Tag: Untagged, Layer: UI)
+            [X] Text_RealtimeSales (Tag: Untagged, Layer: UI)
+            [X] Text_Feedback (Tag: Untagged, Layer: UI)
+        [X] Panel_ClosingResult (Tag: Untagged, Layer: UI)
+            [X] Text_Title (Tag: Untagged, Layer: UI)
+            [X] Text_FinalTotal (Tag: Untagged, Layer: UI)
+            [X] Text_GradeComment (Tag: Untagged, Layer: UI)
+            [X] Btn_Restart (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainMenu (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+        [X] Panel_Pause (Tag: Untagged, Layer: UI)
+            [X] Text_Pause (Tag: Untagged, Layer: UI)
+            [X] Btn_ResumePause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_RestartPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
 [O] LegalPad_Group (Tag: Untagged, Layer: Default)
     [O] LegalPad (Tag: Untagged, Layer: Default)
     [O] LegalPad_Canvas (Tag: Untagged, Layer: UI)
@@ -1015,12 +1027,11 @@ public class FinalResultInputHandler : MonoBehaviour
 
     void Update()
     {
-        // FinalResult ���°� �ƴϸ� ����
         if (!gameFlowManager || gameFlowManager.CurrentState != GameState.FinalResult)
             return;
 
-        // A ��ư�� ���
-        if (OVRInput.GetDown(OVRInput.Button.One)) // A ��ư
+        // A 버튼만 허용
+        if (OVRInput.GetDown(OVRInput.Button.One)) // A 버튼
         {
             if (Time.time - _lastInputTime > inputCooldown)
             {
@@ -1033,7 +1044,6 @@ public class FinalResultInputHandler : MonoBehaviour
     void OnAButtonPressed()
     {
         Debug.Log("[FinalResultInput] A button pressed - Going to main menu");
-
         if (gameFlowManager)
         {
             gameFlowManager.GoToMainMenu();
@@ -1041,12 +1051,13 @@ public class FinalResultInputHandler : MonoBehaviour
     }
 }
 
-
 --------------------------------------------------
 
 --- FILENAME: GameFlowManager.cs (Assets/2_Stage1/Scripts/GameFlowManager.cs) ---
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -1062,66 +1073,221 @@ public class GameFlowManager : MonoBehaviour
     public MissionBoardUI missionBoard;
     public HandToolSwitcher toolSwitcher;
 
+    [Header("Monitor Panels")]
+    public GameObject panelPlayGame;   
+    public GameObject panelDialogue;   
+    public GameObject panelSelectMode; 
+    public GameObject panelResult;     
+
+    [Header("Play Game UI")]
+    public Slider songProgressSlider;       
+    public TextMeshProUGUI textRemainingTime; 
+    
+    [Header("Sales UI")]
+    public GameObject salesInfoGroup;         
+    public TextMeshProUGUI textRealtimeSales; 
+    public TextMeshProUGUI textFeedback;      
+
+    [Header("Wage Settings")]
+    public int totalDailyWage = 100000; 
+    public int pricePerSlice = 0; 
+
     [Header("Data")]
     public RhythmTriggerListSO mainTriggerList;
 
     [Header("Settings")]
-    public string mainMenuSceneName = "Main_v4.1";
-
-    // ❌ [삭제됨] 내부 enum 정의 삭제 -> GameState.cs를 따르게 됨
-    // public enum GameState { Intro, PlayingMain, Paused, FinalResult } 
+    public int mainMenuSceneIndex = 0; 
 
     public GameState CurrentState { get; private set; } = GameState.Intro;
-
     GameState _stateBeforePause;
+
+    int _currentSales = 0;
+    bool _isGameEnding = false;
+    RhythmConductor.RhythmState _lastConductorState;
 
     void OnEnable()
     {
         Debug.Log("[GameFlowManager] 실전 모드 활성화됨");
-        
-        // GameState.cs에 Intro를 추가했으므로 정상 작동함
         CurrentState = GameState.Intro; 
         
-        Invoke(nameof(StartMainGame), 0.5f);
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.AddListener(OnSliceSuccess);
+            conductor.OnSliceFail.AddListener(OnSliceFail);
+        }
+
+        StartMainGame();
     }
 
     void OnDisable()
     {
         Debug.Log("[GameFlowManager] 실전 모드 종료");
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.RemoveListener(OnSliceSuccess);
+            conductor.OnSliceFail.RemoveListener(OnSliceFail);
+        }
+    }
+
+    void Update()
+    {
+        if (CurrentState != GameState.PlayingMain || !conductor) return;
+
+        // 1. 노래 시간 UI 업데이트 및 종료 감지
+        if (conductor.bgmSource && conductor.bgmSource.clip)
+        {
+            float currentTime = conductor.bgmSource.time;
+            float totalTime = conductor.bgmSource.clip.length;
+            
+            // [종료 감지] 노래가 끝났고(루프 아님), 아직 종료 처리가 안 됐다면
+            if (!_isGameEnding && !conductor.bgmSource.loop && currentTime >= totalTime - 0.1f)
+            {
+                Debug.Log("[GameFlowManager] 노래 종료 감지 -> 결과 화면으로 이동");
+                _isGameEnding = true;
+                if (resultManager) resultManager.EndGame(); 
+            }
+
+            if (songProgressSlider) songProgressSlider.value = currentTime / totalTime;
+            
+            if (textRemainingTime)
+            {
+                float remaining = Mathf.Max(0, totalTime - currentTime);
+                int min = Mathf.FloorToInt(remaining / 60);
+                int sec = Mathf.FloorToInt(remaining % 60);
+                textRemainingTime.text = $"{min:00}:{sec:00}";
+            }
+        }
+
+        // 2. 리갈패드 상태 메시지 업데이트
+        if (_lastConductorState != conductor.State)
+        {
+            _lastConductorState = conductor.State;
+            UpdateLegalPadByState();
+        }
+    }
+
+    void UpdateLegalPadByState()
+    {
+        if (!missionBoard) return;
+
+        if (conductor.State == RhythmConductor.RhythmState.Waiting || 
+            conductor.State == RhythmConductor.RhythmState.Result ||
+            conductor.State == RhythmConductor.RhythmState.Cleanup)
+        {
+            missionBoard.UpdateMission("주문 대기 중...\n<size=80%>잠시만 기다리세요</size>", 0, 0);
+        }
+        else if (conductor.State == RhythmConductor.RhythmState.Guiding || 
+                 conductor.State == RhythmConductor.RhythmState.Judging)
+        {
+            UpdateSliceCountUI(); 
+        }
+    }
+
+    void OnSliceSuccess(Vector3 pos, Vector3 normal, float speed)
+    {
+        if (CurrentState != GameState.PlayingMain) return;
+
+        _currentSales += pricePerSlice;
+        
+        if (conductor.SliceCount >= conductor.RequiredSliceCount) 
+             _currentSales = totalDailyWage; 
+
+        UpdateSalesUI();
+        ShowFeedbackText($"+ {pricePerSlice:N0} 원");
+        UpdateSliceCountUI();
+    }
+
+    void OnSliceFail(Vector3 pos, string reason)
+    {
+        UpdateSliceCountUI();
+    }
+
+    void UpdateSalesUI()
+    {
+        if (textRealtimeSales) textRealtimeSales.text = $"{_currentSales:N0} 원";
+    }
+
+    void ShowFeedbackText(string msg)
+    {
+        if (textFeedback)
+        {
+            textFeedback.text = msg;
+            textFeedback.gameObject.SetActive(true);
+            CancelInvoke(nameof(HideFeedback));
+            Invoke(nameof(HideFeedback), 1.0f);
+        }
+    }
+    void HideFeedback() { if (textFeedback) textFeedback.gameObject.SetActive(false); }
+
+    void UpdateSliceCountUI()
+    {
+        if (!missionBoard || !conductor) return;
+        if (conductor.State == RhythmConductor.RhythmState.Waiting) return;
+
+        int current = conductor.SliceCount;
+        int total = conductor.RequiredSliceCount;
+        string progressText = $"<color=red><b>{current}</b></color> / {total}";
+        string message = $"주문 들어왔습니다!\n<size=120%>[ {progressText} ]</size>";
+
+        missionBoard.UpdateMission(message, current, total);
+    }
+
+    void CalculateUnitPrice()
+    {
+        if (mainTriggerList == null || mainTriggerList.triggers == null) return;
+        int totalRequiredSlices = 0;
+        foreach (var trigger in mainTriggerList.triggers)
+            totalRequiredSlices += Mathf.Max(1, trigger.requiredSliceCount);
+
+        if (totalRequiredSlices > 0)
+            pricePerSlice = totalDailyWage / totalRequiredSlices;
     }
 
     public void StartMainGame()
     {
         Debug.Log("[GameFlowManager] 실전 영업 개시!");
         CurrentState = GameState.PlayingMain;
+        _isGameEnding = false;
+        
+        CalculateUnitPrice();
+        _currentSales = 0;
+        UpdateSalesUI();
+        if (textFeedback) textFeedback.gameObject.SetActive(false);
 
-        // 1. 주문서 갱신
+        if (salesInfoGroup) salesInfoGroup.SetActive(true);
+
+        if (panelPlayGame) panelPlayGame.SetActive(true);
+        if (panelDialogue) panelDialogue.SetActive(false);
+        if (panelSelectMode) panelSelectMode.SetActive(false);
+        if (panelResult) panelResult.SetActive(false);
+
         if (missionBoard)
         {
             missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("< 점심 주문 >");
-            missionBoard.UpdateText("< 점심 주문 >", "주문이 폭주합니다!\n정신 바짝 차리세요!", "");
+            missionBoard.UpdateHeader("*** 주문서 ***");
+            missionBoard.UpdateMission("영업 준비 중...", 0, 0); 
             missionBoard.ShowSuccessStamp(false);
         }
 
-        // 2. 하드웨어 세팅
         if (radio) radio.SetClickable(false);
         if (toolSwitcher) toolSwitcher.SwitchToKnife();
         if (plateController) plateController.ResetToEmptyPlate();
 
-        // 3. UI 초기화
         if (StageUIManager.Instance)
         {
             StageUIManager.Instance.UpdateGauge(0, 1);
             StageUIManager.Instance.SetGuides(false, true);
         }
 
-        // 4. 리듬 게임 시작
         if (conductor && mainTriggerList)
         {
             conductor.isTutorialMode = false;
             conductor.data = mainTriggerList;
+            
+            // [중요 수정] StartGame을 먼저 호출하고, 그 다음에 Loop를 꺼야 합니다!
+            // 반대로 하면 StartGame 내부에서 다시 loop=true로 켜버립니다.
             conductor.StartGame();
+            if (conductor.bgmSource) conductor.bgmSource.loop = false; 
         }
 
         if (resultManager && mainTriggerList)
@@ -1133,11 +1299,9 @@ public class GameFlowManager : MonoBehaviour
     public void PauseGame()
     {
         if (CurrentState == GameState.Paused) return;
-
         _stateBeforePause = CurrentState;
         CurrentState = GameState.Paused;
         Time.timeScale = 0f;
-        
         if (toolSwitcher) toolSwitcher.SwitchToController();
         if (pauseManager) pauseManager.ShowPauseMenu();
     }
@@ -1145,10 +1309,8 @@ public class GameFlowManager : MonoBehaviour
     public void ResumeGame()
     {
         if (CurrentState != GameState.Paused) return;
-
         Time.timeScale = 1f;
         CurrentState = _stateBeforePause;
-        
         if (toolSwitcher) toolSwitcher.SwitchToKnife();
         if (pauseManager) pauseManager.HidePauseMenu();
     }
@@ -1158,11 +1320,13 @@ public class GameFlowManager : MonoBehaviour
         CurrentState = GameState.FinalResult;
         
         if (toolSwitcher) toolSwitcher.SwitchToController();
+        if (panelPlayGame) panelPlayGame.SetActive(false);
+        if (panelResult) panelResult.SetActive(true);
         
         if (missionBoard)
         {
             missionBoard.UpdateHeader("< 영 업 종 료 >");
-            missionBoard.UpdateText("< 영 업 종 료 >", "오늘 장사 끝!\n수고하셨습니다.", "");
+            missionBoard.UpdateText("< 영 업 종 료 >", $"오늘 총 매출:\n<size=150%><color=yellow>{_currentSales:N0} 원</color></size>", "");
             missionBoard.ShowSuccessStamp(true);
         }
     }
@@ -1177,10 +1341,9 @@ public class GameFlowManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        SceneManager.LoadScene(mainMenuSceneIndex);
     }
 }
-
 
 --------------------------------------------------
 
@@ -2051,8 +2214,6 @@ public class PauseManager : MonoBehaviour
 {
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
-    public RhythmConductor conductor;
-    public TutorialController tutorialController; // 튜토리얼용 (필요시)
     public GameObject pauseMenuPanel;
 
     [Header("Buttons")]
@@ -2061,17 +2222,18 @@ public class PauseManager : MonoBehaviour
     public Button mainMenuButton;
 
     [Header("Audio")]
-    public AudioSource[] allAudioSources; // 멈출 오디오들
+    public AudioSource[] allAudioSources; 
 
     [Header("Settings")]
     public float inputCooldown = 0.5f;
+    // 씬 인덱스로 변경
+    public int mainMenuSceneIndex = 0; 
 
     bool _isPaused = false;
     float _lastPauseInputTime = -999f;
 
     void Start()
     {
-        // 버튼 리스너 연결
         if (resumeButton) resumeButton.onClick.AddListener(Resume);
         if (restartButton) restartButton.onClick.AddListener(Restart);
         if (mainMenuButton) mainMenuButton.onClick.AddListener(GoToMainMenu);
@@ -2081,14 +2243,22 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        // 입력 쿨타임 체크
-        if (Time.time - _lastPauseInputTime < inputCooldown) return;
+        // 입력 쿨타임 체크 (unscaledTime 사용으로 일시정지 중에도 시간 흐름 감지)
+        if (Time.unscaledTime - _lastPauseInputTime < inputCooldown) return;
 
-        // B버튼 또는 Y버튼 또는 ESC로 일시정지 토글
-        if (OVRInput.GetDown(OVRInput.Button.Two) || OVRInput.GetDown(OVRInput.Button.Four) || Input.GetKeyDown(KeyCode.Escape))
+        // 왼손 인덱스 트리거 OR 오른손 A버튼
+        bool inputLeftTrigger = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch);
+        bool inputRightA = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch);
+
+        // 키보드 ESC는 디버깅용
+        if (inputLeftTrigger || inputRightA || Input.GetKeyDown(KeyCode.Escape))
         {
-            _lastPauseInputTime = Time.time;
-            TogglePause();
+            // 인트로(대기) 상태가 아닐 때만 일시정지 가능
+            if (gameFlowManager != null && gameFlowManager.CurrentState != GameState.Intro)
+            {
+                _lastPauseInputTime = Time.unscaledTime;
+                TogglePause();
+            }
         }
     }
 
@@ -2102,23 +2272,14 @@ public class PauseManager : MonoBehaviour
     {
         if (_isPaused) return;
 
-        // ★ GameFlowManager가 없거나, 이미 인트로/결과창이면 일시정지 불가
-        if (gameFlowManager == null) return;
-        
-        // ★ 여기서 에러가 났던 겁니다. 
-        // 전역 GameState를 쓰므로 GameFlowManager.GameState가 아니라 그냥 GameState입니다.
-        if (gameFlowManager.CurrentState == GameState.Intro || 
-            gameFlowManager.CurrentState == GameState.FinalResult) return;
-
         _isPaused = true;
-        
-        // 메뉴 표시
+        Time.timeScale = 0f; // 시간 정지
+
         if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
         
-        // 매니저에게 알림
-        gameFlowManager.PauseGame();
+        // 매니저에게 알림 (도구 전환 등을 위함)
+        if (gameFlowManager) gameFlowManager.PauseGame();
         
-        // 소리 끄기 (선택)
         PauseAllAudio();
     }
 
@@ -2127,51 +2288,38 @@ public class PauseManager : MonoBehaviour
         if (!_isPaused) return;
 
         _isPaused = false;
+        Time.timeScale = 1f; // 시간 재개
 
-        // 메뉴 숨김
         if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-
-        // 매니저에게 알림
+        
         if (gameFlowManager) gameFlowManager.ResumeGame();
 
-        // 소리 켜기
         ResumeAllAudio();
     }
 
     public void Restart()
     {
         Debug.Log("[PauseManager] 재시작 요청");
-        
-        // 일시정지 해제 (시간 흐르게 하기 위해)
         Time.timeScale = 1f; 
 
-        // 현재 모드에 따라 재시작 분기
-        if (gameFlowManager)
+        // 튜토리얼 중이거나 예외 상황이면 씬 재로딩
+        if (gameFlowManager && gameFlowManager.CurrentState == GameState.PlayingMain)
         {
-            // 전역 GameState 사용
-            if (gameFlowManager.CurrentState == GameState.Tutorial)
-            {
-                // 튜토리얼은 씬 재로딩이 깔끔할 수 있음
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
-            else
-            {
-                // 실전 모드는 매니저 리셋
-                gameFlowManager.RestartMainGameOnly();
-            }
+            Resume(); // UI 끄고
+            gameFlowManager.RestartMainGameOnly();
         }
         else
         {
-            // 예외 상황: 그냥 씬 재시작
-             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // 현재 씬 재로딩 (인덱스 기반)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
     public void GoToMainMenu()
     {
+        Debug.Log($"[PauseManager] 메인 메뉴(Index {mainMenuSceneIndex})로 이동");
         Time.timeScale = 1f;
-        if (gameFlowManager) gameFlowManager.GoToMainMenu();
-        else SceneManager.LoadScene("Main_v4.1"); // 하드코딩 백업
+        SceneManager.LoadScene(mainMenuSceneIndex);
     }
 
     void PauseAllAudio()
@@ -2190,16 +2338,8 @@ public class PauseManager : MonoBehaviour
         }
     }
     
-    // UI 포인터용 퍼블릭 메서드 (필요시 사용)
-    public void ShowPauseMenu() 
-    {
-         if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
-    }
-    
-    public void HidePauseMenu() 
-    {
-         if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-    }
+    public void ShowPauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(true); }
+    public void HidePauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(false); }
 }
 
 --------------------------------------------------
@@ -2778,50 +2918,38 @@ public class ResultManager : MonoBehaviour
     public RhythmConductor conductor;
     public GameFlowManager gameFlowManager;
 
-    [Header("Result Panels (3�� �� 1���� Ȱ��ȭ)")]
-    public GameObject panel100k; // 100% ~ 80%
-    public GameObject panel50k;  // 80% ~ 50%
-    public GameObject panel0;    // 50% ~ 0%
+    [Header("Result Panels")]
+    public GameObject panel100k; 
+    public GameObject panel50k;  
+    public GameObject panel0;    
 
     [Header("Settings")]
-    public float endDelaySeconds = 3f; // ������ Ʈ���� �Ϸ� �� ��� �ð�
+    public float endDelaySeconds = 3f;
 
     [Header("Events")]
-    public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
+    public UnityEvent<int, int, float> OnProgressUpdate;
 
-    // ��Ÿ�� ������
     int _totalTriggers;
     int _successCount;
     bool _gameEnded;
 
     void OnEnable()
     {
-        if (conductor)
-        {
-            conductor.OnRoundResult.AddListener(HandleRoundResult);
-        }
+        if (conductor) conductor.OnRoundResult.AddListener(HandleRoundResult);
     }
 
     void OnDisable()
     {
-        if (conductor)
-        {
-            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
-        }
+        if (conductor) conductor.OnRoundResult.RemoveListener(HandleRoundResult);
     }
 
     public void StartTracking(int totalTriggers)
     {
-        // 🔥 이전에 예약된 Invoke 취소 (재시작 시 EndGame이 중복 호출되는 것 방지)
         CancelInvoke(nameof(EndGame));
-
         _totalTriggers = totalTriggers;
         _successCount = 0;
         _gameEnded = false;
-
         Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
-
-        // �ʱ� ������ ������Ʈ
         OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
     }
 
@@ -2830,83 +2958,43 @@ public class ResultManager : MonoBehaviour
         if (_gameEnded) return;
         if (!gameFlowManager || gameFlowManager.CurrentState != GameState.PlayingMain) return;
 
-        if (success)
-        {
-            _successCount++;
-            Debug.Log($"[ResultManager] Success! ({_successCount}/{_totalTriggers})");
-        }
-        else
-        {
-            Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
-        }
-
-        // ����� ���
-        float percentage = (_successCount / (float)_totalTriggers) * 100f;
+        if (success) _successCount++;
+        
+        float percentage = (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
         OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
-
-        // ������ Ʈ���� �Ϸ� Ȯ��
-        if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
-        {
-            Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
-            Invoke(nameof(EndGame), endDelaySeconds);
-        }
     }
 
-    void EndGame()
+    public void EndGame()
     {
         if (_gameEnded) return;
         _gameEnded = true;
 
         Debug.Log("[ResultManager] Game ended. Showing result panel...");
 
-        // ������ ���
-        float successRate = (_successCount / (float)_totalTriggers) * 100f;
+        float successRate = 0f;
+        if (_totalTriggers > 0)
+            successRate = (_successCount / (float)_totalTriggers) * 100f;
 
-        // BGM ����
-        if (conductor && conductor.bgmSource)
-        {
-            conductor.bgmSource.Stop();
-        }
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
 
-        // ���� ��ȯ
         if (gameFlowManager)
         {
             gameFlowManager.EnterFinalResult(successRate);
         }
 
-        // �г� Ȱ��ȭ
         ShowResultPanel(successRate);
     }
 
     void ShowResultPanel(float successRate)
     {
-        // ��� �г� ��Ȱ��ȭ
         if (panel100k) panel100k.SetActive(false);
         if (panel50k) panel50k.SetActive(false);
         if (panel0) panel0.SetActive(false);
 
-        // ���ǿ� �´� �гθ� Ȱ��ȭ
-        if (successRate >= 80f)
-        {
-            if (panel100k) panel100k.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 100k (Success Rate: {successRate:F1}%)");
-        }
-        else if (successRate >= 50f)
-        {
-            if (panel50k) panel50k.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 50k (Success Rate: {successRate:F1}%)");
-        }
-        else
-        {
-            if (panel0) panel0.SetActive(true);
-            Debug.Log($"[ResultManager] Result: 0 (Success Rate: {successRate:F1}%)");
-        }
+        if (successRate >= 80f) panel100k.SetActive(true);
+        else if (successRate >= 50f) panel50k.SetActive(true);
+        else panel0.SetActive(true);
     }
-
-    // �ܺο��� ȣ�� ����
-    public int GetSuccessCount() => _successCount;
-    public int GetTotalTriggers() => _totalTriggers;
-    public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
 }
 
 --------------------------------------------------
@@ -3347,24 +3435,17 @@ public class StageManager : MonoBehaviour
         // 1. 튜토리얼 모드 끄기
         if (modeTutorial != null) modeTutorial.SetActive(false);
 
-        // 2. 본 게임 모드 켜기
+        // 2. 본 게임 모드 켜기 (GameFlowManager가 깨어남)
         if (modeGame != null) modeGame.SetActive(true);
 
-        // 3. 리갈패드(주문서) 초기화 (합격 도장 지우기)
-        if (missionBoard != null)
-        {
-            missionBoard.InitializeUI();
-            missionBoard.UpdateHeader("< 영업 개시 >");
-            missionBoard.UpdateMission("손님들이 몰려옵니다!\n정확하게 서빙하세요.", 0, 0);
-        }
+        // ▼▼▼ [삭제] GameFlowManager가 할 일이므로 StageManager에서는 삭제했습니다. ▼▼▼
+        /*
+        // 3. 리갈패드(주문서) 초기화
+        if (missionBoard != null) { ... }
 
-        // 4. 리듬 컨덕터 설정 변경 (튜토리얼 -> 본 게임)
-        if (conductor != null)
-        {
-            conductor.isTutorialMode = false; // 튜토리얼 모드 해제
-            conductor.data = mainGameData;    // 데이터 교체 (Tutorial -> Main)
-            conductor.StartGame();            // 게임 시작!
-        }
+        // 4. 리듬 컨덕터 설정 변경
+        if (conductor != null) { ... }
+        */
     }
 }
 
@@ -3376,23 +3457,22 @@ using UnityEngine;
 public class StageModeSelector : MonoBehaviour
 {
     [Header("UI Panels")]
-    public GameObject selectionPanel; // Panel_SelectMode
-
+    public GameObject selectionPanel; 
     [Header("Game Modes")]
-    public GameObject tutorialGroup;  // MODE_TUTORIAL
-    public GameObject mainGameGroup;  // MODE_MAINGAME
-
+    public GameObject tutorialGroup;  
+    public GameObject mainGameGroup;  
     [Header("Shared UI")]
     public MissionBoardUI missionBoard;
 
+    [Header("Ambience")]
+    public AudioSource ambientSource; 
+
     void Start()
     {
-        // 1. 초기화: 선택창만 켜고 나머지는 끔
         if (selectionPanel) selectionPanel.SetActive(true);
         if (tutorialGroup) tutorialGroup.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(false);
 
-        // 2. 주문서에 안내 문구 띄우기
         if (missionBoard)
         {
             missionBoard.InitializeUI();
@@ -3400,28 +3480,34 @@ public class StageModeSelector : MonoBehaviour
             missionBoard.UpdateText("< 대 기 중 >", "모니터에서\n모드를 선택하세요", "");
             missionBoard.ShowSuccessStamp(false);
         }
+
+        // 배경음악 재생
+        if (ambientSource && !ambientSource.isPlaying)
+        {
+            ambientSource.loop = true;
+            ambientSource.Play();
+        }
     }
 
-    // [버튼: 신입 교육]
     public void OnClick_StartTutorial()
     {
         Debug.Log(">> 튜토리얼 모드 시작");
-        
+        StopAmbience();
         if (selectionPanel) selectionPanel.SetActive(false);
-        if (tutorialGroup) tutorialGroup.SetActive(true); // OnEnable() 발동됨
-        
-        // MissionBoard 텍스트는 TutorialController.OnEnable()이 곧바로 덮어씌움
+        if (tutorialGroup) tutorialGroup.SetActive(true); 
     }
 
-    // [버튼: 점심 장사]
     public void OnClick_StartGame()
     {
         Debug.Log(">> 실전 게임 시작");
-
+        StopAmbience();
         if (selectionPanel) selectionPanel.SetActive(false);
-        if (mainGameGroup) mainGameGroup.SetActive(true); // OnEnable() 발동됨
+        if (mainGameGroup) mainGameGroup.SetActive(true); 
+    }
 
-        // MissionBoard 텍스트는 GameFlowManager.OnEnable()이 곧바로 덮어씌움
+    void StopAmbience()
+    {
+        if (ambientSource) ambientSource.Stop();
     }
 }
 
@@ -3500,7 +3586,6 @@ public class TutorialController : MonoBehaviour
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
     public RadioClickable radio;
-    
     public MissionBoardUI missionBoard; 
 
     [Header("UI Groups")]
@@ -3520,19 +3605,16 @@ public class TutorialController : MonoBehaviour
     public int requiredSuccessCount = 1; 
 
     [Header("Wage Settings")]
-    public int maxTotalWage = 100000; // (내부 계산용으로만 남겨둠)
+    public int maxTotalWage = 100000; 
     
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FF3333"; 
 
-    // 내부 변수
     int _currentStepIndex = 0;
     int _successCountThisStep = 0; 
     bool _tutorialCompleted = false;
     bool _isProcessingResult = false;
     float _lastSkipInput = -999f;
-    
-    // 마지막 입력 대기용
     bool _waitForFinalInput = false; 
 
     void OnEnable()
@@ -3563,17 +3645,15 @@ public class TutorialController : MonoBehaviour
 
     void Update()
     {
-        // 스킵 기능
         if (!_tutorialCompleted && OVRInput.GetDown(OVRInput.Button.One))
         {
-            if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
+            if (Time.timeScale > 0.1f && Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
             {
                 _lastSkipInput = Time.time;
                 SkipTutorial();
             }
         }
 
-        // 🔥 마지막 트리거 대기 (합격 화면에서)
         if (_waitForFinalInput)
         {
             if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
@@ -3592,7 +3672,11 @@ public class TutorialController : MonoBehaviour
 
         conductor.isTutorialMode = true;
         conductor.data = tutorialTriggerList;
+        
         conductor.StartGame();
+        
+        // [중요] StartGame 호출 후에 Loop를 켜야 안전합니다.
+        if (conductor.bgmSource) conductor.bgmSource.loop = true; 
 
         if (missionBoard) missionBoard.InitializeUI();
         if (finalResultPanel) finalResultPanel.SetActive(false);
@@ -3627,14 +3711,11 @@ public class TutorialController : MonoBehaviour
         if (success)
         {
             _successCountThisStep++;
-            
-            // 🔥 [변경] 돈 액수 대신 '성공!' 메시지
             ShowMonitorText("성공!", Color.green);
             
             if (_successCountThisStep >= requiredSuccessCount)
             {
                 if (missionBoard) missionBoard.ShowSuccessStamp(true);
-                
                 Invoke(nameof(ShowClearMessage), 1.0f);
                 
                 _currentStepIndex++;
@@ -3655,8 +3736,7 @@ public class TutorialController : MonoBehaviour
         }
         else
         {
-            // 🔥 [변경] 실패 시 '다시!' 메시지
-            ShowMonitorText("다시!", Color.red); // 실패는 빨간색 등 경고색
+            ShowMonitorText("다시!", Color.red);
             Invoke(nameof(RetryCurrentStep), 1.5f);
             Invoke(nameof(ClearMonitorText), 1.0f);
         }
@@ -3664,22 +3744,14 @@ public class TutorialController : MonoBehaviour
 
     void MoveToNextStep()
     {
-        if (conductor)
-        {
-            conductor.AdvanceToNextTrigger();
-            UpdateMissionUI();
-        }
+        if (conductor) { conductor.AdvanceToNextTrigger(); UpdateMissionUI(); }
         _isProcessingResult = false;
         ClearMonitorText();
     }
 
     void RetryCurrentStep()
     {
-        if (conductor)
-        {
-            conductor.RetryCurrentTrigger();
-            UpdateMissionUI();
-        }
+        if (conductor) { conductor.RetryCurrentTrigger(); UpdateMissionUI(); }
         _isProcessingResult = false;
     }
 
@@ -3688,20 +3760,15 @@ public class TutorialController : MonoBehaviour
         if (!missionBoard) return;
         
         missionBoard.ShowSuccessStamp(false);
-        // 실습 단계 표시
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
         int targetSliceCount = 0;
         if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
-        {
             targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
-        }
 
         int currentSlices = 0;
         if (conductor != null && conductor.IsJudgingWindow())
-        {
             currentSlices = conductor.SliceCount;
-        }
         
         int remainCount = Mathf.Max(0, targetSliceCount - currentSlices);
         string icons = "";
@@ -3712,17 +3779,9 @@ public class TutorialController : MonoBehaviour
         string guideText = "";
         switch (_currentStepIndex)
         {
-            case 0: 
-                guideText = "망설이지 말고\n[직접] 한번 썰어보게나!"; 
-                break;
-                
-            case 1: 
-                guideText = "잘했네! 감이 좋군.\n이제 [비트]에 맞춰 썰어보자!"; 
-                break;
-                
-            default: 
-                guideText = "박자에 맞춰\n[정확히] 썰어보게!"; 
-                break;
+            case 0: guideText = "망설이지 말고\n[직접] 한번 썰어보게나!"; break;
+            case 1: guideText = "잘했네! 감이 좋군.\n이제 [비트]에 맞춰 썰어보자!"; break;
+            default: guideText = "박자에 맞춰\n[정확히] 썰어보게!"; break;
         }
 
         guideText = ApplyHighlightColor(guideText);
@@ -3737,12 +3796,7 @@ public class TutorialController : MonoBehaviour
         return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
     }
 
-    // 🔥 [변경] 매출 0원 안 뜨게 변경
-    void UpdateSalesUI()
-    {
-        if (salesText) salesText.text = "면접 실습\n[ 진행 중 ]";
-    }
-
+    void UpdateSalesUI() { if (salesText) salesText.text = "면접 실습\n[ 진행 중 ]"; }
     void ShowClearMessage() { ShowMonitorText("통과!", Color.cyan); }
 
     void SkipTutorial()
@@ -3753,7 +3807,6 @@ public class TutorialController : MonoBehaviour
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
-    // 🔥 [최종 화면 로직]
     void CompleteTutorial()
     {
         _tutorialCompleted = true;
@@ -3762,7 +3815,6 @@ public class TutorialController : MonoBehaviour
         string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
         string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
 
-        // 1. 리갈패드
         if (missionBoard)
         {
             missionBoard.ShowSuccessStamp(true);
@@ -3770,25 +3822,14 @@ public class TutorialController : MonoBehaviour
             missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
         
-        // 2. 모니터 결과창
         if (finalResultPanel)
         {
             finalResultPanel.SetActive(true);
-            
-            // 금액 대신 '합 격'
             if (finalTotalText) finalTotalText.text = bigTitle;
-            
-            // 설명 멘트 + 트리거 힌트
-            if (finalCommentText) 
-            { 
-                finalCommentText.text = finalMessage + startHint; 
-                finalCommentText.color = Color.white; 
-            }
+            if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
         }
         
         ShowMonitorText(finalMessage, Color.cyan);
-
-        // 입력 대기 시작
         _waitForFinalInput = true;
     }
 
@@ -3803,6 +3844,9 @@ public class TutorialController : MonoBehaviour
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
         if (salesUIGroup) salesUIGroup.SetActive(false);
         if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
+        
+        if (finalResultPanel) finalResultPanel.SetActive(false);
+        ClearMonitorText();
     }
 
     void ShowMonitorText(string text, Color color)
@@ -3810,10 +3854,7 @@ public class TutorialController : MonoBehaviour
         if (monitorText) { monitorText.text = text; monitorText.color = color; monitorText.gameObject.SetActive(true); }
     }
 
-    void ClearMonitorText()
-    {
-        if (monitorText) monitorText.text = "";
-    }
+    void ClearMonitorText() { if (monitorText) monitorText.text = ""; }
 }
 
 --------------------------------------------------

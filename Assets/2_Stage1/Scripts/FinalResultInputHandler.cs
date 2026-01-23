@@ -12,12 +12,11 @@ public class FinalResultInputHandler : MonoBehaviour
 
     void Update()
     {
-        // FinalResult »óÅÂ°¡ ¾Æ´Ï¸é ¹«½Ã
         if (!gameFlowManager || gameFlowManager.CurrentState != GameState.FinalResult)
             return;
 
-        // A ¹öÆ°¸¸ Çã¿ë
-        if (OVRInput.GetDown(OVRInput.Button.One)) // A ¹öÆ°
+        // A ë²„íŠ¼ë§Œ í—ˆìš©
+        if (OVRInput.GetDown(OVRInput.Button.One)) // A ë²„íŠ¼
         {
             if (Time.time - _lastInputTime > inputCooldown)
             {
@@ -30,7 +29,6 @@ public class FinalResultInputHandler : MonoBehaviour
     void OnAButtonPressed()
     {
         Debug.Log("[FinalResultInput] A button pressed - Going to main menu");
-
         if (gameFlowManager)
         {
             gameFlowManager.GoToMainMenu();

@@ -89,23 +89,32 @@ public class TutorialDialogueController : MonoBehaviour
         DisableExistingSystems();
     }
     
-    void Start()
+void Start()
+{
+    InitializeControllerPosition();
+    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+
+    // [중요] 대화 시작과 동시에 튜토리얼 BGM 재생
+    if (conductor != null && tutorialController != null)
     {
-        InitializeControllerPosition();
-        
-        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
-
-        if (missionBoard)
-        {
-            missionBoard.InitializeUI(); 
-            missionBoard.UpdateHeader("< 면 접 중 >");
-            missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
-            missionBoard.ShowSuccessStamp(false);
-        }
-
-        if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
-        else StartMainTutorial();
+        conductor.gameObject.SetActive(true);
+        conductor.enabled = true;
+        conductor.isTutorialMode = true;
+        conductor.data = tutorialController.tutorialTriggerList;
+        conductor.StartGame(); 
+        if (conductor.bgmSource) conductor.bgmSource.loop = true;
     }
+
+    if (missionBoard)
+    {
+        missionBoard.InitializeUI(); 
+        missionBoard.UpdateHeader("< 면 접 중 >");
+        missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
+    }
+
+    if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
+    else StartMainTutorial();
+}
     
     void Update()
     {
