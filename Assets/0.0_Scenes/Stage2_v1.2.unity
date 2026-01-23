@@ -3213,9 +3213,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c794fc828328344acb7e3b37868dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectHalfWindow: 1.5
-  goodHalfWindow: 2.9
-  fishCatchableDuration: 3
+  perfectHalfWindow: 0.5
+  goodHalfWindow: 1
+  fishCatchableDuration: 2
   consumeOnTimeout: 0
   hub: {fileID: 903122778}
   perfectCount: 0
