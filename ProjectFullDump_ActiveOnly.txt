@@ -1,6 +1,6 @@
 [PROJECT DUMP START]
 Scene: Stage2_v1.2
-Date: 2026-01-23 오후 4:02:31
+Date: 2026-01-23 오후 5:30:37
 ========================================
               SCENE HIERARCHY
 ========================================
@@ -696,6 +696,44 @@ Date: 2026-01-23 오후 4:02:31
 [O] UI (Tag: Untagged, Layer: Default)
     [O] MenuMonitorCanvas (Tag: Untagged, Layer: Default)
     [O] DebugHUD (Tag: Untagged, Layer: Default)
+[O] Monitor_Group (Tag: Untagged, Layer: Default)
+    [O] Monitor (Tag: Untagged, Layer: Default)
+    [O] Monitor_Canvas (Tag: Untagged, Layer: UI)
+        [O] Panel_SelectMode (Tag: Untagged, Layer: UI)
+            [O] BG (Tag: Untagged, Layer: UI)
+            [O] Text_Title (Tag: Untagged, Layer: UI)
+            [O] Btn_Tutorial (Tag: Untagged, Layer: UI)
+                [O] Text (TMP) (Tag: Untagged, Layer: UI)
+            [O] Btn_Game (Tag: Untagged, Layer: UI)
+                [O] Text (TMP) (Tag: Untagged, Layer: UI)
+        [X] Panel_Dialogue (Tag: Untagged, Layer: UI)
+            [X] Text_Speech (Tag: Untagged, Layer: UI)
+            [X] Text_Hint (Tag: Untagged, Layer: UI)
+        [X] Panel_PlayGame (Tag: Untagged, Layer: UI)
+            [X] Slider_SongProgress (Tag: Untagged, Layer: UI)
+                [X] Background (Tag: Untagged, Layer: UI)
+                [X] Fill Area (Tag: Untagged, Layer: UI)
+                    [X] Fill (Tag: Untagged, Layer: UI)
+            [X] Text_RemainingTime (Tag: Untagged, Layer: UI)
+        [X] Sales_Info_Group (Tag: Untagged, Layer: UI)
+            [X] Text_RealtimeSales (Tag: Untagged, Layer: UI)
+            [X] Text_Feedback (Tag: Untagged, Layer: UI)
+        [X] Panel_ClosingResult (Tag: Untagged, Layer: UI)
+            [X] Text_Title (Tag: Untagged, Layer: UI)
+            [X] Text_FinalTotal (Tag: Untagged, Layer: UI)
+            [X] Text_GradeComment (Tag: Untagged, Layer: UI)
+            [X] Btn_Restart (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainMenu (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+        [X] Panel_Pause (Tag: Untagged, Layer: UI)
+            [X] Text_Pause (Tag: Untagged, Layer: UI)
+            [X] Btn_ResumePause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_RestartPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
 
 ========================================
          USED SCRIPTS SOURCE CODE
@@ -1323,6 +1361,7 @@ public class BagPolicy_st2 : MonoBehaviour
 --------------------------------------------------
 
 --- FILENAME: CatchInput_st2.cs (Assets/3_Stage2/Scripts/Catch/CatchInput_st2.cs) ---
+// Assets/3_Stage2/Scripts/Catch/CatchInput_st2.cs
 using UnityEngine;
 using static GameState_st2;
 
@@ -1375,56 +1414,64 @@ public class CatchInput_st2 : MonoBehaviour
     private void TryUnbindHub()
     {
         if (!_subscribed) return;
-        if (hub == null) { _subscribed = false; return; }
 
-        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        if (hub != null)
+            hub.JudgeResolved -= OnJudgeResolved_Debug;
+
         _subscribed = false;
-    }
-
-    // ✅ 표시용 값만 업데이트
-    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
-    {
-        lastJudgeResult = result;
-        lastHandName = HandToName(hand);
     }
 
     private void Update()
     {
-        if (hub == null) return;
+        // Playing에서만 입력 받기 (원하면 다른 상태도 허용 가능)
+        if (GameFlowController_st2.Instance != null &&
+            GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing)
+            return;
 
-        ProcessHand(OVRInput.Controller.LTouch, leftSensor, ref _lastLeftAttemptDsp);
-        ProcessHand(OVRInput.Controller.RTouch, rightSensor, ref _lastRightAttemptDsp);
+        if (hub == null) return;
+        if (leftSensor == null || rightSensor == null) return;
+
+        // Left
+        float lt = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch);
+        if (lt >= triggerThreshold)
+            TryAttempt(OVRInput.Controller.LTouch, leftSensor);
+
+        // Right
+        float rt = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        if (rt >= triggerThreshold)
+            TryAttempt(OVRInput.Controller.RTouch, rightSensor);
     }
 
-    private void ProcessHand(OVRInput.Controller hand, HandCatchSensor_st2 sensor, ref double lastAttemptDsp)
+    private void TryAttempt(OVRInput.Controller hand, HandCatchSensor_st2 sensor)
     {
-        double dsp = AudioSettings.dspTime;
-        if (dsp - lastAttemptDsp < perHandCooldown) return;
-
-        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
-        if (axis < triggerThreshold) return;
-
-        // 표시용
-        lastHandName = HandToName(hand);
-
-        // ✅ 튜토와 동일: 센서 레이 타겟이 없으면 "아무것도 안 함"
         if (sensor == null) return;
 
-        var target = sensor.GetCurrentTarget();
-        if (target == null) return;
-        if (target.isResolved) return;
+        double now = AudioSettings.dspTime;
+        if (hand == OVRInput.Controller.LTouch)
+        {
+            if (now - _lastLeftAttemptDsp < perHandCooldown) return;
+            _lastLeftAttemptDsp = now;
+            lastHandName = "Left";
+        }
+        else
+        {
+            if (now - _lastRightAttemptDsp < perHandCooldown) return;
+            _lastRightAttemptDsp = now;
+            lastHandName = "Right";
+        }
 
-        lastAttemptDsp = dsp;
+        var fish = sensor.GetCurrentTarget();
+        if (fish == null) return;
+        if (fish.isResolved) return;
 
-        // ✅ v6.2 원칙 유지: 여기서는 이벤트만 발행(판정/봉투/임금 직접 호출 금지)
-        hub.PublishCatchAttempted(target, hand, dsp);
+        // ✅ “잡기 시도”만 발행 → JudgeBridge가 판정 → JudgeResolved로 퍼짐
+        hub.PublishCatchAttempted(fish, hand, now);
     }
 
-    private static string HandToName(OVRInput.Controller hand)
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
     {
-        return hand == OVRInput.Controller.LTouch ? "Left" :
-               hand == OVRInput.Controller.RTouch ? "Right" :
-               hand.ToString();
+        lastJudgeResult = result;
+        lastHandName = (hand == OVRInput.Controller.LTouch) ? "Left" : "Right";
     }
 }
 
@@ -1938,6 +1985,7 @@ public class FishConsumer_st2 : MonoBehaviour
 --------------------------------------------------
 
 --- FILENAME: MoldController_st2.cs (Assets/3_Stage2/Scripts/Fish&mold/MoldController_st2.cs) ---
+// Assets/3_Stage2/Scripts/Fish&mold/MoldController_st2.cs
 using UnityEngine;
 using UnityEngine.Pool;
 using System;
@@ -1955,85 +2003,88 @@ public class MoldController_st2 : MonoBehaviour
     public AudioClip telegraphClip;
     public AudioClip popClip;
 
-    [Header("시각 효과")]
+    [Header("애니메이션")]
     public Animator moldAnimator;
-
-    [Header("퐁 애니메이션 (뚜껑 열림)")]
     public string popAnimationTrigger = "Pop";
     public float popAnimationLeadTime = 0.2f;
 
-    [Header("달그락 애니메이션 (코드 흔들림)")]
-    public bool useTelegraphShake = true;
-    public float shakeIntensity = 0.02f;
-    public float shakeDuration = 0.3f;
-    public int shakeCount = 8;
+    [Header("점프(수치)")]
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
 
-    [Header("VFX (Pop / 퐁)")]
-    public GameObject popVfxPrefab;                 /*[변경가능_퐁이펙트프리팹]*/
-    public Transform popVfxAnchor;                  /*[변경가능_퐁이펙트기준점] (없으면 mold transform)*/
-    public Vector3 popVfxLocalOffset = Vector3.zero;/*[변경가능_퐁이펙트오프셋]*/
-    public Vector3 popVfxLocalEuler = Vector3.zero; /*[변경가능_퐁이펙트회전]*/
-    public float popVfxAutoDestroySeconds = 2.0f;   /*[변경가능_퐁이펙트자동삭제]*/
+    [Header("Pop VFX")]
+    public GameObject popVfxPrefab;
+    public Transform popVfxAnchor;
+    public Vector3 popVfxLocalOffset;
+    public Vector3 popVfxLocalEuler;
+    public float popVfxAutoDestroySeconds = 2.0f;
+
+    [Header("디버그")]
+    public TextMeshProUGUI debugText;
+
+    [Header("외부 시스템")]
+    public JudgeSystem_st2 judgeSystem;
 
     private ObjectPool<FishCatchToken_st2> fishPool;
-    private JudgeSystem_st2 judgeSystem;
-
-    // 이벤트
-    public event Action OnTelegraphPlayed;
-    public event Action OnPopPlayed;
-
-    // 활성 fish 추적
-    private List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
-
-    // 예약된 코루틴 추적
-    private List<Coroutine> scheduledSpawns = new List<Coroutine>();
-
-    // 틀 원본 위치 (흔들림 복원용)
+    private readonly List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
     private Vector3 originalMoldPosition;
+
+    // 스케줄 스폰(패턴 디렉터에서 예약)
+    private readonly List<Coroutine> scheduledSpawns = new List<Coroutine>();
 
     void Awake()
     {
         originalMoldPosition = transform.localPosition;
 
+
         fishPool = new ObjectPool<FishCatchToken_st2>(
-            createFunc: () => {
-                var obj = Instantiate(fishPrefab, transform);
-                var fish = obj.GetComponent<FishCatchToken_st2>();
-                if (fish == null) fish = obj.AddComponent<FishCatchToken_st2>();
-                return fish;
-            },
-            actionOnGet: (fish) => {
-                fish.gameObject.SetActive(true);
-            },
-            actionOnRelease: (fish) => {
-                fish.OnReturnToPool();
-                fish.transform.SetParent(transform);
-                fish.transform.localPosition = Vector3.zero;
-                fish.transform.localRotation = Quaternion.identity;
-                fish.transform.localScale = Vector3.one;
-                fish.gameObject.SetActive(false);
-                activeFish.Remove(fish);
-            },
-            actionOnDestroy: (fish) => Destroy(fish.gameObject),
-            defaultCapacity: 10
+            CreateFish,
+            OnGetFish,
+            OnReleaseFish,
+            OnDestroyFish,
+            collectionCheck: false,
+            defaultCapacity: 12,
+            maxSize: 64
         );
     }
-
-    // ✅ GameFlowController가 호출함(복구)
     public void Initialize(JudgeSystem_st2 judge)
     {
         judgeSystem = judge;
     }
-
-    void Update()
+    private FishCatchToken_st2 CreateFish()
     {
-        for (int i = 0; i < activeFish.Count; i++)
-        {
-            if (activeFish[i] != null && !activeFish[i].isResolved)
-            {
-                activeFish[i].UpdateMovement();
-            }
-        }
+        var go = Instantiate(fishPrefab);
+        go.SetActive(false);
+
+        var fish = go.GetComponent<FishCatchToken_st2>();
+        if (fish == null) fish = go.AddComponent<FishCatchToken_st2>();
+
+        // owner/풀은 Initialize 또는 SetPool에서 잡히게 설계해둠
+        fish.SetPool(fishPool);
+        return fish;
+    }
+
+
+
+    private void OnGetFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        fish.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        fish.gameObject.SetActive(false);
+        fish.transform.SetParent(null);
+    }
+
+    private void OnDestroyFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        Destroy(fish.gameObject);
     }
 
     public void ScheduleTelegraph(double dspTime)
@@ -2056,14 +2107,14 @@ public class MoldController_st2 : MonoBehaviour
             popSource.PlayScheduled(dspTime);
         }
 
-        // ✅ 애니메이션은 퐁 소리보다 먼저 시작
+        // 애니메이션은 퐁 소리보다 먼저
         double animationDelay = dspTime - AudioSettings.dspTime - popAnimationLeadTime;
         if (animationDelay > 0)
         {
             StartCoroutine(PlayPopAnimation((float)animationDelay));
         }
 
-        // ✅ fish 생성은 퐁 소리 타이밍에 맞춤
+        // fish 생성은 퐁 소리 타이밍에 맞춤
         double fishDelay = dspTime - AudioSettings.dspTime;
         var spawnRoutine = StartCoroutine(SpawnFishDelayed((float)fishDelay, dspTime));
         scheduledSpawns.Add(spawnRoutine);
@@ -2071,36 +2122,14 @@ public class MoldController_st2 : MonoBehaviour
 
     IEnumerator PlayTelegraphVisual(float delay)
     {
-        yield return new WaitForSeconds(delay);
-
-        if (useTelegraphShake)
+        float elapsed = 0f;
+        while (elapsed < delay)
         {
-            StartCoroutine(ShakeMold());
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
         }
 
-        OnTelegraphPlayed?.Invoke();
-    }
-
-    IEnumerator ShakeMold()
-    {
-        int currentShake = 0;
-        float shakeInterval = shakeDuration / Mathf.Max(1, shakeCount);
-
-        while (currentShake < shakeCount)
-        {
-            Vector3 randomOffset = new Vector3(
-                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
-                0,
-                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
-            );
-
-            transform.localPosition = originalMoldPosition + randomOffset;
-
-            yield return new WaitForSeconds(shakeInterval);
-            currentShake++;
-        }
-
-        transform.localPosition = originalMoldPosition;
+        // 여기서 흔들림/이펙트 넣어도 됨
     }
 
     IEnumerator PlayPopAnimation(float delay)
@@ -2125,7 +2154,7 @@ public class MoldController_st2 : MonoBehaviour
             yield return null;
         }
 
-        // Ending/Result 체크 (기존 유지)
+        // Ending/Result 체크
         if (GameFlowController_st2.Instance != null)
         {
             if (GameFlowController_st2.Instance.isEndingTriggered ||
@@ -2135,28 +2164,21 @@ public class MoldController_st2 : MonoBehaviour
             }
         }
 
-        // DSP 시간 재확인 (PAUSE로 인한 지연 감지)
+        // PAUSE로 인한 지연 감지
         double actualDsp = AudioSettings.dspTime;
         if (actualDsp > popTime + 1.0f)
             yield break;
 
-        // ✅ fish 생성
         var fish = fishPool.Get();
-        fish.Initialize(popTime, transform, this);
+        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
 
-        // ✅ 퐁 이펙트 생성 (퐁 소리/스폰 타이밍)
         SpawnPopVfx();
 
         activeFish.Add(fish);
 
         if (judgeSystem != null)
-        {
             judgeSystem.RegisterFish(fish);
-        }
 
-        OnPopPlayed?.Invoke();
-
-        // 안전 정리
         scheduledSpawns.RemoveAll(c => c == null);
     }
 
@@ -2180,8 +2202,8 @@ public class MoldController_st2 : MonoBehaviour
         if (ps != null)
         {
             var main = ps.main;
-            float lifeMax = 0f;
 
+            float lifeMax = 0f;
             var sl = main.startLifetime;
             if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
             else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
@@ -2201,7 +2223,7 @@ public class MoldController_st2 : MonoBehaviour
             fishPool.Release(fish);
     }
 
-    // ✅ GameFlowController가 호출함(복구)
+    // ✅ GameFlowController가 호출(복구)
     public void CancelAllScheduledSpawns()
     {
         foreach (var routine in scheduledSpawns)
@@ -2713,10 +2735,15 @@ public class EconomySystem_st2 : MonoBehaviour
 --- FILENAME: GameFlowController_st2.cs (Assets/3_Stage2/Scripts/System/GameFlowController_st2.cs) ---
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static GameState_st2;
 
+/// <summary>
+/// Stage2 전체 흐름 제어:
+/// - Panel_SelectMode에서 튜토리얼/메인 선택
+/// - Panel_Pause(A버튼) 일시정지: 결과 화면이 아닐 때(튜토리얼/메인) 호출
+/// - Panel_ClosingResult / Panel_Pause의 다시하기/메인으로: SelectMode로 복귀 + 완전 초기화
+/// </summary>
 public class GameFlowController_st2 : MonoBehaviour
 {
     public static GameFlowController_st2 Instance { get; private set; }
@@ -2725,7 +2752,9 @@ public class GameFlowController_st2 : MonoBehaviour
     public GameStatest2 CurrentState = GameStatest2.MainMenu;
     public bool isEndingTriggered = false;
 
-    [Header("오디오")]
+    public event Action<GameStatest2> OnStateChanged;
+
+    [Header("오디오(메인 BGM)")]
     public AudioSource bgmSource;
     public AudioClip bgmClip;
 
@@ -2738,171 +2767,168 @@ public class GameFlowController_st2 : MonoBehaviour
     public EconomySystem_st2 economySystem;
     public BagManager_st2 bagManager;
     public PatternDirector_st2 patternDirector;
-    public MenuMonitorUI_st2 menuMonitorUI;
+
+    [Tooltip("MenuMonitorUI는 제거 예정. 대신 Stage2UIController_st2를 사용.")]
+    public Stage2UIController_st2 uiController;
+
+    [Header("메인 시스템 오브젝트")]
     public MoldController_st2[] molds;
     public CatchInput_st2[] catchInputs;
 
-    [Header("튜토리얼 (옵션)")]
-    public StandaloneTutorialController_st2 tutorialController; // ✅ 추가
+    [Header("튜토리얼(옵션)")]
+    public StandaloneTutorialController_st2 tutorialController;
 
-    [Header("타이밍")]
+    [Header("Pause 시 상호작용 차단(선택)")]
+    [Tooltip("Pause 시 SetActive(false)로 꺼버릴 루트/오브젝트들(예: MainRoot, TutorialRoot, 상호작용 오브젝트들). PauseMenu는 넣지 마세요.")]
+    public GameObject[] pauseBlockObjects;
+
+    // 타이밍 (DSP 기반)
     private double songStartDspTime;
     private double songEndDspTime;
     private double pausedDspAccum = 0.0;
     private double pauseStartDspTime = 0.0;
 
+    private GameStatest2 stateBeforePause = GameStatest2.MainMenu;
+
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
     }
 
     void Start()
     {
         // 시스템 초기화
-        foreach (var mold in molds)
+        if (molds != null)
         {
-            mold.Initialize(judgeSystem);
+            foreach (var mold in molds)
+                if (mold != null) mold.Initialize(judgeSystem);
         }
 
-        foreach (var input in catchInputs)
-        {
-            // (필요 시 초기화 코드)
-        }
+        if (uiController != null)
+            uiController.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
 
-        menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
+        // 중앙 이벤트 연결
+        if (judgeSystem != null)
+            judgeSystem.OnJudgeResult += OnJudgeResult;
 
-        // ✅ 중앙 이벤트 연결
-        judgeSystem.OnJudgeResult += OnJudgeResult;
-        bagManager.OnBagSwapped += OnBagSwapped;
-        patternDirector.OnPatternQueued += OnPatternQueued;
-
-        // ✅ 개발용: 매 실행마다 튜토리얼 강제
-        PlayerPrefs.SetInt("TutorialCompleted", 0);
-        PlayerPrefs.Save();
-
-        // ✅ 튜토리얼 체크
-        bool hasCompletedTutorial = PlayerPrefs.GetInt("TutorialCompleted", 0) == 1;
-
-        if (!hasCompletedTutorial && tutorialController != null)
-        {
-            // 튜토리얼 활성화, 메인 게임 비활성화
-            TransitionToTutorial();
-        }
-        else
-        {
-            // 튜토리얼 비활성화, 메인 게임 시작
-            if (tutorialController != null)
-            {
-                tutorialController.gameObject.SetActive(false);
-            }
-            TransitionToPlaying();
-        }
+        // 시작은 무조건 SelectMode(사용자 선택)
+        TransitionToMainMenu();
     }
 
     void Update()
     {
-        // ✅ Tutorial 상태일 때는 메인 게임 로직 실행 안 함
-        if (CurrentState == GameStatest2.Tutorial) return;
-
-        // PAUSE 입력
-        if (CurrentState == GameStatest2.Playing)
+        // ✅ A 버튼(오큘러스 오른손 A = Button.One) → 결과 화면이 아닐 때 Pause 토글
+        // (튜토리얼 스킵은 B로 변경됨)
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
-            if (OVRInput.GetDown(OVRInput.Button.Start))
+            if (CurrentState == GameStatest2.Playing || CurrentState == GameStatest2.Tutorial || CurrentState == GameStatest2.Paused)
             {
-                if (bgmSource != null && bgmSource.time > 0.1f)
-                {
-                    PauseGame();
-                }
+                TogglePause();
             }
         }
 
         // 곡 종료 체크 (총 루프 횟수 기준 / Pause 보정 포함)
         if (CurrentState == GameStatest2.Playing && !isEndingTriggered)
         {
-            double effectiveElapsed = (AudioSettings.dspTime - songStartDspTime) - pausedDspAccum;
-            double totalDuration = (songEndDspTime - songStartDspTime);
-
-            if (effectiveElapsed >= totalDuration)
+            if (GetSongProgress01(out double elapsed, out double total, out double _))
             {
-                TriggerEnding();
+                if (elapsed >= total)
+                    TriggerEnding();
             }
-        }
-
-        // UI 업데이트 (루프 포함 전체 진행시간으로 표시)
-        if (CurrentState == GameStatest2.Playing)
-        {
-            float effectiveElapsed = (float)((AudioSettings.dspTime - songStartDspTime) - pausedDspAccum);
-            float totalDuration = (float)(songEndDspTime - songStartDspTime);
-
-            menuMonitorUI.UpdateSongTime(effectiveElapsed, totalDuration);
-            menuMonitorUI.UpdateFilledBags(bagManager.GetFilledBagCount());
         }
     }
 
-    // ✅ 추가: 튜토리얼 전환
+    // =========================
+    // External UI Entry Points
+    // =========================
+
+    public void StartTutorialFromMenu()
+    {
+        TransitionToTutorial();
+    }
+
+    public void StartMainGameFromMenu()
+    {
+        TransitionToPlaying();
+    }
+
+    public void BackToSelectMode()
+    {
+        TransitionToMainMenu();
+    }
+
+    public void RestartToSelectMode()
+    {
+        // 게임을 "다시하기" 요구사항: SelectMode로 복귀 + 완전 초기화 + BGM도 초기화
+        TransitionToMainMenu();
+    }
+
+    // =========================
+    // State Transitions
+    // =========================
+
+    public void TransitionToMainMenu()
+    {
+        // 예약 이벤트 정리
+        if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
+
+        // Mold 스폰 취소
+        if (molds != null)
+        {
+            foreach (var mold in molds)
+                if (mold != null) mold.CancelAllScheduledSpawns();
+        }
+
+        // 오디오 정지
+        if (bgmSource != null) bgmSource.Stop();
+
+        // 시간/오디오/플래그 초기화
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        ResetGameState();
+
+        // 메인/튜토리얼 비활성화
+        SetMainGameActive(false);
+        if (tutorialController != null) tutorialController.gameObject.SetActive(false);
+
+        // UI는 SelectMode
+        SetState(GameStatest2.MainMenu);
+    }
+
     public void TransitionToTutorial()
     {
-        CurrentState = GameStatest2.Tutorial;
-        menuMonitorUI.UpdateState(CurrentState);
+        // 완전 초기화 후 튜토리얼 진입
+        ResetGameState();
 
-        // 메인 게임 몰드 비활성화
-        foreach (var mold in molds)
-        {
-            mold.gameObject.SetActive(false);
-        }
-
-        // 메인 게임 입력 비활성화
-        foreach (var input in catchInputs)
-        {
-            input.enabled = false;
-        }
+        // 메인 비활성화
+        SetMainGameActive(false);
 
         // 튜토리얼 활성화
         if (tutorialController != null)
-        {
             tutorialController.gameObject.SetActive(true);
-        }
+
+        // BGM(메인)은 끔
+        if (bgmSource != null) bgmSource.Stop();
+
+        SetState(GameStatest2.Tutorial);
     }
 
     public void TransitionToPlaying()
     {
-        CurrentState = GameStatest2.Playing;
-        isEndingTriggered = false;
-        menuMonitorUI.UpdateState(CurrentState);
+        ResetGameState();
 
-        // ✅ 튜토리얼 완전 비활성화
+        // 튜토리얼 완전 비활성화
         if (tutorialController != null)
-        {
             tutorialController.gameObject.SetActive(false);
-        }
 
-        // ✅ 메인 게임 몰드 활성화 및 초기화
-        foreach (var mold in molds)
-        {
-            mold.gameObject.SetActive(true);
-            mold.CancelAllScheduledSpawns(); // 혹시 모를 이전 스폰 정리
-        }
+        // 메인 활성화 + 초기화
+        SetMainGameActive(true);
 
-        // ✅ 메인 게임 입력 활성화 및 초기화
-        foreach (var input in catchInputs)
-        {
-            input.enabled = true;
-            // 혹시 이전 판정 기록 초기화
-            input.lastJudgeResult = JudgeResult_st2.Miss;
-        }
-
-        // ✅ 메인 게임 시스템 초기화
-        judgeSystem.ResetStats();
-        economySystem.Reset();
-        bagManager.Reset();
+        if (judgeSystem != null) judgeSystem.ResetStats();
+        if (economySystem != null) economySystem.Reset();
+        if (bagManager != null) bagManager.Reset();
 
         // ===== BGM 시작 (루프 N회 후 종료) =====
         songStartDspTime = AudioSettings.dspTime;
@@ -2912,88 +2938,157 @@ public class GameFlowController_st2 : MonoBehaviour
         if (bgmSource != null)
         {
             bgmSource.clip = bgmClip;
-
-            // 실제 루프 동작은 AudioSource.loop로 처리
             bgmSource.loop = bgmLoopEnabled;
 
-            // "총 재생 목표 시간" 계산 (루프 미사용이면 1회 재생)
             int loops = (bgmLoopEnabled ? Mathf.Max(1, bgmLoopCount) : 1);
             double totalDuration = (bgmClip != null ? bgmClip.length : 0.0) * loops;
 
             songEndDspTime = songStartDspTime + totalDuration;
-
             bgmSource.Play();
         }
         else
         {
-            // bgmSource가 없다면 즉시 종료되지 않게 최소값 설정
             songEndDspTime = songStartDspTime + 0.1;
         }
 
-        // 시스템 시작
-        patternDirector.StartPatternSystem(songStartDspTime);
+        if (patternDirector != null)
+            patternDirector.StartPatternSystem(songStartDspTime);
 
-        Debug.Log("✅ Main game started - Tutorial cleanup complete");
+        SetState(GameStatest2.Playing);
+    }
+
+    // =========================
+    // Pause
+    // =========================
+
+    public void TogglePause()
+    {
+        if (CurrentState == GameStatest2.Paused) ResumeGame();
+        else PauseGame();
     }
 
     void PauseGame()
     {
-        CurrentState = GameStatest2.Paused;
+        if (CurrentState == GameStatest2.Result || CurrentState == GameStatest2.MainMenu) return;
+
+        stateBeforePause = CurrentState;
+        SetState(GameStatest2.Paused);
+
         Time.timeScale = 0f;
         AudioListener.pause = true;
 
+        // 메인 BGM pause
         if (bgmSource != null) bgmSource.Pause();
 
-        // ✅ DSP 시간 보정용
+        // 튜토리얼 BGM pause
+        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+            tutorialController.tutorialBGMSource.Pause();
+
+        // DSP 보정용
         pauseStartDspTime = AudioSettings.dspTime;
 
-        menuMonitorUI.UpdateState(CurrentState);
+        // 상호작용 차단(옵션): 루트 꺼버리기
+        SetPauseBlockObjectsActive(false);
     }
 
     public void ResumeGame()
     {
-        CurrentState = GameStatest2.Playing;
+        if (CurrentState != GameStatest2.Paused) return;
+
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
+        // BGM resume
         if (bgmSource != null) bgmSource.UnPause();
+        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+            tutorialController.tutorialBGMSource.UnPause();
 
-        // ✅ Pause 동안 흐른 dspTime 누적 보정
+        // Pause 동안 흐른 dspTime 누적 보정
         pausedDspAccum += (AudioSettings.dspTime - pauseStartDspTime);
 
-        menuMonitorUI.UpdateState(CurrentState);
+        // 루트 복구
+        SetPauseBlockObjectsActive(true);
+
+        // 원래 상태로 복귀
+        SetState(stateBeforePause);
     }
 
-    public void RestartGame()
+    void SetPauseBlockObjectsActive(bool active)
     {
-        // 예약 이벤트 정리
-        patternDirector.ClearAllScheduledEvents();
+        if (pauseBlockObjects == null) return;
+        for (int i = 0; i < pauseBlockObjects.Length; i++)
+        {
+            var go = pauseBlockObjects[i];
+            if (go == null) continue;
+            go.SetActive(active);
+        }
+    }
+
+    // =========================
+    // Ending / Result
+    // =========================
+
+    void TriggerEnding()
+    {
+        isEndingTriggered = true;
 
         // Mold 스폰 취소
-        foreach (var mold in molds)
+        if (molds != null)
         {
-            mold.CancelAllScheduledSpawns();
+            foreach (var mold in molds)
+                if (mold != null) mold.CancelAllScheduledSpawns();
         }
 
-        // PAUSE 해제
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        // 남은 fish 강제 Miss 처리
+        if (judgeSystem != null) judgeSystem.ForceResolveAll();
 
-        // 오디오 정지
-        if (bgmSource != null) bgmSource.Stop();
+        // 현재 봉투 완성
+        if (bagManager != null) bagManager.FinalizeBag();
 
-        // 게임 상태 초기화
-        ResetGameState();
+        StartCoroutine(TransitionToResultDelayed(0.5f));
+    }
 
-        // 재시작
-        TransitionToPlaying();
+    IEnumerator TransitionToResultDelayed(float delay)
+    {
+        // TimeScale 0에 멈추지 않게 WaitForSecondsRealtime 사용
+        yield return new WaitForSecondsRealtime(delay);
+        TransitionToResult();
+    }
+
+    void TransitionToResult()
+    {
+        // Result 진입 전 Pause 해제
+        if (CurrentState == GameStatest2.Paused)
+            ResumeGame();
+
+        SetState(GameStatest2.Result);
+    }
+
+    // =========================
+    // Helpers
+    // =========================
+
+    void SetMainGameActive(bool active)
+    {
+        if (molds != null)
+        {
+            foreach (var mold in molds)
+                if (mold != null) mold.gameObject.SetActive(active);
+        }
+
+        if (catchInputs != null)
+        {
+            foreach (var input in catchInputs)
+            {
+                if (input == null) continue;
+                input.enabled = active;
+                if (active) input.lastJudgeResult = JudgeResult_st2.Miss;
+            }
+        }
     }
 
     void ResetGameState()
     {
-        judgeSystem.ResetStats();
-        economySystem.Reset();
-        bagManager.Reset();
         isEndingTriggered = false;
 
         // 타이밍 초기화
@@ -3003,52 +3098,38 @@ public class GameFlowController_st2 : MonoBehaviour
         pauseStartDspTime = 0.0;
     }
 
-    void TriggerEnding()
+    void SetState(GameStatest2 newState)
     {
-        isEndingTriggered = true;
+        CurrentState = newState;
 
-        // Mold 스폰 취소
-        foreach (var mold in molds)
-        {
-            mold.CancelAllScheduledSpawns();
-        }
+        if (uiController != null)
+            uiController.UpdateState(newState);
 
-        // 남은 fish 강제 Miss 처리
-        judgeSystem.ForceResolveAll();
-
-        // 현재 봉투 완성
-        bagManager.FinalizeBag();
-
-        // Result로 전환
-        StartCoroutine(TransitionToResultDelayed(0.5f));
+        OnStateChanged?.Invoke(newState);
     }
 
-    IEnumerator TransitionToResultDelayed(float delay)
+    /// <summary>
+    /// 메인 BGM의 "Pause 보정 포함" 진행시간/총시간/정규화 값을 얻는다.
+    /// </summary>
+    public bool GetSongProgress01(out double effectiveElapsed, out double totalDuration, out double normalized01)
     {
-        yield return new WaitForSeconds(delay);
-        TransitionToResult();
+        effectiveElapsed = 0;
+        totalDuration = 0;
+        normalized01 = 0;
+
+        if (songEndDspTime <= songStartDspTime) return false;
+
+        totalDuration = (songEndDspTime - songStartDspTime);
+        effectiveElapsed = (AudioSettings.dspTime - songStartDspTime) - pausedDspAccum;
+        normalized01 = Mathf.Clamp01((float)(effectiveElapsed / totalDuration));
+        return true;
     }
 
-    void TransitionToResult()
-    {
-        CurrentState = GameStatest2.Result;
-        menuMonitorUI.UpdateState(CurrentState);
-    }
-
-    // ✅ 중앙 이벤트 핸들러 (튜토리얼과 무관)
+    // 중앙 이벤트 핸들러
     void OnJudgeResult(JudgeResult_st2 result, float delta)
     {
-        economySystem.ApplyJudgeResult(result);
-    }
-
-    void OnBagSwapped()
-    {
-        // 메인 게임에서만 사용
-    }
-
-    void OnPatternQueued(PatternType_st2 type)
-    {
-        // 메인 게임에서만 사용
+        if (economySystem != null)
+            economySystem.ApplyJudgeResult(result);
     }
 }
 
@@ -3297,6 +3378,14 @@ public class JudgeSystem_st2 : MonoBehaviour
 
     private void Update()
     {
+        // ✅ Pause/MainMenu/Result에서는 판정 타임아웃 진행 금지
+        if (GameFlowController_st2.Instance != null)
+        {
+            var s = GameFlowController_st2.Instance.CurrentState;
+            if (s == GameStatest2.Paused || s == GameStatest2.MainMenu || s == GameStatest2.Result)
+                return;
+        }
+
         // 자동 Miss 확정(타임아웃)
         if (activeFish.Count == 0) return;
 
@@ -3385,25 +3474,43 @@ public class JudgeSystem_st2 : MonoBehaviour
         fish.isResolved = true;
         fish.isCaught = (result != JudgeResult_st2.Miss);
 
-        activeFish.Remove(fish);
+        // 결과 브로드캐스트
         OnJudgeResult?.Invoke(result, delta);
+
+        // 해결된 fish는 active에서 제거
+        activeFish.Remove(fish);
 
         return result;
     }
 
-    private void ProcessTimeoutMiss(FishCatchToken_st2 fish)
+    void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
-        if (fish == null) return;
-        if (fish.isResolved) return;
-
+        // 타임아웃은 Miss 확정
+        missCount++;
         fish.isResolved = true;
         fish.isCaught = false;
-        missCount++;
+
+        // delta는 의미상 "late"지만, 표시만 필요하면 0으로 둬도 됨
+        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
         activeFish.Remove(fish);
+    }
 
-        // 타임아웃 미스는 delta 의미 없으니 0
-        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
+    public void ForceResolveAll()
+    {
+        _timeoutBuffer.Clear();
+        foreach (var fish in activeFish) _timeoutBuffer.Add(fish);
+
+        for (int i = 0; i < _timeoutBuffer.Count; i++)
+        {
+            var fish = _timeoutBuffer[i];
+            if (fish == null) continue;
+            if (fish.isResolved) continue;
+
+            ProcessTimeoutMiss(fish);
+        }
+
+        activeFish.Clear();
     }
 
     public void ResetStats()
@@ -3412,27 +3519,6 @@ public class JudgeSystem_st2 : MonoBehaviour
         goodCount = 0;
         missCount = 0;
         activeFish.Clear();
-        _timeoutBuffer.Clear();
-    }
-
-    public void ForceResolveAll()
-    {
-        _timeoutBuffer.Clear();
-        foreach (var fish in activeFish)
-        {
-            if (fish != null && !fish.isResolved)
-                _timeoutBuffer.Add(fish);
-        }
-
-        for (int i = 0; i < _timeoutBuffer.Count; i++)
-        {
-            var fish = _timeoutBuffer[i];
-            if (fish != null && !fish.isResolved)
-                ProcessTimeoutMiss(fish);
-        }
-
-        activeFish.Clear();
-        _timeoutBuffer.Clear();
     }
 }
 
@@ -3836,9 +3922,12 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
     void Update()
     {
-        // A 버튼 스킵
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        if (GameFlowController_st2.Instance != null && GameFlowController_st2.Instance.CurrentState == GameStatest2.Paused)
+            return;
+        //B버튼 스킵
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
             SkipTutorial();
+
 
         // ✅ 스테이지별로 잡기 허용
         if (IsCatchingEnabled())
@@ -3858,7 +3947,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     void InitializeUI()
     {
         if (skipText != null)
-            skipText.text = "[Press A to Skip Tutorial]";
+            skipText.text = "[Press B to Skip Tutorial]";
 
         if (tutorialCanvas != null)
             tutorialCanvas.SetActive(true);

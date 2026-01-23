@@ -37,6 +37,14 @@ public class JudgeSystem_st2 : MonoBehaviour
 
     private void Update()
     {
+        // ✅ Pause/MainMenu/Result에서는 판정 타임아웃 진행 금지
+        if (GameFlowController_st2.Instance != null)
+        {
+            var s = GameFlowController_st2.Instance.CurrentState;
+            if (s == GameStatest2.Paused || s == GameStatest2.MainMenu || s == GameStatest2.Result)
+                return;
+        }
+
         // 자동 Miss 확정(타임아웃)
         if (activeFish.Count == 0) return;
 
@@ -125,25 +133,43 @@ public class JudgeSystem_st2 : MonoBehaviour
         fish.isResolved = true;
         fish.isCaught = (result != JudgeResult_st2.Miss);
 
-        activeFish.Remove(fish);
+        // 결과 브로드캐스트
         OnJudgeResult?.Invoke(result, delta);
+
+        // 해결된 fish는 active에서 제거
+        activeFish.Remove(fish);
 
         return result;
     }
 
-    private void ProcessTimeoutMiss(FishCatchToken_st2 fish)
+    void ProcessTimeoutMiss(FishCatchToken_st2 fish)
     {
-        if (fish == null) return;
-        if (fish.isResolved) return;
-
+        // 타임아웃은 Miss 확정
+        missCount++;
         fish.isResolved = true;
         fish.isCaught = false;
-        missCount++;
+
+        // delta는 의미상 "late"지만, 표시만 필요하면 0으로 둬도 됨
+        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
 
         activeFish.Remove(fish);
+    }
 
-        // 타임아웃 미스는 delta 의미 없으니 0
-        OnJudgeResult?.Invoke(JudgeResult_st2.Miss, 0f);
+    public void ForceResolveAll()
+    {
+        _timeoutBuffer.Clear();
+        foreach (var fish in activeFish) _timeoutBuffer.Add(fish);
+
+        for (int i = 0; i < _timeoutBuffer.Count; i++)
+        {
+            var fish = _timeoutBuffer[i];
+            if (fish == null) continue;
+            if (fish.isResolved) continue;
+
+            ProcessTimeoutMiss(fish);
+        }
+
+        activeFish.Clear();
     }
 
     public void ResetStats()
@@ -152,26 +178,5 @@ public class JudgeSystem_st2 : MonoBehaviour
         goodCount = 0;
         missCount = 0;
         activeFish.Clear();
-        _timeoutBuffer.Clear();
-    }
-
-    public void ForceResolveAll()
-    {
-        _timeoutBuffer.Clear();
-        foreach (var fish in activeFish)
-        {
-            if (fish != null && !fish.isResolved)
-                _timeoutBuffer.Add(fish);
-        }
-
-        for (int i = 0; i < _timeoutBuffer.Count; i++)
-        {
-            var fish = _timeoutBuffer[i];
-            if (fish != null && !fish.isResolved)
-                ProcessTimeoutMiss(fish);
-        }
-
-        activeFish.Clear();
-        _timeoutBuffer.Clear();
     }
 }

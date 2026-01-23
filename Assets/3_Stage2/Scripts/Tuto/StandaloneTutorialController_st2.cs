@@ -98,9 +98,12 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
     void Update()
     {
-        // A 버튼 스킵
-        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        if (GameFlowController_st2.Instance != null && GameFlowController_st2.Instance.CurrentState == GameStatest2.Paused)
+            return;
+        //B버튼 스킵
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
             SkipTutorial();
+
 
         // ✅ 스테이지별로 잡기 허용
         if (IsCatchingEnabled())
@@ -120,7 +123,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     void InitializeUI()
     {
         if (skipText != null)
-            skipText.text = "[Press A to Skip Tutorial]";
+            skipText.text = "[Press B to Skip Tutorial]";
 
         if (tutorialCanvas != null)
             tutorialCanvas.SetActive(true);

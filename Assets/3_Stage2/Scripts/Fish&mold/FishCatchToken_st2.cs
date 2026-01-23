@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class FishCatchToken_st2 : MonoBehaviour
 {
@@ -43,17 +44,64 @@ public class FishCatchToken_st2 : MonoBehaviour
     // 바닥 반환 1회 가드
     private bool _releasedToPoolOnce = false;
 
+    // ✅ MoldController가 요구하는 풀 주입/반환용
+    private IObjectPool<FishCatchToken_st2> _pool;
+
     // 소유 몰드 추적
     public MoldController_st2 ownerMold;
+
+    // =========================
+    // ✅ 호환 API (컴파일 핵심)
+    // =========================
+
+    // MoldController.CreateFish()에서 호출됨
+    public void SetPool(IObjectPool<FishCatchToken_st2> pool)
+    {
+        _pool = pool;
+    }
+
+    // MoldController.SpawnFishDelayed()에서 호출되는 7인자 버전
+    public void Initialize(double popDspTime, Transform mold, MoldController_st2 owner,
+                           float jumpHeight, float forwardDistance, float gravity, LayerMask groundLayer)
+    {
+        // 외부에서 들어온 점프 파라미터 우선 반영
+        this.jumpHeight = jumpHeight;
+        this.forwardDistance = forwardDistance;
+        this.gravity = gravity;
+        this.groundLayer = groundLayer;
+
+        // 기존 3인자 Initialize로 공통 초기화
+        Initialize(popDspTime, mold, owner);
+    }
+
+    // CatchInput에서 OnCaught(hand) 호출할 수 있게 오버로드 제공
+    public void OnCaught(OVRInput.Controller hand)
+    {
+        assignedHand = hand;
+        OnCaught(); // 기존 연출/고정 로직 재사용
+    }
+
+    // =========================
+    // Pool Return
+    // =========================
 
     public void ConsumeToPool(FishConsumeReason_st2 reason)
     {
         // ✅ 성공/미스/타임아웃 등 어떤 이유든 "정상 풀 반환"
+        transform.SetParent(null, true);
+
+        // 반환 직전 정리
+        OnReturnToPool();
+
         if (ownerMold != null)
         {
-            // 손에 붙어있을 수 있으니 분리
-            transform.SetParent(null, true);
             ownerMold.ReleaseFish(this);
+            return;
+        }
+
+        if (_pool != null)
+        {
+            _pool.Release(this);
             return;
         }
 
@@ -146,6 +194,7 @@ public class FishCatchToken_st2 : MonoBehaviour
         if (catchSfxSource == null) catchSfxSource = GetComponent<AudioSource>();
     }
 
+    // ✅ 기존 3인자 Initialize(내부 공통)
     public void Initialize(double popDspTime, Transform mold, MoldController_st2 owner)
     {
         popTime = popDspTime;
@@ -158,16 +207,20 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         hasJumped = false;
         catchFxPlayed = false;
-        _releasedToPoolOnce = false; // ✅ 풀 재사용 시 반드시 리셋
+        _releasedToPoolOnce = false;
 
-        moldPosition = mold.position;
+        moldPosition = (mold != null) ? mold.position : transform.position;
         transform.position = moldPosition;
 
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.useGravity = true;
-        rb.isKinematic = false;
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.useGravity = true;
+            rb.isKinematic = false;
+        }
 
+        // ⚠️ 기존 네 연출 유지(스케일 100)
         transform.localScale = Vector3.one * 100.0f;
 
         PerformJump();
@@ -190,9 +243,13 @@ public class FishCatchToken_st2 : MonoBehaviour
         float forwardVelocityZ = forwardDistance / flightTime;
 
         Vector3 velocity = new Vector3(0, jumpVelocityY, -forwardVelocityZ);
-        rb.velocity = velocity;
 
+        if (rb != null)
+            rb.velocity = velocity;
+
+        // ⚠️ 주의: 이건 "전역 중력" 변경이라 원하면 GameFlow 시작 때 1회만 세팅하는 게 더 안전함.
         Physics.gravity = new Vector3(0, -gravity, 0);
+
         hasJumped = true;
     }
 
@@ -210,18 +267,12 @@ public class FishCatchToken_st2 : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")) isGround = true;
         if (!isGround) return;
 
-        if (!isResolved)
-        {
-            
-        }
-
         if (ownerMold != null)
             ownerMold.ReleaseFish(this);
     }
 
     public void OnCaught()
     {
-        // ✅ isCaught가 이미 true여도(외부에서 먼저 세팅했어도) FX는 1회 보장
         isCaught = true;
 
         if (!catchFxPlayed)
@@ -252,9 +303,7 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         hasJumped = false;
         catchFxPlayed = false;
-        _releasedToPoolOnce = false; // ✅ 안전 리셋
-        // isResolved/isCaught는 MoldController actionOnRelease에서 OnReturnToPool 호출 후 SetActive(false)라
-        // 다음 Get() 때 Initialize에서 다시 세팅됨
+        _releasedToPoolOnce = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -267,7 +316,6 @@ public class FishCatchToken_st2 : MonoBehaviour
         if (_releasedToPoolOnce) return;
         if (otherGo == null) return;
 
-        // 이미 잡혀서 처리 중이면 바닥으로 반환 막기(성공 연출/스냅 중 충돌 방지)
         if (isCaught) return;
 
         bool isGround =
@@ -278,10 +326,13 @@ public class FishCatchToken_st2 : MonoBehaviour
 
         _releasedToPoolOnce = true;
 
-        // ✅ 여기서 isResolved 여부와 상관없이 "풀 반환"이 목표
         if (ownerMold != null)
         {
             ownerMold.ReleaseFish(this);
+        }
+        else if (_pool != null)
+        {
+            _pool.Release(this);
         }
         else
         {

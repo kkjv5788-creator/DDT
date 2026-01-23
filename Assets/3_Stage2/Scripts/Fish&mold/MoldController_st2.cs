@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Assets/3_Stage2/Scripts/Fish&mold/MoldController_st2.cs
+using UnityEngine;
 using UnityEngine.Pool;
 using System;
 using System.Collections;
@@ -15,85 +16,88 @@ public class MoldController_st2 : MonoBehaviour
     public AudioClip telegraphClip;
     public AudioClip popClip;
 
-    [Header("시각 효과")]
+    [Header("애니메이션")]
     public Animator moldAnimator;
-
-    [Header("퐁 애니메이션 (뚜껑 열림)")]
     public string popAnimationTrigger = "Pop";
     public float popAnimationLeadTime = 0.2f;
 
-    [Header("달그락 애니메이션 (코드 흔들림)")]
-    public bool useTelegraphShake = true;
-    public float shakeIntensity = 0.02f;
-    public float shakeDuration = 0.3f;
-    public int shakeCount = 8;
+    [Header("점프(수치)")]
+    public float jumpHeight = 2.5f;
+    public float forwardDistance = 2.0f;
+    public float gravity = 9.81f;
+    public LayerMask groundLayer;
 
-    [Header("VFX (Pop / 퐁)")]
-    public GameObject popVfxPrefab;                 /*[변경가능_퐁이펙트프리팹]*/
-    public Transform popVfxAnchor;                  /*[변경가능_퐁이펙트기준점] (없으면 mold transform)*/
-    public Vector3 popVfxLocalOffset = Vector3.zero;/*[변경가능_퐁이펙트오프셋]*/
-    public Vector3 popVfxLocalEuler = Vector3.zero; /*[변경가능_퐁이펙트회전]*/
-    public float popVfxAutoDestroySeconds = 2.0f;   /*[변경가능_퐁이펙트자동삭제]*/
+    [Header("Pop VFX")]
+    public GameObject popVfxPrefab;
+    public Transform popVfxAnchor;
+    public Vector3 popVfxLocalOffset;
+    public Vector3 popVfxLocalEuler;
+    public float popVfxAutoDestroySeconds = 2.0f;
+
+    [Header("디버그")]
+    public TextMeshProUGUI debugText;
+
+    [Header("외부 시스템")]
+    public JudgeSystem_st2 judgeSystem;
 
     private ObjectPool<FishCatchToken_st2> fishPool;
-    private JudgeSystem_st2 judgeSystem;
-
-    // 이벤트
-    public event Action OnTelegraphPlayed;
-    public event Action OnPopPlayed;
-
-    // 활성 fish 추적
-    private List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
-
-    // 예약된 코루틴 추적
-    private List<Coroutine> scheduledSpawns = new List<Coroutine>();
-
-    // 틀 원본 위치 (흔들림 복원용)
+    private readonly List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
     private Vector3 originalMoldPosition;
+
+    // 스케줄 스폰(패턴 디렉터에서 예약)
+    private readonly List<Coroutine> scheduledSpawns = new List<Coroutine>();
 
     void Awake()
     {
         originalMoldPosition = transform.localPosition;
 
+
         fishPool = new ObjectPool<FishCatchToken_st2>(
-            createFunc: () => {
-                var obj = Instantiate(fishPrefab, transform);
-                var fish = obj.GetComponent<FishCatchToken_st2>();
-                if (fish == null) fish = obj.AddComponent<FishCatchToken_st2>();
-                return fish;
-            },
-            actionOnGet: (fish) => {
-                fish.gameObject.SetActive(true);
-            },
-            actionOnRelease: (fish) => {
-                fish.OnReturnToPool();
-                fish.transform.SetParent(transform);
-                fish.transform.localPosition = Vector3.zero;
-                fish.transform.localRotation = Quaternion.identity;
-                fish.transform.localScale = Vector3.one;
-                fish.gameObject.SetActive(false);
-                activeFish.Remove(fish);
-            },
-            actionOnDestroy: (fish) => Destroy(fish.gameObject),
-            defaultCapacity: 10
+            CreateFish,
+            OnGetFish,
+            OnReleaseFish,
+            OnDestroyFish,
+            collectionCheck: false,
+            defaultCapacity: 12,
+            maxSize: 64
         );
     }
-
-    // ✅ GameFlowController가 호출함(복구)
     public void Initialize(JudgeSystem_st2 judge)
     {
         judgeSystem = judge;
     }
-
-    void Update()
+    private FishCatchToken_st2 CreateFish()
     {
-        for (int i = 0; i < activeFish.Count; i++)
-        {
-            if (activeFish[i] != null && !activeFish[i].isResolved)
-            {
-                activeFish[i].UpdateMovement();
-            }
-        }
+        var go = Instantiate(fishPrefab);
+        go.SetActive(false);
+
+        var fish = go.GetComponent<FishCatchToken_st2>();
+        if (fish == null) fish = go.AddComponent<FishCatchToken_st2>();
+
+        // owner/풀은 Initialize 또는 SetPool에서 잡히게 설계해둠
+        fish.SetPool(fishPool);
+        return fish;
+    }
+
+
+
+    private void OnGetFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        fish.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        fish.gameObject.SetActive(false);
+        fish.transform.SetParent(null);
+    }
+
+    private void OnDestroyFish(FishCatchToken_st2 fish)
+    {
+        if (fish == null) return;
+        Destroy(fish.gameObject);
     }
 
     public void ScheduleTelegraph(double dspTime)
@@ -116,14 +120,14 @@ public class MoldController_st2 : MonoBehaviour
             popSource.PlayScheduled(dspTime);
         }
 
-        // ✅ 애니메이션은 퐁 소리보다 먼저 시작
+        // 애니메이션은 퐁 소리보다 먼저
         double animationDelay = dspTime - AudioSettings.dspTime - popAnimationLeadTime;
         if (animationDelay > 0)
         {
             StartCoroutine(PlayPopAnimation((float)animationDelay));
         }
 
-        // ✅ fish 생성은 퐁 소리 타이밍에 맞춤
+        // fish 생성은 퐁 소리 타이밍에 맞춤
         double fishDelay = dspTime - AudioSettings.dspTime;
         var spawnRoutine = StartCoroutine(SpawnFishDelayed((float)fishDelay, dspTime));
         scheduledSpawns.Add(spawnRoutine);
@@ -131,36 +135,14 @@ public class MoldController_st2 : MonoBehaviour
 
     IEnumerator PlayTelegraphVisual(float delay)
     {
-        yield return new WaitForSeconds(delay);
-
-        if (useTelegraphShake)
+        float elapsed = 0f;
+        while (elapsed < delay)
         {
-            StartCoroutine(ShakeMold());
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
         }
 
-        OnTelegraphPlayed?.Invoke();
-    }
-
-    IEnumerator ShakeMold()
-    {
-        int currentShake = 0;
-        float shakeInterval = shakeDuration / Mathf.Max(1, shakeCount);
-
-        while (currentShake < shakeCount)
-        {
-            Vector3 randomOffset = new Vector3(
-                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
-                0,
-                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
-            );
-
-            transform.localPosition = originalMoldPosition + randomOffset;
-
-            yield return new WaitForSeconds(shakeInterval);
-            currentShake++;
-        }
-
-        transform.localPosition = originalMoldPosition;
+        // 여기서 흔들림/이펙트 넣어도 됨
     }
 
     IEnumerator PlayPopAnimation(float delay)
@@ -185,7 +167,7 @@ public class MoldController_st2 : MonoBehaviour
             yield return null;
         }
 
-        // Ending/Result 체크 (기존 유지)
+        // Ending/Result 체크
         if (GameFlowController_st2.Instance != null)
         {
             if (GameFlowController_st2.Instance.isEndingTriggered ||
@@ -195,28 +177,21 @@ public class MoldController_st2 : MonoBehaviour
             }
         }
 
-        // DSP 시간 재확인 (PAUSE로 인한 지연 감지)
+        // PAUSE로 인한 지연 감지
         double actualDsp = AudioSettings.dspTime;
         if (actualDsp > popTime + 1.0f)
             yield break;
 
-        // ✅ fish 생성
         var fish = fishPool.Get();
-        fish.Initialize(popTime, transform, this);
+        fish.Initialize(popTime, transform, this, jumpHeight, forwardDistance, gravity, groundLayer);
 
-        // ✅ 퐁 이펙트 생성 (퐁 소리/스폰 타이밍)
         SpawnPopVfx();
 
         activeFish.Add(fish);
 
         if (judgeSystem != null)
-        {
             judgeSystem.RegisterFish(fish);
-        }
 
-        OnPopPlayed?.Invoke();
-
-        // 안전 정리
         scheduledSpawns.RemoveAll(c => c == null);
     }
 
@@ -240,8 +215,8 @@ public class MoldController_st2 : MonoBehaviour
         if (ps != null)
         {
             var main = ps.main;
-            float lifeMax = 0f;
 
+            float lifeMax = 0f;
             var sl = main.startLifetime;
             if (sl.mode == ParticleSystemCurveMode.Constant) lifeMax = sl.constant;
             else if (sl.mode == ParticleSystemCurveMode.TwoConstants) lifeMax = sl.constantMax;
@@ -261,7 +236,7 @@ public class MoldController_st2 : MonoBehaviour
             fishPool.Release(fish);
     }
 
-    // ✅ GameFlowController가 호출함(복구)
+    // ✅ GameFlowController가 호출(복구)
     public void CancelAllScheduledSpawns()
     {
         foreach (var routine in scheduledSpawns)

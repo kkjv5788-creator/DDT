@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Assets/3_Stage2/Scripts/Catch/CatchInput_st2.cs
+using UnityEngine;
 using static GameState_st2;
 
 public class CatchInput_st2 : MonoBehaviour
@@ -50,55 +51,63 @@ public class CatchInput_st2 : MonoBehaviour
     private void TryUnbindHub()
     {
         if (!_subscribed) return;
-        if (hub == null) { _subscribed = false; return; }
 
-        hub.JudgeResolved -= OnJudgeResolved_Debug;
+        if (hub != null)
+            hub.JudgeResolved -= OnJudgeResolved_Debug;
+
         _subscribed = false;
-    }
-
-    // ✅ 표시용 값만 업데이트
-    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
-    {
-        lastJudgeResult = result;
-        lastHandName = HandToName(hand);
     }
 
     private void Update()
     {
-        if (hub == null) return;
+        // Playing에서만 입력 받기 (원하면 다른 상태도 허용 가능)
+        if (GameFlowController_st2.Instance != null &&
+            GameFlowController_st2.Instance.CurrentState != GameStatest2.Playing)
+            return;
 
-        ProcessHand(OVRInput.Controller.LTouch, leftSensor, ref _lastLeftAttemptDsp);
-        ProcessHand(OVRInput.Controller.RTouch, rightSensor, ref _lastRightAttemptDsp);
+        if (hub == null) return;
+        if (leftSensor == null || rightSensor == null) return;
+
+        // Left
+        float lt = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch);
+        if (lt >= triggerThreshold)
+            TryAttempt(OVRInput.Controller.LTouch, leftSensor);
+
+        // Right
+        float rt = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        if (rt >= triggerThreshold)
+            TryAttempt(OVRInput.Controller.RTouch, rightSensor);
     }
 
-    private void ProcessHand(OVRInput.Controller hand, HandCatchSensor_st2 sensor, ref double lastAttemptDsp)
+    private void TryAttempt(OVRInput.Controller hand, HandCatchSensor_st2 sensor)
     {
-        double dsp = AudioSettings.dspTime;
-        if (dsp - lastAttemptDsp < perHandCooldown) return;
-
-        float axis = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, hand);
-        if (axis < triggerThreshold) return;
-
-        // 표시용
-        lastHandName = HandToName(hand);
-
-        // ✅ 튜토와 동일: 센서 레이 타겟이 없으면 "아무것도 안 함"
         if (sensor == null) return;
 
-        var target = sensor.GetCurrentTarget();
-        if (target == null) return;
-        if (target.isResolved) return;
+        double now = AudioSettings.dspTime;
+        if (hand == OVRInput.Controller.LTouch)
+        {
+            if (now - _lastLeftAttemptDsp < perHandCooldown) return;
+            _lastLeftAttemptDsp = now;
+            lastHandName = "Left";
+        }
+        else
+        {
+            if (now - _lastRightAttemptDsp < perHandCooldown) return;
+            _lastRightAttemptDsp = now;
+            lastHandName = "Right";
+        }
 
-        lastAttemptDsp = dsp;
+        var fish = sensor.GetCurrentTarget();
+        if (fish == null) return;
+        if (fish.isResolved) return;
 
-        // ✅ v6.2 원칙 유지: 여기서는 이벤트만 발행(판정/봉투/임금 직접 호출 금지)
-        hub.PublishCatchAttempted(target, hand, dsp);
+        // ✅ “잡기 시도”만 발행 → JudgeBridge가 판정 → JudgeResolved로 퍼짐
+        hub.PublishCatchAttempted(fish, hand, now);
     }
 
-    private static string HandToName(OVRInput.Controller hand)
+    private void OnJudgeResolved_Debug(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
     {
-        return hand == OVRInput.Controller.LTouch ? "Left" :
-               hand == OVRInput.Controller.RTouch ? "Right" :
-               hand.ToString();
+        lastJudgeResult = result;
+        lastHandName = (hand == OVRInput.Controller.LTouch) ? "Left" : "Right";
     }
 }
