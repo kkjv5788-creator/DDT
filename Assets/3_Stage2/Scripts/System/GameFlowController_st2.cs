@@ -16,6 +16,10 @@ public class GameFlowController_st2 : MonoBehaviour
     public AudioSource bgmSource;
     public AudioClip bgmClip;
 
+    [Header("BGM 루프 설정")]
+    public bool bgmLoopEnabled = true;
+    [Min(1)] public int bgmLoopCount = 4;   // 18초 클립을 4번 재생 후 종료
+
     [Header("시스템 참조")]
     public JudgeSystem_st2 judgeSystem;
     public EconomySystem_st2 economySystem;
@@ -30,6 +34,9 @@ public class GameFlowController_st2 : MonoBehaviour
 
     [Header("타이밍")]
     private double songStartDspTime;
+    private double songEndDspTime;
+    private double pausedDspAccum = 0.0;
+    private double pauseStartDspTime = 0.0;
 
     void Awake()
     {
@@ -54,7 +61,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
         foreach (var input in catchInputs)
         {
-           
+            // (필요 시 초기화 코드)
         }
 
         menuMonitorUI.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
@@ -97,26 +104,32 @@ public class GameFlowController_st2 : MonoBehaviour
         {
             if (OVRInput.GetDown(OVRInput.Button.Start))
             {
-                if (bgmSource.time > 0.1f)
+                if (bgmSource != null && bgmSource.time > 0.1f)
                 {
                     PauseGame();
                 }
             }
         }
 
-        // 곡 종료 체크
+        // 곡 종료 체크 (총 루프 횟수 기준 / Pause 보정 포함)
         if (CurrentState == GameStatest2.Playing && !isEndingTriggered)
         {
-            if (bgmSource.time >= bgmClip.length)
+            double effectiveElapsed = (AudioSettings.dspTime - songStartDspTime) - pausedDspAccum;
+            double totalDuration = (songEndDspTime - songStartDspTime);
+
+            if (effectiveElapsed >= totalDuration)
             {
                 TriggerEnding();
             }
         }
 
-        // UI 업데이트
+        // UI 업데이트 (루프 포함 전체 진행시간으로 표시)
         if (CurrentState == GameStatest2.Playing)
         {
-            menuMonitorUI.UpdateSongTime(bgmSource.time, bgmClip.length);
+            float effectiveElapsed = (float)((AudioSettings.dspTime - songStartDspTime) - pausedDspAccum);
+            float totalDuration = (float)(songEndDspTime - songStartDspTime);
+
+            menuMonitorUI.UpdateSongTime(effectiveElapsed, totalDuration);
             menuMonitorUI.UpdateFilledBags(bagManager.GetFilledBagCount());
         }
     }
@@ -178,13 +191,33 @@ public class GameFlowController_st2 : MonoBehaviour
         economySystem.Reset();
         bagManager.Reset();
 
-        // 곡 시작
+        // ===== BGM 시작 (루프 N회 후 종료) =====
         songStartDspTime = AudioSettings.dspTime;
-        bgmSource.clip = bgmClip;
-        bgmSource.Play();
+        pausedDspAccum = 0.0;
+        pauseStartDspTime = 0.0;
+
+        if (bgmSource != null)
+        {
+            bgmSource.clip = bgmClip;
+
+            // 실제 루프 동작은 AudioSource.loop로 처리
+            bgmSource.loop = bgmLoopEnabled;
+
+            // "총 재생 목표 시간" 계산 (루프 미사용이면 1회 재생)
+            int loops = (bgmLoopEnabled ? Mathf.Max(1, bgmLoopCount) : 1);
+            double totalDuration = (bgmClip != null ? bgmClip.length : 0.0) * loops;
+
+            songEndDspTime = songStartDspTime + totalDuration;
+
+            bgmSource.Play();
+        }
+        else
+        {
+            // bgmSource가 없다면 즉시 종료되지 않게 최소값 설정
+            songEndDspTime = songStartDspTime + 0.1;
+        }
 
         // 시스템 시작
-       
         patternDirector.StartPatternSystem(songStartDspTime);
 
         Debug.Log("✅ Main game started - Tutorial cleanup complete");
@@ -195,7 +228,11 @@ public class GameFlowController_st2 : MonoBehaviour
         CurrentState = GameStatest2.Paused;
         Time.timeScale = 0f;
         AudioListener.pause = true;
-        bgmSource.Pause();
+
+        if (bgmSource != null) bgmSource.Pause();
+
+        // ✅ DSP 시간 보정용
+        pauseStartDspTime = AudioSettings.dspTime;
 
         menuMonitorUI.UpdateState(CurrentState);
     }
@@ -205,7 +242,11 @@ public class GameFlowController_st2 : MonoBehaviour
         CurrentState = GameStatest2.Playing;
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        bgmSource.UnPause();
+
+        if (bgmSource != null) bgmSource.UnPause();
+
+        // ✅ Pause 동안 흐른 dspTime 누적 보정
+        pausedDspAccum += (AudioSettings.dspTime - pauseStartDspTime);
 
         menuMonitorUI.UpdateState(CurrentState);
     }
@@ -226,7 +267,7 @@ public class GameFlowController_st2 : MonoBehaviour
         AudioListener.pause = false;
 
         // 오디오 정지
-        bgmSource.Stop();
+        if (bgmSource != null) bgmSource.Stop();
 
         // 게임 상태 초기화
         ResetGameState();
@@ -235,13 +276,18 @@ public class GameFlowController_st2 : MonoBehaviour
         TransitionToPlaying();
     }
 
-
     void ResetGameState()
     {
         judgeSystem.ResetStats();
         economySystem.Reset();
         bagManager.Reset();
         isEndingTriggered = false;
+
+        // 타이밍 초기화
+        songStartDspTime = 0.0;
+        songEndDspTime = 0.0;
+        pausedDspAccum = 0.0;
+        pauseStartDspTime = 0.0;
     }
 
     void TriggerEnding()
