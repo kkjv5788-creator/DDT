@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 3424700}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -3.81, y: 1.926, z: 10.829}
+  m_LocalPosition: {x: -4.304, y: 1.926, z: 11.149}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1368,7 +1368,7 @@ Transform:
   m_GameObject: {fileID: 285979274}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -3.548, y: 1.936, z: 9.849}
+  m_LocalPosition: {x: -3.789, y: 1.936, z: 10.114}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6056,7 +6056,7 @@ Transform:
   m_GameObject: {fileID: 1597276626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6084,7 +6084,7 @@ MonoBehaviour:
   stackSpacingY: 0.12
   stackColumns: 5
   stackSpacingX: 0.12
-  stackSpacingZ: 0.28
+  stackSpacingZ: 0.42
   stackOffsetLocal: {x: 0, y: 0, z: 0}
   fishVisualPrefab: {fileID: 9166995538719816746, guid: 75520d39edcda3142afa41fd2eebdb23, type: 3}
 --- !u!1001 &1610901169
