@@ -5239,10 +5239,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e32368f7c878654f940c945db43109d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 0
-  instructionText: {fileID: 1387406280}
-  progressText: {fileID: 1000439132}
-  skipText: {fileID: 965451704}
+  instructionText: {fileID: 0}
+  progressText: {fileID: 0}
+  skipText: {fileID: 0}
 --- !u!114 &1252293581
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,55 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         WaitBeforeMain
     }
 
+    [Serializable]
+    public class StageDialogueBlock
+    {
+        public TutorialStage stage;
+
+        [TextArea(3, 12)]
+        public string beforeDialogue; // 스테이지 시작 전 대사들 (줄바꿈=한 줄씩)
+
+        [TextArea(3, 12)]
+        public string afterDialogue;  // 스테이지 성공 후 대사들 (줄바꿈=한 줄씩)
+    }
+
+    public enum DialoguePhase
+    {
+        None,
+        BeforeStage,
+        AfterStage
+    }
+
+    // =========================================================
+    // ✅ 네가 실제로 쓰는 UI는 딱 2개만
+    // =========================================================
+    [Header("Dialogue Blocks")]
+    public List<StageDialogueBlock> dialogueBlocks = new List<StageDialogueBlock>();
+
+    [Header("대사 표시 텍스트")]
+    [Tooltip("모니터 패널에 표시될 대사(TextMeshProUGUI)")]
+    public TextMeshProUGUI dialogueText;
+
+    [Header("다음 안내 텍스트")]
+    [Tooltip("예: '오른손 트리거로 다음' 을 표시할 TextMeshProUGUI")]
+    public TextMeshProUGUI nextHintText;
+
+    [Header("대사 진행 입력")]
+    public OVRInput.Controller dialogueAdvanceController = OVRInput.Controller.RTouch;
+    public OVRInput.Button dialogueAdvanceButton = OVRInput.Button.PrimaryIndexTrigger;
+
+    // =========================================================
+    // ✅ 기존 UIController/DebugHUD 호환용(인스펙터 숨김)
+    //    - Stage2UIController_st2 / DebugHUD_st2 컴파일 깨지는 것 방지용
+    //    - 너는 신경 안 써도 됨
+    // =========================================================
+    [HideInInspector] public TextMeshProUGUI instructionText;
+    [HideInInspector] public TextMeshProUGUI progressText;
+    [HideInInspector] public TextMeshProUGUI skipText;
+    [HideInInspector] public TextMeshProUGUI stageCompleteText;
+    [HideInInspector] public GameObject tutorialCanvas;
+
+    // =========================================================
     [Header("현재 스테이지")]
     public TutorialStage currentStage = TutorialStage.T0_Telegraph;
 
@@ -26,13 +76,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     [Header("튜토리얼 전용 손 센서")]
     public TutorialHandSensor_st2 leftSensor;
     public TutorialHandSensor_st2 rightSensor;
-
-    [Header("UI")]
-    public TextMeshProUGUI instructionText;
-    public TextMeshProUGUI progressText;
-    public TextMeshProUGUI skipText;
-    public TextMeshProUGUI stageCompleteText;
-    public GameObject tutorialCanvas;
 
     [Header("오디오")]
     public AudioSource telegraphSource;
@@ -54,10 +97,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     public float runStepInterval = 0.25f;
     public float waitBeforeMainDuration = 3.0f;
 
-    [Header("스테이지 전환 설정")]
-    public float stageTransitionDelay = 2.0f;
-    public bool showStageCompleteMessage = true;
-
     [Header("판정 설정")]
     public float perfectWindow = 0.04f;
     public float goodWindow = 0.075f;
@@ -69,7 +108,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     public float popAnimLeadSeconds = 0.25f;
 
     [Header("특수 패턴 재시도")]
-    public float specialAttemptTimeout = 3.0f;   // 이 시간 안에 다 못 잡으면 리셋 후 재시도
+    public float specialAttemptTimeout = 3.0f;
     public float specialRetryDelay = 0.5f;
 
     // 진행 카운터
@@ -80,7 +119,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     // 특수 패턴 목표/진행
     private int specialTargetCount = 0;   // 2 또는 3
     private int specialCaughtCount = 0;   // 현재 시도에서 잡은 개수
-    private bool specialStageCompleted = false;
 
     private PatternType_st2 currentPatternType = PatternType_st2.Normal;
     private bool hasSuccessSync2 = false;
@@ -88,22 +126,49 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
     private Coroutine autoPatternRoutine;
 
+    // ===== Dialogue Runtime =====
+    private readonly Queue<string> _dialogueQueue = new Queue<string>();
+    private bool _dialogueWaiting = false;
+    private DialoguePhase _dialoguePhase = DialoguePhase.None;
+    private Action _onDialogueDone = null;
+
     void Start()
     {
-        InitializeUI();
+        AutoBindLegacyUIForCompatibility();
         InitializeSensors();
         StartTutorialBGM();
+
+        telegraphCount = 0;
+        popCount = 0;
+        goodOrBetterCount = 0;
+        specialTargetCount = 0;
+        specialCaughtCount = 0;
+        hasSuccessSync2 = false;
+        hasSuccessRun3 = false;
+
         StartStage(currentStage);
     }
 
     void Update()
     {
-        if (GameFlowController_st2.Instance != null && GameFlowController_st2.Instance.CurrentState == GameStatest2.Paused)
+        if (GameFlowController_st2.Instance != null &&
+            GameFlowController_st2.Instance.CurrentState == GameStatest2.Paused)
             return;
-        //B버튼 스킵
-        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
-            SkipTutorial();
 
+        // ✅ 대사 진행 중이면: 오른손 트리거로만 Next, 나머지(잡기 포함) 차단
+        if (_dialogueWaiting)
+        {
+            if (nextHintText != null) nextHintText.text = "오른손 트리거로 다음";
+
+            if (OVRInput.GetDown(dialogueAdvanceButton, dialogueAdvanceController))
+                AdvanceDialogue();
+
+            return;
+        }
+        else
+        {
+            if (nextHintText != null) nextHintText.text = "";
+        }
 
         // ✅ 스테이지별로 잡기 허용
         if (IsCatchingEnabled())
@@ -113,23 +178,30 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // ✅ 외부(UIController/DebugHUD) 호환
+    // =========================================================
+    void AutoBindLegacyUIForCompatibility()
+    {
+        // 네가 쓰는 UI 2개가 곧 "대사/다음안내"임.
+        // 그런데 Stage2UIController_st2가 옛 필드들에 접근하니까
+        // 그 필드들이 null이면 안전하게 여기서 매핑해둠.
+
+        if (instructionText == null) instructionText = dialogueText;
+        if (progressText == null) progressText = nextHintText;
+
+        // skipText / stageCompleteText / tutorialCanvas는 이제 안 쓰지만
+        // 다른 스크립트가 null 체크 없이 접근할 수도 있으니 "그냥 존재만" 유지
+        // (필요하면 Stage2UIController 쪽에서 주입해줄 수도 있음)
+    }
+
     bool IsCatchingEnabled()
     {
+        if (_dialogueWaiting) return false;
+
         return currentStage == TutorialStage.T2_Catch
             || currentStage == TutorialStage.T4_Sync2
             || currentStage == TutorialStage.T5_Run3;
-    }
-
-    void InitializeUI()
-    {
-        if (skipText != null)
-            skipText.text = "[Press B to Skip Tutorial]";
-
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(true);
-
-        if (stageCompleteText != null)
-            stageCompleteText.gameObject.SetActive(false);
     }
 
     void InitializeSensors()
@@ -158,82 +230,183 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             tutorialBGMSource.Stop();
     }
 
+    // =========================================================
+    // Stage Start (Before 대사 → 액션 시작)
+    // =========================================================
     void StartStage(TutorialStage stage)
     {
         currentStage = stage;
 
-        // 이전 루틴 중지
-        if (autoPatternRoutine != null)
-        {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
+        StopAutoRoutine();
 
-        HideStageComplete();
+        // 스테이지 들어가면 잔여 fish 정리(대사/전환 안정성)
+        CleanupAllTutorialFish();
 
-        // 특수 패턴 상태 초기화
-        specialStageCompleted = false;
+        // 특수 패턴 상태 초기화(스테이지 진입 시)
         specialTargetCount = 0;
         specialCaughtCount = 0;
+
+        BeginStageDialogue(stage, DialoguePhase.BeforeStage, () =>
+        {
+            // 대사 끝나면 스테이지 액션 시작
+            StartStageAction(stage);
+        });
+    }
+
+    void StartStageAction(TutorialStage stage)
+    {
+        // ✅ 상호작용 구간에서는 화면에 굳이 뭐 안 띄우고 싶다면 비워둠
+        if (dialogueText != null) dialogueText.text = "";
 
         switch (stage)
         {
             case TutorialStage.T0_Telegraph:
                 currentPatternType = PatternType_st2.Normal;
-                ShowInstruction("Listen to the 'Telegraph' sound!", $"Progress: {telegraphCount}/2");
                 autoPatternRoutine = StartCoroutine(AutoTelegraphOnly());
                 break;
 
             case TutorialStage.T1_Pop:
                 currentPatternType = PatternType_st2.Normal;
-                ShowInstruction("Watch the fish 'Pop' out! (Can't catch yet)", $"Progress: {popCount}/2");
                 autoPatternRoutine = StartCoroutine(AutoPopWatchOnly());
                 break;
 
             case TutorialStage.T2_Catch:
                 currentPatternType = PatternType_st2.Normal;
-                ShowInstruction("Now catch fish with Good or Perfect!", $"Good+ Catches: {goodOrBetterCount}/2");
                 autoPatternRoutine = StartCoroutine(AutoCatchNormal());
                 break;
 
             case TutorialStage.T4_Sync2:
                 currentPatternType = PatternType_st2.Sync2;
-                ShowInstruction("Sync2 Pattern: Catch BOTH fish!", "Caught: 0/2");
                 autoPatternRoutine = StartCoroutine(RunSync2UntilSuccess());
                 break;
 
             case TutorialStage.T5_Run3:
                 currentPatternType = PatternType_st2.Run3;
-                ShowInstruction("Run3 Pattern: Catch ALL THREE fish!", "Caught: 0/3");
                 autoPatternRoutine = StartCoroutine(RunRun3UntilSuccess());
                 break;
 
             case TutorialStage.Complete:
-                ShowInstruction("Tutorial Complete!", "Starting main game...");
+                StartStage(TutorialStage.WaitBeforeMain);
+                break;
+
+            case TutorialStage.WaitBeforeMain:
                 StartCoroutine(WaitThenStartMain());
                 break;
         }
     }
 
-    void ShowInstruction(string instruction, string progress)
+    void StopAutoRoutine()
     {
-        if (instructionText != null) instructionText.text = instruction;
-        if (progressText != null) progressText.text = progress;
-    }
-
-    void UpdateProgress(string text)
-    {
-        if (progressText != null) progressText.text = text;
+        if (autoPatternRoutine != null)
+        {
+            StopCoroutine(autoPatternRoutine);
+            autoPatternRoutine = null;
+        }
     }
 
     // =========================================================
-    // Stage 0: Telegraph Only (Shake only, no pop, no fish)
+    // Dialogue System
+    // =========================================================
+    void BeginStageDialogue(TutorialStage stage, DialoguePhase phase, Action onDone)
+    {
+        _dialogueQueue.Clear();
+        _dialoguePhase = phase;
+        _onDialogueDone = onDone;
+
+        var block = FindBlock(stage);
+        string multi = "";
+        if (block != null)
+            multi = (phase == DialoguePhase.BeforeStage) ? block.beforeDialogue : block.afterDialogue;
+
+        var lines = SplitLines(multi);
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (!string.IsNullOrWhiteSpace(lines[i]))
+                _dialogueQueue.Enqueue(lines[i].Trim());
+        }
+
+        if (_dialogueQueue.Count == 0)
+        {
+            _dialogueWaiting = false;
+            _dialoguePhase = DialoguePhase.None;
+
+            // 대사 없으면 안내도 끔
+            if (nextHintText != null) nextHintText.text = "";
+
+            onDone?.Invoke();
+            return;
+        }
+
+        _dialogueWaiting = true;
+        ShowNextDialogueLine();
+    }
+
+    void AdvanceDialogue()
+    {
+        if (!_dialogueWaiting) return;
+
+        if (_dialogueQueue.Count > 0)
+        {
+            ShowNextDialogueLine();
+            return;
+        }
+
+        // 대사 끝
+        _dialogueWaiting = false;
+        _dialoguePhase = DialoguePhase.None;
+
+        if (nextHintText != null) nextHintText.text = "";
+
+        var cb = _onDialogueDone;
+        _onDialogueDone = null;
+        cb?.Invoke();
+    }
+
+    void ShowNextDialogueLine()
+    {
+        if (dialogueText == null) return;
+
+        if (_dialogueQueue.Count == 0)
+        {
+            // 마지막 줄 이후(안전)
+            return;
+        }
+
+        dialogueText.text = _dialogueQueue.Dequeue();
+    }
+
+    string[] SplitLines(string multiLine)
+    {
+        if (string.IsNullOrWhiteSpace(multiLine)) return Array.Empty<string>();
+
+        var raw = multiLine.Replace("\r\n", "\n").Split('\n');
+        var list = new List<string>();
+        for (int i = 0; i < raw.Length; i++)
+        {
+            var t = raw[i].Trim();
+            if (!string.IsNullOrEmpty(t)) list.Add(t);
+        }
+        return list.ToArray();
+    }
+
+    StageDialogueBlock FindBlock(TutorialStage stage)
+    {
+        for (int i = 0; i < dialogueBlocks.Count; i++)
+        {
+            if (dialogueBlocks[i] != null && dialogueBlocks[i].stage == stage)
+                return dialogueBlocks[i];
+        }
+        return null;
+    }
+
+    // =========================================================
+    // Stage 0: Telegraph Only
     // =========================================================
     IEnumerator AutoTelegraphOnly()
     {
-        while (true)
+        while (currentStage == TutorialStage.T0_Telegraph)
         {
-            int moldIndex = Random.Range(0, 3);
+            int moldIndex = UnityEngine.Random.Range(0, 3);
             yield return StartCoroutine(PlayTelegraphOnly(moldIndex));
             yield return new WaitForSeconds(manualPatternInterval);
         }
@@ -243,13 +416,9 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     {
         if (tutorialMolds[moldIndex] == null) yield break;
 
-        // 텔레그래프 사운드
         if (telegraphSource != null && telegraphClip != null)
-        {
             telegraphSource.PlayOneShot(telegraphClip);
-        }
 
-        // 달그락(흔들림) 비주얼
         tutorialMolds[moldIndex].PlayTelegraphVisual();
 
         OnTelegraphPlayed();
@@ -257,13 +426,13 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 
     // =========================================================
-    // Stage 1: Pop Watch Only (spawn but catching disabled by Update gating)
+    // Stage 1: Pop Watch Only
     // =========================================================
     IEnumerator AutoPopWatchOnly()
     {
-        while (true)
+        while (currentStage == TutorialStage.T1_Pop)
         {
-            int moldIndex = Random.Range(0, 3);
+            int moldIndex = UnityEngine.Random.Range(0, 3);
             yield return StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
             yield return new WaitForSeconds(manualPatternInterval);
         }
@@ -274,46 +443,40 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     // =========================================================
     IEnumerator AutoCatchNormal()
     {
-        while (true)
+        while (currentStage == TutorialStage.T2_Catch)
         {
-            int moldIndex = Random.Range(0, 3);
+            int moldIndex = UnityEngine.Random.Range(0, 3);
             yield return StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
             yield return new WaitForSeconds(manualPatternInterval);
         }
     }
 
     // =========================================================
-    // Special: Sync2 (catch both)
+    // Special: Sync2
     // =========================================================
     IEnumerator RunSync2UntilSuccess()
     {
         specialTargetCount = 2;
 
-        while (!specialStageCompleted && currentStage == TutorialStage.T4_Sync2)
+        while (currentStage == TutorialStage.T4_Sync2)
         {
-            // 새 시도 시작
             specialCaughtCount = 0;
-            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
 
-            CleanupAllTutorialFish(); // 이전 시도 잔여 제거
+            CleanupAllTutorialFish();
 
-            // 큐
             if (cueSource != null && sync2Cue != null)
                 cueSource.PlayOneShot(sync2Cue);
 
             yield return new WaitForSeconds(0.35f);
 
-            // 2개 몰드 선택
             int[][] pairs = { new int[] { 0, 1 }, new int[] { 1, 2 }, new int[] { 0, 2 } };
-            int[] selectedPair = pairs[Random.Range(0, 3)];
+            int[] selectedPair = pairs[UnityEngine.Random.Range(0, 3)];
 
-            // 2개 동시 스폰
             foreach (int moldIndex in selectedPair)
                 StartCoroutine(SpawnTelegraphToPopFish(moldIndex));
 
-            // 제한 시간 안에 둘 다 잡으면 성공
             float t = 0f;
-            while (t < specialAttemptTimeout && !specialStageCompleted && currentStage == TutorialStage.T4_Sync2)
+            while (t < specialAttemptTimeout && currentStage == TutorialStage.T4_Sync2)
             {
                 if (specialCaughtCount >= specialTargetCount)
                     break;
@@ -325,36 +488,32 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             if (specialCaughtCount >= specialTargetCount)
             {
                 hasSuccessSync2 = true;
-                CompleteStageWithMessage("Sync2 Complete!");
+                CompleteStageAndWaitNextTrigger(TutorialStage.T4_Sync2);
                 yield break;
             }
 
-            // 실패 → 재시도
             yield return new WaitForSeconds(specialRetryDelay);
         }
     }
 
     // =========================================================
-    // Special: Run3 (catch all three)
+    // Special: Run3
     // =========================================================
     IEnumerator RunRun3UntilSuccess()
     {
         specialTargetCount = 3;
 
-        while (!specialStageCompleted && currentStage == TutorialStage.T5_Run3)
+        while (currentStage == TutorialStage.T5_Run3)
         {
             specialCaughtCount = 0;
-            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
 
             CleanupAllTutorialFish();
 
-            // 큐
             if (cueSource != null && run3Cue != null)
                 cueSource.PlayOneShot(run3Cue);
 
             yield return new WaitForSeconds(0.35f);
 
-            // 3개 순차 스폰
             for (int i = 0; i < 3; i++)
             {
                 StartCoroutine(SpawnTelegraphToPopFish(i));
@@ -362,7 +521,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             }
 
             float t = 0f;
-            while (t < specialAttemptTimeout && !specialStageCompleted && currentStage == TutorialStage.T5_Run3)
+            while (t < specialAttemptTimeout && currentStage == TutorialStage.T5_Run3)
             {
                 if (specialCaughtCount >= specialTargetCount)
                     break;
@@ -374,7 +533,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             if (specialCaughtCount >= specialTargetCount)
             {
                 hasSuccessRun3 = true;
-                CompleteStageWithMessage("Run3 Complete!");
+                CompleteStageAndWaitNextTrigger(TutorialStage.T5_Run3);
                 yield break;
             }
 
@@ -383,22 +542,19 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 
     // =========================================================
-    // Common Spawn: Telegraph -> (Pop anim lead) -> Pop sound -> Spawn fish
+    // Common Spawn
     // =========================================================
     IEnumerator SpawnTelegraphToPopFish(int moldIndex)
     {
         if (tutorialMolds[moldIndex] == null) yield break;
 
-        // Telegraph 사운드 + 달그락
         if (telegraphSource != null && telegraphClip != null)
             telegraphSource.PlayOneShot(telegraphClip);
 
         tutorialMolds[moldIndex].PlayTelegraphVisual();
 
-        // (T0에서만 카운트 올라가도록 OnTelegraphPlayed 내부에서 스테이지 체크)
-        OnTelegraphPlayed();
+        OnTelegraphPlayed(); // T0에서만 카운트
 
-        // Pop 애니가 퐁 소리보다 먼저 열리도록
         float lead = Mathf.Max(0f, popAnimLeadSeconds);
         float pre = Mathf.Max(0f, telegraphToPopDelay - lead);
         yield return new WaitForSeconds(pre);
@@ -407,11 +563,9 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
         if (lead > 0f) yield return new WaitForSeconds(lead);
 
-        // Pop 사운드
         if (popSource != null && popClip != null)
             popSource.PlayOneShot(popClip);
 
-        // 스폰
         double popTime = AudioSettings.dspTime;
         tutorialMolds[moldIndex].SpawnFish(popTime);
 
@@ -419,7 +573,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 
     // =========================================================
-    // Hand Input (catching)
+    // Hand Input
     // =========================================================
     void ProcessHandInput(TutorialHandSensor_st2 sensor, OVRInput.Controller controller)
     {
@@ -428,8 +582,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
         var target = sensor.GetCurrentTarget();
         if (target == null) return;
-
-        // ✅ 이미 잡힌 애만 중복 방지
         if (target.isResolved) return;
 
         double catchTime = AudioSettings.dspTime;
@@ -442,12 +594,10 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
         if (result != JudgeResult_st2.Miss)
         {
-            // ✅ 성공일 때만 resolved 처리
             target.isResolved = true;
 
             target.OnCaught();
 
-            // 손 스냅
             target.transform.position = sensor.transform.position;
             target.transform.SetParent(sensor.transform, true);
 
@@ -457,7 +607,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         }
         else
         {
-            // Miss는 resolved 처리 안 함 (계속 떨어지거나 다시 시도 가능)
             OnCatchMiss();
         }
     }
@@ -480,30 +629,20 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     // =========================================================
     void OnTelegraphPlayed()
     {
-        if (currentStage == TutorialStage.T0_Telegraph)
-        {
-            telegraphCount++;
-            UpdateProgress($"Progress: {telegraphCount}/2");
+        if (currentStage != TutorialStage.T0_Telegraph) return;
 
-            if (telegraphCount >= 2)
-            {
-                CompleteStageWithMessage("Telegraph Stage Complete!");
-            }
-        }
+        telegraphCount++;
+        if (telegraphCount >= 2)
+            CompleteStageAndWaitNextTrigger(TutorialStage.T0_Telegraph);
     }
 
     void OnPopPlayed()
     {
-        if (currentStage == TutorialStage.T1_Pop)
-        {
-            popCount++;
-            UpdateProgress($"Progress: {popCount}/2");
+        if (currentStage != TutorialStage.T1_Pop) return;
 
-            if (popCount >= 2)
-            {
-                CompleteStageWithMessage("Pop Watch Stage Complete!");
-            }
-        }
+        popCount++;
+        if (popCount >= 2)
+            CompleteStageAndWaitNextTrigger(TutorialStage.T1_Pop);
     }
 
     void OnCatchSuccess(JudgeResult_st2 result)
@@ -514,79 +653,45 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         if (currentStage == TutorialStage.T2_Catch)
         {
             goodOrBetterCount++;
-            UpdateProgress($"Good+ Catches: {goodOrBetterCount}/2");
-
             if (goodOrBetterCount >= 2)
-                CompleteStageWithMessage("Catch Stage Complete!");
+                CompleteStageAndWaitNextTrigger(TutorialStage.T2_Catch);
         }
         else if (currentStage == TutorialStage.T4_Sync2 && currentPatternType == PatternType_st2.Sync2)
         {
-            // ✅ 2개 모두 잡아야 성공
             specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
-            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
         }
         else if (currentStage == TutorialStage.T5_Run3 && currentPatternType == PatternType_st2.Run3)
         {
-            // ✅ 3개 모두 잡아야 성공
             specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
-            UpdateProgress($"Caught: {specialCaughtCount}/{specialTargetCount}");
         }
     }
 
     void OnCatchMiss()
     {
-        // 필요하면 여기서 Miss 카운트/피드백 추가 가능
+        // 필요하면 Miss 피드백 추가 가능
     }
 
     // =========================================================
-    // Stage Completion Helper
+    // Stage Completion -> AFTER 대사 -> 다음 스테이지 진입
     // =========================================================
-    void CompleteStageWithMessage(string message)
+    void CompleteStageAndWaitNextTrigger(TutorialStage stage)
     {
-        if (specialStageCompleted) return; // 중복 방지
-        specialStageCompleted = true;
+        if (currentStage != stage) return;
 
-        ShowStageComplete(message);
+        StopAutoRoutine();
+        CleanupAllTutorialFish();
 
-        // 자동 루틴 중지
-        if (autoPatternRoutine != null)
+        BeginStageDialogue(stage, DialoguePhase.AfterStage, () =>
         {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
-
-        StartCoroutine(AdvanceStageDelayed());
-    }
-
-    void ShowStageComplete(string message)
-    {
-        if (!showStageCompleteMessage || stageCompleteText == null)
-            return;
-
-        stageCompleteText.text = message;
-        stageCompleteText.gameObject.SetActive(true);
-    }
-
-    void HideStageComplete()
-    {
-        if (stageCompleteText != null)
-            stageCompleteText.gameObject.SetActive(false);
-    }
-
-    IEnumerator AdvanceStageDelayed()
-    {
-        yield return new WaitForSeconds(stageTransitionDelay);
-        HideStageComplete();
-        AdvanceStage();
-    }
-
-    void AdvanceStage()
-    {
-        StartStage(currentStage + 1);
+            if (stage == TutorialStage.T5_Run3)
+                StartStage(TutorialStage.Complete);
+            else
+                StartStage(stage + 1);
+        });
     }
 
     // =========================================================
-    // Debug HUD
+    // ✅ DebugHUD 호환용(에러났던 GetCurrentStageInfo 복구)
     // =========================================================
     public string GetCurrentStageInfo()
     {
@@ -608,12 +713,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     // =========================================================
     IEnumerator WaitThenStartMain()
     {
-        if (autoPatternRoutine != null)
-        {
-            StopCoroutine(autoPatternRoutine);
-            autoPatternRoutine = null;
-        }
-
+        StopAutoRoutine();
         StopTutorialBGM();
         CleanupAllTutorialFish();
 
@@ -622,29 +722,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         PlayerPrefs.SetInt("TutorialCompleted", 1);
         PlayerPrefs.Save();
 
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(false);
-
         gameObject.SetActive(false);
-
-        GameFlowController_st2.Instance?.TransitionToPlaying();
-    }
-
-    void SkipTutorial()
-    {
-        StopAllCoroutines();
-
-        StopTutorialBGM();
-        CleanupAllTutorialFish();
-
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
-        PlayerPrefs.Save();
-
-        if (tutorialCanvas != null)
-            tutorialCanvas.SetActive(false);
-
-        gameObject.SetActive(false);
-
         GameFlowController_st2.Instance?.TransitionToPlaying();
     }
 
