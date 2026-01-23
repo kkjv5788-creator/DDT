@@ -1,54 +1,139 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ResultManager : MonoBehaviour
 {
     [Header("Refs")]
-    public StageUIManager stageUIManager;   
-    public RhythmConductor conductor; // [중요] 이벤트를 받기 위해 연결 필요
+    public RhythmConductor conductor;
+    public GameFlowManager gameFlowManager;
+
+    [Header("Result Panels (3�� �� 1���� Ȱ��ȭ)")]
+    public GameObject panel100k; // 100% ~ 80%
+    public GameObject panel50k;  // 80% ~ 50%
+    public GameObject panel0;    // 50% ~ 0%
 
     [Header("Settings")]
-    public int pricePerSuccess = 5000;
+    public float endDelaySeconds = 3f; // ������ Ʈ���� �Ϸ� �� ��� �ð�
 
-    // 내부 변수
-    private int _currentTotalSales = 0;
+    [Header("Events")]
+    public UnityEvent<int, int, float> OnProgressUpdate; // successCount, totalTriggers, percentage
+
+    // ��Ÿ�� ������
+    int _totalTriggers;
+    int _successCount;
+    bool _gameEnded;
 
     void OnEnable()
     {
-        // 컨덕터의 성공 이벤트를 구독
-        if (conductor != null)
+        if (conductor)
         {
-            conductor.OnRoundResult.AddListener(OnRoundResult);
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
         }
     }
 
     void OnDisable()
     {
-        if (conductor != null)
+        if (conductor)
         {
-            conductor.OnRoundResult.RemoveListener(OnRoundResult);
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
         }
     }
 
-    // 성공/실패 결과가 나오면 호출됨
-    public void OnRoundResult(bool isSuccess)
+    public void StartTracking(int totalTriggers)
     {
-        if (isSuccess)
-        {
-            // 돈 더하기
-            _currentTotalSales += pricePerSuccess;
+        // 🔥 이전에 예약된 Invoke 취소 (재시작 시 EndGame이 중복 호출되는 것 방지)
+        CancelInvoke(nameof(EndGame));
 
-            // UI 매니저에게 표시하라고 시킴
-            if (stageUIManager)
-            {
-                stageUIManager.UpdateSalesUI(_currentTotalSales, pricePerSuccess, true);
-            }
+        _totalTriggers = totalTriggers;
+        _successCount = 0;
+        _gameEnded = false;
+
+        Debug.Log($"[ResultManager] Tracking started: {totalTriggers} triggers");
+
+        // �ʱ� ������ ������Ʈ
+        OnProgressUpdate?.Invoke(0, _totalTriggers, 0f);
+    }
+
+    void HandleRoundResult(bool success)
+    {
+        if (_gameEnded) return;
+        if (!gameFlowManager || gameFlowManager.CurrentState != GameState.PlayingMain) return;
+
+        if (success)
+        {
+            _successCount++;
+            Debug.Log($"[ResultManager] Success! ({_successCount}/{_totalTriggers})");
+        }
+        else
+        {
+            Debug.Log($"[ResultManager] Failed. ({_successCount}/{_totalTriggers})");
+        }
+
+        // ����� ���
+        float percentage = (_successCount / (float)_totalTriggers) * 100f;
+        OnProgressUpdate?.Invoke(_successCount, _totalTriggers, percentage);
+
+        // ������ Ʈ���� �Ϸ� Ȯ��
+        if (conductor.CurrentTriggerIndex >= _totalTriggers - 1)
+        {
+            Debug.Log("[ResultManager] Last trigger completed. Starting end delay...");
+            Invoke(nameof(EndGame), endDelaySeconds);
         }
     }
 
-    // 게임 재시작용
-    public void ResetResults()
+    void EndGame()
     {
-        _currentTotalSales = 0;
-        if (stageUIManager) stageUIManager.UpdateSalesUI(0, 0, false);
+        if (_gameEnded) return;
+        _gameEnded = true;
+
+        Debug.Log("[ResultManager] Game ended. Showing result panel...");
+
+        // ������ ���
+        float successRate = (_successCount / (float)_totalTriggers) * 100f;
+
+        // BGM ����
+        if (conductor && conductor.bgmSource)
+        {
+            conductor.bgmSource.Stop();
+        }
+
+        // ���� ��ȯ
+        if (gameFlowManager)
+        {
+            gameFlowManager.EnterFinalResult(successRate);
+        }
+
+        // �г� Ȱ��ȭ
+        ShowResultPanel(successRate);
     }
+
+    void ShowResultPanel(float successRate)
+    {
+        // ��� �г� ��Ȱ��ȭ
+        if (panel100k) panel100k.SetActive(false);
+        if (panel50k) panel50k.SetActive(false);
+        if (panel0) panel0.SetActive(false);
+
+        // ���ǿ� �´� �гθ� Ȱ��ȭ
+        if (successRate >= 80f)
+        {
+            if (panel100k) panel100k.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 100k (Success Rate: {successRate:F1}%)");
+        }
+        else if (successRate >= 50f)
+        {
+            if (panel50k) panel50k.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 50k (Success Rate: {successRate:F1}%)");
+        }
+        else
+        {
+            if (panel0) panel0.SetActive(true);
+            Debug.Log($"[ResultManager] Result: 0 (Success Rate: {successRate:F1}%)");
+        }
+    }
+
+    // �ܺο��� ȣ�� ����
+    public int GetSuccessCount() => _successCount;
+    public int GetTotalTriggers() => _totalTriggers;
+    public float GetSuccessRate() => (_successCount / (float)Mathf.Max(1, _totalTriggers)) * 100f;
 }
