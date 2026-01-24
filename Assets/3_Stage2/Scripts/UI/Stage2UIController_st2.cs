@@ -6,11 +6,11 @@ using static GameState_st2;
 /// <summary>
 /// Stage2 UI 통합 컨트롤러 (MenuMonitorUI 대체)
 /// - Panel_SelectMode: 튜토리얼/메인 선택
-/// - Panel_Dialogue: 튜토리얼 안내 텍스트(선택)
+/// - Panel_Dialogue: 튜토리얼 대사 패널(튜토리얼 컨트롤러가 직접 텍스트를 관리)
 /// - Panel_PlayGame: 음악 진행 게이지
-/// - Sales_Info_Group: 매출(임금) 누적 + 이번 판정 증가분 표시
+/// - Sales_Info_Group: 매출(임금) 누적 + 이번 판정 증가분 표시 (메인 Playing에서만)
 /// - Panel_ClosingResult: 결과 화면
-/// - Panel_Pause: 일시정지 메뉴
+/// - Panel_Pause: 일시정지 메뉴(오버레이)
 /// </summary>
 public class Stage2UIController_st2 : MonoBehaviour
 {
@@ -29,15 +29,15 @@ public class Stage2UIController_st2 : MonoBehaviour
     [Header("Pause Buttons")]
     public Button btnResume;
     public Button btnPauseRestart;
-    public Button btnPauseMain;
+    public Button btnPauseMain;  // 메인 씬 로드
 
     [Header("ClosingResult Buttons")]
     public Button btnResultRestart;
-    public Button btnResultMain;
+    public Button btnResultMain; // 메인 씬 로드
 
     [Header("PlayGame Gauge")]
-    public Slider songProgressSlider;   // 권장
-    public Image songProgressFill;      // Slider 없을 때 대체(선택)
+    public Slider songProgressSlider;    // 권장
+    public Image songProgressFill;       // Slider 없을 때 대체(선택)
     public TextMeshProUGUI songTimeText; // 선택(있으면 mm:ss 출력)
 
     [Header("Sales Info")]
@@ -49,20 +49,18 @@ public class Stage2UIController_st2 : MonoBehaviour
     public TextMeshProUGUI resultBodyText;
     public TextMeshProUGUI resultTotalText;
 
-    [Header("튜토리얼 UI 연결(선택)")]
-    [Tooltip("Panel_Dialogue 내부 텍스트를 튜토리얼 컨트롤러에 연결하고 싶다면 넣어주세요.")]
-    public TextMeshProUGUI tutorialInstructionText;
-    public TextMeshProUGUI tutorialProgressText;
-    public TextMeshProUGUI tutorialSkipText;
-
     private EconomySystem_st2 economy;
     private BagManager_st2 bag;
     private PatternDirector_st2 pattern;
     private JudgeSystem_st2 judge;
 
-    private float _lastWage = 0f;
+    private int _lastWage = 0;
 
-    public void Initialize(EconomySystem_st2 economySystem, BagManager_st2 bagManager, PatternDirector_st2 patternDirector, JudgeSystem_st2 judgeSystem)
+    public void Initialize(
+        EconomySystem_st2 economySystem,
+        BagManager_st2 bagManager,
+        PatternDirector_st2 patternDirector,
+        JudgeSystem_st2 judgeSystem)
     {
         economy = economySystem;
         bag = bagManager;
@@ -112,41 +110,39 @@ public class Stage2UIController_st2 : MonoBehaviour
 
     public void UpdateState(GameStatest2 state)
     {
-        // 패널 노출 규칙
-        SetActiveSafe(Panel_SelectMode, state == GameStatest2.MainMenu);
-        SetActiveSafe(Panel_Pause, state == GameStatest2.Paused);
-        SetActiveSafe(Panel_ClosingResult, state == GameStatest2.Result);
-
-        // 플레이 중 UI
-        bool showPlayHUD = (state == GameStatest2.Playing);
-        SetActiveSafe(Panel_PlayGame, showPlayHUD);
-
-        // 튜토리얼용 UI
-        bool showTutorial = (state == GameStatest2.Tutorial);
-        SetActiveSafe(Panel_Dialogue, showTutorial);
-
-        // 매출 UI는 메인/튜토리얼 진행 중에만
-        bool showSales = (state == GameStatest2.Playing || state == GameStatest2.Tutorial);
-        SetActiveSafe(Sales_Info_Group, showSales);
-
-        // Pause/Result일 때 플레이 HUD 숨기기(상호작용 헷갈림 방지)
-        if (state == GameStatest2.Paused || state == GameStatest2.Result)
+        // ✅ Pause는 "오버레이": 다른 패널 상태를 건드리지 않고 Pause 패널만 켠다.
+        if (state == GameStatest2.Paused)
         {
-            SetActiveSafe(Panel_PlayGame, false);
-            SetActiveSafe(Panel_Dialogue, false);
-            SetActiveSafe(Sales_Info_Group, false);
+            SetActiveSafe(Panel_Pause, true);
+            return;
         }
 
-        // 결과 화면 텍스트 갱신
+        // Pause가 아니면 Pause 패널은 끈다.
+        SetActiveSafe(Panel_Pause, false);
+
+        // 결과 화면은 Result에서만
+        SetActiveSafe(Panel_ClosingResult, state == GameStatest2.Result);
+
+        // SelectMode는 MainMenu에서만
+        SetActiveSafe(Panel_SelectMode, state == GameStatest2.MainMenu);
+
+        // 튜토리얼 대사 패널은 Tutorial에서만
+        SetActiveSafe(Panel_Dialogue, state == GameStatest2.Tutorial);
+
+        // Play HUD는 Playing에서만
+        SetActiveSafe(Panel_PlayGame, state == GameStatest2.Playing);
+
+        // ✅ 매출 UI는 메인 Playing에서만 (튜토리얼에서는 절대 안 켬)
+        SetActiveSafe(Sales_Info_Group, state == GameStatest2.Playing);
+
+        // 결과 텍스트 갱신
         if (state == GameStatest2.Result)
             RefreshResultTexts();
-
-        // 튜토리얼 텍스트 연결(선택)
-        TryBindTutorialTexts();
     }
 
     void BindButtonsOnce()
     {
+        // Select Mode
         if (btnTutorial != null)
         {
             btnTutorial.onClick.RemoveAllListeners();
@@ -159,6 +155,7 @@ public class Stage2UIController_st2 : MonoBehaviour
             btnMainGame.onClick.AddListener(() => GameFlowController_st2.Instance?.StartMainGameFromMenu());
         }
 
+        // Pause Menu
         if (btnResume != null)
         {
             btnResume.onClick.RemoveAllListeners();
@@ -171,37 +168,26 @@ public class Stage2UIController_st2 : MonoBehaviour
             btnPauseRestart.onClick.AddListener(() => GameFlowController_st2.Instance?.RestartToSelectMode());
         }
 
+        // ✅ 메인으로 = 메인 씬 로드
         if (btnPauseMain != null)
         {
             btnPauseMain.onClick.RemoveAllListeners();
-            btnPauseMain.onClick.AddListener(() => GameFlowController_st2.Instance?.BackToSelectMode());
+            btnPauseMain.onClick.AddListener(() => GameFlowController_st2.Instance?.LoadMainScene());
         }
 
+        // Result Menu
         if (btnResultRestart != null)
         {
             btnResultRestart.onClick.RemoveAllListeners();
             btnResultRestart.onClick.AddListener(() => GameFlowController_st2.Instance?.RestartToSelectMode());
         }
 
+        // ✅ 메인으로 = 메인 씬 로드
         if (btnResultMain != null)
         {
             btnResultMain.onClick.RemoveAllListeners();
-            btnResultMain.onClick.AddListener(() => GameFlowController_st2.Instance?.BackToSelectMode());
+            btnResultMain.onClick.AddListener(() => GameFlowController_st2.Instance?.LoadMainScene());
         }
-    }
-
-    void TryBindTutorialTexts()
-    {
-        var t = GameFlowController_st2.Instance != null ? GameFlowController_st2.Instance.tutorialController : null;
-        if (t == null) return;
-
-        // Panel_Dialogue 텍스트를 튜토리얼 컨트롤러가 직접 쓰도록 연결(선택)
-        if (tutorialInstructionText != null) t.instructionText = tutorialInstructionText;
-        if (tutorialProgressText != null) t.progressText = tutorialProgressText;
-        if (tutorialSkipText != null) t.skipText = tutorialSkipText;
-
-        // tutorialCanvas를 Panel_Dialogue로 쓰고 싶다면(선택)
-        if (Panel_Dialogue != null) t.tutorialCanvas = Panel_Dialogue;
     }
 
     // =========================
@@ -216,8 +202,7 @@ public class Stage2UIController_st2 : MonoBehaviour
 
     void OnJudgeResult(JudgeResult_st2 result, float delta)
     {
-        // delta는 현재 구현에서 "판정 차이 시간"일 수 있어 표시값으로는 result 기반 보너스를 쓰는 게 안전
-        // 하지만 EconomySystem이 적용 후 OnWageChanged를 주기 때문에 여기서는 '증가분'만 감성적으로 보여준다.
+        // delta는 판정 오차시간일 수 있으니 표시값은 result 기반 보너스로 처리
         int add = 0;
         if (economy != null)
         {
@@ -254,7 +239,6 @@ public class Stage2UIController_st2 : MonoBehaviour
 
         if (resultTitleText != null || resultBodyText != null)
         {
-            // 임의 멘트(원하면 나중에 쉽게 바꿀 수 있게 구조만)
             string title;
             string body;
 
