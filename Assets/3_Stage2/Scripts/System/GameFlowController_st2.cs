@@ -65,6 +65,7 @@ public class GameFlowController_st2 : MonoBehaviour
     private double pauseStartDspTime = 0.0;
 
     private GameStatest2 stateBeforePause = GameStatest2.MainMenu;
+    private bool pausedTimeScale = false; // ✅ 실제 게임 진행중일 때만 timeScale/audio를 멈출지
 
     void Awake()
     {
@@ -98,7 +99,7 @@ public class GameFlowController_st2 : MonoBehaviour
         // (튜토리얼 스킵은 B로 변경됨)
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
-            if (CurrentState == GameStatest2.Playing || CurrentState == GameStatest2.Tutorial || CurrentState == GameStatest2.Paused)
+            if (CurrentState == GameStatest2.Playing || CurrentState == GameStatest2.Tutorial || CurrentState == GameStatest2.Paused || CurrentState == GameStatest2.MainMenu)
             {
                 TogglePause();
             }
@@ -268,52 +269,78 @@ public class GameFlowController_st2 : MonoBehaviour
 
     void PauseGame()
     {
-        if (CurrentState == GameStatest2.Result || CurrentState == GameStatest2.MainMenu) return;
+        if (CurrentState == GameStatest2.Result) return;
 
-        // ✅ Pause 보정 시작점 기록
+        // ✅ 지금 상태 저장
+        stateBeforePause = CurrentState;
+
+        // ✅ Playing/Tutorial일 때만 '진짜 정지' (메뉴에서는 UI 애니메이션 멈출 수 있어서)
+        pausedTimeScale = (stateBeforePause == GameStatest2.Playing || stateBeforePause == GameStatest2.Tutorial);
+
+        // ✅ Pause 보정 시작점 기록 (Playing일 때만 의미있긴 하지만, 있어도 무해)
         pauseStartDspTime = AudioSettings.dspTime;
 
-        stateBeforePause = CurrentState;
+        // ✅ 상태 먼저 Paused로
         SetState(GameStatest2.Paused);
 
-        // (선택) 예약 이벤트/스폰도 같이 정리하면 “재개 직후 몰드/큐 폭주” 방지됨
-        if (patternDirector != null) patternDirector.ClearAllScheduledEvents(); // 이미 함수 존재:contentReference[oaicite:8]{index=8}
-        if (molds != null)
+        if (pausedTimeScale)
         {
-            foreach (var mold in molds)
-                if (mold != null) mold.CancelAllScheduledSpawns(); // TransitionToMainMenu에서도 쓰는 방식:contentReference[oaicite:9]{index=9}
+            // (선택) 예약 이벤트/스폰 정리
+            if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
+            if (molds != null)
+            {
+                foreach (var mold in molds)
+                    if (mold != null) mold.CancelAllScheduledSpawns();
+            }
+
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+
+            if (bgmSource != null) bgmSource.Pause();
+            if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+                tutorialController.tutorialBGMSource.Pause();
+
+            SetPauseBehavioursEnabled(false);
         }
+        else
+        {
+            // ✅ MainMenu에서 Pause 걸면: 메뉴 BGM만 멈추고 싶으면 이거 켜
+            if (menuBgmSource != null) menuBgmSource.Pause();
 
-        Time.timeScale = 0f;
-        AudioListener.pause = true;
-
-        if (bgmSource != null) bgmSource.Pause();
-        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
-            tutorialController.tutorialBGMSource.Pause();
-
-        SetPauseBehavioursEnabled(false);
+            // TimeScale/AudioListener는 건드리지 않음
+        }
     }
 
     public void ResumeGame()
     {
         if (CurrentState != GameStatest2.Paused) return;
 
-        // ✅ Pause 보정 누적
+        // ✅ Pause 보정 누적 (Playing/Tutorial에서만 실질적으로 의미)
         double now = AudioSettings.dspTime;
         if (pauseStartDspTime > 0.0)
             pausedDspAccum += (now - pauseStartDspTime);
         pauseStartDspTime = 0.0;
 
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        if (pausedTimeScale)
+        {
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
 
-        if (bgmSource != null) bgmSource.UnPause();
-        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
-            tutorialController.tutorialBGMSource.UnPause();
+            if (bgmSource != null) bgmSource.UnPause();
+            if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+                tutorialController.tutorialBGMSource.UnPause();
 
-        SetPauseBehavioursEnabled(true);
+            SetPauseBehavioursEnabled(true);
+        }
+        else
+        {
+            // ✅ MainMenu였다면 메뉴 BGM 다시 재생
+            if (menuBgmSource != null) menuBgmSource.UnPause();
+        }
+
         SetState(stateBeforePause);
     }
+
 
     void SetPauseBehavioursEnabled(bool enabled)
     {
