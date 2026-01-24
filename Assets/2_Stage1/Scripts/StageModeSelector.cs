@@ -4,25 +4,25 @@ public class StageModeSelector : MonoBehaviour
 {
     [Header("UI Panels")]
     public GameObject selectionPanel;
-
     [Header("Game Modes")]
     public GameObject tutorialGroup;
     public GameObject mainGameGroup;
 
     [Header("Shared UI")]
     public MissionBoardUI missionBoard;
-
+    
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
     public RhythmConductor conductor;
     public RhythmTriggerListSO mainGameData;
-
-    [Header("Tutorial Refs (one of these)")]
+    
+    [Header("Tutorial Refs")]
     public TutorialDialogueController tutorialDialogueController;
     public TutorialController tutorialController;
-
-    [Header("Ambience")]
+    
+    [Header("Audio")]
     public AudioSource ambientSource;
+    public AudioClip menuBgmClip; 
 
     void Start()
     {
@@ -38,10 +38,14 @@ public class StageModeSelector : MonoBehaviour
             missionBoard.ShowSuccessStamp(false);
         }
 
-        if (ambientSource && !ambientSource.isPlaying)
+        if (ambientSource)
         {
-            ambientSource.loop = true;
-            ambientSource.Play();
+            if (menuBgmClip != null) ambientSource.clip = menuBgmClip;
+            if (!ambientSource.isPlaying)
+            {
+                ambientSource.loop = true;
+                ambientSource.Play();
+            }
         }
     }
 
@@ -53,25 +57,24 @@ public class StageModeSelector : MonoBehaviour
         if (selectionPanel) selectionPanel.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(false);
         if (tutorialGroup) tutorialGroup.SetActive(true);
-
-        // (optional) keep state consistent
+        
         if (gameFlowManager) gameFlowManager.EnterTutorialState();
-
-        // Auto-find if not wired
+        
+        // 자동 찾기
         if (!tutorialDialogueController && tutorialGroup)
             tutorialDialogueController = tutorialGroup.GetComponentInChildren<TutorialDialogueController>(true);
         if (!tutorialController && tutorialGroup)
             tutorialController = tutorialGroup.GetComponentInChildren<TutorialController>(true);
-
-        // Start dialogue first; if no dialogue controller, start tutorial directly
+        
         if (tutorialDialogueController)
             tutorialDialogueController.BeginTutorialFlow();
         else if (tutorialController)
             tutorialController.StartTutorial();
         else
-            Debug.LogError("[StageModeSelector] TutorialDialogueController/TutorialController not assigned or found.");
+            Debug.LogError("[StageModeSelector] Tutorial Controllers not found.");
     }
 
+    // ▼▼▼ [핵심 수정] 순서가 바뀐 StartGame 함수 ▼▼▼
     public void OnClick_StartGame()
     {
         Debug.Log(">> 실전 게임 시작");
@@ -79,18 +82,43 @@ public class StageModeSelector : MonoBehaviour
 
         if (selectionPanel) selectionPanel.SetActive(false);
         if (tutorialGroup) tutorialGroup.SetActive(false);
-        if (mainGameGroup) mainGameGroup.SetActive(true);
-
-        if (conductor && mainGameData)
-            conductor.data = mainGameData;
-
+        
+        // 1. 매니저 먼저 찾기 (비활성 상태에서도 찾기)
         if (!gameFlowManager && mainGameGroup)
             gameFlowManager = mainGameGroup.GetComponentInChildren<GameFlowManager>(true);
 
+        // 2. [중요] 게임을 켜기 전에 데이터를 먼저 셋팅!
+        if (conductor)
+        {
+            if (gameFlowManager) gameFlowManager.conductor = conductor;
+            
+            // 🔥 [절대 필수] 튜토리얼 모드 강제 해제
+            conductor.isTutorialMode = false; 
+
+            // 데이터 주입
+            if (mainGameData)
+            {
+                conductor.data = mainGameData;
+                Debug.Log($"[Selector] 데이터 주입 완료: {mainGameData.name}");
+            }
+            else
+            {
+                Debug.LogError("[Selector] MainGameData가 연결되지 않았습니다!");
+            }
+        }
+
+        // 3. 이제 게임 오브젝트를 켭니다. (데이터가 들어간 상태로 깨어남)
+        if (mainGameGroup) mainGameGroup.SetActive(true);
+
+        // 4. 게임 시작
         if (gameFlowManager)
+        {
             gameFlowManager.StartMainGame();
+        }
         else
-            Debug.LogError("[StageModeSelector] gameFlowManager not assigned/found.");
+        {
+            Debug.LogError("[StageModeSelector] gameFlowManager not found.");
+        }
     }
 
     void StopAmbience()

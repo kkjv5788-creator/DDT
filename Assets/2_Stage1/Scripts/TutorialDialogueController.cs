@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Text.RegularExpressions;
 
 public enum DialogueConditionType
@@ -17,12 +17,11 @@ public enum DialogueConditionType
 public class TutorialDialogue
 {
     [TextArea(2, 5)]
-    public string dialogueText;     
+    public string dialogueText;
     public DialogueConditionType conditionType; 
     
     [Tooltip("조건이 충족된 후 다음 대사로 넘어가기까지 대기 시간 (초)")]
     public float waitAfterCondition = 0.5f;
-    
     [Tooltip("조건 없을 때 자동 진행 시간 (초, 0이면 수동 진행)")]
     public float autoAdvanceTime = 2f;
 }
@@ -31,7 +30,11 @@ public class TutorialDialogue
 public class TutorialDialogueController : MonoBehaviour
 {
     [Header("Start")]
-    public bool autoStart = false; // Start flow only when explicitly called.
+    public bool autoStart = false; 
+
+    // ▼▼▼ [추가] 인스펙터에서 직접 음악 파일을 넣는 곳 ▼▼▼
+    [Header("Audio Settings")]
+    public AudioClip tutorialBgmClip; 
 
     [Header("References")]
     public TutorialDialogueUIController dialogueUI; 
@@ -44,25 +47,23 @@ public class TutorialDialogueController : MonoBehaviour
     [Header("Target Objects")]
     public GameObject kimbapPrefab;      
     public GameObject kimbap010Prefab;   
-    public GameObject monitorCanvasObject; // 모니터 캔버스 연결
+    public GameObject monitorCanvasObject; 
     
     [Header("Dialogue Data")]
     public TutorialDialogue[] dialogues;
-    
+
     [Header("Settings")]
     public float gazeDetectionDistance = 10f; 
     public float gazeAngleThreshold = 45f;    
-    public float handMovementThreshold = 0.1f; 
-    
+    public float handMovementThreshold = 0.1f;
+
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
-    public string highlightTextColor = "#FFD700"; 
-    
+    public string highlightTextColor = "#FFD700";
+
     // 힌트 텍스트 모음
     private const string HINT_LOOK_KIMBAP = "김밥을 바라보세요";
     private const string HINT_LOOK_NOTE = "왼쪽 주문서를 바라보세요";
     
-    // 🔥 [변경됨] 요청하신 텍스트 포맷 적용
-    // {0} 위치에 "[오른손 트리거] 다음" 텍스트가 들어갑니다.
     private const string HINT_CONFIRMED_FORMAT = "<color=#00FF00>V 확인완료</color>\n{0}"; 
     private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음";
 
@@ -71,7 +72,9 @@ public class TutorialDialogueController : MonoBehaviour
     private bool _isWaitingForCondition = false;
     private bool _conditionMet = false;
     private float _conditionMetTime = 0f;
-    private float _autoAdvanceTimer = 0f;    // 상태 추적
+    private float _autoAdvanceTimer = 0f;
+
+    // 상태 추적
     private bool _hasLookedAtTarget = false; 
     
     private bool _lastRoundResult = false;
@@ -79,67 +82,82 @@ public class TutorialDialogueController : MonoBehaviour
     private Vector3 _previousControllerPosition;
     private bool _hasDetectedHandMovement = false;
     private bool _controllerPositionInitialized = false;
-    
+
     private bool _originalTutorialMode = false;
     private GameObject _tutorialControllerGameObject;
     private GameObject _conductorGameObject;
-    
+
     void Awake()
     {
         DisableExistingSystems();
     }
     
-void Start()
-{
-    // 자동 시작 금지: StageModeSelector에서만 시작
-    if (autoStart)
+    void Start()
     {
-        BeginTutorialFlow();
-    }
-}
-
-
-public void BeginTutorialFlow()
-{
-    InitializeControllerPosition();
-
-// 🔥 [수정] 대화 진행 중에는 플레이어가 쳐다봐야 하므로 켜둬야 합니다(true).
-    // 나중에 StartMainTutorial()에서 다시 끄게 됩니다.
-    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
-
-    // 모니터 캔버스가 꺼져있으면 켬
-    if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
-    
-    // dialogueUI 자동 탐색
-    if (dialogueUI == null)
-        dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
-
-    if (missionBoard)
-    {
-        missionBoard.InitializeUI();
-        missionBoard.UpdateHeader("< 면 접 중 >");
-        missionBoard.UpdateMission("모니터를 보세요", 0, 1);
-    }
-
-    // 대사부터 시작
-    if (dialogues != null && dialogues.Length > 0)
-    {
-        if (dialogueUI == null)
+        if (autoStart)
         {
-            Debug.LogError("[TutorialDialogueController] dialogueUI not assigned/found. Falling back to StartMainTutorial().");
-            StartMainTutorial();
-            return;
+            BeginTutorialFlow();
+        }
+    }
+
+    public void BeginTutorialFlow()
+    {
+        InitializeControllerPosition();
+
+        // 김밥과 모니터 켜기
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+        if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
+
+        if (dialogueUI == null)
+            dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
+
+        if (missionBoard)
+        {
+            missionBoard.InitializeUI();
+            missionBoard.UpdateHeader("< 면 접 중 >");
+            missionBoard.UpdateMission("모니터를 보세요", 0, 1);
         }
 
-        ShowDialogue(0);
-    }
-    else
-    {
-        StartMainTutorial();
-    }
-}
+        // ▼▼▼ [수정] BGM 재생 로직 ▼▼▼
+        if (conductor && conductor.bgmSource)
+        {
+            // 1순위: 인스펙터에 넣은 클립
+            if (tutorialBgmClip != null)
+            {
+                conductor.bgmSource.clip = tutorialBgmClip;
+                conductor.bgmSource.loop = true;
+                conductor.bgmSource.Play();
+            }
+            // 2순위: 데이터에 있는 클립
+            else if (tutorialController && tutorialController.tutorialTriggerList)
+            {
+                var bgm = tutorialController.tutorialTriggerList.bgm;
+                if (bgm)
+                {
+                    conductor.bgmSource.clip = bgm;
+                    conductor.bgmSource.loop = true;
+                    conductor.bgmSource.Play();
+                }
+            }
+        }
 
+        // 대사 시작
+        if (dialogues != null && dialogues.Length > 0)
+        {
+            if (dialogueUI == null)
+            {
+                Debug.LogError("[TutorialDialogueController] dialogueUI missing. Skip to main tutorial.");
+                StartMainTutorial();
+                return;
+            }
 
+            ShowDialogue(0);
+        }
+        else
+        {
+            StartMainTutorial();
+        }
+    }
     
     void Update()
     {
@@ -167,7 +185,6 @@ public void BeginTutorialFlow()
                 
                 // 현재 쳐다보고 있는지 확인
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
-                
                 if (isCurrentlyLooking) 
                 {
                     _hasLookedAtTarget = true;
@@ -176,10 +193,6 @@ public void BeginTutorialFlow()
                 // 봤던 적이 있으면
                 if (_hasLookedAtTarget)
                 {
-                    // 🔥 [변경] 모니터 힌트 텍스트 업데이트 (리갈패드 건드리지 않음)
-                    // 예: 
-                    // V 확인완료
-                    // [오른손 트리거] 다음
                     string nextAction = ApplyHighlightColor(ACTION_TRIGGER_NEXT);
                     string finalHint = string.Format(HINT_CONFIRMED_FORMAT, nextAction);
                     
@@ -194,7 +207,8 @@ public void BeginTutorialFlow()
                 else
                 {
                     // 아직 안 봤으면 "쳐다보세요" 힌트
-                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
+                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ?
+                        HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
                     UpdateHintText(originalHint);
                 }
             }
@@ -229,16 +243,13 @@ public void BeginTutorialFlow()
         }
     }
     
-    // 모니터 캔버스 클릭 감지
     bool CheckMonitorClick()
     {
         if (monitorCanvasObject == null) return false;
 
-        // 트리거 확인
         if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             return false;
 
-        // 레이캐스트 확인
         GameObject controller = GetControllerObject();
         if (controller == null) return false;
 
@@ -262,17 +273,17 @@ public void BeginTutorialFlow()
     bool CheckGazeAtObject(GameObject target)
     {
         if (target == null) return false;
+
         GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
         if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
         if (centerEye == null) return false;
-        
+
         Vector3 eyePos = centerEye.transform.position;
         Vector3 forward = centerEye.transform.forward;
         Vector3 dirToTarget = (target.transform.position - eyePos).normalized;
         float angle = Vector3.Angle(forward, dirToTarget);
         if (angle > gazeAngleThreshold) return false;
 
-        // SphereCast로 조금 두껍게 쏴서 인식률 높임
         RaycastHit hit;
         if (Physics.SphereCast(eyePos, 0.15f, forward, out hit, gazeDetectionDistance))
         {
@@ -330,10 +341,7 @@ public void BeginTutorialFlow()
         _conditionMet = false;
         _isWaitingForCondition = (dialogue.conditionType != DialogueConditionType.None);
         
-        // 초기화
-        _hasLookedAtTarget = false; 
-        
-        // 새 대사 나오면 리갈패드 도장 초기화
+        _hasLookedAtTarget = false;
         if (_isWaitingForCondition && missionBoard) 
         {
             missionBoard.ShowSuccessStamp(false);
@@ -344,12 +352,8 @@ public void BeginTutorialFlow()
     {
         if (dialogueUI != null && dialogueUI.hintText != null)
         {
-            // "V 확인완료" 텍스트가 들어오면, 이미 색상 태그가 있으므로 ApplyHighlightColor를 거치지 않고 바로 넣거나
-            // ApplyHighlightColor 함수가 태그를 망치지 않게 주의해야 함.
-            
             if (newHint.Contains("V 확인완료"))
             {
-                 // 이미 색상 처리된 문자열 그대로 사용
                  if (dialogueUI.hintText.text != newHint)
                     dialogueUI.hintText.text = newHint;
             }
@@ -359,7 +363,6 @@ public void BeginTutorialFlow()
                  if (dialogueUI.hintText.text != colored)
                     dialogueUI.hintText.text = colored;
             }
-            
             dialogueUI.hintText.gameObject.SetActive(true);
         }
     }
@@ -387,6 +390,7 @@ public void BeginTutorialFlow()
         if (!_controllerPositionInitialized) { InitializeControllerPosition(); return false; }
         GameObject controller = GetControllerObject();
         if (controller == null) return false;
+
         Vector3 currentPos = controller.transform.position;
         float movement = Vector3.Distance(currentPos, _previousControllerPosition);
         _previousControllerPosition = currentPos;
@@ -414,44 +418,44 @@ public void BeginTutorialFlow()
     {
         if (tutorialController != null) 
         { 
-            _tutorialControllerGameObject = tutorialController.gameObject; 
+            _tutorialControllerGameObject = tutorialController.gameObject;
             tutorialController.enabled = false; 
             _tutorialControllerGameObject.SetActive(false); 
         }
         
         if (conductor != null) 
         { 
-            _conductorGameObject = conductor.gameObject; 
+            _conductorGameObject = conductor.gameObject;
             _originalTutorialMode = conductor.isTutorialMode; 
+            
             conductor.enabled = false; 
-            _conductorGameObject.SetActive(false); 
+            // 🔥 [중요 수정] 오디오 재생을 위해 Conductor 오브젝트는 끄지 않습니다.
+            // _conductorGameObject.SetActive(false); 
         }
     }
     
     void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
+        // 실습 단계로 넘어가면 대화용 김밥은 끕니다.
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
         
         if (_conductorGameObject != null && conductor != null)
         {
-            _conductorGameObject.SetActive(true);
-            conductor.enabled = true;
+            // _conductorGameObject.SetActive(true); // 이미 켜져 있음
+            conductor.enabled = true; // Update 다시 시작
             conductor.isTutorialMode = _originalTutorialMode;
             conductor.OnRoundResult.AddListener(OnRoundResult);
         }
         
-if (_tutorialControllerGameObject != null && tutorialController != null)
-{
-    _tutorialControllerGameObject.SetActive(true);
-    tutorialController.enabled = true;
-
-    // 자동 시작( OnEnable )에 의존하지 않음: 명시 호출
-    tutorialController.StartTutorial();
-}
-
+        if (_tutorialControllerGameObject != null && tutorialController != null)
+        {
+            _tutorialControllerGameObject.SetActive(true);
+            tutorialController.enabled = true;
+            tutorialController.StartTutorial();
+        }
         
-        this.enabled = false; 
+        this.enabled = false;
     }
     
     void OnEnable() { if (conductor != null && conductor.enabled) conductor.OnRoundResult.AddListener(OnRoundResult); }

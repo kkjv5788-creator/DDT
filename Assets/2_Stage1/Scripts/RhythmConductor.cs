@@ -9,14 +9,12 @@ public class RhythmConductor : MonoBehaviour
 
     [Header("Data")]
     public RhythmTriggerListSO data;
-
     [Header("Refs")]
     public AudioSource bgmSource;
     public AudioSource sfxSource;
     public KimbapSpawner spawner;
     public DebugHUD hud;
     public PlateController plateController;
-
     [Header("Events")]
     public UnityEvent<Vector3, Vector3, float> OnSliceSuccess;
     public UnityEvent<Vector3, string> OnSliceFail;
@@ -29,7 +27,6 @@ public class RhythmConductor : MonoBehaviour
     public float resultDisplayDuration = 0.5f;
     [Tooltip("가이드 비트 사운드 재생 간격 (초)")]
     public float guideBeatInterval = 0.15f;
-
     [Header("Tutorial Mode")]
     public bool isTutorialMode = false;
 
@@ -56,8 +53,7 @@ public class RhythmConductor : MonoBehaviour
 
     void Start()
     {
-        // GameFlowManager에서 호출하도록 변경
-        // StartGame();
+        // StartGame() is called externally
     }
 
     public void StartGame()
@@ -69,19 +65,30 @@ public class RhythmConductor : MonoBehaviour
         }
 
         _offsetSec = (data ? data.timingOffsetMs : 0f) / 1000f;
-
-        // 🔥 BGM 재생 (튜토리얼/메인 모두)
+        
+        // ▼▼▼ [수정] BGM 재생 로직 분기 ▼▼▼
         if (data.bgm)
         {
             bgmSource.clip = data.bgm;
-            bgmSource.loop = isTutorialMode; // 튜토리얼은 반복 재생
-            bgmSource.Play();
+            bgmSource.loop = isTutorialMode; 
+
+            // 1. 튜토리얼: 대화 흐름을 위해 이미 켜져 있으면 끊지 않음
+            if (isTutorialMode)
+            {
+                if (!bgmSource.isPlaying) bgmSource.Play();
+            }
+            // 2. 실전(메인 게임): 무조건 처음부터 다시 재생 (박자 싱크 맞춤)
+            else
+            {
+                bgmSource.Stop();
+                bgmSource.time = 0f;
+                bgmSource.Play();
+            }
+
             _bgmStarted = true;
-            UnityEngine.Debug.Log($"[RhythmConductor] BGM started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
         }
         else
         {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] No BGM assigned!");
             _bgmStarted = false;
         }
 
@@ -91,31 +98,29 @@ public class RhythmConductor : MonoBehaviour
         RequiredSliceCount = 0;
         _waitingForManualAdvance = false;
 
+        // 게임 시작 시 소리 정리
+        StopAllGuideBeats();
+
         if (spawner) spawner.EnsureKimbapExists();
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (hud) hud.Log($"Game Started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
     }
 
     void Update()
     {
-        // 🔥 튜토리얼 모드에서는 시간 기반 진행 완전 차단
         if (isTutorialMode)
         {
-            // BGM 시간 업데이트만 (디버그용)
             if (_bgmStarted && bgmSource.isPlaying)
             {
                 BgmTime = bgmSource.time + _offsetSec;
             }
-
-            // 상태 머신만 작동 (트리거 자동 진행 X)
             TickStateMachine();
             return;
         }
 
-        // 메인 게임 모드: 기존 로직
+        // 메인 게임
         if (!_bgmStarted) return;
-
+        
+        // AudioSettings.dspTime을 쓰면 더 정확하지만 일단 time 사용
         BgmTime = bgmSource.time + _offsetSec;
 
         AdvanceTriggerIfNeeded();
@@ -124,14 +129,13 @@ public class RhythmConductor : MonoBehaviour
 
     void AdvanceTriggerIfNeeded()
     {
-        // 🔥 튜토리얼 모드에서는 절대 호출되지 않음
         if (isTutorialMode) return;
-
         if (data.triggers == null || data.triggers.Length == 0) return;
 
         int nextIndex = CurrentTriggerIndex + 1;
         if (nextIndex >= data.triggers.Length) return;
-
+        
+        // 다음 트리거 시간이 되면 진입
         if (BgmTime >= data.triggers[nextIndex].triggerTime)
         {
             EnterTrigger(nextIndex);
@@ -145,10 +149,8 @@ public class RhythmConductor : MonoBehaviour
 
         SliceCount = 0;
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
-
-        // 빈 접시로 초기화
+        
         if (plateController) plateController.ResetToEmptyPlate();
-
         if (spawner && spawner.CurrentKimbap)
         {
             spawner.CurrentKimbap.BeginTrigger(t);
@@ -156,14 +158,12 @@ public class RhythmConductor : MonoBehaviour
 
         State = RhythmState.Guiding;
         _stateEndTime = BgmTime + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
+        // 가이드 비트 재생
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Enter Trigger #{idx} (req={RequiredSliceCount}) - State: Guiding");
     }
 
     void TickStateMachine()
@@ -171,10 +171,6 @@ public class RhythmConductor : MonoBehaviour
         if (CurrentTriggerIndex < 0) return;
         var t = data.triggers[CurrentTriggerIndex];
 
-        // 🔥 튜토리얼 모드: 수동 진행 대기 중이면 Result 이후 Cleanup만 차단
-        // Guiding -> Judging 전환은 정상 작동해야 함!
-
-        // 🔥 튜토리얼 모드: Time.time 기준으로 상태 전환
         float currentTime = isTutorialMode ? Time.time : BgmTime;
 
         if (State == RhythmState.Guiding && currentTime >= _stateEndTime)
@@ -184,130 +180,75 @@ public class RhythmConductor : MonoBehaviour
 
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.SetSliceable(true);
-
-            if (hud) hud.Log("State -> Judging");
         }
         else if (State == RhythmState.Judging && currentTime >= _stateEndTime)
         {
             State = RhythmState.Result;
-
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.SetSliceable(false);
-
+            
             bool success = (SliceCount == RequiredSliceCount);
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.OnTriggerResult(success);
 
-            if (hud) hud.Log($"State -> Result (success={success})");
-
             OnRoundResult?.Invoke(success);
 
-            // 튜토리얼 모드: 결과 후 수동 진행 대기
-            if (isTutorialMode)
-            {
-                _waitingForManualAdvance = true;
-            }
-
+            if (isTutorialMode) _waitingForManualAdvance = true;
             _stateEndTime = currentTime + resultDisplayDuration;
         }
         else if (State == RhythmState.Result && currentTime >= _stateEndTime)
         {
-            // 🔥 튜토리얼 모드: Result 이후 즉시 Cleanup 실행 (김밥 교체)
             State = RhythmState.Cleanup;
-            if (hud) hud.Log("State -> Cleanup");
-
             if (spawner)
             {
                 spawner.DestroyCurrentKimbap();
                 spawner.EnsureKimbapExists();
-                if (hud) hud.Log("New kimbap spawned after Result");
             }
 
-            // 🔥 튜토리얼 모드: Cleanup 이후 수동 진행 대기
             if (isTutorialMode)
             {
                 State = RhythmState.Waiting;
-                // _waitingForManualAdvance는 이미 Result에서 true로 설정됨
                 return;
             }
 
-            // 메인 게임: 바로 다음 Waiting으로
             State = RhythmState.Waiting;
         }
     }
 
+    // 튜토리얼용 수동 조작 함수들
     public void RetryCurrentTrigger()
     {
-        if (!isTutorialMode)
-        {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] RetryCurrentTrigger called but not in tutorial mode!");
-            return;
-        }
-
+        if (!isTutorialMode) return;
         if (CurrentTriggerIndex < 0) return;
 
-        UnityEngine.Debug.Log($"[RhythmConductor] Retrying trigger #{CurrentTriggerIndex}");
-
         _waitingForManualAdvance = false;
+        if (spawner && !spawner.CurrentKimbap) spawner.EnsureKimbapExists();
 
-        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
-        // 대신 현재 김밥이 없으면 생성
-        if (spawner && !spawner.CurrentKimbap)
-        {
-            spawner.EnsureKimbapExists();
-        }
-
-        // 🔥 Time.time 기준으로 상태 시간 설정
         var t = data.triggers[CurrentTriggerIndex];
-
         SliceCount = 0;
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
 
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (spawner && spawner.CurrentKimbap)
-        {
-            spawner.CurrentKimbap.BeginTrigger(t);
-        }
+        if (spawner && spawner.CurrentKimbap) spawner.CurrentKimbap.BeginTrigger(t);
 
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Retry Trigger #{CurrentTriggerIndex} - State: Guiding");
     }
 
     public void AdvanceToNextTrigger()
     {
-        if (!isTutorialMode)
-        {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] AdvanceToNextTrigger called but not in tutorial mode!");
-            return;
-        }
+        if (!isTutorialMode) return;
 
         _waitingForManualAdvance = false;
-
         int nextIndex = CurrentTriggerIndex + 1;
+        if (nextIndex >= data.triggers.Length) return;
 
-        if (nextIndex >= data.triggers.Length)
-        {
-            UnityEngine.Debug.Log("[RhythmConductor] Tutorial completed - no more triggers");
-            return;
-        }
-
-        UnityEngine.Debug.Log($"[RhythmConductor] Advancing to next trigger #{nextIndex}");
-
-        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
-        // 대신 현재 김밥이 없으면 생성
-        if (spawner && !spawner.CurrentKimbap)
-        {
-            spawner.EnsureKimbapExists();
-        }
+        if (spawner && !spawner.CurrentKimbap) spawner.EnsureKimbapExists();
 
         CurrentTriggerIndex = nextIndex;
         var t = data.triggers[nextIndex];
@@ -316,22 +257,15 @@ public class RhythmConductor : MonoBehaviour
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
 
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (spawner && spawner.CurrentKimbap)
-        {
-            spawner.CurrentKimbap.BeginTrigger(t);
-        }
+        if (spawner && spawner.CurrentKimbap) spawner.CurrentKimbap.BeginTrigger(t);
 
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Enter Trigger #{nextIndex} (req={RequiredSliceCount}) - State: Guiding");
     }
 
     public bool IsJudgingWindow()
@@ -348,11 +282,7 @@ public class RhythmConductor : MonoBehaviour
 
     public void RegisterValidSlice()
     {
-        var t = GetCurrentTrigger();
-        if (t == null) return;
-
         SliceCount++;
-        if (hud) hud.Log($"ValidSlice! ({SliceCount}/{RequiredSliceCount})");
     }
 
     public void NotifySliceSuccess(Vector3 hitPos, Vector3 hitNormal, float knifeSpeed)
@@ -370,41 +300,19 @@ public class RhythmConductor : MonoBehaviour
         OnWrongCut?.Invoke(hitPos);
     }
 
-    /// <summary>
-    /// 가이드 비트 사운드를 requiredSliceCount만큼 반복 재생하는 코루틴
-    /// </summary>
     IEnumerator PlayGuideBeatSoundRepeatedly(AudioClip clip, int count)
     {
-        if (clip == null || sfxSource == null || count <= 0)
-            yield break;
-
+        if (clip == null || sfxSource == null || count <= 0) yield break;
         for (int i = 0; i < count; i++)
         {
             sfxSource.PlayOneShot(clip);
-            
-            // 마지막 재생이 아니면 간격 대기
-            if (i < count - 1)
-            {
-                yield return new WaitForSeconds(guideBeatInterval);
-            }
+            if (i < count - 1) yield return new WaitForSeconds(guideBeatInterval);
         }
-
-        if (hud) hud.Log($"Guide beat sound played {count} times");
     }
 
-    /// <summary>
-    /// 모든 가이드 비트 사운드 코루틴을 정지하고 SFX를 정리합니다.
-    /// 튜토리얼 스킵/완료 시 호출하여 중복 재생을 방지합니다.
-    /// </summary>
     public void StopAllGuideBeats()
     {
-        // 이 스크립트에서 돌리는 모든 코루틴(가이드 비트 포함) 정지
         StopAllCoroutines();
-
-        // 남아 있는 SFX 한 번 정리
-        if (sfxSource)
-            sfxSource.Stop();
-
-        if (hud) hud.Log("All guide beat sounds stopped");
+        if (sfxSource) sfxSource.Stop();
     }
 }
