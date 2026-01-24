@@ -23,11 +23,22 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     {
         public TutorialStage stage;
 
+        [Header("Before (스테이지 시작 전 대사)")]
         [TextArea(3, 12)]
-        public string beforeDialogue; // 스테이지 시작 전 대사들 (줄바꿈=한 줄씩)
+        public string beforeDialogue; // 줄바꿈=한 줄씩
 
+        [Header("During (상호작용 진행 중 화면)")]
+        [Tooltip("대사 끝난 뒤~성공 처리 전까지 상호작용 진행 중에 dialogueText에 띄울 문구.\n" +
+                 "플레이스홀더: {stage} {telegraphCount} {popCount} {goodCount} {specialCaught} {specialTarget}")]
+        [TextArea(2, 8)]
+        public string duringText;
+
+        [Tooltip("상호작용 진행 중에 nextHintText에 띄울 힌트(예: '잡아보세요', '오른손 트리거로 잡기')")]
+        public string duringHintText;
+
+        [Header("After (스테이지 성공 후 대사)")]
         [TextArea(3, 12)]
-        public string afterDialogue;  // 스테이지 성공 후 대사들 (줄바꿈=한 줄씩)
+        public string afterDialogue;  // 줄바꿈=한 줄씩
     }
 
     public enum DialoguePhase
@@ -57,8 +68,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
     // =========================================================
     // ✅ 기존 UIController/DebugHUD 호환용(인스펙터 숨김)
-    //    - Stage2UIController_st2 / DebugHUD_st2 컴파일 깨지는 것 방지용
-    //    - 너는 신경 안 써도 됨
     // =========================================================
     [HideInInspector] public TextMeshProUGUI instructionText;
     [HideInInspector] public TextMeshProUGUI progressText;
@@ -132,21 +141,13 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     private DialoguePhase _dialoguePhase = DialoguePhase.None;
     private Action _onDialogueDone = null;
 
+    // ===== During UI cache (불필요한 SetText 최소화) =====
+    private string _lastDuringDialogue = null;
+    private string _lastDuringHint = null;
+
     void Start()
     {
         AutoBindLegacyUIForCompatibility();
-        InitializeSensors();
-        StartTutorialBGM();
-
-        telegraphCount = 0;
-        popCount = 0;
-        goodOrBetterCount = 0;
-        specialTargetCount = 0;
-        specialCaughtCount = 0;
-        hasSuccessSync2 = false;
-        hasSuccessRun3 = false;
-
-        StartStage(currentStage);
     }
 
     void Update()
@@ -165,10 +166,9 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
             return;
         }
-        else
-        {
-            if (nextHintText != null) nextHintText.text = "";
-        }
+
+        // ✅ 상호작용 진행 중 UI 반영(네가 정한 duringText/duringHintText)
+        ApplyDuringUI(currentStage);
 
         // ✅ 스테이지별로 잡기 허용
         if (IsCatchingEnabled())
@@ -178,21 +178,76 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         }
     }
 
+    private Coroutine _bgmRoutine;
+
+    void OnEnable()
+    {
+        AutoBindLegacyUIForCompatibility();
+
+        InitializeSensors();
+        HardResetTutorial();
+
+        // ✅ BGM은 1프레임 늦게 시작(초기화 충돌 방지)
+        if (_bgmRoutine != null) StopCoroutine(_bgmRoutine);
+        _bgmRoutine = StartCoroutine(StartTutorialBGM_NextFrame());
+
+        StartStage(TutorialStage.T0_Telegraph);
+    }
+
+    IEnumerator StartTutorialBGM_NextFrame()
+    {
+        yield return null;
+        StartTutorialBGM();
+    }
+
+    void OnDisable()
+    {
+        if (_bgmRoutine != null)
+        {
+            StopCoroutine(_bgmRoutine);
+            _bgmRoutine = null;
+        }
+
+        StopAllCoroutines();
+        StopTutorialBGM();
+        CleanupAllTutorialFish();
+    }
+
+    public void HardResetTutorial()
+    {
+        currentStage = TutorialStage.T0_Telegraph;
+
+        telegraphCount = 0;
+        popCount = 0;
+        goodOrBetterCount = 0;
+
+        specialTargetCount = 0;
+        specialCaughtCount = 0;
+
+        hasSuccessSync2 = false;
+        hasSuccessRun3 = false;
+
+        _dialogueQueue.Clear();
+        _dialogueWaiting = false;
+        _dialoguePhase = DialoguePhase.None;
+        _onDialogueDone = null;
+
+        _lastDuringDialogue = null;
+        _lastDuringHint = null;
+
+        if (stageCompleteText != null) stageCompleteText.gameObject.SetActive(false);
+        if (progressText != null) progressText.text = "";
+        if (dialogueText != null) dialogueText.text = "";
+        if (nextHintText != null) nextHintText.text = "";
+    }
+
     // =========================================================
     // ✅ 외부(UIController/DebugHUD) 호환
     // =========================================================
     void AutoBindLegacyUIForCompatibility()
     {
-        // 네가 쓰는 UI 2개가 곧 "대사/다음안내"임.
-        // 그런데 Stage2UIController_st2가 옛 필드들에 접근하니까
-        // 그 필드들이 null이면 안전하게 여기서 매핑해둠.
-
         if (instructionText == null) instructionText = dialogueText;
         if (progressText == null) progressText = nextHintText;
-
-        // skipText / stageCompleteText / tutorialCanvas는 이제 안 쓰지만
-        // 다른 스크립트가 null 체크 없이 접근할 수도 있으니 "그냥 존재만" 유지
-        // (필요하면 Stage2UIController 쪽에서 주입해줄 수도 있음)
     }
 
     bool IsCatchingEnabled()
@@ -238,25 +293,25 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         currentStage = stage;
 
         StopAutoRoutine();
-
-        // 스테이지 들어가면 잔여 fish 정리(대사/전환 안정성)
         CleanupAllTutorialFish();
 
-        // 특수 패턴 상태 초기화(스테이지 진입 시)
         specialTargetCount = 0;
         specialCaughtCount = 0;
 
+        // during UI 캐시 초기화 (스테이지 바뀌면 즉시 갱신되게)
+        _lastDuringDialogue = null;
+        _lastDuringHint = null;
+
         BeginStageDialogue(stage, DialoguePhase.BeforeStage, () =>
         {
-            // 대사 끝나면 스테이지 액션 시작
             StartStageAction(stage);
         });
     }
 
     void StartStageAction(TutorialStage stage)
     {
-        // ✅ 상호작용 구간에서는 화면에 굳이 뭐 안 띄우고 싶다면 비워둠
-        if (dialogueText != null) dialogueText.text = "";
+        // ✅ 상호작용 시작 시점에 네가 지정한 during UI를 즉시 반영
+        ApplyDuringUI(stage, force: true);
 
         switch (stage)
         {
@@ -305,6 +360,47 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 
     // =========================================================
+    // ✅ During UI (상호작용 진행중 화면을 네가 정하도록)
+    // =========================================================
+    void ApplyDuringUI(TutorialStage stage, bool force = false)
+    {
+        if (_dialogueWaiting) return;
+
+        var block = FindBlock(stage);
+
+        string rawDuring = (block != null) ? block.duringText : "";
+        string rawHint = (block != null) ? block.duringHintText : "";
+
+        string during = FormatPlaceholders(rawDuring);
+        string hint = FormatPlaceholders(rawHint);
+
+        if (force || _lastDuringDialogue != during)
+        {
+            if (dialogueText != null) dialogueText.text = string.IsNullOrEmpty(during) ? "" : during;
+            _lastDuringDialogue = during;
+        }
+
+        if (force || _lastDuringHint != hint)
+        {
+            if (nextHintText != null) nextHintText.text = string.IsNullOrEmpty(hint) ? "" : hint;
+            _lastDuringHint = hint;
+        }
+    }
+
+    string FormatPlaceholders(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return "";
+
+        return s
+            .Replace("{stage}", currentStage.ToString())
+            .Replace("{telegraphCount}", telegraphCount.ToString())
+            .Replace("{popCount}", popCount.ToString())
+            .Replace("{goodCount}", goodOrBetterCount.ToString())
+            .Replace("{specialCaught}", specialCaughtCount.ToString())
+            .Replace("{specialTarget}", specialTargetCount.ToString());
+    }
+
+    // =========================================================
     // Dialogue System
     // =========================================================
     void BeginStageDialogue(TutorialStage stage, DialoguePhase phase, Action onDone)
@@ -330,9 +426,6 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             _dialogueWaiting = false;
             _dialoguePhase = DialoguePhase.None;
 
-            // 대사 없으면 안내도 끔
-            if (nextHintText != null) nextHintText.text = "";
-
             onDone?.Invoke();
             return;
         }
@@ -351,11 +444,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             return;
         }
 
-        // 대사 끝
         _dialogueWaiting = false;
         _dialoguePhase = DialoguePhase.None;
-
-        if (nextHintText != null) nextHintText.text = "";
 
         var cb = _onDialogueDone;
         _onDialogueDone = null;
@@ -367,10 +457,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         if (dialogueText == null) return;
 
         if (_dialogueQueue.Count == 0)
-        {
-            // 마지막 줄 이후(안전)
             return;
-        }
 
         dialogueText.text = _dialogueQueue.Dequeue();
     }
@@ -461,6 +548,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         while (currentStage == TutorialStage.T4_Sync2)
         {
             specialCaughtCount = 0;
+            ApplyDuringUI(currentStage, force: true);
 
             CleanupAllTutorialFish();
 
@@ -506,6 +594,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         while (currentStage == TutorialStage.T5_Run3)
         {
             specialCaughtCount = 0;
+            ApplyDuringUI(currentStage, force: true);
 
             CleanupAllTutorialFish();
 
@@ -553,7 +642,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
         tutorialMolds[moldIndex].PlayTelegraphVisual();
 
-        OnTelegraphPlayed(); // T0에서만 카운트
+        OnTelegraphPlayed();
 
         float lead = Mathf.Max(0f, popAnimLeadSeconds);
         float pre = Mathf.Max(0f, telegraphToPopDelay - lead);
@@ -604,6 +693,9 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             StartCoroutine(SnapHoldThenRelease(target));
 
             OnCatchSuccess(result);
+
+            // ✅ 카운트 변화 즉시 반영
+            ApplyDuringUI(currentStage, force: true);
         }
         else
         {
@@ -632,6 +724,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         if (currentStage != TutorialStage.T0_Telegraph) return;
 
         telegraphCount++;
+        ApplyDuringUI(currentStage, force: true);
+
         if (telegraphCount >= 2)
             CompleteStageAndWaitNextTrigger(TutorialStage.T0_Telegraph);
     }
@@ -641,6 +735,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         if (currentStage != TutorialStage.T1_Pop) return;
 
         popCount++;
+        ApplyDuringUI(currentStage, force: true);
+
         if (popCount >= 2)
             CompleteStageAndWaitNextTrigger(TutorialStage.T1_Pop);
     }
@@ -653,22 +749,27 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         if (currentStage == TutorialStage.T2_Catch)
         {
             goodOrBetterCount++;
+            ApplyDuringUI(currentStage, force: true);
+
             if (goodOrBetterCount >= 2)
                 CompleteStageAndWaitNextTrigger(TutorialStage.T2_Catch);
         }
         else if (currentStage == TutorialStage.T4_Sync2 && currentPatternType == PatternType_st2.Sync2)
         {
             specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
+            ApplyDuringUI(currentStage, force: true);
         }
         else if (currentStage == TutorialStage.T5_Run3 && currentPatternType == PatternType_st2.Run3)
         {
             specialCaughtCount = Mathf.Min(specialTargetCount, specialCaughtCount + 1);
+            ApplyDuringUI(currentStage, force: true);
         }
     }
 
     void OnCatchMiss()
     {
         // 필요하면 Miss 피드백 추가 가능
+        // miss가 UI에 반영되길 원하면 여기서도 ApplyDuringUI(currentStage, true) 호출하면 됨.
     }
 
     // =========================================================
@@ -691,7 +792,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     }
 
     // =========================================================
-    // ✅ DebugHUD 호환용(에러났던 GetCurrentStageInfo 복구)
+    // ✅ DebugHUD 호환용(GetCurrentStageInfo)
     // =========================================================
     public string GetCurrentStageInfo()
     {
