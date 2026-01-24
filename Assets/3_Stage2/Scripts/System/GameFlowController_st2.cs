@@ -271,7 +271,7 @@ public class GameFlowController_st2 : MonoBehaviour
         if (CurrentState == GameStatest2.Result || CurrentState == GameStatest2.MainMenu) return;
 
         stateBeforePause = CurrentState;
-        SetState(GameStatest2.Paused);
+        SetState(GameStatest2.Paused);   // ← 이때 UIController가 Panel_Pause 켬
 
         Time.timeScale = 0f;
         AudioListener.pause = true;
@@ -280,8 +280,7 @@ public class GameFlowController_st2 : MonoBehaviour
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.Pause();
 
-        // ✅ SetActive(false) 대신 컴포넌트 disable
-        SetPauseBehavioursEnabled(false);
+        SetPauseBehavioursEnabled(false); // ✅ 월드만 막기 (UI는 건드리지 않음)
     }
 
     public void ResumeGame()
@@ -297,7 +296,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
         SetPauseBehavioursEnabled(true);
 
-        SetState(stateBeforePause);
+        SetState(stateBeforePause);      // ← UIController가 Panel_Pause 끔
     }
 
     void SetPauseBehavioursEnabled(bool enabled)

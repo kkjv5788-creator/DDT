@@ -134,19 +134,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
     void Start()
     {
-        AutoBindLegacyUIForCompatibility();
-        InitializeSensors();
-        StartTutorialBGM();
-
-        telegraphCount = 0;
-        popCount = 0;
-        goodOrBetterCount = 0;
-        specialTargetCount = 0;
-        specialCaughtCount = 0;
-        hasSuccessSync2 = false;
-        hasSuccessRun3 = false;
-
-        StartStage(currentStage);
+       
     }
 
     void Update()
@@ -178,6 +166,50 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         }
     }
 
+
+    void OnEnable()
+    {
+        // ✅ 튜토리얼 재진입(다시하기 포함) 때마다 확실히 리셋 + BGM + 시작
+        InitializeSensors();
+        HardResetTutorial();
+        StartTutorialBGM();
+        StartStage(TutorialStage.T0_Telegraph);
+    }
+
+    void OnDisable()
+    {
+        // ✅ 나갈 때 정리
+        StopAllCoroutines();
+        StopTutorialBGM();
+        CleanupAllTutorialFish();
+    }
+
+    public void HardResetTutorial()
+    {
+        // 카운터/플래그 리셋
+        currentStage = TutorialStage.T0_Telegraph;
+
+        telegraphCount = 0;
+        popCount = 0;
+        goodOrBetterCount = 0;
+
+        specialTargetCount = 0;
+        specialCaughtCount = 0;
+
+        hasSuccessSync2 = false;
+        hasSuccessRun3 = false;
+
+        // 대사 상태도 리셋(대사 시스템 쓰는 버전이라면)
+        _dialogueQueue.Clear();
+        _dialogueWaiting = false;
+        _dialoguePhase = DialoguePhase.None;
+        _onDialogueDone = null;
+
+        // UI 정리(원하는 스타일로)
+        if (stageCompleteText != null) stageCompleteText.gameObject.SetActive(false);
+        if (progressText != null) progressText.text = "";
+        if (dialogueText != null) dialogueText.text = "";
+    }
     // =========================================================
     // ✅ 외부(UIController/DebugHUD) 호환
     // =========================================================
