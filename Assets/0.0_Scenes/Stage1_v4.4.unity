@@ -245,6 +245,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
+--- !u!1 &129385893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2066149544834999045, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
+  m_PrefabInstance: {fileID: 4023450101779682469}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &155217195 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5058885340262819531, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
@@ -618,8 +623,9 @@ MonoBehaviour:
   salesInfoGroup: {fileID: 268026783}
   textRealtimeSales: {fileID: 787213205}
   textFeedback: {fileID: 116851612}
-  pricePerSlice: 0
+  pricePerLine: 5000
   mainMenuSceneIndex: 0
+  resultBgmClip: {fileID: 8300000, guid: ca315076f894cbe4381e22befe62231e, type: 3}
 --- !u!114 &206060682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,6 +666,7 @@ GameObject:
   - component: {fileID: 275202587}
   - component: {fileID: 275202589}
   - component: {fileID: 275202590}
+  - component: {fileID: 275202591}
   m_Layer: 0
   m_Name: StageManager
   m_TagString: Untagged
@@ -721,9 +728,10 @@ MonoBehaviour:
   gameFlowManager: {fileID: 206060681}
   conductor: {fileID: 463253587}
   mainGameData: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
-  tutorialDialogueController: {fileID: 0}
+  tutorialDialogueController: {fileID: 1696699494}
   tutorialController: {fileID: 1696699493}
   ambientSource: {fileID: 275202590}
+  menuBgmClip: {fileID: 8300000, guid: baa10e22530d2894da66228abc09cb92, type: 3}
 --- !u!82 &275202590
 AudioSource:
   m_ObjectHideFlags: 0
@@ -820,6 +828,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &275202591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275202586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 816a00128604e9b46b057828f4979a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  conductor: {fileID: 463253587}
 --- !u!65 &299981848
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1442,7 +1463,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 63676804374322481, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
   m_PrefabInstance: {fileID: 4023450101779682469}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 129385893}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -2648,7 +2669,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7728554518528156471, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
   m_PrefabInstance: {fileID: 4023450101779682469}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1716832993}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -4543,6 +4564,9 @@ MonoBehaviour:
   monitorText: {fileID: 116851612}
   salesText: {fileID: 787213205}
   finalResultPanel: {fileID: 1188267593}
+  finalTitleText: {fileID: 932535380}
+  btnRestartObj: {fileID: 1716832993}
+  btnMainMenuObj: {fileID: 129385893}
   finalTotalText: {fileID: 155217195}
   finalCommentText: {fileID: 1824342089}
   tutorialTriggerList: {fileID: 11400000, guid: 71b719ccccca59a4f8477dfc3daca575, type: 2}
@@ -4562,6 +4586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStart: 1
+  tutorialBgmClip: {fileID: 8300000, guid: 7a12bca8ae3b6e2439b6c55ca820e9c0, type: 3}
   dialogueUI: {fileID: 1696699495}
   missionBoard: {fileID: 918129802}
   tutorialController: {fileID: 1696699493}
@@ -4731,6 +4756,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1ebbc8829f32b6f4791d8dfc321639ad, type: 3}
   m_PrefabInstance: {fileID: 1704363448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1716832993 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8579109642889338115, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
+  m_PrefabInstance: {fileID: 4023450101779682469}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1727750381 stripped
 Transform:
@@ -6091,6 +6121,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 275202589}
+    - target: {fileID: 3441280793615170610, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClick_StartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3441280793615170610, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StageModeSelector, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3931814133190268797, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_Name
       value: Monitor_Group

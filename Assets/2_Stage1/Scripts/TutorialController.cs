@@ -3,7 +3,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 
 public class TutorialController : MonoBehaviour
-    {
+{
     [Header("Refs")]
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
@@ -11,24 +11,30 @@ public class TutorialController : MonoBehaviour
     public StageModeSelector modeSelector;
 
     [Header("UI Groups")]
-    public GameObject salesUIGroup; 
+    public GameObject salesUIGroup;
 
     [Header("Monitor UI")]
     public TextMeshProUGUI monitorText; 
     public TextMeshProUGUI salesText;   
 
     [Header("Final Result UI")]
-    public GameObject finalResultPanel;        
+    public GameObject finalResultPanel;
+    
+    // ▼▼▼ [추가] 제목 변경 및 버튼 숨기기용 변수 ▼▼▼
+    public TextMeshProUGUI finalTitleText; // "영업 종료" -> "채용 결과"
+    public GameObject btnRestartObj;       // 다시하기 버튼
+    public GameObject btnMainMenuObj;      // 메인으로 버튼
+
     public TextMeshProUGUI finalTotalText;     
-    public TextMeshProUGUI finalCommentText;   
+    public TextMeshProUGUI finalCommentText;
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
-    public int requiredSuccessCount = 1; 
+    public int requiredSuccessCount = 1;
 
     [Header("Wage Settings")]
-    public int maxTotalWage = 100000; 
-    
+    public int maxTotalWage = 100000;
+
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FF3333"; 
 
@@ -49,9 +55,6 @@ public class TutorialController : MonoBehaviour
             conductor.OnRoundResult.AddListener(HandleRoundResult);
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
         }
-
-        // StartTutorial is triggered explicitly by StageModeSelector.
-
     }
 
     void OnDisable()
@@ -62,14 +65,26 @@ public class TutorialController : MonoBehaviour
             conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
         }
     }
+
+    void Update()
+    {
+        // 튜토리얼 완료 후 입력 대기
+        if (_tutorialCompleted && finalResultPanel != null && finalResultPanel.activeSelf)
+        {
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+            {
+                FinalizeAndStartGame();
+            }
+        }
+    }
+
     public void StartTutorial()
     {
-// Reset tutorial runtime state (since we no longer auto-start on OnEnable)
-_currentStepIndex = 0;
-_successCountThisStep = 0;
-_tutorialCompleted = false;
-_isProcessingResult = false;
-        // Mark tutorial state for global systems (e.g., Pause block)
+        _currentStepIndex = 0;
+        _successCountThisStep = 0;
+        _tutorialCompleted = false;
+        _isProcessingResult = false;
+        
         var gf = FindObjectOfType<GameFlowManager>();
         if (gf) gf.EnterTutorialState();
 
@@ -81,8 +96,7 @@ _isProcessingResult = false;
         conductor.data = tutorialTriggerList;
         
         conductor.StartGame();
-        
-        // [중요] StartGame 호출 후에 Loop를 켜야 안전합니다.
+
         if (missionBoard) missionBoard.InitializeUI();
         if (finalResultPanel) finalResultPanel.SetActive(false);
 
@@ -92,19 +106,6 @@ _isProcessingResult = false;
         ShowMonitorText("<size=60%>면접 실습 시작</size>", Color.green);
         Invoke(nameof(StartFirstTrigger), 1.5f);
     }
-
-    void Update()
-{
-    // 튜토리얼이 끝났고, 결과창이 떠 있는 상태일 때만 입력을 받음
-    if (_tutorialCompleted && finalResultPanel != null && finalResultPanel.activeSelf)
-    {
-        // 오른손 검지 트리거 입력 감지
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
-        {
-            FinalizeAndStartGame(); // 게임 시작으로 이동
-        }
-    }
-}
 
     void StartFirstTrigger()
     {
@@ -176,14 +177,13 @@ _isProcessingResult = false;
     void UpdateMissionUI()
     {
         if (!missionBoard) return;
-        
         missionBoard.ShowSuccessStamp(false);
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
         int targetSliceCount = 0;
         if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
             targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
-
+        
         int currentSlices = 0;
         if (conductor != null && conductor.IsJudgingWindow())
             currentSlices = conductor.SliceCount;
@@ -193,7 +193,6 @@ _isProcessingResult = false;
         for (int i = 0; i < remainCount; i++) icons += "@ "; 
 
         string progressText = $"<color={highlightTextColor}>{currentSlices}</color> / {targetSliceCount}";
-
         string guideText = "";
         switch (_currentStepIndex)
         {
@@ -225,42 +224,46 @@ _isProcessingResult = false;
         if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
     }
 
-void CompleteTutorial()
-{
-    _tutorialCompleted = true; // 플래그 설정
-    string bigTitle = "** 합 격 **"; 
-    string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
-    string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
+    void CompleteTutorial()
+    {
+        _tutorialCompleted = true;
+        string bigTitle = "** 합 격 **"; 
+        string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
+        string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
 
-    if (missionBoard)
-    {
-        missionBoard.ShowSuccessStamp(true);
-        missionBoard.UpdateHeader("< 채용 결과 >");
-        missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
-    }
-    
-    if (finalResultPanel)
-    {
-        finalResultPanel.SetActive(true); // ✅ 수정: 패널을 켭니다.
-        if (finalTotalText) finalTotalText.text = bigTitle;
-        if (finalCommentText) 
-        { 
-            finalCommentText.text = finalMessage + startHint; 
-            finalCommentText.color = Color.white;
+        if (missionBoard)
+        {
+            missionBoard.ShowSuccessStamp(true);
+            missionBoard.UpdateHeader("< 채용 결과 >");
+            missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
         }
+        
+        if (finalResultPanel)
+        {
+            finalResultPanel.SetActive(true);
+            
+            // ▼▼▼ [수정] 텍스트 변경 및 버튼 숨기기
+            if (finalTitleText) finalTitleText.text = "채용 결과";
+            if (btnRestartObj) btnRestartObj.SetActive(false);
+            if (btnMainMenuObj) btnMainMenuObj.SetActive(false);
+
+            if (finalTotalText) finalTotalText.text = bigTitle;
+            if (finalCommentText) 
+            { 
+                finalCommentText.text = finalMessage + startHint; 
+                finalCommentText.color = Color.white;
+            }
+        }
+        
+        ShowMonitorText(finalMessage, Color.cyan);
     }
-    
-    ShowMonitorText(finalMessage, Color.cyan);
-    
-    // ❌ 삭제: Invoke(nameof(FinalizeAndStartGame), 1.0f); 
-    // (자동으로 넘어가지 않고 입력을 기다리게 둡니다.)
-}
 
     void FinalizeAndStartGame()
     {
         Cleanup();
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
         if (!modeSelector) modeSelector = FindObjectOfType<StageModeSelector>();
+        
         if (modeSelector)
         {
             modeSelector.OnClick_StartGame();
@@ -276,6 +279,10 @@ void CompleteTutorial()
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
         if (salesUIGroup) salesUIGroup.SetActive(false);
         
+        // ▼▼▼ [수정] 버튼 복구
+        if (btnRestartObj) btnRestartObj.SetActive(true);
+        if (btnMainMenuObj) btnMainMenuObj.SetActive(true);
+
         if (finalResultPanel) finalResultPanel.SetActive(false);
         ClearMonitorText();
     }

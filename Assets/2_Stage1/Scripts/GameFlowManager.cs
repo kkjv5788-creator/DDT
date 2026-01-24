@@ -14,50 +14,59 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Monitor Panels")]
     public GameObject panelPlayGame;   
-    public GameObject panelDialogue;   // 튜토리얼 대화창 (Panel_Dialogue)
-    public GameObject panelResult;     // 결과창 (Panel_ClosingResult)
+    public GameObject panelDialogue; 
+    public GameObject panelResult;   
 
     [Header("Play Game UI")]
     public Slider songProgressSlider;       
-    public TextMeshProUGUI textRemainingTime; 
+    public TextMeshProUGUI textRemainingTime;
     
     [Header("Sales UI")]
     public GameObject salesInfoGroup;         
     public TextMeshProUGUI textRealtimeSales; 
-    public TextMeshProUGUI textFeedback;      
-
+    public TextMeshProUGUI textFeedback;
+    
     [Header("Settings")]
-    public int pricePerSlice = 5000; // 성공 시 5,000원 고정
-    public int mainMenuSceneIndex = 0; 
+    public int pricePerLine = 5000; 
+    public int mainMenuSceneIndex = 0;
+
+    [Header("Audio Clips")]
+    public AudioClip resultBgmClip; 
 
     public GameState CurrentState { get; private set; } = GameState.Intro;
 
-// Explicit state setter (CurrentState has a restricted setter)
-public void SetState(GameState state)
-{
-    CurrentState = state;
-}
-
-public void EnterTutorialState()
-{
-    SetState(GameState.Tutorial);
-}
-
-GameState _stateBeforePause;
+    GameState _stateBeforePause;
     int _currentSales = 0;
     bool _isGameEnding = false;
     RhythmConductor.RhythmState _lastConductorState;
+    
+    void Awake()
+    {
+        if (!conductor) conductor = FindObjectOfType<RhythmConductor>();
 
+        // UI 자동 찾기
+        if (!salesInfoGroup || !textRealtimeSales)
+        {
+            GameObject canvas = GameObject.Find("Monitor_Canvas");
+            if (canvas)
+            {
+                if (!salesInfoGroup) { Transform t = canvas.transform.Find("Sales_Info_Group"); if (t) salesInfoGroup = t.gameObject; }
+                if (!textRealtimeSales) { var texts = canvas.GetComponentsInChildren<TextMeshProUGUI>(true); foreach (var tx in texts) if (tx.name == "Text_RealtimeSales") { textRealtimeSales = tx; break; } }
+                if (!textFeedback) { var texts = canvas.GetComponentsInChildren<TextMeshProUGUI>(true); foreach (var tx in texts) if (tx.name == "Text_Feedback") { textFeedback = tx; break; } }
+            }
+        }
+    }
+    
     void OnEnable()
     {
-        CurrentState = GameState.Intro; 
+        CurrentState = GameState.Intro;
         if (conductor)
         {
             conductor.OnSliceSuccess.AddListener(OnSliceSuccess);
             conductor.OnSliceFail.AddListener(OnSliceFail);
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
         }
-        // StartMainGame() is called explicitly by StageModeSelector/StageManager.
-}
+    }
 
     void OnDisable()
     {
@@ -65,6 +74,7 @@ GameState _stateBeforePause;
         {
             conductor.OnSliceSuccess.RemoveListener(OnSliceSuccess);
             conductor.OnSliceFail.RemoveListener(OnSliceFail);
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
         }
     }
 
@@ -103,22 +113,61 @@ GameState _stateBeforePause;
     void UpdateLegalPadByState()
     {
         if (!missionBoard) return;
+        
+        // 대기 중일 때
         if (conductor.State == RhythmConductor.RhythmState.Waiting)
+        {
             missionBoard.UpdateMission("주문 대기 중...", 0, 0);
+            missionBoard.ShowSuccessStamp(false); // 도장 끄기
+        }
+        // 썰기 시작하면 (Guiding/Judging)
         else if (conductor.State == RhythmConductor.RhythmState.Guiding || conductor.State == RhythmConductor.RhythmState.Judging)
+        {
             UpdateSliceCountUI();
+            missionBoard.ShowSuccessStamp(false); // 새 주문이 시작되면 도장 지우기
+        }
     }
 
     void OnSliceSuccess(Vector3 pos, Vector3 normal, float speed)
     {
-        _currentSales += pricePerSlice; // 단순 가산 방식
-        UpdateSalesUI();
-        ShowFeedbackText($"+ {pricePerSlice:N0} 원");
         UpdateSliceCountUI();
     }
 
+    // 한 줄(라운드) 정산
+    void HandleRoundResult(bool success)
+    {
+        if (CurrentState != GameState.PlayingMain) return;
+
+        if (success)
+        {
+            // 성공 시: 돈 지급 + 피드백 + 도장 찍기
+            int earnedMoney = pricePerLine;
+            _currentSales += earnedMoney;
+            UpdateSalesUI();
+            
+            string msg = $"<color=#00FF00>판매 완료</color>\n+ {earnedMoney:N0} 원";
+            ShowFeedbackText(msg);
+
+            // 🔥 [수정] 성공했을 때만 도장 쾅!
+            if (missionBoard) missionBoard.ShowSuccessStamp(true);
+        }
+        else
+        {
+            // 실패 시: 도장 안 찍음
+            string msg = "<color=#FF0000>판매 실패</color>";
+            ShowFeedbackText(msg);
+
+            if (missionBoard) missionBoard.ShowSuccessStamp(false);
+        }
+    }
+
     void OnSliceFail(Vector3 pos, string reason) => UpdateSliceCountUI();
-    void UpdateSalesUI() { if (textRealtimeSales) textRealtimeSales.text = $"{_currentSales:N0} 원"; }
+    
+    void UpdateSalesUI() 
+    { 
+        if (textRealtimeSales) 
+            textRealtimeSales.text = $"{_currentSales:N0} 원";
+    }
 
     void ShowFeedbackText(string msg)
     {
@@ -127,7 +176,7 @@ GameState _stateBeforePause;
             textFeedback.text = msg;
             textFeedback.gameObject.SetActive(true);
             CancelInvoke(nameof(HideFeedback));
-            Invoke(nameof(HideFeedback), 1.0f);
+            Invoke(nameof(HideFeedback), 2.0f);
         }
     }
     void HideFeedback() { if (textFeedback) textFeedback.gameObject.SetActive(false); }
@@ -139,15 +188,21 @@ GameState _stateBeforePause;
     }
 
     public int GetCurrentSales() => _currentSales;
+    
+    public void SetState(GameState state) { CurrentState = state; }
+    public void EnterTutorialState() { SetState(GameState.Tutorial); }
 
     public void StartMainGame()
     {
-        // Safety guards
+        if (!conductor) conductor = FindObjectOfType<RhythmConductor>();
+
         if (!conductor || conductor.data == null || conductor.data.triggers == null)
         {
             Debug.LogError("[GameFlowManager] Cannot start main game: RhythmConductor or data/triggers not assigned.");
             return;
         }
+
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
 
         CurrentState = GameState.PlayingMain;
         _isGameEnding = false;
@@ -158,77 +213,94 @@ GameState _stateBeforePause;
         if (panelPlayGame) panelPlayGame.SetActive(true);
         if (panelDialogue) panelDialogue.SetActive(false);
         if (panelResult) panelResult.SetActive(false);
+        if (textFeedback) textFeedback.gameObject.SetActive(false);
 
-        if (missionBoard) { missionBoard.InitializeUI(); missionBoard.UpdateHeader("*** 주문서 ***"); }
+        if (missionBoard) 
+        { 
+            missionBoard.InitializeUI(); 
+            missionBoard.UpdateHeader("*** 주문서 ***"); 
+            missionBoard.UpdateMission("주문 대기 중...", 0, 0);
+            missionBoard.ShowSuccessStamp(false); // 시작할 땐 도장 없음
+        }
 
         if (conductor)
         {
             conductor.isTutorialMode = false;
             conductor.StartGame();
-}
+        }
         if (resultManager) resultManager.StartTracking(conductor.data.triggers.Length);
     }
 
     public void PauseGame()
-{
-    _stateBeforePause = CurrentState;
-    CurrentState = GameState.Paused;
+    {
+        _stateBeforePause = CurrentState;
+        CurrentState = GameState.Paused;
+        Time.timeScale = 0f;
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Pause();
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+        if (pauseManager) pauseManager.ShowPauseMenu();
+    }
 
-    Time.timeScale = 0f;
-
-    if (toolSwitcher) toolSwitcher.SwitchToController();
-    if (pauseManager) pauseManager.ShowPauseMenu();
-}
     public void ResumeGame()
-{
-    Time.timeScale = 1f;
-
-    // Restore prior state (e.g., PlayingMain / WaitForRadio)
-    CurrentState = _stateBeforePause;
-
-    if (toolSwitcher) toolSwitcher.SwitchToKnife();
-    if (pauseManager) pauseManager.HidePauseMenu();
-}
+    {
+        Time.timeScale = 1f;
+        CurrentState = _stateBeforePause;
+        if (conductor && conductor.bgmSource) conductor.bgmSource.UnPause();
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+        if (pauseManager) pauseManager.HidePauseMenu();
+    }
 
     public void EnterFinalResult(float successRate)
     {
-        Time.timeScale = 1f; // ensure result is not paused
+        Time.timeScale = 1f;
         CurrentState = GameState.FinalResult;
         if (toolSwitcher) toolSwitcher.SwitchToController();
+
         if (panelPlayGame) panelPlayGame.SetActive(false);
-        if (panelDialogue) panelDialogue.SetActive(false); // 튜토리얼 UI 강제 종료
+        if (panelDialogue) panelDialogue.SetActive(false); 
         if (panelResult) panelResult.SetActive(true);
-        if (missionBoard) { missionBoard.UpdateHeader("< 영 업 종 료 >"); missionBoard.ShowSuccessStamp(true); }
+        
+        if (missionBoard) 
+        { 
+            missionBoard.UpdateHeader("< 영 업 종 료 >"); 
+            missionBoard.UpdateText("정 산 중", "", ""); // 내용 비우기 (원하시면)
+            // 🔥 [수정] 결과창에서는 도장을 절대 찍지 않음
+            missionBoard.ShowSuccessStamp(false); 
+        }
+
+        if (conductor && conductor.bgmSource && resultBgmClip != null)
+        {
+            conductor.bgmSource.Stop();
+            conductor.bgmSource.clip = resultBgmClip;
+            conductor.bgmSource.loop = true; 
+            conductor.bgmSource.Play();
+        }
     }
 
-    
-public void ResetAndRestartMainGame()
-{
-    Time.timeScale = 1f;
+    public void ResetAndRestartMainGame()
+    {
+        Time.timeScale = 1f;
+        _currentSales = 0;
+        _isGameEnding = false;
+        _lastConductorState = default;
 
-    // Core state reset
-    _currentSales = 0;
-    _isGameEnding = false;
-    _lastConductorState = default;
+        CurrentState = GameState.PlayingMain;
+        _stateBeforePause = GameState.PlayingMain;
 
-    CurrentState = GameState.PlayingMain;
-    _stateBeforePause = GameState.PlayingMain;
+        if (panelResult) panelResult.SetActive(false);
+        if (panelDialogue) panelDialogue.SetActive(false);
+        if (panelPlayGame) panelPlayGame.SetActive(true);
+        if (textFeedback) textFeedback.gameObject.SetActive(false);
+        
+        if (songProgressSlider) songProgressSlider.value = 0f;
+        if (textRemainingTime) textRemainingTime.text = "00:00";
 
-    // UI reset
-    if (panelResult) panelResult.SetActive(false);
-    if (panelDialogue) panelDialogue.SetActive(false);
-    if (panelPlayGame) panelPlayGame.SetActive(true);
+        UpdateSalesUI();
+        
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
 
-    if (textFeedback) textFeedback.gameObject.SetActive(false);
-    if (songProgressSlider) songProgressSlider.value = 0f;
-    if (textRemainingTime) textRemainingTime.text = "00:00";
+        StartMainGame();
+    }
 
-    UpdateSalesUI();
-
-    // Prevent BGM overlap
-    if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
-
-    StartMainGame();
-}
-public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
+    public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
 }
