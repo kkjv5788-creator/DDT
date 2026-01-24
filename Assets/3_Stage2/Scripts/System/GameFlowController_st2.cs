@@ -270,8 +270,19 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         if (CurrentState == GameStatest2.Result || CurrentState == GameStatest2.MainMenu) return;
 
+        // ✅ Pause 보정 시작점 기록
+        pauseStartDspTime = AudioSettings.dspTime;
+
         stateBeforePause = CurrentState;
-        SetState(GameStatest2.Paused);   // ← 이때 UIController가 Panel_Pause 켬
+        SetState(GameStatest2.Paused);
+
+        // (선택) 예약 이벤트/스폰도 같이 정리하면 “재개 직후 몰드/큐 폭주” 방지됨
+        if (patternDirector != null) patternDirector.ClearAllScheduledEvents(); // 이미 함수 존재:contentReference[oaicite:8]{index=8}
+        if (molds != null)
+        {
+            foreach (var mold in molds)
+                if (mold != null) mold.CancelAllScheduledSpawns(); // TransitionToMainMenu에서도 쓰는 방식:contentReference[oaicite:9]{index=9}
+        }
 
         Time.timeScale = 0f;
         AudioListener.pause = true;
@@ -280,12 +291,18 @@ public class GameFlowController_st2 : MonoBehaviour
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.Pause();
 
-        SetPauseBehavioursEnabled(false); // ✅ 월드만 막기 (UI는 건드리지 않음)
+        SetPauseBehavioursEnabled(false);
     }
 
     public void ResumeGame()
     {
         if (CurrentState != GameStatest2.Paused) return;
+
+        // ✅ Pause 보정 누적
+        double now = AudioSettings.dspTime;
+        if (pauseStartDspTime > 0.0)
+            pausedDspAccum += (now - pauseStartDspTime);
+        pauseStartDspTime = 0.0;
 
         Time.timeScale = 1f;
         AudioListener.pause = false;
@@ -295,8 +312,7 @@ public class GameFlowController_st2 : MonoBehaviour
             tutorialController.tutorialBGMSource.UnPause();
 
         SetPauseBehavioursEnabled(true);
-
-        SetState(stateBeforePause);      // ← UIController가 Panel_Pause 끔
+        SetState(stateBeforePause);
     }
 
     void SetPauseBehavioursEnabled(bool enabled)

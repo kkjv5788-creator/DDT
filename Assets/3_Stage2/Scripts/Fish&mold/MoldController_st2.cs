@@ -21,6 +21,13 @@ public class MoldController_st2 : MonoBehaviour
     public string popAnimationTrigger = "Pop";
     public float popAnimationLeadTime = 0.2f;
 
+    // ✅ 달그락 애니메이션 (코드 흔들림) - 튜토리얼과 동일 컨셉
+    [Header("달그락 애니메이션 (코드 흔들림)")]
+    public bool useTelegraphShake = true;
+    public float shakeIntensity = 0.02f;
+    public float shakeDuration = 0.3f;
+    public int shakeCount = 8;
+
     [Header("점프(수치)")]
     public float jumpHeight = 2.5f;
     public float forwardDistance = 2.0f;
@@ -44,13 +51,15 @@ public class MoldController_st2 : MonoBehaviour
     private readonly List<FishCatchToken_st2> activeFish = new List<FishCatchToken_st2>();
     private Vector3 originalMoldPosition;
 
+    // ✅ 텔레그래프 흔들림 코루틴 핸들
+    private Coroutine shakeRoutine;
+
     // 스케줄 스폰(패턴 디렉터에서 예약)
     private readonly List<Coroutine> scheduledSpawns = new List<Coroutine>();
 
     void Awake()
     {
         originalMoldPosition = transform.localPosition;
-
 
         fishPool = new ObjectPool<FishCatchToken_st2>(
             CreateFish,
@@ -62,10 +71,12 @@ public class MoldController_st2 : MonoBehaviour
             maxSize: 64
         );
     }
+
     public void Initialize(JudgeSystem_st2 judge)
     {
         judgeSystem = judge;
     }
+
     private FishCatchToken_st2 CreateFish()
     {
         var go = Instantiate(fishPrefab);
@@ -74,12 +85,9 @@ public class MoldController_st2 : MonoBehaviour
         var fish = go.GetComponent<FishCatchToken_st2>();
         if (fish == null) fish = go.AddComponent<FishCatchToken_st2>();
 
-        // owner/풀은 Initialize 또는 SetPool에서 잡히게 설계해둠
         fish.SetPool(fishPool);
         return fish;
     }
-
-
 
     private void OnGetFish(FishCatchToken_st2 fish)
     {
@@ -109,7 +117,7 @@ public class MoldController_st2 : MonoBehaviour
         }
 
         double delay = dspTime - AudioSettings.dspTime;
-        StartCoroutine(PlayTelegraphVisual((float)delay));
+        StartCoroutine(PlayTelegraphVisualDelayed((float)delay));
     }
 
     public void SchedulePop(double dspTime)
@@ -133,7 +141,10 @@ public class MoldController_st2 : MonoBehaviour
         scheduledSpawns.Add(spawnRoutine);
     }
 
-    IEnumerator PlayTelegraphVisual(float delay)
+    // =========================================================
+    // ✅ Telegraph Visual (달그락 흔들림)
+    // =========================================================
+    IEnumerator PlayTelegraphVisualDelayed(float delay)
     {
         float elapsed = 0f;
         while (elapsed < delay)
@@ -142,9 +153,50 @@ public class MoldController_st2 : MonoBehaviour
             yield return null;
         }
 
-        // 여기서 흔들림/이펙트 넣어도 됨
+        PlayTelegraphVisual(); // 딜레이 후 흔들림 실행
     }
 
+    // ✅ 외부에서 즉시 달그락 연출이 필요하면 이 메서드 호출 가능
+    public void PlayTelegraphVisual()
+    {
+        if (!useTelegraphShake) return;
+
+        if (shakeRoutine != null) StopCoroutine(shakeRoutine);
+        shakeRoutine = StartCoroutine(ShakeMold());
+    }
+
+    IEnumerator ShakeMold()
+    {
+        int currentShake = 0;
+        float shakeInterval = shakeDuration / Mathf.Max(1, shakeCount);
+
+        while (currentShake < shakeCount)
+        {
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity),
+                0f,
+                UnityEngine.Random.Range(-shakeIntensity, shakeIntensity)
+            );
+
+            transform.localPosition = originalMoldPosition + randomOffset;
+
+            float elapsed = 0f;
+            while (elapsed < shakeInterval)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            currentShake++;
+        }
+
+        transform.localPosition = originalMoldPosition;
+        shakeRoutine = null;
+    }
+
+    // =========================================================
+    // Pop Animation
+    // =========================================================
     IEnumerator PlayPopAnimation(float delay)
     {
         float elapsed = 0f;
@@ -253,4 +305,12 @@ public class MoldController_st2 : MonoBehaviour
     }
 
     public int GetActiveFishCount() => activeFish.Count;
+
+    void OnDisable()
+    {
+        // 흔들림 중이면 원위치 복구
+        if (shakeRoutine != null) StopCoroutine(shakeRoutine);
+        shakeRoutine = null;
+        transform.localPosition = originalMoldPosition;
+    }
 }

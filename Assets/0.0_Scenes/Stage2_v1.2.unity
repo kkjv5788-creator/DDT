@@ -350,31 +350,46 @@ MonoBehaviour:
       \uC804\uC5D0 \uBD95\uC5B4\uBE75 \uD2C0\uC774 \uBA3C\uC800 \uB2EC\uADF8\uB77D
       \uAC70\uB9B4\uAC70\uC57C\n\uB2EC\uADF8\uB77D \uAC70\uB9AC\uB294 \uD2C0\uC744
       \uC798 \uC9C0\uCF1C\uBD10"
+    duringText: "\uB2EC\uADF8\uB77D \uC18C\uB9AC\uB97C \uB4E4\uC5B4\uBCF4\uC138\uC694!\n\uD604\uC7AC
+      {telegraphCount}/2"
+    duringHintText: 
     afterDialogue: "\uC5B4\uB54C \uB2EC\uADF8\uB77D \uAC70\uB9AC\uB294\uAC74 \uC798
       \uCC3E\uC558\uC5B4?"
   - stage: 1
     beforeDialogue: "\uC774\uC81C \uB2EC\uADF8\uB77D \uAC70\uB9B0 \uD2C0\uC5D0\uC11C
       \uBD95\uC5B4\uBE75\uC774 \uD401 \uD280\uC5B4\uC624\uC744\uAC70\uC57C\n2\uBC88
       \uD280\uC5B4\uC624\uB97C\uAC70\uC57C \uC798 \uBD10\uBC14"
+    duringText: "\uD401! \uD280\uC5B4\uB098\uC624\uB294 \uD0C0\uC774\uBC0D\uC744
+      \uBCF4\uC138\uC694.\n\uD604\uC7AC {popCount}/2"
+    duringHintText: "\uC7A1\uAE30 \uBD88\uAC00 (\uAD00\uCC30 \uB2E8\uACC4)"
     afterDialogue: "\uC5B4\uB54C \uC798 \uBD24\uC5B4?"
   - stage: 2
     beforeDialogue: "\uC774\uC81C \uC9C1\uC811 \uBD95\uC5B4\uBE75\uC744 \uC7A1\uC544\uBCFC\uAC70\uC57C\n\uD280\uC5B4\uC624\uB978
       \uBD95\uC5B4\uBE75\uC5D0 \uB808\uC774\uC800\uB97C \uB9DE\uCD94\uACE0\n\uC3D8\uBA74
       \uC7A1\uC744 \uC218 \uC788\uC5B4\n2\uBC88 \uC7A1\uC544\uBD10"
+    duringText: "\uC7A1\uC544\uBCF4\uC138\uC694!\nGood \uC774\uC0C1 2\uD68C \uD544\uC694
+      ({goodCount}/2)"
+    duringHintText: "\uC591\uC190 \uC778\uB371\uC2A4 \uD2B8\uB9AC\uAC70\uB85C \uC7A1\uAE30"
     afterDialogue: "\uC798\uD558\uB294\uB370?"
   - stage: 3
     beforeDialogue: "\uAC00\uB054 \uBD95\uC5B4\uBE75\uC774 2\uAC1C \uB3D9\uC2DC\uC5D0
       \uD280\uC5B4\uB098\uC62C \uB54C\uAC00 \uC788\uC5B4\n2\uAC1C\uAC00 \uB098\uC624\uAE30
       \uC804\uC5D0 \uC18C\uB9AC\uAC00 \uB2E4\uB974\uB2C8\uAE4C \uC798 \uB4E3\uACE0
       \uC7A1\uC544\uBD10"
+    duringText: "\uB450 \uAC1C \uB3D9\uC2DC\uC5D0!\n\uD604\uC7AC {specialCaught}/{specialTarget}"
+    duringHintText: "\uC591\uC190 \uC778\uB371\uC2A4 \uD2B8\uB9AC\uAC70\uB85C \uC7A1\uAE30"
     afterDialogue: "\uC624 \uC774\uAC83\uB3C4 \uC798 \uC7A1\uB294\uB370?"
   - stage: 4
     beforeDialogue: "\uC774\uC81C \uB9C8\uC9C0\uB9C9 \uD328\uD134\uC774\uC57C\n\uC774\uBC88\uC5D0\uB294
       \uD2C0 3\uAC1C\uC5D0\uC11C \uC21C\uCC28\uC801\uC73C\uB85C \uD280\uC5B4\uC624\uB97C\uAC70\uC57C\n\uC774\uAC83\uB3C4
       \uC18C\uB9AC\uAC00 \uB2E4\uB974\uB2C8\uAE4C \uC798 \uB4E3\uACE0 \uC7A1\uC544\uBD10!"
+    duringText: "3\uAC1C \uC5F0\uC18D!\n\uD604\uC7AC {specialCaught}/{specialTarget}"
+    duringHintText: "\uC5F0\uC18D\uC73C\uB85C \uBE60\uB974\uAC8C \uD2B8\uB9AC\uAC70!"
     afterDialogue: "\uC644\uBCBD\uD574"
   - stage: 5
     beforeDialogue: "\uC774\uC81C \uBD95\uC5B4\uBE75 \uAC00\uAC8C\uB97C \uC6B4\uC601\uD574\uBCF4\uC790"
+    duringText: 
+    duringHintText: 
     afterDialogue: "\uB108\uB77C\uBA74 \uC798 \uD560 \uC218 \uC788\uC744\uAC70\uC57C"
   dialogueText: {fileID: 1657243053}
   nextHintText: {fileID: 1569074001}
@@ -399,7 +414,7 @@ MonoBehaviour:
   popClip: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
   sync2Cue: {fileID: 8300000, guid: 3f94aca8b41b32b4bb47016b37705509, type: 3}
   run3Cue: {fileID: 8300000, guid: da9da6c6d94bb6b48acb7dd8f0784f6e, type: 3}
-  tutorialBGMSource: {fileID: 749518925}
+  tutorialBGMSource: {fileID: 1183472829}
   tutorialBGMClip: {fileID: 8300000, guid: 7a12bca8ae3b6e2439b6c55ca820e9c0, type: 3}
   bgmVolume: 0.5
   telegraphToPopDelay: 0.4
@@ -964,6 +979,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
+      propertyPath: judgeSystem
+      value: 
+      objectReference: {fileID: 873462218}
+    - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
       propertyPath: moldAnimator
       value: 
       objectReference: {fileID: 92310527}
@@ -975,6 +994,10 @@ PrefabInstance:
       propertyPath: popVfxPrefab
       value: 
       objectReference: {fileID: 8547867254204328264, guid: cf378989e15716e40a61692dcd97e628, type: 3}
+    - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8192
+      objectReference: {fileID: 0}
     - target: {fileID: 5729279135218831447, guid: 5fd76731a30a9e14c89bc01c20d1a5ae, type: 3}
       propertyPath: popAnimationLeadTime
       value: 0.25
@@ -1598,7 +1621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6751033446562463824, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7122689946529383145, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2091,6 +2114,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
+      propertyPath: judgeSystem
+      value: 
+      objectReference: {fileID: 873462218}
+    - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
       propertyPath: moldAnimator
       value: 
       objectReference: {fileID: 410289140}
@@ -2102,6 +2129,10 @@ PrefabInstance:
       propertyPath: popVfxPrefab
       value: 
       objectReference: {fileID: 8547867254204328264, guid: cf378989e15716e40a61692dcd97e628, type: 3}
+    - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8192
+      objectReference: {fileID: 0}
     - target: {fileID: 5967767119279396130, guid: 752b4ba6c9727404c8ca8ad0206ef88a, type: 3}
       propertyPath: popAnimationLeadTime
       value: 0.25
@@ -2305,6 +2336,7 @@ MonoBehaviour:
   objectsToDisableWhenPaused: []
   pauseButton: 1
   pauseController: 2
+  <IsPaused>k__BackingField: 0
 --- !u!114 &511390742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4646,8 +4678,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 7a12bca8ae3b6e2439b6c55ca820e9c0, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -5377,6 +5409,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 9204251bdd172c646bd7a3aa7e405a8c, type: 3}
     - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
+      propertyPath: judgeSystem
+      value: 
+      objectReference: {fileID: 873462218}
+    - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
       propertyPath: moldAnimator
       value: 
       objectReference: {fileID: 1298712840}
@@ -5388,6 +5424,10 @@ PrefabInstance:
       propertyPath: popVfxPrefab
       value: 
       objectReference: {fileID: 8547867254204328264, guid: cf378989e15716e40a61692dcd97e628, type: 3}
+    - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8192
+      objectReference: {fileID: 0}
     - target: {fileID: 5471668503351741853, guid: 8c7cba9fb78634e41b04f5f40ad39542, type: 3}
       propertyPath: popAnimationLeadTime
       value: 0.25
