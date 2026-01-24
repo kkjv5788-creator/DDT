@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Text.RegularExpressions;
 
 public enum DialogueConditionType
@@ -30,6 +30,9 @@ public class TutorialDialogue
 [DefaultExecutionOrder(-100)]
 public class TutorialDialogueController : MonoBehaviour
 {
+    [Header("Start")]
+    public bool autoStart = false; // Start flow only when explicitly called.
+
     [Header("References")]
     public TutorialDialogueUIController dialogueUI; 
     public MissionBoardUI missionBoard;             
@@ -68,10 +71,7 @@ public class TutorialDialogueController : MonoBehaviour
     private bool _isWaitingForCondition = false;
     private bool _conditionMet = false;
     private float _conditionMetTime = 0f;
-    private float _autoAdvanceTimer = 0f;
-    private float _lastSkipInput = -999f;
-    
-    // 상태 추적
+    private float _autoAdvanceTimer = 0f;    // 상태 추적
     private bool _hasLookedAtTarget = false; 
     
     private bool _lastRoundResult = false;
@@ -91,46 +91,61 @@ public class TutorialDialogueController : MonoBehaviour
     
 void Start()
 {
+    // 자동 시작 금지: StageModeSelector에서만 시작
+    if (autoStart)
+    {
+        BeginTutorialFlow();
+    }
+}
+
+
+public void BeginTutorialFlow()
+{
     InitializeControllerPosition();
+
+// 🔥 [수정] 대화 진행 중에는 플레이어가 쳐다봐야 하므로 켜둬야 합니다(true).
+    // 나중에 StartMainTutorial()에서 다시 끄게 됩니다.
     if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
 
-    // [중요] 대화 시작과 동시에 튜토리얼 BGM 재생
-    if (conductor != null && tutorialController != null)
-    {
-        conductor.gameObject.SetActive(true);
-        conductor.enabled = true;
-        conductor.isTutorialMode = true;
-        conductor.data = tutorialController.tutorialTriggerList;
-        conductor.StartGame(); 
-        if (conductor.bgmSource) conductor.bgmSource.loop = true;
-    }
+    // 모니터 캔버스가 꺼져있으면 켬
+    if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
+    
+    // dialogueUI 자동 탐색
+    if (dialogueUI == null)
+        dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
 
     if (missionBoard)
     {
-        missionBoard.InitializeUI(); 
+        missionBoard.InitializeUI();
         missionBoard.UpdateHeader("< 면 접 중 >");
-        missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
+        missionBoard.UpdateMission("모니터를 보세요", 0, 1);
     }
 
-    if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
-    else StartMainTutorial();
+    // 대사부터 시작
+    if (dialogues != null && dialogues.Length > 0)
+    {
+        if (dialogueUI == null)
+        {
+            Debug.LogError("[TutorialDialogueController] dialogueUI not assigned/found. Falling back to StartMainTutorial().");
+            StartMainTutorial();
+            return;
+        }
+
+        ShowDialogue(0);
+    }
+    else
+    {
+        StartMainTutorial();
+    }
 }
+
+
     
     void Update()
     {
+        if (dialogues == null || dialogues.Length == 0) return;
         if (_currentDialogueIndex >= dialogues.Length) return;
-        
-        // 스킵 (A 버튼)
-        if (OVRInput.GetDown(OVRInput.Button.One))
-        {
-            if (Time.time - _lastSkipInput > (feedbackSet ? feedbackSet.skipInputCooldown : 0.5f))
-            {
-                _lastSkipInput = Time.time;
-                SkipAllDialogues();
-                return;
-            }
-        }
-        
+
         var currentDialogue = dialogues[_currentDialogueIndex];
         
         // 조건 체크
@@ -142,7 +157,13 @@ void Start()
             if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap || 
                 currentDialogue.conditionType == DialogueConditionType.GazeAtNote)
             {
-                GameObject target = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? kimbapPrefab : missionBoard.gameObject;
+                GameObject target = null;
+                if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
+                    target = kimbapPrefab;
+                else if (missionBoard)
+                    target = missionBoard.gameObject;
+
+                if (!target) return;
                 
                 // 현재 쳐다보고 있는지 확인
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
@@ -391,11 +412,23 @@ void Start()
     
     void DisableExistingSystems()
     {
-        if (tutorialController != null) { _tutorialControllerGameObject = tutorialController.gameObject; tutorialController.enabled = false; _tutorialControllerGameObject.SetActive(false); }
-        if (conductor != null) { _conductorGameObject = conductor.gameObject; _originalTutorialMode = conductor.isTutorialMode; conductor.enabled = false; _conductorGameObject.SetActive(false); }
+        if (tutorialController != null) 
+        { 
+            _tutorialControllerGameObject = tutorialController.gameObject; 
+            tutorialController.enabled = false; 
+            _tutorialControllerGameObject.SetActive(false); 
+        }
+        
+        if (conductor != null) 
+        { 
+            _conductorGameObject = conductor.gameObject; 
+            _originalTutorialMode = conductor.isTutorialMode; 
+            conductor.enabled = false; 
+            _conductorGameObject.SetActive(false); 
+        }
     }
     
-void StartMainTutorial()
+    void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
@@ -408,14 +441,15 @@ void StartMainTutorial()
             conductor.OnRoundResult.AddListener(OnRoundResult);
         }
         
-        if (_tutorialControllerGameObject != null && tutorialController != null)
-        {
-            _tutorialControllerGameObject.SetActive(true); // 1. 여기서 켜지면서 자동으로 시작됨 (OnEnable)
-            tutorialController.enabled = true;
-            
-            // 🚨 [범인 발견!] 이 줄이 한번 더 실행시켜서 1단계를 스킵해버리는 겁니다.
-            // tutorialController.StartTutorial();  <-- 이 줄을 지우세요!
-        }
+if (_tutorialControllerGameObject != null && tutorialController != null)
+{
+    _tutorialControllerGameObject.SetActive(true);
+    tutorialController.enabled = true;
+
+    // 자동 시작( OnEnable )에 의존하지 않음: 명시 호출
+    tutorialController.StartTutorial();
+}
+
         
         this.enabled = false; 
     }

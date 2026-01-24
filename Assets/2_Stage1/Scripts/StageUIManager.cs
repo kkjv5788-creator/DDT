@@ -43,7 +43,7 @@ public class StageUIManager : MonoBehaviour
     public void UpdateGauge(float current, float max)
     {
         if (!gaugeSlider) return;
-        float ratio = Mathf.Clamp01(current / max);
+        float ratio = max > 0f ? Mathf.Clamp01(current / max) : 0f;
         gaugeSlider.value = ratio;
         if (gaugeFill && gaugeColor != null) 
             gaugeFill.color = gaugeColor.Evaluate(ratio);

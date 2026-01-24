@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -31,7 +31,19 @@ public class GameFlowManager : MonoBehaviour
     public int mainMenuSceneIndex = 0; 
 
     public GameState CurrentState { get; private set; } = GameState.Intro;
-    GameState _stateBeforePause;
+
+// Explicit state setter (CurrentState has a restricted setter)
+public void SetState(GameState state)
+{
+    CurrentState = state;
+}
+
+public void EnterTutorialState()
+{
+    SetState(GameState.Tutorial);
+}
+
+GameState _stateBeforePause;
     int _currentSales = 0;
     bool _isGameEnding = false;
     RhythmConductor.RhythmState _lastConductorState;
@@ -44,8 +56,8 @@ public class GameFlowManager : MonoBehaviour
             conductor.OnSliceSuccess.AddListener(OnSliceSuccess);
             conductor.OnSliceFail.AddListener(OnSliceFail);
         }
-        StartMainGame();
-    }
+        // StartMainGame() is called explicitly by StageModeSelector/StageManager.
+}
 
     void OnDisable()
     {
@@ -130,6 +142,13 @@ public class GameFlowManager : MonoBehaviour
 
     public void StartMainGame()
     {
+        // Safety guards
+        if (!conductor || conductor.data == null || conductor.data.triggers == null)
+        {
+            Debug.LogError("[GameFlowManager] Cannot start main game: RhythmConductor or data/triggers not assigned.");
+            return;
+        }
+
         CurrentState = GameState.PlayingMain;
         _isGameEnding = false;
         _currentSales = 0;
@@ -146,16 +165,34 @@ public class GameFlowManager : MonoBehaviour
         {
             conductor.isTutorialMode = false;
             conductor.StartGame();
-            if (conductor.bgmSource) conductor.bgmSource.loop = false; 
-        }
+}
         if (resultManager) resultManager.StartTracking(conductor.data.triggers.Length);
     }
 
-    public void PauseGame() { Time.timeScale = 0f; if (toolSwitcher) toolSwitcher.SwitchToController(); if (pauseManager) pauseManager.ShowPauseMenu(); }
-    public void ResumeGame() { Time.timeScale = 1f; if (toolSwitcher) toolSwitcher.SwitchToKnife(); if (pauseManager) pauseManager.HidePauseMenu(); }
+    public void PauseGame()
+{
+    _stateBeforePause = CurrentState;
+    CurrentState = GameState.Paused;
+
+    Time.timeScale = 0f;
+
+    if (toolSwitcher) toolSwitcher.SwitchToController();
+    if (pauseManager) pauseManager.ShowPauseMenu();
+}
+    public void ResumeGame()
+{
+    Time.timeScale = 1f;
+
+    // Restore prior state (e.g., PlayingMain / WaitForRadio)
+    CurrentState = _stateBeforePause;
+
+    if (toolSwitcher) toolSwitcher.SwitchToKnife();
+    if (pauseManager) pauseManager.HidePauseMenu();
+}
 
     public void EnterFinalResult(float successRate)
     {
+        Time.timeScale = 1f; // ensure result is not paused
         CurrentState = GameState.FinalResult;
         if (toolSwitcher) toolSwitcher.SwitchToController();
         if (panelPlayGame) panelPlayGame.SetActive(false);
@@ -164,6 +201,34 @@ public class GameFlowManager : MonoBehaviour
         if (missionBoard) { missionBoard.UpdateHeader("< 영 업 종 료 >"); missionBoard.ShowSuccessStamp(true); }
     }
 
-    public void RestartMainGameOnly() { gameObject.SetActive(false); gameObject.SetActive(true); }
-    public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
+    
+public void ResetAndRestartMainGame()
+{
+    Time.timeScale = 1f;
+
+    // Core state reset
+    _currentSales = 0;
+    _isGameEnding = false;
+    _lastConductorState = default;
+
+    CurrentState = GameState.PlayingMain;
+    _stateBeforePause = GameState.PlayingMain;
+
+    // UI reset
+    if (panelResult) panelResult.SetActive(false);
+    if (panelDialogue) panelDialogue.SetActive(false);
+    if (panelPlayGame) panelPlayGame.SetActive(true);
+
+    if (textFeedback) textFeedback.gameObject.SetActive(false);
+    if (songProgressSlider) songProgressSlider.value = 0f;
+    if (textRemainingTime) textRemainingTime.text = "00:00";
+
+    UpdateSalesUI();
+
+    // Prevent BGM overlap
+    if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
+
+    StartMainGame();
+}
+public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
 }

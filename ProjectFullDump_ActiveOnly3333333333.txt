@@ -1,0 +1,4321 @@
+[PROJECT DUMP START]
+Scene: Stage1_v4.4
+Date: 2026-01-23 오후 6:18:07
+========================================
+              SCENE HIERARCHY
+========================================
+
+[O] Player_Core (Tag: Untagged, Layer: Default)
+    [O] OVRCameraRig (Tag: MainCamera, Layer: Default)
+        [O] TrackingSpace (Tag: Untagged, Layer: Default)
+            [O] LeftEyeAnchor (Tag: MainCamera, Layer: Default)
+            [O] CenterEyeAnchor (Tag: MainCamera, Layer: Default)
+            [O] RightEyeAnchor (Tag: Untagged, Layer: Default)
+            [O] TrackerAnchor (Tag: Untagged, Layer: Default)
+            [O] LeftHandAnchor (Tag: Untagged, Layer: Default)
+                [O] LaserVisual_L (Tag: Untagged, Layer: Default)
+                [X] LeftControllerAnchor (Tag: Untagged, Layer: Default)
+                    [X] [BuildingBlock] Controller Tracking Left (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
+                            [X] l_controller_ply (Tag: Untagged, Layer: Default)
+                            [X] left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                            [X] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [X] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
+                            [X] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [X] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                            [X] r_controller_ply (Tag: Untagged, Layer: Default)
+                            [X] right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
+                            [X] l_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [X] left_laser_begin (Tag: Untagged, Layer: Default)
+                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
+                            [X] r_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [X] right_laser_begin (Tag: Untagged, Layer: Default)
+                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [X] left_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button01 (Tag: Untagged, Layer: Default)
+                                [X] b_button02 (Tag: Untagged, Layer: Default)
+                                [X] b_button03 (Tag: Untagged, Layer: Default)
+                                [X] b_hold1 (Tag: Untagged, Layer: Default)
+                                [X] b_stick (Tag: Untagged, Layer: Default)
+                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [X] b_trigger (Tag: Untagged, Layer: Default)
+                            [X] left_touch_mesh (Tag: Untagged, Layer: Default)
+                        [X] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [X] right_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button01 (Tag: Untagged, Layer: Default)
+                                [X] b_button02 (Tag: Untagged, Layer: Default)
+                                [X] b_button03 (Tag: Untagged, Layer: Default)
+                                [X] b_hold (Tag: Untagged, Layer: Default)
+                                [X] b_stick (Tag: Untagged, Layer: Default)
+                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [X] b_trigger (Tag: Untagged, Layer: Default)
+                            [X] right_touch_mesh (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] left_nub (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] laser_begin (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] right_nub (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] laser_begin (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] left_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] left_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] left_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] left_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] left_laser_begin (Tag: Untagged, Layer: Default)
+                            [X] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
+                            [X] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] right_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] right_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] right_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] right_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] right_laser_begin (Tag: Untagged, Layer: Default)
+                [X] LeftControllerInHandAnchor (Tag: Untagged, Layer: Default)
+                    [X] LeftHandOnControllerAnchor (Tag: Untagged, Layer: Default)
+            [O] RightHandAnchor (Tag: Untagged, Layer: Default)
+                [O] LaserVisual_R (Tag: Untagged, Layer: Default)
+                [X] RightControllerAnchor (Tag: Untagged, Layer: Default)
+                    [X] [BuildingBlock] Controller Tracking Right (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuestAndRiftS_Left (Tag: Untagged, Layer: Default)
+                            [X] l_controller_ply (Tag: Untagged, Layer: Default)
+                            [X] left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                            [X] prp00002questController_animrig:left_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [X] prp00002questController_animrig:RIG_left_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuestAndRiftS_Right (Tag: Untagged, Layer: Default)
+                            [X] prp00002questController_animrig:right_monterey_controller_rig (Tag: Untagged, Layer: Default)
+                                [X] prp00002questController_animrig:RIG_right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                    [X] prp00002questController_animrig:f_world (Tag: Untagged, Layer: Default)
+                            [X] r_controller_ply (Tag: Untagged, Layer: Default)
+                            [X] right_monterey_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuest2LeftModel (Tag: Untagged, Layer: Default)
+                            [X] l_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [X] left_laser_begin (Tag: Untagged, Layer: Default)
+                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] OculusTouchForQuest2RightModel (Tag: Untagged, Layer: Default)
+                            [X] r_rainier_mesh (Tag: Untagged, Layer: Default)
+                            [X] right_laser_begin (Tag: Untagged, Layer: Default)
+                                [X] pasted__laser_end_pointer (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                        [X] left_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [X] left_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button01 (Tag: Untagged, Layer: Default)
+                                [X] b_button02 (Tag: Untagged, Layer: Default)
+                                [X] b_button03 (Tag: Untagged, Layer: Default)
+                                [X] b_hold1 (Tag: Untagged, Layer: Default)
+                                [X] b_stick (Tag: Untagged, Layer: Default)
+                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [X] b_trigger (Tag: Untagged, Layer: Default)
+                            [X] left_touch_mesh (Tag: Untagged, Layer: Default)
+                        [X] right_touch_controller_model_skel (Tag: Untagged, Layer: Default)
+                            [X] right_touch_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button01 (Tag: Untagged, Layer: Default)
+                                [X] b_button02 (Tag: Untagged, Layer: Default)
+                                [X] b_button03 (Tag: Untagged, Layer: Default)
+                                [X] b_hold (Tag: Untagged, Layer: Default)
+                                [X] b_stick (Tag: Untagged, Layer: Default)
+                                    [X] b_stick_IGNORE (Tag: Untagged, Layer: Default)
+                                [X] b_trigger (Tag: Untagged, Layer: Default)
+                            [X] right_touch_mesh (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPro_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] left_nub (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] laser_begin (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPro_Right (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad (Tag: Untagged, Layer: Default)
+                            [X] right_nub (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_mesh (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] laser_begin (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPlus_Left (Tag: Untagged, Layer: Default)
+                            [X] left_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [X] left_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_x (Tag: Untagged, Layer: Default)
+                                [X] b_button_y (Tag: Untagged, Layer: Default)
+                                [X] left_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] left_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] left_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] left_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] left_laser_begin (Tag: Untagged, Layer: Default)
+                            [X] oculus_controller_l_MeshX (Tag: Untagged, Layer: Default)
+                        [X] MetaQuestTouchPlus_Right (Tag: Untagged, Layer: Default)
+                            [X] oculus_controller_r_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_batteryIndicatorQuad_MeshX (Tag: Untagged, Layer: Default)
+                            [X] right_oculus_controller_world (Tag: Untagged, Layer: Default)
+                                [X] b_button_a (Tag: Untagged, Layer: Default)
+                                [X] b_button_b (Tag: Untagged, Layer: Default)
+                                [X] right_b_button_oculus (Tag: Untagged, Layer: Default)
+                                [X] right_b_thumbstick (Tag: Untagged, Layer: Default)
+                                [X] right_b_trigger_front (Tag: Untagged, Layer: Default)
+                                [X] right_b_trigger_grip (Tag: Untagged, Layer: Default)
+                                [X] right_laser_begin (Tag: Untagged, Layer: Default)
+                [X] RightControllerInHandAnchor (Tag: Untagged, Layer: Default)
+                    [X] RightHandOnControllerAnchor (Tag: Untagged, Layer: Default)
+            [O] LeftHandAnchorDetached (Tag: Untagged, Layer: Default)
+            [O] RightHandAnchorDetached (Tag: Untagged, Layer: Default)
+    [O] EventSystem (Tag: Untagged, Layer: Default)
+[O] KnifePhysicalRoot (Tag: Untagged, Layer: KnifePhysical)
+    [O] KnifeSliceTrigger (Tag: Untagged, Layer: KnifeSlice)
+    [O] KnifeVisual (Tag: Untagged, Layer: KnifePhysical)
+    [O] AttachPoint_R (Tag: Untagged, Layer: KnifePhysical)
+[O] Environment (Tag: Untagged, Layer: Default)
+    [O] radio (Tag: Untagged, Layer: Radio)
+    [O] Kitchen_Creation (Tag: Untagged, Layer: World)
+        [O] centerTable_01 (Tag: Untagged, Layer: World)
+        [O] cuttingBoard_01 (Tag: Untagged, Layer: World)
+    [O] Point Light (Tag: Untagged, Layer: Default)
+    [O] microphone (Tag: Untagged, Layer: Default)
+        [O] Circle (Tag: Untagged, Layer: Default)
+        [O] Circle.001 (Tag: Untagged, Layer: Default)
+        [O] Cylinder (Tag: Untagged, Layer: Default)
+        [O] Sphere (Tag: Untagged, Layer: Default)
+    [O] Room (Tag: Untagged, Layer: Default)
+        [O] Inner_Room (Tag: Untagged, Layer: World)
+            [O] Door_01 (Tag: Untagged, Layer: World)
+            [O] Door_01.001 (Tag: Untagged, Layer: World)
+            [O] Door_01.002 (Tag: Untagged, Layer: World)
+            [O] Door_01.003 (Tag: Untagged, Layer: World)
+            [O] Door_01.004 (Tag: Untagged, Layer: World)
+            [O] Door_01.005 (Tag: Untagged, Layer: World)
+            [O] Room (Tag: Untagged, Layer: World)
+        [O] Menu_2 (Tag: Untagged, Layer: World)
+        [X] Menu (Tag: Untagged, Layer: World)
+        [O] club_neon_2 (Tag: Untagged, Layer: Default)
+            [O] club_neon_2 (1) (Tag: Untagged, Layer: Default)
+        [O] 24hour_Neon (Tag: Untagged, Layer: World)
+        [X] Cafe_Neon (Tag: Untagged, Layer: World)
+            [X] 04 (Tag: Untagged, Layer: World)
+            [X] Shadow (Tag: Untagged, Layer: World)
+        [O] Disco_Ball (Tag: Untagged, Layer: Default)
+            [O] Color-lights (Tag: Untagged, Layer: Default)
+            [O] Disco_ball_ext (Tag: Untagged, Layer: Default)
+            [O] Disco_ball_int (Tag: Untagged, Layer: Default)
+            [O] DiscoBall-motor (Tag: Untagged, Layer: Default)
+            [O] Reflection Probe (Tag: Untagged, Layer: Default)
+            [O] Spot Light (Tag: Untagged, Layer: Default)
+            [O] Spot Light_2 (Tag: Untagged, Layer: Default)
+    [O] Fridge (Tag: Untagged, Layer: World)
+        [O] port_frigo (Tag: Untagged, Layer: World)
+    [O] bean_01 (Tag: Untagged, Layer: World)
+    [X] Table02 (Tag: Untagged, Layer: Default)
+    [O] GameObject (Tag: Untagged, Layer: Default)
+        [O] Table01 (Tag: Untagged, Layer: Default)
+            [O] chair_01 (Tag: Untagged, Layer: World)
+            [O] chair_02 (Tag: Untagged, Layer: World)
+            [O] chair_03 (Tag: Untagged, Layer: World)
+            [O] chair_04 (Tag: Untagged, Layer: World)
+        [O] Kimchi_Jjigae (Tag: Untagged, Layer: Default)
+            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
+            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
+            [O] Soup (Tag: Untagged, Layer: Default)
+            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
+        [O] Kimchi_Jjigae2 (Tag: Untagged, Layer: Default)
+            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
+            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
+            [O] Soup (Tag: Untagged, Layer: Default)
+            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
+        [O] Bowl (Tag: Untagged, Layer: Default)
+    [O] GameObject (1) (Tag: Untagged, Layer: Default)
+        [O] Table01 (Tag: Untagged, Layer: Default)
+            [O] chair_01 (Tag: Untagged, Layer: World)
+            [O] chair_02 (Tag: Untagged, Layer: World)
+            [O] chair_03 (Tag: Untagged, Layer: World)
+            [O] chair_04 (Tag: Untagged, Layer: World)
+        [O] Kimchi_Jjigae (Tag: Untagged, Layer: Default)
+            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
+            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
+            [O] Soup (Tag: Untagged, Layer: Default)
+            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
+        [O] Kimchi_Jjigae2 (Tag: Untagged, Layer: Default)
+            [O] Mushroom_Geo7 (Tag: Untagged, Layer: Default)
+            [O] Pot_Reduced (Tag: Untagged, Layer: Default)
+            [O] Soup (Tag: Untagged, Layer: Default)
+            [O] Tofu_1_LowRes (Tag: Untagged, Layer: Default)
+        [O] Bowl (Tag: Untagged, Layer: Default)
+    [X] LightSaber (Tag: Untagged, Layer: Default)
+        [X] Collada visual scene group (Tag: Untagged, Layer: Default)
+            [X] Cylinder (Tag: Untagged, Layer: Default)
+                [X] defaultMaterial (Tag: Untagged, Layer: Default)
+    [X] chair_01 (Tag: Untagged, Layer: World)
+    [O] Kimbap_Bird (Tag: Untagged, Layer: Default)
+    [O] cute_gorani (Tag: Untagged, Layer: Default)
+        [O] Armature (Tag: Untagged, Layer: Default)
+            [O] Root (Tag: Untagged, Layer: Default)
+                [O] Hip (Tag: Untagged, Layer: Default)
+                    [O] Pelvis (Tag: Untagged, Layer: Default)
+                        [O] L_Thigh (Tag: Untagged, Layer: Default)
+                            [O] L_Calf (Tag: Untagged, Layer: Default)
+                                [O] L_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] L_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] L_Foot (Tag: Untagged, Layer: Default)
+                            [O] L_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] L_ThighTwist02 (Tag: Untagged, Layer: Default)
+                        [O] R_Thigh (Tag: Untagged, Layer: Default)
+                            [O] R_Calf (Tag: Untagged, Layer: Default)
+                                [O] R_CalfTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] R_CalfTwist02 (Tag: Untagged, Layer: Default)
+                                [O] R_Foot (Tag: Untagged, Layer: Default)
+                            [O] R_ThighTwist01 (Tag: Untagged, Layer: Default)
+                                [O] R_ThighTwist02 (Tag: Untagged, Layer: Default)
+                    [O] Waist (Tag: Untagged, Layer: Default)
+                        [O] Spine01 (Tag: Untagged, Layer: Default)
+                            [O] Spine02 (Tag: Untagged, Layer: Default)
+                                [O] L_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] L_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] L_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] L_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] L_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] L_Hand (Tag: Untagged, Layer: Default)
+                                        [O] L_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] L_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+                                [O] NeckTwist01 (Tag: Untagged, Layer: Default)
+                                    [O] NeckTwist02 (Tag: Untagged, Layer: Default)
+                                        [O] Head (Tag: Untagged, Layer: Default)
+                                [O] R_Clavicle (Tag: Untagged, Layer: Default)
+                                    [O] R_Upperarm (Tag: Untagged, Layer: Default)
+                                        [O] R_Forearm (Tag: Untagged, Layer: Default)
+                                            [O] R_ForearmTwist01 (Tag: Untagged, Layer: Default)
+                                                [O] R_ForearmTwist02 (Tag: Untagged, Layer: Default)
+                                            [O] R_Hand (Tag: Untagged, Layer: Default)
+                                        [O] R_UpperarmTwist01 (Tag: Untagged, Layer: Default)
+                                            [O] R_UpperarmTwist02 (Tag: Untagged, Layer: Default)
+        [O] tripo_node_1641414e (Tag: Untagged, Layer: Default)
+[O] StageManager (Tag: Untagged, Layer: Default)
+    [O] GameManager (Tag: Untagged, Layer: Default)
+        [O] spawnpoint(kimbap) (Tag: Untagged, Layer: World)
+        [O] spawn point(dish) (Tag: Untagged, Layer: World)
+        [O] spawn point(dish) VFXwin (Tag: Untagged, Layer: World)
+        [O] spawnpoint(kimbap) VFX (Tag: Untagged, Layer: World)
+        [O] spawn point(dish) VFX (Tag: Untagged, Layer: World)
+    [O] MODE_TUTORIAL (Tag: Untagged, Layer: Default)
+        [X] Kimbap.010 (Tag: Untagged, Layer: KimbapSliceable)
+            [X] MainMesh (Tag: Untagged, Layer: KimbapSliceable)
+                [X] SliceTrigger (Tag: Untagged, Layer: KimbapSliceable)
+                [X] BlockCollider (Tag: Untagged, Layer: KimbapBlocked)
+            [X] SliceTrigger (Tag: Untagged, Layer: KimbapSliceable)
+            [X] BlockCollider (Tag: Untagged, Layer: KimbapBlocked)
+    [X] MODE_GAME (Tag: Untagged, Layer: Default)
+[O] Monitor_Group (Tag: Untagged, Layer: Default)
+    [O] Monitor (Tag: Untagged, Layer: Default)
+    [O] Monitor_Canvas (Tag: Untagged, Layer: UI)
+        [O] Panel_SelectMode (Tag: Untagged, Layer: UI)
+            [O] BG (Tag: Untagged, Layer: UI)
+            [O] Text_Title (Tag: Untagged, Layer: UI)
+            [O] Btn_Tutorial (Tag: Untagged, Layer: UI)
+                [O] Text (TMP) (Tag: Untagged, Layer: UI)
+            [O] Btn_Game (Tag: Untagged, Layer: UI)
+                [O] Text (TMP) (Tag: Untagged, Layer: UI)
+        [X] Panel_Dialogue (Tag: Untagged, Layer: UI)
+            [X] Text_Speech (Tag: Untagged, Layer: UI)
+            [X] Text_Hint (Tag: Untagged, Layer: UI)
+        [X] Panel_PlayGame (Tag: Untagged, Layer: UI)
+            [X] Slider_SongProgress (Tag: Untagged, Layer: UI)
+                [X] Background (Tag: Untagged, Layer: UI)
+                [X] Fill Area (Tag: Untagged, Layer: UI)
+                    [X] Fill (Tag: Untagged, Layer: UI)
+            [X] Text_RemainingTime (Tag: Untagged, Layer: UI)
+        [X] Sales_Info_Group (Tag: Untagged, Layer: UI)
+            [X] Text_RealtimeSales (Tag: Untagged, Layer: UI)
+            [X] Text_Feedback (Tag: Untagged, Layer: UI)
+        [X] Panel_ClosingResult (Tag: Untagged, Layer: UI)
+            [X] Text_Title (Tag: Untagged, Layer: UI)
+            [X] Text_FinalTotal (Tag: Untagged, Layer: UI)
+            [X] Text_GradeComment (Tag: Untagged, Layer: UI)
+            [X] Btn_Restart (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainMenu (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+        [X] Panel_Pause (Tag: Untagged, Layer: UI)
+            [X] Text_Pause (Tag: Untagged, Layer: UI)
+            [X] Btn_ResumePause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_RestartPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+            [X] Btn_MainPause (Tag: Untagged, Layer: UI)
+                [X] Text (TMP) (Tag: Untagged, Layer: UI)
+[O] LegalPad_Group (Tag: Untagged, Layer: Default)
+    [O] LegalPad (Tag: Untagged, Layer: Default)
+    [O] LegalPad_Canvas (Tag: Untagged, Layer: UI)
+        [O] Text_Header (Tag: Untagged, Layer: UI)
+        [X] Text_Mission (Tag: Untagged, Layer: UI)
+        [O] Text_MissionName (Tag: Untagged, Layer: UI)
+        [O] Text_Progress (Tag: Untagged, Layer: UI)
+        [X] Image_Stamp (Tag: Untagged, Layer: UI)
+
+========================================
+         USED SCRIPTS SOURCE CODE
+   (Only scripts attached in this Scene)
+========================================
+
+--- FILENAME: SimpleLaserPointer.cs (Assets/1_Main/Scripts/SimpleLaserPointer.cs) ---
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(AudioSource))]
+public class SimpleLaserPointer : MonoBehaviour
+{
+    [Header("1. 레이저 설정")]
+    public float maxDistance = 5.0f;
+    public float laserWidth = 0.005f;
+
+    [Header("2. 색상 설정")]
+    public Color normalLaserColor = Color.white; // 평소 레이저 색 (흰색)
+    public Color hoverLaserColor = Color.green;  // 닿았을 때 레이저/아웃라인 색 (초록)
+
+    [Header("3. 사운드 & 진동")]
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
+    [Range(0, 1)] public float vibrationStrength = 0.2f;
+
+    private LineRenderer lr;
+    private AudioSource audioSource;
+    private OVRInput.Controller controllerType = OVRInput.Controller.None;
+    private GameFlowManager gameFlowManager;
+
+    // --- 상태 관리 변수 ---
+    private GameObject currentHitObject; // 현재 가리키고 있는 오브젝트
+    private Outline currentOutline;      // 현재 켜진 아웃라인
+    private CanvasGroup currentCanvas;   // 현재 켜진 정보창
+
+    void Start()
+    {
+        lr = GetComponent<LineRenderer>();
+        audioSource = GetComponent<AudioSource>();
+        gameFlowManager = FindObjectOfType<GameFlowManager>();
+
+        lr.useWorldSpace = true;
+        lr.positionCount = 2;
+        lr.startWidth = laserWidth;
+        lr.endWidth = laserWidth;
+        if (!lr.material) lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0.5f;
+
+        DisableLaser(); // 시작 시 끄기
+
+        if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
+            controllerType = OVRInput.Controller.LTouch;
+        else
+            controllerType = OVRInput.Controller.RTouch;
+    }
+
+    private void OnDisable()
+    {
+        DisableLaser();
+    }
+
+    void LateUpdate()
+    {
+        if (!lr) return;
+
+        // // [1] 게임 상태 체크 (메뉴/대기 상태가 아니면 레이저 끄기)
+        // if (gameFlowManager != null)
+        // {
+        //     bool isMenuState =
+        //         gameFlowManager.CurrentState == GameState.WaitForRadio ||
+        //         gameFlowManager.CurrentState == GameState.Paused ||
+        //         gameFlowManager.CurrentState == GameState.FinalResult;
+
+        //     if (!isMenuState)
+        //     {
+        //         DisableLaser();
+        //         return;
+        //     }
+        // }
+
+        // [2] 레이저 로직 시작
+        if (!lr.enabled) lr.enabled = true; // 레이저 켜기
+        lr.SetPosition(0, transform.position); // 시작점
+
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        // 충돌 감지
+        if (Physics.Raycast(ray, out hit, maxDistance))
+        {
+            lr.SetPosition(1, hit.point); // 끝점은 닿은 곳
+            GameObject hitObj = hit.collider.gameObject;
+
+            // [A] 상호작용 가능한 물체인가? (버튼, 문 등)
+            if (IsInteractable(hitObj))
+            {
+                // 레이저 색상 -> 초록색
+                SetLaserColor(hoverLaserColor);
+
+                // 새로운 물체에 닿았을 때만 처리 (최적화)
+                if (currentHitObject != hitObj)
+                {
+                    ResetPreviousEffects(); // 이전 효과 끄기
+                    
+                    currentHitObject = hitObj;
+                    PlayFeedback(); // 소리/진동
+
+                    // // 1. 아웃라인 켜기
+                    // var outline = hitObj.GetComponentInParent<Outline>();
+                    // if (outline != null)
+                    // {
+                    //     outline.enabled = true;
+                    //     outline.OutlineColor = hoverLaserColor;
+                    //     outline.OutlineWidth = 5f; // 두께 조절 가능
+                    //     currentOutline = outline;
+                    // }
+
+                    // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
+                    var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
+                    if (canvasGroup != null)
+                    {
+                        canvasGroup.alpha = 1f; // 보이게 설정
+                        currentCanvas = canvasGroup;
+                    }
+                }
+            }
+            else
+            {
+                // [B] 벽이나 바닥 (상호작용 불가)
+                SetLaserColor(normalLaserColor); // 레이저 흰색
+                ResetPreviousEffects();          // 아웃라인/정보창 끄기
+            }
+        }
+        else
+        {
+            // [C] 허공
+            lr.SetPosition(1, transform.position + (transform.forward * maxDistance)); // 길게 뻗기
+            SetLaserColor(normalLaserColor); // 레이저 흰색
+            ResetPreviousEffects();          // 아웃라인/정보창 끄기
+        }
+
+        // 트리거 클릭 입력
+        HandleInput();
+    }
+
+    // --- 기능 함수들 ---
+
+    void ResetPreviousEffects()
+    {
+        // 아웃라인 끄기
+        if (currentOutline != null)
+        {
+            currentOutline.enabled = false;
+            currentOutline = null;
+        }
+
+        // 정보창 숨기기
+        if (currentCanvas != null)
+        {
+            currentCanvas.alpha = 0f; // 투명하게
+            currentCanvas = null;
+        }
+
+        currentHitObject = null;
+    }
+
+    void SetLaserColor(Color c)
+    {
+        lr.startColor = c;
+        lr.endColor = c;
+    }
+
+    void HandleInput()
+    {
+        if (lr.enabled && OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, controllerType))
+        {
+            if (currentHitObject != null)
+            {
+                if (clickSound) audioSource.PlayOneShot(clickSound);
+
+                // UI 버튼 클릭
+                var button = currentHitObject.GetComponentInParent<Button>();
+                if (button != null) button.onClick.Invoke();
+
+                // 일반 상호작용
+                var clickHandler = currentHitObject.GetComponentInParent<IPointerClickHandler>();
+                if (clickHandler != null)
+                {
+                    PointerEventData data = new PointerEventData(EventSystem.current);
+                    clickHandler.OnPointerClick(data);
+                }
+            }
+        }
+    }
+void DisableLaser()
+    {
+        // lr이 존재하는지 먼저 확인 (안전장치 추가)
+        if (lr != null && lr.enabled)
+        {
+            lr.enabled = false;
+            ResetPreviousEffects();
+        }
+    }
+    bool IsInteractable(GameObject obj)
+    {
+        if (obj.GetComponentInParent<Button>() != null) return true;
+        if (obj.GetComponentInParent<IPointerClickHandler>() != null) return true;
+        if (obj.GetComponentInParent<RadioClickable>() != null) return true;
+        
+        // Outline이 있는 오브젝트도 상호작용 대상으로 간주 (문 등)
+        if (obj.GetComponentInParent<Outline>() != null) return true; 
+        
+        return false;
+    }
+
+    void PlayFeedback()
+    {
+        if (hoverSound)
+        {
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            audioSource.PlayOneShot(hoverSound);
+        }
+
+        if (controllerType != OVRInput.Controller.None)
+        {
+            OVRInput.SetControllerVibration(vibrationStrength, vibrationStrength, controllerType);
+            Invoke("StopVibration", 0.1f);
+        }
+    }
+
+    void StopVibration()
+    {
+        OVRInput.SetControllerVibration(0, 0, controllerType);
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: BlockHitDetector.cs (Assets/2_Stage1/Scripts/BlockHitDetector.cs) ---
+using UnityEngine;
+
+public class BlockHitDetector : MonoBehaviour
+{
+    public RhythmConductor conductor;
+    public DebugHUD hud;
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!conductor) return;
+
+        // 🔥 Judging 중에도 WrongCut 감지 (기존: IsJudging이면 return)
+        // PDF에서는 Non-Judging일 때만 WrongCut이라고 했지만,
+        // Blocker는 항상 WrongCut으로 처리하는 게 더 합리적
+
+        // WrongCut feedback (debug only)
+        if (hud)
+        {
+            string msg = conductor.IsJudgingWindow()
+                ? "WrongCut: Hit blocked area during Judging"
+                : "WrongCut: Hit blocked Kimbap (Non-Judging)";
+            hud.Log(msg);
+        }
+
+        // 🔥 WrongCut 이벤트 발행
+        if (conductor && collision.contacts.Length > 0)
+        {
+            conductor.NotifyWrongCut(collision.contacts[0].point);
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: DebugHUD.cs (Assets/2_Stage1/Scripts/DebugHUD.cs) ---
+using System.Diagnostics;
+using UnityEngine;
+
+public class DebugHUD : MonoBehaviour
+{
+    RhythmConductor _conductor;
+    string _logLine = "";
+    float _logTimer;
+
+    public KnifeVelocityEstimator knifeSpeedSource;
+
+    public void Bind(RhythmConductor c) => _conductor = c;
+
+    public void Log(string msg)
+    {
+        _logLine = msg;
+        _logTimer = 2.5f;
+        UnityEngine.Debug.Log("[HUD] " + msg);
+    }
+
+    void Update()
+    {
+        if (_logTimer > 0f) _logTimer -= Time.deltaTime;
+    }
+
+    void OnGUI()
+    {
+        if (_conductor == null) return;
+
+        GUIStyle s = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 16
+        };
+
+        float x = 12, y = 12, w = 640, h = 22;
+
+        GUI.Label(new Rect(x, y, w, h), $"State: {_conductor.State}", s); y += h;
+        GUI.Label(new Rect(x, y, w, h), $"BGM Time: {_conductor.BgmTime:F3}s", s); y += h;
+        GUI.Label(new Rect(x, y, w, h), $"Trigger Index: {_conductor.CurrentTriggerIndex}", s); y += h;
+        GUI.Label(new Rect(x, y, w, h), $"SliceCount: {_conductor.SliceCount} / {_conductor.RequiredSliceCount}", s); y += h;
+
+        float spd = knifeSpeedSource ? knifeSpeedSource.speed : 0f;
+        GUI.Label(new Rect(x, y, w, h), $"Knife Speed: {spd:F2}", s); y += h;
+
+        if (_logTimer > 0f)
+        {
+            GUI.Label(new Rect(x, y + 8, w, h), $"LOG: {_logLine}", s);
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: DiscoLightController.cs (Assets/2_Stage1/Scripts/DiscoLightController.cs) ---
+using UnityEngine;
+
+[RequireComponent(typeof(Light))]
+public class DiscoLightController : MonoBehaviour
+{
+    [Header("Rotation")]
+    public bool enableRotation = true;
+    public Vector3 rotationAxis = new Vector3(0f, 1f, 0f); // Y�� ȸ�� �⺻
+    public float rotationSpeed = 25f;
+
+    [Header("Rainbow Color")]
+    public bool enableRainbow = true;
+    public float rainbowSpeed = 0.25f;   // 0.1~1.0 ��õ
+    [Range(0f, 1f)] public float saturation = 1f;
+    [Range(0f, 1f)] public float brightness = 1f;
+
+    [Header("Optional Intensity Pulse")]
+    public bool enableIntensityPulse = false;
+    public float baseIntensity = 3f;
+    public float pulseAmplitude = 1f;
+    public float pulseSpeed = 1.5f;
+
+    private Light _light;
+
+    void Awake()
+    {
+        _light = GetComponent<Light>();
+
+        // �ʱⰪ ����
+        if (enableIntensityPulse)
+            _light.intensity = baseIntensity;
+    }
+
+    void Update()
+    {
+        // 1) ȸ��
+        if (enableRotation)
+        {
+            transform.Rotate(rotationAxis.normalized, rotationSpeed * Time.deltaTime, Space.Self);
+        }
+
+        // 2) ���κ��� �÷� ��ȭ
+        if (enableRainbow)
+        {
+            float h = Mathf.Repeat(Time.time * rainbowSpeed, 1f);
+            _light.color = Color.HSVToRGB(h, saturation, brightness);
+        }
+
+        // 3) (�ɼ�) ��� ������
+        if (enableIntensityPulse)
+        {
+            float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f; // 0~1
+            _light.intensity = baseIntensity + (t * pulseAmplitude);
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: FeedbackRouter.cs (Assets/2_Stage1/Scripts/FeedbackRouter.cs) ---
+using UnityEngine;
+
+public class FeedbackRouter : MonoBehaviour
+{
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public KnifeSlicer knifeSlicer; // (������Ʈ���� ���� �ɷ����� �� �־� ����)
+    public AudioSource sfxSource;
+    public FeedbackSetSO feedbackSet;
+    public PlateController plateController;
+
+    [Header("VFX Spawn Override")]
+    [Tooltip("üũ�ϸ�, Slice ���� VFX�� hitPos ��� ������ ��ġ���� �����մϴ�.")]
+    public bool overrideSliceSuccessVfxSpawn = false;
+
+    [Tooltip("Slice ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
+    public Transform sliceSuccessVfxSpawnPoint;
+
+    [Tooltip("üũ�ϸ�, Result(����/����) VFX�� transform.position ��� ������ ��ġ���� �����մϴ�.")]
+    public bool overrideResultVfxSpawn = false;
+
+    [Tooltip("Result ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
+    public Transform resultSuccessVfxSpawnPoint;
+
+    [Tooltip("Result ���� VFX ���� ��ġ(Transform). ��������� �� ������Ʈ(transform)�� ���.")]
+    public Transform resultFailVfxSpawnPoint;
+
+    float _lastFailFeedbackTime = -999f;
+
+    void ResolveSpawn(Transform overridePoint, out Vector3 pos, out Quaternion rot)
+    {
+        Transform t = overridePoint ? overridePoint : transform;
+        pos = t.position;
+        rot = t.rotation;
+    }
+
+    void OnEnable()
+    {
+        // RhythmConductor�� UnityEvent�� �����ϴ� �̺�Ʈ�� ����
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
+            conductor.OnSliceFail.AddListener(HandleSliceFail);
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
+            conductor.OnWrongCut.AddListener(HandleWrongCut);
+        }
+    }
+
+    void OnDisable()
+    {
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
+            conductor.OnSliceFail.RemoveListener(HandleSliceFail);
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
+            conductor.OnWrongCut.RemoveListener(HandleWrongCut);
+        }
+    }
+
+    void HandleSliceSuccess(Vector3 hitPos, Vector3 hitNormal, float knifeSpeed)
+    {
+        if (!feedbackSet) return;
+
+        // VFX
+        if (feedbackSet.vfxSliceSuccessPrefab)
+        {
+            Vector3 spawnPos = hitPos;
+            Quaternion spawnRot = Quaternion.LookRotation(hitNormal);
+
+            if (overrideSliceSuccessVfxSpawn)
+            {
+                ResolveSpawn(sliceSuccessVfxSpawnPoint, out spawnPos, out spawnRot);
+            }
+
+            var vfx = Instantiate(feedbackSet.vfxSliceSuccessPrefab, spawnPos, spawnRot);
+            Destroy(vfx, 2f);
+        }
+
+        // �÷����� ���� �߰�
+        if (plateController)
+            plateController.AddPlatingPiece();
+    }
+
+    void HandleSliceFail(Vector3 hitPos, string reason)
+    {
+        if (!feedbackSet) return;
+
+        // Spam ���� (FeedbackSetSO�� failCooldown ���)
+        if (Time.time - _lastFailFeedbackTime < feedbackSet.failCooldown)
+            return;
+        _lastFailFeedbackTime = Time.time;
+
+        // SFX
+        if (feedbackSet.sfxSliceFail && sfxSource)
+            sfxSource.PlayOneShot(feedbackSet.sfxSliceFail);
+
+        // VFX (���д� ����ó�� hitPos�� ����)
+        if (feedbackSet.vfxSliceFailPrefab)
+        {
+            var vfx = Instantiate(feedbackSet.vfxSliceFailPrefab, hitPos, Quaternion.identity);
+            Destroy(vfx, 2f);
+        }
+    }
+
+    void HandleRoundResult(bool success)
+    {
+        if (!feedbackSet) return;
+
+        if (success)
+        {
+            // Success SFX
+            if (feedbackSet.sfxResultSuccess && sfxSource)
+                sfxSource.PlayOneShot(feedbackSet.sfxResultSuccess);
+
+            // Success VFX
+            if (feedbackSet.vfxResultSuccessPrefab)
+            {
+                Vector3 spawnPos = transform.position;
+                Quaternion spawnRot = Quaternion.identity;
+
+                if (overrideResultVfxSpawn)
+                    ResolveSpawn(resultSuccessVfxSpawnPoint, out spawnPos, out spawnRot);
+
+                var vfx = Instantiate(feedbackSet.vfxResultSuccessPrefab, spawnPos, spawnRot);
+                Destroy(vfx, 3f);
+            }
+
+            // ���� ��ü
+            if (plateController)
+                plateController.ShowSuccessPlate();
+        }
+        else
+        {
+            // Fail SFX
+            if (feedbackSet.sfxResultFail && sfxSource)
+                sfxSource.PlayOneShot(feedbackSet.sfxResultFail);
+
+            // Fail VFX
+            if (feedbackSet.vfxResultFailPrefab)
+            {
+                Vector3 spawnPos = transform.position;
+                Quaternion spawnRot = Quaternion.identity;
+
+                if (overrideResultVfxSpawn)
+                    ResolveSpawn(resultFailVfxSpawnPoint, out spawnPos, out spawnRot);
+
+                var vfx = Instantiate(feedbackSet.vfxResultFailPrefab, spawnPos, spawnRot);
+                Destroy(vfx, 3f);
+            }
+
+            // ���� ��ü
+            if (plateController)
+                plateController.ShowFailPlate();
+        }
+    }
+
+    void HandleWrongCut(Vector3 hitPos)
+    {
+        if (!feedbackSet) return;
+
+        // SFX
+        if (feedbackSet.sfxWrongCut && sfxSource)
+            sfxSource.PlayOneShot(feedbackSet.sfxWrongCut);
+
+        // VFX
+        if (feedbackSet.vfxWrongCutPrefab)
+        {
+            var vfx = Instantiate(feedbackSet.vfxWrongCutPrefab, hitPos, Quaternion.identity);
+            Destroy(vfx, 1.5f);
+        }
+
+        // ª�� ������
+        XRHaptics.SendHaptic(true, 0.2f, 0.08f);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: FinalResultInputHandler.cs (Assets/2_Stage1/Scripts/FinalResultInputHandler.cs) ---
+using UnityEngine;
+
+public class FinalResultInputHandler : MonoBehaviour
+{
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+
+    [Header("Settings")]
+    public float inputCooldown = 0.5f;
+
+    float _lastInputTime = -999f;
+
+    void Update()
+    {
+        if (!gameFlowManager || gameFlowManager.CurrentState != GameState.FinalResult)
+            return;
+
+        // A 버튼만 허용
+        if (OVRInput.GetDown(OVRInput.Button.One)) // A 버튼
+        {
+            if (Time.time - _lastInputTime > inputCooldown)
+            {
+                _lastInputTime = Time.time;
+                OnAButtonPressed();
+            }
+        }
+    }
+
+    void OnAButtonPressed()
+    {
+        Debug.Log("[FinalResultInput] A button pressed - Going to main menu");
+        if (gameFlowManager)
+        {
+            gameFlowManager.GoToMainMenu();
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: GameFlowManager.cs (Assets/2_Stage1/Scripts/GameFlowManager.cs) ---
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
+
+public class GameFlowManager : MonoBehaviour
+{
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public ResultManager resultManager;
+    public PauseManager pauseManager;
+    public HandToolSwitcher toolSwitcher;
+    public MissionBoardUI missionBoard;
+
+    [Header("Monitor Panels")]
+    public GameObject panelPlayGame;   
+    public GameObject panelDialogue;   // 튜토리얼 대화창 (Panel_Dialogue)
+    public GameObject panelResult;     // 결과창 (Panel_ClosingResult)
+
+    [Header("Play Game UI")]
+    public Slider songProgressSlider;       
+    public TextMeshProUGUI textRemainingTime; 
+    
+    [Header("Sales UI")]
+    public GameObject salesInfoGroup;         
+    public TextMeshProUGUI textRealtimeSales; 
+    public TextMeshProUGUI textFeedback;      
+
+    [Header("Settings")]
+    public int pricePerSlice = 5000; // 성공 시 5,000원 고정
+    public int mainMenuSceneIndex = 0; 
+
+    public GameState CurrentState { get; private set; } = GameState.Intro;
+
+// Explicit state setter (CurrentState has a restricted setter)
+public void SetState(GameState state)
+{
+    CurrentState = state;
+}
+
+public void EnterTutorialState()
+{
+    SetState(GameState.Tutorial);
+}
+
+GameState _stateBeforePause;
+    int _currentSales = 0;
+    bool _isGameEnding = false;
+    RhythmConductor.RhythmState _lastConductorState;
+
+    void OnEnable()
+    {
+        CurrentState = GameState.Intro; 
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.AddListener(OnSliceSuccess);
+            conductor.OnSliceFail.AddListener(OnSliceFail);
+        }
+        // StartMainGame() is called explicitly by StageModeSelector/StageManager.
+}
+
+    void OnDisable()
+    {
+        if (conductor)
+        {
+            conductor.OnSliceSuccess.RemoveListener(OnSliceSuccess);
+            conductor.OnSliceFail.RemoveListener(OnSliceFail);
+        }
+    }
+
+    void Update()
+    {
+        if (CurrentState != GameState.PlayingMain || !conductor) return;
+
+        if (conductor.bgmSource && conductor.bgmSource.clip)
+        {
+            float currentTime = conductor.bgmSource.time;
+            float totalTime = conductor.bgmSource.clip.length;
+            
+            if (!_isGameEnding && !conductor.bgmSource.loop && currentTime >= totalTime - 0.1f)
+            {
+                _isGameEnding = true;
+                if (resultManager) resultManager.EndGame(); 
+            }
+
+            if (songProgressSlider) songProgressSlider.value = currentTime / totalTime;
+            if (textRemainingTime)
+            {
+                float remaining = Mathf.Max(0, totalTime - currentTime);
+                int min = Mathf.FloorToInt(remaining / 60);
+                int sec = Mathf.FloorToInt(remaining % 60);
+                textRemainingTime.text = $"{min:00}:{sec:00}";
+            }
+        }
+
+        if (_lastConductorState != conductor.State)
+        {
+            _lastConductorState = conductor.State;
+            UpdateLegalPadByState();
+        }
+    }
+
+    void UpdateLegalPadByState()
+    {
+        if (!missionBoard) return;
+        if (conductor.State == RhythmConductor.RhythmState.Waiting)
+            missionBoard.UpdateMission("주문 대기 중...", 0, 0);
+        else if (conductor.State == RhythmConductor.RhythmState.Guiding || conductor.State == RhythmConductor.RhythmState.Judging)
+            UpdateSliceCountUI();
+    }
+
+    void OnSliceSuccess(Vector3 pos, Vector3 normal, float speed)
+    {
+        _currentSales += pricePerSlice; // 단순 가산 방식
+        UpdateSalesUI();
+        ShowFeedbackText($"+ {pricePerSlice:N0} 원");
+        UpdateSliceCountUI();
+    }
+
+    void OnSliceFail(Vector3 pos, string reason) => UpdateSliceCountUI();
+    void UpdateSalesUI() { if (textRealtimeSales) textRealtimeSales.text = $"{_currentSales:N0} 원"; }
+
+    void ShowFeedbackText(string msg)
+    {
+        if (textFeedback)
+        {
+            textFeedback.text = msg;
+            textFeedback.gameObject.SetActive(true);
+            CancelInvoke(nameof(HideFeedback));
+            Invoke(nameof(HideFeedback), 1.0f);
+        }
+    }
+    void HideFeedback() { if (textFeedback) textFeedback.gameObject.SetActive(false); }
+
+    void UpdateSliceCountUI()
+    {
+        if (!missionBoard || !conductor || conductor.State == RhythmConductor.RhythmState.Waiting) return;
+        missionBoard.UpdateMission($"주문 폭주 중!\n<size=120%>[ <color=red><b>{conductor.SliceCount}</b></color> / {conductor.RequiredSliceCount} ]</size>", conductor.SliceCount, conductor.RequiredSliceCount);
+    }
+
+    public int GetCurrentSales() => _currentSales;
+
+    public void StartMainGame()
+    {
+        // Safety guards
+        if (!conductor || conductor.data == null || conductor.data.triggers == null)
+        {
+            Debug.LogError("[GameFlowManager] Cannot start main game: RhythmConductor or data/triggers not assigned.");
+            return;
+        }
+
+        CurrentState = GameState.PlayingMain;
+        _isGameEnding = false;
+        _currentSales = 0;
+        UpdateSalesUI();
+
+        if (salesInfoGroup) salesInfoGroup.SetActive(true);
+        if (panelPlayGame) panelPlayGame.SetActive(true);
+        if (panelDialogue) panelDialogue.SetActive(false);
+        if (panelResult) panelResult.SetActive(false);
+
+        if (missionBoard) { missionBoard.InitializeUI(); missionBoard.UpdateHeader("*** 주문서 ***"); }
+
+        if (conductor)
+        {
+            conductor.isTutorialMode = false;
+            conductor.StartGame();
+}
+        if (resultManager) resultManager.StartTracking(conductor.data.triggers.Length);
+    }
+
+    public void PauseGame()
+{
+    _stateBeforePause = CurrentState;
+    CurrentState = GameState.Paused;
+
+    Time.timeScale = 0f;
+
+    if (toolSwitcher) toolSwitcher.SwitchToController();
+    if (pauseManager) pauseManager.ShowPauseMenu();
+}
+    public void ResumeGame()
+{
+    Time.timeScale = 1f;
+
+    // Restore prior state (e.g., PlayingMain / WaitForRadio)
+    CurrentState = _stateBeforePause;
+
+    if (toolSwitcher) toolSwitcher.SwitchToKnife();
+    if (pauseManager) pauseManager.HidePauseMenu();
+}
+
+    public void EnterFinalResult(float successRate)
+    {
+        Time.timeScale = 1f; // ensure result is not paused
+        CurrentState = GameState.FinalResult;
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+        if (panelPlayGame) panelPlayGame.SetActive(false);
+        if (panelDialogue) panelDialogue.SetActive(false); // 튜토리얼 UI 강제 종료
+        if (panelResult) panelResult.SetActive(true);
+        if (missionBoard) { missionBoard.UpdateHeader("< 영 업 종 료 >"); missionBoard.ShowSuccessStamp(true); }
+    }
+
+    
+public void ResetAndRestartMainGame()
+{
+    Time.timeScale = 1f;
+
+    // Core state reset
+    _currentSales = 0;
+    _isGameEnding = false;
+    _lastConductorState = default;
+
+    CurrentState = GameState.PlayingMain;
+    _stateBeforePause = GameState.PlayingMain;
+
+    // UI reset
+    if (panelResult) panelResult.SetActive(false);
+    if (panelDialogue) panelDialogue.SetActive(false);
+    if (panelPlayGame) panelPlayGame.SetActive(true);
+
+    if (textFeedback) textFeedback.gameObject.SetActive(false);
+    if (songProgressSlider) songProgressSlider.value = 0f;
+    if (textRemainingTime) textRemainingTime.text = "00:00";
+
+    UpdateSalesUI();
+
+    // Prevent BGM overlap
+    if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
+
+    StartMainGame();
+}
+public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
+}
+
+--------------------------------------------------
+
+--- FILENAME: HandToolSwitcher.cs (Assets/2_Stage1/Scripts/HandToolSwitcher.cs) ---
+using UnityEngine;
+
+public class HandToolSwitcher : MonoBehaviour
+{
+    public GameObject controllerRoot; // OVRControllerPrefab (UI용)
+    public GameObject knifeRoot;      // KnifePhysicalRoot (게임용)
+
+    public void SwitchToKnife()
+    {
+        if (controllerRoot) controllerRoot.SetActive(false);
+        if (knifeRoot) knifeRoot.SetActive(true);
+    }
+
+    public void SwitchToController()
+    {
+        if (controllerRoot) controllerRoot.SetActive(true);
+        if (knifeRoot) knifeRoot.SetActive(false);
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: KimbapController.cs (Assets/2_Stage1/Scripts/KimbapController.cs) ---
+using System.Diagnostics;
+using UnityEngine;
+
+#if EZYSlice
+using EzySlice;
+#endif
+
+public class KimbapController : MonoBehaviour
+{
+    public enum AxisMode
+    {
+        WorldX,             // ���� +X (���� ���� ������ �̰ɷ� ���� ��찡 ����)
+        WorldZ,             // ���� +Z
+        ReferenceRight,     // axisReference.right
+        ReferenceForward    // axisReference.forward
+    }
+
+    [Header("Thin Piece Timing")]
+    public float thinFlySeconds = 0.22f;
+    public float thinLifeSeconds = 1.2f;
+
+    [Header("Refs")]
+    public Collider sliceTrigger;     // Trigger collider (KimbapSliceable layer)
+    public Collider blockCollider;    // Solid collider (KimbapBlocked layer)
+    public Transform mainMeshRoot;    // Mesh-only object (������ ��Ÿ�ӿ� �ڵ� ����/�и�)
+    public Material crossSectionMaterial;
+
+    [Header("Slice Direction")]
+    public AxisMode axisMode = AxisMode.WorldX;
+    public Transform axisReference;   // ���̺� ���� ���� Transform (Reference ��忡�� ���)
+    public bool invertAxis = false;
+
+    [Header("Debug")]
+    public bool debugDrawPlane = true;
+    public float debugDrawSeconds = 0.25f;
+
+    [Header("Runtime")]
+    public bool sliceable;
+
+    RhythmTriggerListSO.Trigger _trigger;
+
+    // current mesh GO (�׻� "�޽� ����" ������Ʈ�� ����Ű�� ����)
+    GameObject _currentMeshGO;
+
+    int _activeThinPieces;
+
+    void Awake()
+    {
+        // �⺻�� ����
+        SetSliceable(false);
+
+        // ��Ʈ�� Mesh�� �پ������� ��Ÿ�ӿ� �޽� ���� �ڽ����� �и�
+        EnsureMeshRoot();
+
+        _currentMeshGO = FindMeshGameObject(mainMeshRoot);
+        if (_currentMeshGO == null)
+            UnityEngine.Debug.LogWarning("[KimbapController] MeshFilter not found under mainMeshRoot.");
+    }
+
+    public void BeginTrigger(RhythmTriggerListSO.Trigger trigger)
+    {
+        _trigger = trigger;
+        _activeThinPieces = 0;
+
+        EnsureMeshRoot();
+        _currentMeshGO = FindMeshGameObject(mainMeshRoot);
+        SetSliceable(false);
+    }
+
+    public void SetSliceable(bool value)
+    {
+        sliceable = value;
+        if (sliceTrigger) sliceTrigger.enabled = value;
+        if (blockCollider) blockCollider.enabled = !value;
+    }
+
+    public void OnTriggerResult(bool success)
+    {
+        UnityEngine.Debug.Log($"[KimbapController] Trigger result: {(success ? "SUCCESS" : "FAIL")}");
+    }
+
+    public bool CanSpawnThinPiece()
+    {
+        if (_trigger == null) return true;
+        return _activeThinPieces < Mathf.Max(1, _trigger.maxActiveThinPieces);
+    }
+
+    public void NotifyThinPieceSpawned() => _activeThinPieces++;
+    public void NotifyThinPieceDespawned() => _activeThinPieces = Mathf.Max(0, _activeThinPieces - 1);
+
+    Vector3 GetCutAxis()
+    {
+        Vector3 axis = Vector3.right;
+
+        switch (axisMode)
+        {
+            case AxisMode.WorldX: axis = Vector3.right; break;
+            case AxisMode.WorldZ: axis = Vector3.forward; break;
+            case AxisMode.ReferenceRight:
+                axis = axisReference ? axisReference.right : Vector3.right;
+                break;
+            case AxisMode.ReferenceForward:
+                axis = axisReference ? axisReference.forward : Vector3.forward;
+                break;
+        }
+
+        axis = axis.normalized;
+        if (invertAxis) axis = -axis;
+        return axis;
+    }
+
+    /// <summary>
+    /// ���� ���� "����(=Axis)"���� ��� �� �徿 ����� ����.
+    /// sliceIndex0Based�� thin thickness curve��.
+    /// </summary>
+    public bool ExecuteRightThinSlice(int sliceIndex0Based)
+    {
+#if !EZYSlice
+        UnityEngine.Debug.LogWarning("[KimbapController] EZYSlice not enabled. Add EzySlice and define scripting symbol EZYSlice.");
+        return false;
+#else
+        if (_trigger == null)
+        {
+            UnityEngine.Debug.LogWarning("[KimbapController] No trigger bound.");
+            return false;
+        }
+
+        EnsureMeshRoot();
+
+        if (_currentMeshGO == null)
+        {
+            _currentMeshGO = FindMeshGameObject(mainMeshRoot);
+            if (_currentMeshGO == null)
+            {
+                UnityEngine.Debug.LogWarning("[KimbapController] Mesh object not found.");
+                return false;
+            }
+        }
+
+        var rend = _currentMeshGO.GetComponentInChildren<Renderer>();
+        if (!rend)
+        {
+            UnityEngine.Debug.LogWarning("[KimbapController] Renderer not found on mesh.");
+            return false;
+        }
+
+        // ���� ��(���� ���� ����)
+        Vector3 axis = GetCutAxis();
+
+        // thickness ���
+        float tNorm = _trigger.thinSliceThicknessNorm;
+        if (_trigger.thinThicknessCurve != null && _trigger.thinThicknessCurve.length > 0 && _trigger.requiredSliceCount > 1)
+        {
+            float u = sliceIndex0Based / (float)(_trigger.requiredSliceCount - 1);
+            float cu = _trigger.thinThicknessCurve.Evaluate(u);
+            if (cu > 0f) tNorm = cu;
+        }
+
+        Bounds wb = rend.bounds;
+
+        // bounds corners�� axis�� �����ؼ� ���� ����
+        GetMinMaxAlongDir(wb, axis, out float minD, out float maxD);
+        float lengthAlongAxis = Mathf.Max(0.0001f, maxD - minD);
+
+        float thinWorld = Mathf.Max(lengthAlongAxis * tNorm, _trigger.minThinThicknessWorld);
+
+        // "���� ��" (axis ������ max ��)
+        // AABB�� axis �������� center ���� ��Ī�̹Ƿ� �Ʒ� ����� ������
+        Vector3 axisEnd = wb.center + axis * (lengthAlongAxis * 0.5f);
+
+        // axisEnd���� thinWorld��ŭ �������� ���� ������ ���� ��� ����
+        Vector3 planePoint = axisEnd - axis * thinWorld;
+        Vector3 planeNormal = axis; // normal�� axis ���� ���ϸ� axisEnd �� ������ ��� ������
+
+        if (debugDrawPlane)
+        {
+           UnityEngine.Debug.DrawRay(planePoint, planeNormal * 0.2f, Color.green, debugDrawSeconds);
+            UnityEngine.Debug.DrawRay(planePoint, -planeNormal * 0.2f, Color.red, debugDrawSeconds);
+        }
+
+        // �����̽��� "�޽� ���� ������Ʈ"�� �������!
+        // (��Ʈ�� ���� Destroy �ϸ� �� ��)
+        Transform meshT = _currentMeshGO.transform;
+
+        // ��Ʈ ���� ���� ���� ����(�����̽� �Ŀ��� ���� ���� ����)
+        Transform root = transform;
+        Vector3 localPos = root.InverseTransformPoint(meshT.position);
+        Quaternion localRot = Quaternion.Inverse(root.rotation) * meshT.rotation;
+        Vector3 localScale = meshT.localScale;
+
+        // ���� �����̽�
+        var hull = _currentMeshGO.Slice(planePoint, planeNormal, crossSectionMaterial);
+        if (hull == null)
+        {
+            UnityEngine.Debug.LogWarning("[KimbapController] Slice returned null (failed). Try enabling Read/Write on mesh import, or adjust axis.");
+            return false;
+        }
+
+        GameObject upper = hull.CreateUpperHull(_currentMeshGO, crossSectionMaterial);
+        GameObject lower = hull.CreateLowerHull(_currentMeshGO, crossSectionMaterial);
+
+        if (!upper || !lower)
+        {
+            if (upper) Destroy(upper);
+            if (lower) Destroy(lower);
+            UnityEngine.Debug.LogWarning("[KimbapController] Hull create failed.");
+            return false;
+        }
+
+        // big/small ����(�� ū ���� ��ü)
+        float vu = BoundsVolume(upper);
+        float vl = BoundsVolume(lower);
+        GameObject big = (vu >= vl) ? upper : lower;
+        GameObject small = (big == upper) ? lower : upper;
+
+        // ���� �޽� ������Ʈ ����
+        Destroy(_currentMeshGO);
+
+        // big/small�� ��Ʈ �Ʒ��� ���̰� ���� ���� ����
+        big.name = "MainMeshRuntime";
+        big.transform.SetParent(root, false);
+        big.transform.localPosition = localPos;
+        big.transform.localRotation = localRot;
+        big.transform.localScale = localScale;
+
+        small.transform.SetParent(root, false);
+        small.transform.localPosition = localPos;
+        small.transform.localRotation = localRot;
+        small.transform.localScale = localScale;
+
+        // ���� �޽� ����
+        mainMeshRoot = big.transform;
+        _currentMeshGO = big;
+
+        // ���� ���� ����
+        if (CanSpawnThinPiece())
+        {
+            NotifyThinPieceSpawned();
+
+            var tp = small.AddComponent<ThinPieceAutoCleanup>();
+            tp.owner = this;
+            tp.flyDirection = axis;     // �������� ��¦ ƨ���
+            tp.flySeconds = 0.22f;
+            tp.lifeSeconds = 1.2f;
+
+            foreach (var c in small.GetComponentsInChildren<Collider>())
+                c.enabled = false;
+        }
+        else
+        {
+            Destroy(small);
+        }
+
+        return true;
+#endif
+    }
+
+    // --- �ٽ�: ��Ʈ�� Mesh�� �پ������� �޽��� �ڽ����� �и��ؼ� "��Ʈ �ı�" ���� ---
+    void EnsureMeshRoot()
+    {
+        if (mainMeshRoot && FindMeshGameObject(mainMeshRoot)) return;
+
+        // ��Ʈ�� Mesh�� �پ� ������ ��Ÿ�� �����ؼ� �ڽ����� �и�
+        var mf = GetComponent<MeshFilter>();
+        var mr = GetComponent<MeshRenderer>();
+        if (mf && mr)
+        {
+            var go = new GameObject("MainMeshRuntime");
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one;
+
+            var newMf = go.AddComponent<MeshFilter>();
+            newMf.sharedMesh = mf.sharedMesh;
+
+            var newMr = go.AddComponent<MeshRenderer>();
+            newMr.sharedMaterials = mr.sharedMaterials;
+
+            // ��Ʈ MeshRenderer�� ���α�(�ݶ��̴�/��ũ��Ʈ�� ����)
+            mr.enabled = false;
+            mf.mesh = null;
+
+            mainMeshRoot = go.transform;
+            _currentMeshGO = go;
+            return;
+        }
+
+        // ��Ʈ�� Mesh�� ���ٸ�(�̹� �ڽ� ������ ����)
+        // mainMeshRoot�� ��Ʈ�� �ΰ� �˻�
+        if (!mainMeshRoot) mainMeshRoot = transform;
+    }
+
+    static GameObject FindMeshGameObject(Transform root)
+    {
+        if (!root) return null;
+        var mfSelf = root.GetComponent<MeshFilter>();
+        if (mfSelf) return mfSelf.gameObject;
+        var mf = root.GetComponentInChildren<MeshFilter>();
+        return mf ? mf.gameObject : null;
+    }
+
+    static float BoundsVolume(GameObject go)
+    {
+        var r = go.GetComponentInChildren<Renderer>();
+        if (!r) return 0f;
+        var b = r.bounds;
+        return b.size.x * b.size.y * b.size.z;
+    }
+
+    static void GetMinMaxAlongDir(Bounds b, Vector3 dir, out float min, out float max)
+    {
+        dir.Normalize();
+        Vector3 c = b.center;
+        Vector3 e = b.extents;
+
+        Vector3[] corners = new Vector3[8]
+        {
+            c + new Vector3( e.x,  e.y,  e.z),
+            c + new Vector3( e.x,  e.y, -e.z),
+            c + new Vector3( e.x, -e.y,  e.z),
+            c + new Vector3( e.x, -e.y, -e.z),
+            c + new Vector3(-e.x,  e.y,  e.z),
+            c + new Vector3(-e.x,  e.y, -e.z),
+            c + new Vector3(-e.x, -e.y,  e.z),
+            c + new Vector3(-e.x, -e.y, -e.z),
+        };
+
+        min = float.PositiveInfinity;
+        max = float.NegativeInfinity;
+
+        for (int i = 0; i < corners.Length; i++)
+        {
+            float d = Vector3.Dot(corners[i], dir);
+            if (d < min) min = d;
+            if (d > max) max = d;
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: KimbapSliceTarget.cs (Assets/2_Stage1/Scripts/KimbapSliceTarget.cs) ---
+using UnityEngine;
+
+public class KimbapSliceTarget : MonoBehaviour
+{
+    public KimbapController controller;
+
+    void Awake()
+    {
+        if (!controller) controller = GetComponentInParent<KimbapController>();
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: KimbapSpawner.cs (Assets/2_Stage1/Scripts/KimbapSpawner.cs) ---
+using System.Diagnostics;
+using UnityEngine;
+
+public class KimbapSpawner : MonoBehaviour
+{
+    public KimbapController kimbapPrefab;
+    public Transform spawnPoint;
+
+    public KimbapController CurrentKimbap { get; private set; }
+
+    public void EnsureKimbapExists()
+    {
+        if (CurrentKimbap) return;
+        SpawnNew();
+    }
+
+    public void SpawnNew()
+    {
+        if (!kimbapPrefab)
+        {
+            UnityEngine.Debug.LogError("[KimbapSpawner] Missing kimbapPrefab.");
+            return;
+        }
+
+        Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
+        Quaternion rot = spawnPoint ? spawnPoint.rotation : transform.rotation;
+
+        CurrentKimbap = Instantiate(kimbapPrefab, pos, rot);
+    }
+
+    // 🔥 새로 추가: 기존 김밥 제거
+    public void DestroyCurrentKimbap()
+    {
+        if (CurrentKimbap)
+        {
+            Destroy(CurrentKimbap.gameObject);
+            CurrentKimbap = null;
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: KnifePhysicsFollowerOVR.cs (Assets/2_Stage1/Scripts/KnifePhysicsFollowerOVR.cs) ---
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
+public class KnifePhysicsFollowerOVR : MonoBehaviour
+{
+    public Transform target;
+    public Rigidbody rb;
+
+    [Range(0.01f, 1f)] public float positionLerp = 0.5f;
+    [Range(0.01f, 1f)] public float rotationLerp = 0.35f;
+    public float maxMoveSpeed = 12f;
+    public float maxTurnSpeed = 480f;
+
+    Vector3 _targetPos;
+    Quaternion _targetRot;
+    bool _hasTargetPose;
+
+    void Awake()
+    {
+        if (!rb) rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        if (!target) return;
+        _targetPos = target.position;
+        _targetRot = target.rotation;
+        _hasTargetPose = true;
+    }
+
+    void FixedUpdate()
+    {
+        if (!rb || !_hasTargetPose) return;
+
+        // --- Position ---
+        Vector3 delta = _targetPos - rb.position;
+        float maxStep = maxMoveSpeed * Time.fixedDeltaTime;
+        Vector3 step = Vector3.ClampMagnitude(delta, maxStep);
+        Vector3 nextPos = rb.position + step;
+        nextPos = Vector3.Lerp(rb.position, nextPos, positionLerp);
+        rb.MovePosition(nextPos);
+
+        // --- Rotation ---
+        Quaternion desiredRot = _targetRot;
+
+        Quaternion dq = desiredRot * Quaternion.Inverse(rb.rotation);
+        dq.ToAngleAxis(out float angle, out Vector3 axis);
+        if (angle > 180f) angle -= 360f;
+
+        float maxAngleStep = maxTurnSpeed * Time.fixedDeltaTime;
+        float clamped = Mathf.Clamp(angle, -maxAngleStep, maxAngleStep);
+        Quaternion stepRot = Quaternion.AngleAxis(clamped, axis);
+
+        Quaternion nextRot = stepRot * rb.rotation;
+        nextRot = Quaternion.Slerp(rb.rotation, nextRot, rotationLerp);
+        rb.MoveRotation(nextRot);
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: KnifeSlicer.cs (Assets/2_Stage1/Scripts/KnifeSlicer.cs) ---
+using UnityEngine;
+
+public class KnifeSlicer : MonoBehaviour
+{
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public KnifeVelocityEstimator velocityEstimator;
+    public KnifeVisualResistance visualResistance;
+
+    [Header("Hand")]
+    public bool rightHand = true;
+
+    [Header("Audio")]
+    public AudioSource sfxSource;
+
+    [Header("Slice Prevention (중복 방지)")]
+    [Tooltip("자르기 후 다음 자르기까지 최소 대기 시간 (초)")]
+    public float sliceCooldown = 0.15f;
+
+    [Tooltip("연속으로 같은 김밥을 자를 수 있는 최소 간격 (초)")]
+    public float sameKimbapCooldown = 0.1f;
+
+    // attempt lock
+    bool _canSlice = true;
+    float _contactMs;
+    float _lastSliceTime = -999f;
+
+    KimbapController _currentKimbap;
+    KimbapController _lastSlicedKimbap;
+    float _lastKimbapSliceTime = -999f;
+
+    int _sliceIndexThisTrigger;
+
+    // 🔥 실패 피드백 쿨다운
+    float _lastFailFeedbackTime = -999f;
+    const float FAIL_FEEDBACK_COOLDOWN = 0.2f;
+
+    void Awake()
+    {
+        if (!sfxSource) sfxSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    void Update()
+    {
+        // Reset per-trigger index when trigger changes
+        if (!conductor) return;
+
+        // If not judging, allow slice again but don't keep old target
+        if (!conductor.IsJudgingWindow())
+        {
+            _canSlice = true;
+            _contactMs = 0f;
+            _currentKimbap = null;
+            _sliceIndexThisTrigger = 0;
+            return;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        var target = other.GetComponentInParent<KimbapSliceTarget>();
+        if (!target || !target.controller) return;
+
+        _currentKimbap = target.controller;
+        _contactMs = 0f;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (!conductor || !conductor.IsJudgingWindow()) return;
+
+        // 🔥 쿨다운 체크 (중복 방지)
+        if (Time.time - _lastSliceTime < sliceCooldown)
+        {
+            return;
+        }
+
+        if (!_canSlice) return;
+
+        var trigger = conductor.GetCurrentTrigger();
+        if (trigger == null) return;
+
+        var target = other.GetComponentInParent<KimbapSliceTarget>();
+        if (!target || !target.controller) return;
+
+        // 🔥 같은 김밥 연속 자르기 방지
+        if (target.controller == _lastSlicedKimbap)
+        {
+            if (Time.time - _lastKimbapSliceTime < sameKimbapCooldown)
+            {
+                return;
+            }
+        }
+
+        // Must be sliceable state
+        if (!target.controller.sliceable) return;
+
+        // Contact time
+        _contactMs += Time.deltaTime * 1000f;
+        if (_contactMs < trigger.minContactMs)
+        {
+            // 🔥 접촉 시간 부족 - 피드백 없이 그냥 리턴
+            return;
+        }
+
+        // 🔥 Speed check (핵심!)
+        float speed = velocityEstimator ? velocityEstimator.speed : 0f;
+
+        if (speed < trigger.minKnifeSpeed)
+        {
+            // 🔥 속도 부족 - 실패 피드백 (spam 방지)
+            if (Time.time - _lastFailFeedbackTime >= FAIL_FEEDBACK_COOLDOWN)
+            {
+                _lastFailFeedbackTime = Time.time;
+
+                // 디버그 로그
+                UnityEngine.Debug.Log($"[KnifeSlicer] Speed too low: {speed:F2} < {trigger.minKnifeSpeed:F2}");
+
+                if (conductor)
+                {
+                    conductor.NotifySliceFail(transform.position, "SpeedTooLow");
+                }
+            }
+            return;
+        }
+
+        // 🔥 속도 충분! - VALID SLICE!
+        UnityEngine.Debug.Log($"[KnifeSlicer] Valid slice! Speed: {speed:F2} >= {trigger.minKnifeSpeed:F2}");
+
+        _canSlice = false;
+        _lastSliceTime = Time.time;
+        _lastSlicedKimbap = target.controller;
+        _lastKimbapSliceTime = Time.time;
+
+        // 1) register count
+        conductor.RegisterValidSlice();
+
+        // 2) feedback
+        float amp = Mathf.Lerp(trigger.hapticHitBase, trigger.hapticHitMax,
+            Mathf.Clamp01(speed / (trigger.minKnifeSpeed * 2f)));
+        XRHaptics.SendHaptic(rightHand, amp, trigger.hapticDurationMs / 1000f);
+        // second tap
+        XRHaptics.SendHaptic(rightHand, amp * 0.85f, Mathf.Max(0.01f, trigger.hapticDurationMs / 1600f));
+
+        if (trigger.impactSound) sfxSource.PlayOneShot(trigger.impactSound);
+
+        if (visualResistance)
+            visualResistance.Play(trigger.visualResistanceMs, trigger.visualResistanceStrength);
+
+        if (trigger.cutVfxPrefab)
+        {
+            // spawn at contact approx (knife trigger position)
+            var vfx = GameObject.Instantiate(trigger.cutVfxPrefab, transform.position, Quaternion.identity);
+            GameObject.Destroy(vfx, 1.5f);
+        }
+
+        // 3) RightThin slice (EzySlice)
+        if (_currentKimbap)
+        {
+            int idx0 = _sliceIndexThisTrigger;
+            _sliceIndexThisTrigger++;
+            _currentKimbap.ExecuteRightThinSlice(idx0);
+        }
+
+        // 🔥 4) 성공 이벤트 발행
+        if (conductor)
+        {
+            // 법선은 위쪽(김밥 단면)으로 가정
+            conductor.NotifySliceSuccess(transform.position, Vector3.up, speed);
+        }
+
+        // Unlock after short cooldown (prevents multi-count in same swing)
+        Invoke(nameof(UnlockSlice), sliceCooldown);
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        var target = other.GetComponentInParent<KimbapSliceTarget>();
+        if (!target) return;
+
+        _contactMs = 0f;
+
+        // exit allows next slice sooner (but still respects cooldown)
+        if (conductor && conductor.IsJudgingWindow())
+        {
+            // 쿨다운이 지났으면 바로 허용
+            if (Time.time - _lastSliceTime >= sliceCooldown)
+            {
+                _canSlice = true;
+            }
+        }
+    }
+
+    void UnlockSlice()
+    {
+        _contactMs = 0f;
+        _canSlice = true;
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: KnifeVelocityEstimator.cs (Assets/2_Stage1/Scripts/KnifeVelocityEstimator.cs) ---
+using UnityEngine;
+
+public class KnifeVelocityEstimator : MonoBehaviour
+{
+    public Transform samplePoint; // blade tip or knife root
+    public float speed { get; private set; }
+
+    Vector3 _prevPos;
+    bool _hasPrev;
+
+    void Start()
+    {
+        if (!samplePoint) samplePoint = transform;
+    }
+
+    void Update()
+    {
+        Vector3 p = samplePoint.position;
+        if (_hasPrev)
+        {
+            float dt = Mathf.Max(Time.deltaTime, 0.0001f);
+            speed = Vector3.Distance(p, _prevPos) / dt;
+        }
+        _prevPos = p;
+        _hasPrev = true;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: KnifeVisualResistance.cs (Assets/2_Stage1/Scripts/KnifeVisualResistance.cs) ---
+using UnityEngine;
+
+public class KnifeVisualResistance : MonoBehaviour
+{
+    public Transform knifeVisual; // assign model root
+    public Vector3 localBackAxis = Vector3.back; // visual moves slightly backward on hit
+    public float maxOffset = 0.015f;
+
+    float _timer;
+    float _dur;
+    float _strength;
+    Vector3 _baseLocalPos;
+
+    void Awake()
+    {
+        if (!knifeVisual) knifeVisual = transform;
+        _baseLocalPos = knifeVisual.localPosition;
+    }
+
+    public void Play(int milliseconds, float strength01)
+    {
+        _dur = Mathf.Clamp(milliseconds / 1000f, 0.03f, 0.25f);
+        _timer = _dur;
+        _strength = Mathf.Clamp01(strength01);
+    }
+
+    void LateUpdate()
+    {
+        if (_timer <= 0f)
+        {
+            knifeVisual.localPosition = Vector3.Lerp(knifeVisual.localPosition, _baseLocalPos, 0.35f);
+            return;
+        }
+
+        _timer -= Time.deltaTime;
+        float u = 1f - Mathf.Clamp01(_timer / _dur); // 0->1
+        // ease in/out
+        float k = Mathf.Sin(u * Mathf.PI);
+        Vector3 offset = localBackAxis.normalized * (maxOffset * _strength * k);
+        knifeVisual.localPosition = _baseLocalPos + offset;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: MissionBoardUI.cs (Assets/2_Stage1/Scripts/MissionBoardUI.cs) ---
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using System.Collections;
+
+public class MissionBoardUI : MonoBehaviour
+{
+    [Header("UI References")]
+    public TextMeshProUGUI textHeader;      // 제목 (예: < 실습 1단계 >)
+    public TextMeshProUGUI textMissionName; // 미션 내용 (예: 김밥 3줄 썰기)
+    public TextMeshProUGUI textProgress;    // 진행도 (예: □ ■ □)
+    public GameObject stampObject;          // 도장 오브젝트
+
+    [Header("Settings")]
+    public string uncheckedMark = "<color=#999999>□</color>";
+    public string checkedMark = "<color=red>■</color>";
+
+    // 초기화
+    public void InitializeUI()
+    {
+        if (stampObject) stampObject.SetActive(false);
+        UpdateText("", "", "");
+    }
+
+    // ★ [추가됨] 헤더만 변경 (매니저들이 호출함)
+    public void UpdateHeader(string header)
+    {
+        if (textHeader) textHeader.text = header;
+    }
+
+    // ★ [추가됨] 미션 이름과 진행도를 한방에 변경 (매니저들이 호출함)
+    public void UpdateMission(string missionName, int current, int max)
+    {
+        if (textMissionName) textMissionName.text = missionName;
+        UpdateProgress(current, max);
+    }
+
+    // 텍스트 전체 변경
+    public void UpdateText(string header, string mission, string progress)
+    {
+        if (textHeader && !string.IsNullOrEmpty(header)) textHeader.text = header;
+        if (textMissionName && !string.IsNullOrEmpty(mission)) textMissionName.text = mission;
+        if (textProgress && !string.IsNullOrEmpty(progress)) textProgress.text = progress;
+    }
+
+    // 체크박스 생성 로직
+    public void UpdateProgress(int current, int max)
+    {
+        if (textProgress)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            for (int i = 0; i < max; i++)
+            {
+                sb.Append((i < current) ? checkedMark + " " : uncheckedMark + " ");
+            }
+            textProgress.text = sb.ToString();
+        }
+    }
+
+    // 도장 쾅! 연출
+    public void ShowSuccessStamp(bool show)
+    {
+        if (stampObject)
+        {
+            stampObject.SetActive(show);
+            if (show) StartCoroutine(StampEffect());
+        }
+    }
+
+    IEnumerator StampEffect()
+    {
+        stampObject.transform.localScale = Vector3.one * 1.5f;
+        float t = 0;
+        while (t < 0.2f)
+        {
+            t += Time.deltaTime;
+            stampObject.transform.localScale = Vector3.Lerp(Vector3.one * 1.5f, Vector3.one, t / 0.2f);
+            yield return null;
+        }
+        stampObject.transform.localScale = Vector3.one;
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: PauseManager.cs (Assets/2_Stage1/Scripts/PauseManager.cs) ---
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class PauseManager : MonoBehaviour
+{
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+    public GameObject pauseMenuPanel; // Monitor_Canvas/Panel_Pause
+
+    [Header("Buttons")]
+    public Button resumeButton;  // Btn_ResumePause
+    public Button restartButton; // Btn_RestartPause
+    public Button mainMenuButton;// Btn_MainPause
+
+    [Header("Settings")]
+    public int mainMenuSceneIndex = 0; 
+    public float inputCooldown = 0.5f;
+
+    bool _isPaused = false;
+    float _lastPauseInputTime = -999f;
+
+    void Start()
+    {
+        if (resumeButton) resumeButton.onClick.AddListener(Resume);
+        if (restartButton) restartButton.onClick.AddListener(Restart);
+        if (mainMenuButton) mainMenuButton.onClick.AddListener(GoToMainMenu);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (Time.unscaledTime - _lastPauseInputTime < inputCooldown) return;
+
+        // [수정] 오른손 A 버튼(One) 또는 ESC 키
+                bool inputPause = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch);
+if (inputPause)
+        {
+            if (gameFlowManager != null && gameFlowManager.CurrentState != GameState.Intro && 
+                gameFlowManager.CurrentState != GameState.FinalResult)
+            {
+                _lastPauseInputTime = Time.unscaledTime;
+                TogglePause();
+            }
+        }
+    }
+
+    public void TogglePause() { if (_isPaused) Resume(); else Pause(); }
+    public void Pause() { if (_isPaused) return; _isPaused = true; if (pauseMenuPanel) pauseMenuPanel.SetActive(true); if (gameFlowManager) gameFlowManager.PauseGame(); }
+    public void Resume() { if (!_isPaused) return; _isPaused = false; if (pauseMenuPanel) pauseMenuPanel.SetActive(false); if (gameFlowManager) gameFlowManager.ResumeGame(); }
+        public void Restart() { Time.timeScale = 1f; if (gameFlowManager) gameFlowManager.ResetAndRestartMainGame(); }
+        public void GoToMainMenu() { Time.timeScale = 1f; if (gameFlowManager) gameFlowManager.GoToMainMenu(); }
+    public void ShowPauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(true); }
+    public void HidePauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(false); }
+}
+
+--------------------------------------------------
+
+--- FILENAME: PlateController.cs (Assets/2_Stage1/Scripts/PlateController.cs) ---
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+
+public class PlateController : MonoBehaviour
+{
+    [Header("Refs")]
+    public FeedbackSetSO feedbackSet;
+    public Transform plateSpawnPoint;
+
+    [Header("Stack Layout (12 pieces: 8+4)")]
+    public float pieceRadius = 0.04f;
+    public float pieceThickness = 0.015f;
+    public float ringRadius0 = 0.054f;  // pieceRadius * 1.35
+    public float ringRadius1 = 0.034f;  // pieceRadius * 0.85
+    public float layerHeight = 0.01275f; // pieceThickness * 0.85
+    public float posJitter = 0.0032f;   // pieceRadius * 0.08
+    public float yawJitter = 10f;       // degrees
+    public float tiltJitter = 6f;       // degrees
+
+    [Header("Piece Rotation Offset")]
+    public Vector3 pieceFlatEulerOffset = new Vector3(90f, 0f, 0f);
+
+    [Header("Pile Placement (Slicing Only)")]
+    [Tooltip("젓징(슬라이스 성공) 중 생성되는 조각 배치만 '무더기(사진 느낌)'로 바꿉니다. 기존 8+4 원형 배치는 아래 옵션을 끄면 그대로 유지됩니다.")]
+    public bool usePilePlacementForSlicingPieces = false;
+
+    [Tooltip("빈 접시 프리팹(_currentPlate) 하위에 이 이름의 Transform을 만들어두면 그 지점이 무더기 중심이 됩니다.")]
+    public string platingAnchorName = "PlatingAnchor";
+
+    [Tooltip("무더기가 퍼질 수 있는 최대 반경(미터)")]
+    public float pileMaxRadius = 0.12f;
+    [Tooltip("반경 증가 속도(값이 클수록 더 빨리 퍼짐)")]
+    public float pileTightness = 0.035f;
+    [Tooltip("X/Z 미세 흔들림(미터)")]
+    public float pilePosJitter = 0.006f;
+
+    [Tooltip("조각마다 쌓이는 Y 증가(사진처럼 낮게면 0~0.001 추천)")]
+    public float pileYStep = 0.001f;
+    [Tooltip("Y 미세 흔들림(미터)")]
+    public float pileYJitter = 0.001f;
+    [Tooltip("프리팹 피벗이 바닥이 아니라 떠 보이면 -값으로 보정")]
+    public float pileBottomOffsetY = 0.0f;
+
+    [Tooltip("Yaw(수평 회전) 랜덤 범위(도)")]
+    public float pileYawJitter = 180f;
+    [Tooltip("기울기(도)")]
+    public float pileTiltJitter = 5f;
+
+    // ✅ 추가: 스폰포인트 회전을 기준으로 쌓이는 방향을 '직접' 보정할 수 있는 오프셋
+    [Header("Pile Orientation Override")]
+    [Tooltip("PlatingAnchor/plateSpawnPoint의 회전에 이 오프셋을 더해 '쌓이는 방향(원형 평면)'을 보정합니다.")]
+    public Vector3 pileBaseRotationOffsetEuler = Vector3.zero;
+
+    GameObject _currentPlate;
+    List<GameObject> _platingPieces = new List<GameObject>();
+    int _stackCount = 0;
+
+    static readonly Vector2[] _layer0Offsets = new Vector2[8]
+    {
+        new Vector2(1f, 0f),
+        new Vector2(0.707f, 0.707f),
+        new Vector2(0f, 1f),
+        new Vector2(-0.707f, 0.707f),
+        new Vector2(-1f, 0f),
+        new Vector2(-0.707f, -0.707f),
+        new Vector2(0f, -1f),
+        new Vector2(0.707f, -0.707f)
+    };
+
+    static readonly Vector2[] _layer1Offsets = new Vector2[4]
+    {
+        new Vector2(0.707f, 0f),
+        new Vector2(0f, 0.707f),
+        new Vector2(-0.707f, 0f),
+        new Vector2(0f, -0.707f)
+    };
+
+    void Start()
+    {
+        ResetToEmptyPlate();
+    }
+
+    Transform FindPlatingAnchorInCurrentPlate()
+    {
+        if (_currentPlate == null) return null;
+        return _currentPlate.transform.Find(platingAnchorName);
+    }
+
+    // ✅ 수정: baseRot에 스폰포인트 회전 + 오프셋을 확실히 반영
+    void GetPileBase(out Vector3 basePos, out Quaternion baseRot)
+    {
+        Transform anchor = FindPlatingAnchorInCurrentPlate();
+        Transform refT = anchor != null ? anchor : (plateSpawnPoint != null ? plateSpawnPoint : transform);
+
+        basePos = refT.position;
+
+        // 스폰포인트 rotation을 기반으로, 인스펙터 오프셋으로 보정 가능하게
+        baseRot = refT.rotation * Quaternion.Euler(pileBaseRotationOffsetEuler);
+    }
+
+    Vector3 ComputePileWorldPos(int index, Vector3 basePos, Quaternion baseRot)
+    {
+        var prevState = UnityEngine.Random.state;
+        UnityEngine.Random.InitState(1000 + index * 17);
+
+        const float goldenAngle = 2.39996323f; // radians
+        float i = index;
+        float r = Mathf.Min(pileMaxRadius, pileTightness * Mathf.Sqrt(i));
+        float a = i * goldenAngle;
+
+        Vector2 j = UnityEngine.Random.insideUnitCircle * pilePosJitter;
+        float y = (index * pileYStep) + UnityEngine.Random.Range(-pileYJitter, pileYJitter) + pileBottomOffsetY;
+
+        UnityEngine.Random.state = prevState;
+
+        Vector3 localOffset = new Vector3(Mathf.Cos(a) * r + j.x, y, Mathf.Sin(a) * r + j.y);
+        return basePos + baseRot * localOffset;
+    }
+
+    Quaternion ComputePileWorldRot(int index, Quaternion baseRot)
+    {
+        var prevState = UnityEngine.Random.state;
+        UnityEngine.Random.InitState(2000 + index * 31);
+
+        float yaw = UnityEngine.Random.Range(-pileYawJitter, pileYawJitter);
+        float tx = UnityEngine.Random.Range(-pileTiltJitter, pileTiltJitter);
+        float tz = UnityEngine.Random.Range(-pileTiltJitter, pileTiltJitter);
+
+        UnityEngine.Random.state = prevState;
+
+        return baseRot * Quaternion.Euler(tx, yaw, tz);
+    }
+
+    public void ResetToEmptyPlate()
+    {
+        UnityEngine.Debug.Log("[PlateController] ResetToEmptyPlate called");
+
+        ClearCurrentPlate();
+        ClearPlatingPieces();
+
+        if (feedbackSet && feedbackSet.platePrefabEmptyStack)
+        {
+            Vector3 pos = plateSpawnPoint ? plateSpawnPoint.position : transform.position;
+            Quaternion rot = plateSpawnPoint ? plateSpawnPoint.rotation : transform.rotation;
+            _currentPlate = Instantiate(feedbackSet.platePrefabEmptyStack, pos, rot);
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("[PlateController] feedbackSet or empty plate prefab missing");
+        }
+    }
+
+    public void ShowSuccessPlate()
+    {
+        UnityEngine.Debug.Log("[PlateController] ShowSuccessPlate called");
+
+        ClearCurrentPlate();
+        ClearPlatingPieces();
+
+        if (feedbackSet && feedbackSet.platePrefabSuccessNeat)
+        {
+            Vector3 pos = plateSpawnPoint ? plateSpawnPoint.position : transform.position;
+            Quaternion rot = plateSpawnPoint ? plateSpawnPoint.rotation : transform.rotation;
+            _currentPlate = Instantiate(feedbackSet.platePrefabSuccessNeat, pos, rot);
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("[PlateController] feedbackSet or success plate prefab missing");
+        }
+    }
+
+    public void ShowFailPlate()
+    {
+        UnityEngine.Debug.Log("[PlateController] ShowFailPlate called");
+
+        ClearCurrentPlate();
+        ClearPlatingPieces();
+
+        if (feedbackSet && feedbackSet.platePrefabFailExplode)
+        {
+            Vector3 pos = plateSpawnPoint ? plateSpawnPoint.position : transform.position;
+            Quaternion rot = plateSpawnPoint ? plateSpawnPoint.rotation : transform.rotation;
+            _currentPlate = Instantiate(feedbackSet.platePrefabFailExplode, pos, rot);
+
+            var anim = _currentPlate.GetComponent<Animator>();
+            if (anim) anim.SetTrigger("Explode");
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("[PlateController] feedbackSet or fail plate prefab missing");
+        }
+    }
+
+    void ClearCurrentPlate()
+    {
+        if (_currentPlate)
+        {
+            Destroy(_currentPlate);
+            _currentPlate = null;
+        }
+    }
+
+    public void AddPlatingPiece()
+    {
+        if (!feedbackSet || !feedbackSet.platingPiecePrefab)
+        {
+            UnityEngine.Debug.LogWarning("[PlateController] feedbackSet or platingPiecePrefab missing");
+            return;
+        }
+
+        if (_stackCount >= feedbackSet.maxPlatingPiecesPerRound)
+        {
+            UnityEngine.Debug.LogWarning($"[PlateController] Stack full! {_stackCount}/{feedbackSet.maxPlatingPiecesPerRound}");
+            return;
+        }
+
+        Quaternion flatOffset = Quaternion.Euler(pieceFlatEulerOffset);
+
+        if (usePilePlacementForSlicingPieces)
+        {
+            GetPileBase(out Vector3 pileBasePos, out Quaternion pileBaseRot);
+
+            Vector3 pileWorldPos = ComputePileWorldPos(_stackCount, pileBasePos, pileBaseRot);
+
+            // ✅ 수평 눕힘은 그대로 적용
+            Quaternion pileWorldRot = ComputePileWorldRot(_stackCount, pileBaseRot) * flatOffset;
+
+            GameObject piecePile = Instantiate(feedbackSet.platingPiecePrefab, pileWorldPos, pileWorldRot);
+            if (_currentPlate) piecePile.transform.SetParent(_currentPlate.transform, true);
+
+            _platingPieces.Add(piecePile);
+            _stackCount++;
+            return;
+        }
+
+        Vector3 basePos = plateSpawnPoint ? plateSpawnPoint.position : transform.position;
+        Quaternion baseRot = plateSpawnPoint ? plateSpawnPoint.rotation : transform.rotation;
+
+        int layer = (_stackCount < 8) ? 0 : 1;
+        int indexInLayer = (_stackCount < 8) ? _stackCount : (_stackCount - 8);
+
+        Vector2 offset2D = (layer == 0)
+            ? _layer0Offsets[indexInLayer] * ringRadius0
+            : _layer1Offsets[indexInLayer] * ringRadius1;
+
+        float yPos = layer * layerHeight;
+
+        Vector3 jitterPos = new Vector3(
+            UnityEngine.Random.Range(-posJitter, posJitter),
+            0f,
+            UnityEngine.Random.Range(-posJitter, posJitter)
+        );
+
+        Vector3 localPos = new Vector3(offset2D.x, yPos, offset2D.y) + jitterPos;
+        Vector3 worldPos = basePos + baseRot * localPos;
+
+        Quaternion jitterRot = Quaternion.Euler(
+            UnityEngine.Random.Range(-tiltJitter, tiltJitter),
+            UnityEngine.Random.Range(-yawJitter, yawJitter),
+            UnityEngine.Random.Range(-tiltJitter, tiltJitter)
+        );
+
+        Quaternion worldRot = baseRot * flatOffset * jitterRot;
+
+        GameObject piece = Instantiate(feedbackSet.platingPiecePrefab, worldPos, worldRot);
+        if (_currentPlate) piece.transform.SetParent(_currentPlate.transform, true);
+
+        _platingPieces.Add(piece);
+        _stackCount++;
+    }
+
+    void ClearPlatingPieces()
+    {
+        UnityEngine.Debug.Log($"[PlateController] Clearing {_platingPieces.Count} plating pieces");
+
+        foreach (var p in _platingPieces)
+        {
+            if (p) Destroy(p);
+        }
+        _platingPieces.Clear();
+        _stackCount = 0;
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: RadioClickable.cs (Assets/2_Stage1/Scripts/RadioClickable.cs) ---
+using UnityEngine;
+using UnityEngine.Events;
+
+public class RadioClickable : MonoBehaviour
+{
+    [Header("Events")]
+    public UnityEvent OnRadioClicked;
+
+    [Header("Pointer Settings")]
+    public Transform knifePointerSource;
+    public float pointerMaxDistance = 3f;
+    public LayerMask radioLayer;
+
+    [Tooltip("VR에서 클릭 안정성을 위해 Ray 대신 SphereCast 사용")]
+    public bool useSphereCast = true;
+    public float sphereRadius = 0.04f;
+    public float originForwardOffset = 0.02f;
+
+    [Header("Visual Feedback")]
+    public Renderer radioRenderer;
+    public Material normalMaterial;      // 클릭 불가 상태 (튜토리얼 중)
+    public Material outlineMaterial;     // 클릭 가능 상태 기본 (아웃라인만)
+
+    [Header("Highlight (포인터 겨냥 시)")]
+    public Color highlightEmission = new Color(1f, 0.9f, 0.5f);
+    public float highlightIntensity = 2f;
+
+    [Header("Pointer Line")]
+    public LineRenderer pointerLine;
+    public Color pointerColorNormal = Color.yellow;
+    public Color pointerColorOnTarget = Color.green;
+
+    [Header("Sounds (Optional)")]
+    public AudioSource hoverSound;
+
+    bool _clickable = false;
+    bool _isPointing = false;
+    bool _wasPointing = false;
+    bool _tutorialCompleted = false;
+
+    Material _runtimeMaterial;
+
+    void Start()
+    {
+        // 런타임 머티리얼 생성
+        if (radioRenderer && normalMaterial)
+        {
+            _runtimeMaterial = new Material(normalMaterial);
+            radioRenderer.material = _runtimeMaterial;
+        }
+
+        UpdateVisuals(false, false);
+
+        if (pointerLine)
+            pointerLine.enabled = false;
+    }
+
+    void Update()
+    {
+        if (!_clickable || !_tutorialCompleted)
+        {
+            _isPointing = false;
+            UpdateVisuals(false, false);
+            if (pointerLine) pointerLine.enabled = false;
+            return;
+        }
+
+        CheckPointer();
+
+        // 🔥 디버그: 오른손 인덱스 트리거 입력 확인
+        bool triggerDown = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
+        if (triggerDown)
+        {
+            Debug.Log($"[RadioClickable] Right trigger down. _isPointing={_isPointing}");
+        }
+
+        // 포인터가 라디오를 가리킬 때만 인덱스 트리거로 클릭
+        if (_isPointing && triggerDown)
+        {
+            Debug.Log("[RadioClickable] Trigger on radio target - calling OnRadioClick");
+            OnRadioClick();
+        }
+    }
+
+    void CheckPointer()
+    {
+        _isPointing = false;
+        if (!knifePointerSource) return;
+
+        Vector3 origin = knifePointerSource.position + knifePointerSource.forward * originForwardOffset;
+        Vector3 dir = knifePointerSource.forward;
+
+        bool hitSomething = false;
+        RaycastHit hit;
+
+        if (useSphereCast)
+        {
+            hitSomething = Physics.SphereCast(
+                origin, sphereRadius, dir,
+                out hit, pointerMaxDistance, radioLayer,
+                QueryTriggerInteraction.Collide
+            );
+        }
+        else
+        {
+            hitSomething = Physics.Raycast(
+                origin, dir,
+                out hit, pointerMaxDistance, radioLayer,
+                QueryTriggerInteraction.Collide
+            );
+        }
+
+        if (hitSomething)
+        {
+            var rc = hit.collider.GetComponentInParent<RadioClickable>();
+            if (rc == this)
+            {
+                _isPointing = true;
+                if (!_wasPointing)
+                {
+                    Debug.Log("[RadioClickable] Pointer entered radio");
+                }
+
+                if (pointerLine)
+                {
+                    pointerLine.enabled = true;
+                    pointerLine.SetPosition(0, origin);
+                    pointerLine.SetPosition(1, hit.point);
+                    pointerLine.startColor = pointerColorOnTarget;
+                    pointerLine.endColor = pointerColorOnTarget;
+                }
+
+                if (!_wasPointing && hoverSound)
+                    hoverSound.PlayOneShot(hoverSound.clip);
+            }
+        }
+        else
+        {
+            if (_wasPointing)
+            {
+                Debug.Log("[RadioClickable] Pointer left radio");
+            }
+        }
+
+        // 빗나갔을 때 라인 표시
+        if (!_isPointing && pointerLine && _clickable)
+        {
+            pointerLine.enabled = true;
+            pointerLine.SetPosition(0, origin);
+            pointerLine.SetPosition(1, origin + dir * pointerMaxDistance);
+            pointerLine.startColor = pointerColorNormal;
+            pointerLine.endColor = pointerColorNormal;
+        }
+        else if (!_isPointing && pointerLine)
+        {
+            pointerLine.enabled = false;
+        }
+
+        UpdateVisuals(_clickable, _isPointing);
+        _wasPointing = _isPointing;
+    }
+
+    void UpdateVisuals(bool clickable, bool pointing)
+    {
+        if (!radioRenderer || !_runtimeMaterial) return;
+
+        if (!clickable)
+        {
+            // 🔴 클릭 불가 (튜토리얼 중): normalMaterial, Emission OFF
+            if (normalMaterial && radioRenderer.sharedMaterial != normalMaterial)
+            {
+                radioRenderer.material = new Material(normalMaterial);
+                _runtimeMaterial = radioRenderer.material;
+            }
+
+            _runtimeMaterial.DisableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", Color.black);
+        }
+        else if (clickable && !pointing)
+        {
+            // 🟡 클릭 가능 + 포인터 안 맞음: outlineMaterial, Emission OFF
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = new Material(outlineMaterial);
+                _runtimeMaterial = radioRenderer.material;
+            }
+
+            _runtimeMaterial.DisableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", Color.black);
+        }
+        else if (clickable && pointing)
+        {
+            // 🟢 클릭 가능 + 포인터 맞음: outlineMaterial + Emission ON
+            if (outlineMaterial && radioRenderer.sharedMaterial != outlineMaterial)
+            {
+                radioRenderer.material = new Material(outlineMaterial);
+                _runtimeMaterial = radioRenderer.material;
+            }
+
+            _runtimeMaterial.EnableKeyword("_EMISSION");
+            _runtimeMaterial.SetColor("_EmissionColor", highlightEmission * highlightIntensity);
+        }
+    }
+
+    void OnRadioClick()
+    {
+        Debug.Log("[RadioClickable] Radio clicked via pointer!");
+
+        _clickable = false;
+        _isPointing = false;
+
+        if (pointerLine) pointerLine.enabled = false;
+        UpdateVisuals(false, false);
+
+        OnRadioClicked?.Invoke();
+    }
+
+    public void SetClickable(bool clickable)
+    {
+        if (_clickable == clickable) return;
+
+        _clickable = clickable;
+        Debug.Log($"[RadioClickable] Clickable: {clickable}");
+
+        if (!clickable)
+        {
+            _isPointing = false;
+            if (pointerLine) pointerLine.enabled = false;
+        }
+
+        UpdateVisuals(_clickable, false);
+    }
+
+    public void SetTutorialCompleted(bool completed)
+    {
+        _tutorialCompleted = completed;
+        Debug.Log($"[RadioClickable] Tutorial Completed: {completed}");
+
+        if (!_tutorialCompleted)
+        {
+            _isPointing = false;
+            _wasPointing = false;
+            if (pointerLine) pointerLine.enabled = false;
+        }
+
+        UpdateVisuals(_clickable, false);
+    }
+
+    void OnDestroy()
+    {
+        if (_runtimeMaterial)
+        {
+            Destroy(_runtimeMaterial);
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!knifePointerSource) return;
+
+        Gizmos.color = _isPointing ? Color.green : Color.yellow;
+        Vector3 origin = knifePointerSource.position + knifePointerSource.forward * originForwardOffset;
+        Gizmos.DrawRay(origin, knifePointerSource.forward * pointerMaxDistance);
+
+        if (useSphereCast)
+        {
+            Gizmos.DrawWireSphere(origin + knifePointerSource.forward * 0.15f, sphereRadius);
+        }
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: ResultManager.cs (Assets/2_Stage1/Scripts/ResultManager.cs) ---
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class ResultManager : MonoBehaviour
+{
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public GameFlowManager gameFlowManager;
+
+    [Header("Monitor UI Elements")]
+    public GameObject panelClosingResult; // Panel_ClosingResult
+    public TextMeshProUGUI textTitle;      // Text_Title
+    public TextMeshProUGUI textFinalTotal;  // Text_FinalTotal
+    public TextMeshProUGUI textComment;     // Text_GradeComment
+
+    [Header("Buttons")]
+    public Button btnRestart;  // 인스펙터에서 연결
+    public Button btnMainMenu; // 인스펙터에서 연결
+
+    bool _gameEnded = false;
+
+    void Start()
+    {
+        if (btnRestart) btnRestart.onClick.AddListener(RestartGame);
+        if (btnMainMenu) btnMainMenu.onClick.AddListener(GoToMain);
+        if (panelClosingResult) panelClosingResult.SetActive(false);
+    }
+
+    public void StartTracking(int total) { _gameEnded = false; if (panelClosingResult) panelClosingResult.SetActive(false); }
+
+    public void EndGame()
+    {
+        if (_gameEnded) return;
+        _gameEnded = true;
+
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
+        ShowResult();
+    }
+
+    void ShowResult()
+    {
+        if (panelClosingResult) panelClosingResult.SetActive(true);
+        int totalSales = gameFlowManager.GetCurrentSales(); 
+        
+        if (textTitle) textTitle.text = "< 영 업 정 산 >";
+        if (textFinalTotal) textFinalTotal.text = $"{totalSales:N0} 원";
+        
+        if (textComment)
+        {
+            if (totalSales >= 50000) textComment.text = "자네, 우리 가게의 보배구만!";
+            else if (totalSales >= 10000) textComment.text = "나쁘지 않아. 조금 더 분발하게.";
+            else textComment.text = "이래서 월세나 내겠나? 다시 해보게!";
+        }
+        gameFlowManager.EnterFinalResult(0); 
+    }
+
+    void RestartGame() { Time.timeScale = 1f; gameFlowManager.ResetAndRestartMainGame(); }
+    void GoToMain() { Time.timeScale = 1f; gameFlowManager.GoToMainMenu(); }
+}
+
+--------------------------------------------------
+
+--- FILENAME: RhythmConductor.cs (Assets/2_Stage1/Scripts/RhythmConductor.cs) ---
+using System.Collections;
+using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class RhythmConductor : MonoBehaviour
+{
+    public enum RhythmState { Waiting, Guiding, Judging, Result, Cleanup }
+
+    [Header("Data")]
+    public RhythmTriggerListSO data;
+
+    [Header("Refs")]
+    public AudioSource bgmSource;
+    public AudioSource sfxSource;
+    public KimbapSpawner spawner;
+    public DebugHUD hud;
+    public PlateController plateController;
+
+    [Header("Events")]
+    public UnityEvent<Vector3, Vector3, float> OnSliceSuccess;
+    public UnityEvent<Vector3, string> OnSliceFail;
+    public UnityEvent<bool> OnRoundResult;
+    public UnityEvent<Vector3> OnWrongCut;
+    public UnityEvent OnTutorialSkipped;
+    public UnityEvent OnTutorialCompleted;
+
+    [Header("Settings")]
+    public float resultDisplayDuration = 0.5f;
+    [Tooltip("가이드 비트 사운드 재생 간격 (초)")]
+    public float guideBeatInterval = 0.15f;
+
+    [Header("Tutorial Mode")]
+    public bool isTutorialMode = false;
+
+    public RhythmState State { get; private set; } = RhythmState.Waiting;
+    public int CurrentTriggerIndex { get; private set; } = -1;
+
+    public float BgmTime { get; private set; }
+    public int SliceCount { get; private set; }
+    public int RequiredSliceCount { get; private set; }
+
+    float _offsetSec;
+    float _stateEndTime;
+    bool _bgmStarted;
+    bool _waitingForManualAdvance = false;
+
+    void Awake()
+    {
+        if (!bgmSource) bgmSource = gameObject.AddComponent<AudioSource>();
+        if (!sfxSource) sfxSource = gameObject.AddComponent<AudioSource>();
+        _offsetSec = (data ? data.timingOffsetMs : 0f) / 1000f;
+
+        if (hud) hud.Bind(this);
+    }
+
+    void Start()
+    {
+        // GameFlowManager에서 호출하도록 변경
+        // StartGame();
+    }
+
+    public void StartGame()
+    {
+        if (!data)
+        {
+            UnityEngine.Debug.LogError("[RhythmConductor] Missing data.");
+            return;
+        }
+
+        // 🔥 BGM 재생 (튜토리얼/메인 모두)
+        if (data.bgm)
+        {
+            bgmSource.clip = data.bgm;
+            bgmSource.loop = isTutorialMode; // 튜토리얼은 반복 재생
+            bgmSource.Play();
+            _bgmStarted = true;
+            UnityEngine.Debug.Log($"[RhythmConductor] BGM started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("[RhythmConductor] No BGM assigned!");
+            _bgmStarted = false;
+        }
+
+        State = RhythmState.Waiting;
+        CurrentTriggerIndex = -1;
+        SliceCount = 0;
+        RequiredSliceCount = 0;
+        _waitingForManualAdvance = false;
+
+        if (spawner) spawner.EnsureKimbapExists();
+        if (plateController) plateController.ResetToEmptyPlate();
+
+        if (hud) hud.Log($"Game Started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
+    }
+
+    void Update()
+    {
+        // 🔥 튜토리얼 모드에서는 시간 기반 진행 완전 차단
+        if (isTutorialMode)
+        {
+            // BGM 시간 업데이트만 (디버그용)
+            if (_bgmStarted && bgmSource.isPlaying)
+            {
+                BgmTime = bgmSource.time + _offsetSec;
+            }
+
+            // 상태 머신만 작동 (트리거 자동 진행 X)
+            TickStateMachine();
+            return;
+        }
+
+        // 메인 게임 모드: 기존 로직
+        if (!_bgmStarted) return;
+
+        BgmTime = bgmSource.time + _offsetSec;
+
+        AdvanceTriggerIfNeeded();
+        TickStateMachine();
+    }
+
+    void AdvanceTriggerIfNeeded()
+    {
+        // 🔥 튜토리얼 모드에서는 절대 호출되지 않음
+        if (isTutorialMode) return;
+
+        if (data.triggers == null || data.triggers.Length == 0) return;
+
+        int nextIndex = CurrentTriggerIndex + 1;
+        if (nextIndex >= data.triggers.Length) return;
+
+        if (BgmTime >= data.triggers[nextIndex].triggerTime)
+        {
+            EnterTrigger(nextIndex);
+        }
+    }
+
+    void EnterTrigger(int idx)
+    {
+        CurrentTriggerIndex = idx;
+        var t = data.triggers[idx];
+
+        SliceCount = 0;
+        RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
+
+        // 빈 접시로 초기화
+        if (plateController) plateController.ResetToEmptyPlate();
+
+        if (spawner && spawner.CurrentKimbap)
+        {
+            spawner.CurrentKimbap.BeginTrigger(t);
+        }
+
+        State = RhythmState.Guiding;
+        _stateEndTime = BgmTime + Mathf.Max(0.01f, t.guideDuration);
+
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
+
+        if (hud) hud.Log($"Enter Trigger #{idx} (req={RequiredSliceCount}) - State: Guiding");
+    }
+
+    void TickStateMachine()
+    {
+        if (CurrentTriggerIndex < 0) return;
+        var t = data.triggers[CurrentTriggerIndex];
+
+        // 🔥 튜토리얼 모드: 수동 진행 대기 중이면 Result 이후 Cleanup만 차단
+        // Guiding -> Judging 전환은 정상 작동해야 함!
+
+        // 🔥 튜토리얼 모드: Time.time 기준으로 상태 전환
+        float currentTime = isTutorialMode ? Time.time : BgmTime;
+
+        if (State == RhythmState.Guiding && currentTime >= _stateEndTime)
+        {
+            State = RhythmState.Judging;
+            _stateEndTime = currentTime + Mathf.Max(0.01f, t.judgeDuration);
+
+            if (spawner && spawner.CurrentKimbap)
+                spawner.CurrentKimbap.SetSliceable(true);
+
+            if (hud) hud.Log("State -> Judging");
+        }
+        else if (State == RhythmState.Judging && currentTime >= _stateEndTime)
+        {
+            State = RhythmState.Result;
+
+            if (spawner && spawner.CurrentKimbap)
+                spawner.CurrentKimbap.SetSliceable(false);
+
+            bool success = (SliceCount == RequiredSliceCount);
+            if (spawner && spawner.CurrentKimbap)
+                spawner.CurrentKimbap.OnTriggerResult(success);
+
+            if (hud) hud.Log($"State -> Result (success={success})");
+
+            OnRoundResult?.Invoke(success);
+
+            // 튜토리얼 모드: 결과 후 수동 진행 대기
+            if (isTutorialMode)
+            {
+                _waitingForManualAdvance = true;
+            }
+
+            _stateEndTime = currentTime + resultDisplayDuration;
+        }
+        else if (State == RhythmState.Result && currentTime >= _stateEndTime)
+        {
+            // 🔥 튜토리얼 모드: Result 이후 즉시 Cleanup 실행 (김밥 교체)
+            State = RhythmState.Cleanup;
+            if (hud) hud.Log("State -> Cleanup");
+
+            if (spawner)
+            {
+                spawner.DestroyCurrentKimbap();
+                spawner.EnsureKimbapExists();
+                if (hud) hud.Log("New kimbap spawned after Result");
+            }
+
+            // 🔥 튜토리얼 모드: Cleanup 이후 수동 진행 대기
+            if (isTutorialMode)
+            {
+                State = RhythmState.Waiting;
+                // _waitingForManualAdvance는 이미 Result에서 true로 설정됨
+                return;
+            }
+
+            // 메인 게임: 바로 다음 Waiting으로
+            State = RhythmState.Waiting;
+        }
+    }
+
+    public void RetryCurrentTrigger()
+    {
+        if (!isTutorialMode)
+        {
+            UnityEngine.Debug.LogWarning("[RhythmConductor] RetryCurrentTrigger called but not in tutorial mode!");
+            return;
+        }
+
+        if (CurrentTriggerIndex < 0) return;
+
+        UnityEngine.Debug.Log($"[RhythmConductor] Retrying trigger #{CurrentTriggerIndex}");
+
+        _waitingForManualAdvance = false;
+
+        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
+        // 대신 현재 김밥이 없으면 생성
+        if (spawner && !spawner.CurrentKimbap)
+        {
+            spawner.EnsureKimbapExists();
+        }
+
+        // 🔥 Time.time 기준으로 상태 시간 설정
+        var t = data.triggers[CurrentTriggerIndex];
+
+        SliceCount = 0;
+        RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
+
+        if (plateController) plateController.ResetToEmptyPlate();
+
+        if (spawner && spawner.CurrentKimbap)
+        {
+            spawner.CurrentKimbap.BeginTrigger(t);
+        }
+
+        State = RhythmState.Guiding;
+        _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
+
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
+
+        if (hud) hud.Log($"Retry Trigger #{CurrentTriggerIndex} - State: Guiding");
+    }
+
+    public void AdvanceToNextTrigger()
+    {
+        if (!isTutorialMode)
+        {
+            UnityEngine.Debug.LogWarning("[RhythmConductor] AdvanceToNextTrigger called but not in tutorial mode!");
+            return;
+        }
+
+        _waitingForManualAdvance = false;
+
+        int nextIndex = CurrentTriggerIndex + 1;
+
+        if (nextIndex >= data.triggers.Length)
+        {
+            UnityEngine.Debug.Log("[RhythmConductor] Tutorial completed - no more triggers");
+            return;
+        }
+
+        UnityEngine.Debug.Log($"[RhythmConductor] Advancing to next trigger #{nextIndex}");
+
+        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
+        // 대신 현재 김밥이 없으면 생성
+        if (spawner && !spawner.CurrentKimbap)
+        {
+            spawner.EnsureKimbapExists();
+        }
+
+        CurrentTriggerIndex = nextIndex;
+        var t = data.triggers[nextIndex];
+
+        SliceCount = 0;
+        RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
+
+        if (plateController) plateController.ResetToEmptyPlate();
+
+        if (spawner && spawner.CurrentKimbap)
+        {
+            spawner.CurrentKimbap.BeginTrigger(t);
+        }
+
+        State = RhythmState.Guiding;
+        _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
+
+        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        if (t.guideBeatSound && sfxSource)
+        {
+            StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
+        }
+
+        if (hud) hud.Log($"Enter Trigger #{nextIndex} (req={RequiredSliceCount}) - State: Guiding");
+    }
+
+    public bool IsJudgingWindow()
+    {
+        return State == RhythmState.Judging && CurrentTriggerIndex >= 0;
+    }
+
+    public RhythmTriggerListSO.Trigger GetCurrentTrigger()
+    {
+        if (!data || data.triggers == null) return null;
+        if (CurrentTriggerIndex < 0 || CurrentTriggerIndex >= data.triggers.Length) return null;
+        return data.triggers[CurrentTriggerIndex];
+    }
+
+    public void RegisterValidSlice()
+    {
+        var t = GetCurrentTrigger();
+        if (t == null) return;
+
+        SliceCount++;
+        if (hud) hud.Log($"ValidSlice! ({SliceCount}/{RequiredSliceCount})");
+    }
+
+    public void NotifySliceSuccess(Vector3 hitPos, Vector3 hitNormal, float knifeSpeed)
+    {
+        OnSliceSuccess?.Invoke(hitPos, hitNormal, knifeSpeed);
+    }
+
+    public void NotifySliceFail(Vector3 hitPos, string reason)
+    {
+        OnSliceFail?.Invoke(hitPos, reason);
+    }
+
+    public void NotifyWrongCut(Vector3 hitPos)
+    {
+        OnWrongCut?.Invoke(hitPos);
+    }
+
+    /// <summary>
+    /// 가이드 비트 사운드를 requiredSliceCount만큼 반복 재생하는 코루틴
+    /// </summary>
+    IEnumerator PlayGuideBeatSoundRepeatedly(AudioClip clip, int count)
+    {
+        if (clip == null || sfxSource == null || count <= 0)
+            yield break;
+
+        for (int i = 0; i < count; i++)
+        {
+            sfxSource.PlayOneShot(clip);
+            
+            // 마지막 재생이 아니면 간격 대기
+            if (i < count - 1)
+            {
+                yield return new WaitForSeconds(guideBeatInterval);
+            }
+        }
+
+        if (hud) hud.Log($"Guide beat sound played {count} times");
+    }
+
+    /// <summary>
+    /// 모든 가이드 비트 사운드 코루틴을 정지하고 SFX를 정리합니다.
+    /// 튜토리얼 스킵/완료 시 호출하여 중복 재생을 방지합니다.
+    /// </summary>
+    public void StopAllGuideBeats()
+    {
+        // 이 스크립트에서 돌리는 모든 코루틴(가이드 비트 포함) 정지
+        StopAllCoroutines();
+
+        // 남아 있는 SFX 한 번 정리
+        if (sfxSource)
+            sfxSource.Stop();
+
+        if (hud) hud.Log("All guide beat sounds stopped");
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: StageManager.cs (Assets/2_Stage1/Scripts/StageManager.cs) ---
+using UnityEngine;
+
+public class StageManager : MonoBehaviour
+{
+    [Header("Game Modes")]
+    public GameObject modeTutorial; // MODE_TUTORIAL 오브젝트
+    public GameObject modeGame;     // MODE_GAME 오브젝트
+
+    [Header("System")]
+    public RhythmConductor conductor; // GameManager에 있는 컨덕터
+    public RhythmTriggerListSO mainGameData; // 본 게임용 데이터 (mainTriggerList)
+    
+    [Header("UI References")]
+    public MissionBoardUI missionBoard; // 리갈패드 초기화용
+
+    // 튜토리얼이 끝나고 트리거를 당기면 이 함수가 호출됩니다.
+    public void SwitchToMainGame()
+    {
+        Debug.Log("[StageManager] Switching to Main Game...");
+
+        // 1. 튜토리얼 모드 끄기
+        if (modeTutorial != null) modeTutorial.SetActive(false);
+
+        // 2. 본 게임 모드 켜기 (GameFlowManager가 깨어남)
+        if (modeGame != null) modeGame.SetActive(true);
+
+        // ▼▼▼ [삭제] GameFlowManager가 할 일이므로 StageManager에서는 삭제했습니다. ▼▼▼
+        /*
+        // 3. 리갈패드(주문서) 초기화
+        if (missionBoard != null) { ... }
+
+        // 4. 리듬 컨덕터 설정 변경
+        if (conductor != null) { ... }
+        */
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: StageModeSelector.cs (Assets/2_Stage1/Scripts/StageModeSelector.cs) ---
+using UnityEngine;
+
+public class StageModeSelector : MonoBehaviour
+{
+    [Header("UI Panels")]
+    public GameObject selectionPanel;
+
+    [Header("Game Modes")]
+    public GameObject tutorialGroup;
+    public GameObject mainGameGroup;
+
+    [Header("Shared UI")]
+    public MissionBoardUI missionBoard;
+
+    [Header("Refs")]
+    public GameFlowManager gameFlowManager;
+    public RhythmConductor conductor;
+    public RhythmTriggerListSO mainGameData;
+
+    [Header("Tutorial Refs (choose one)")]
+    public TutorialDialogueController tutorialDialogueController;
+    public TutorialController tutorialController;
+
+    [Header("Ambience")]
+    public AudioSource ambientSource;
+
+    void Start()
+    {
+        // Default view: show selection panel only
+        if (selectionPanel) selectionPanel.SetActive(true);
+        if (tutorialGroup) tutorialGroup.SetActive(false);
+        if (mainGameGroup) mainGameGroup.SetActive(false);
+
+        if (missionBoard)
+        {
+            missionBoard.InitializeUI();
+            missionBoard.UpdateHeader("[메모]");
+            missionBoard.UpdateMission("모드 선택: 튜토리얼 / 실전", 0, 1);
+        }
+    }
+
+    public void OnClick_StartTutorial()
+    {
+        Debug.Log(">> 튜토리얼 모드 시작");
+        StopAmbience();
+
+        if (selectionPanel) selectionPanel.SetActive(false);
+        if (tutorialGroup) tutorialGroup.SetActive(true);
+        if (mainGameGroup) mainGameGroup.SetActive(false);
+
+        // Start tutorial explicitly (no auto-start anywhere else)
+        if (!tutorialDialogueController && tutorialGroup)
+        {
+            tutorialDialogueController = tutorialGroup.GetComponentInChildren<TutorialDialogueController>(true);
+        }
+
+        if (tutorialDialogueController)
+        {
+            tutorialDialogueController.BeginTutorialFlow();
+        }
+        else if (tutorialController)
+        {
+            tutorialController.StartTutorial();
+        }
+        else
+        {
+            Debug.LogError("[StageModeSelector] tutorialDialogueController/tutorialController not assigned.");
+        }
+    }
+
+    public void OnClick_StartGame()
+    {
+        Debug.Log(">> 실전 게임 시작");
+        StopAmbience();
+
+        if (selectionPanel) selectionPanel.SetActive(false);
+        if (tutorialGroup) tutorialGroup.SetActive(false);
+        if (mainGameGroup) mainGameGroup.SetActive(true);
+
+        // Resolve gameFlowManager if not assigned
+        if (!gameFlowManager && mainGameGroup)
+        {
+            gameFlowManager = mainGameGroup.GetComponentInChildren<GameFlowManager>(true);
+        }
+
+        // Ensure main data is assigned
+        if (conductor && mainGameData)
+        {
+            conductor.data = mainGameData;
+        }
+
+        if (gameFlowManager)
+        {
+            gameFlowManager.StartMainGame();
+        }
+        else
+        {
+            Debug.LogError("[StageModeSelector] gameFlowManager not assigned/found.");
+        }
+    }
+
+    void StopAmbience()
+    {
+        if (ambientSource && ambientSource.isPlaying)
+        {
+            ambientSource.Stop();
+        }
+    }
+}
+
+
+--------------------------------------------------
+
+--- FILENAME: StageUIManager.cs (Assets/2_Stage1/Scripts/StageUIManager.cs) ---
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class StageUIManager : MonoBehaviour
+{
+    public static StageUIManager Instance;
+
+    [Header("HUD - Judgement")]
+    public TextMeshProUGUI judgeText; // "PERFECT!" 텍스트
+
+    [Header("HUD - Gauge")]
+    public Slider gaugeSlider;         // 게이지 바
+    public Image gaugeFill;            // 색상 변경용
+    public Gradient gaugeColor;        // 0~100% 색상
+
+    [Header("Guides")]
+    public GameObject radioGuide;      // 라디오 위 화살표
+    public GameObject handTooltip;     // 왼손 메뉴 설명
+
+    void Awake()
+    {
+        Instance = this;
+        if (judgeText) judgeText.gameObject.SetActive(false);
+    }
+
+    // 판정 띄우기
+    public void ShowJudgement(string text, Color color)
+    {
+        if (!judgeText) return;
+        judgeText.text = text;
+        judgeText.color = color;
+        judgeText.gameObject.SetActive(true);
+
+        // 연출: 커졌다가 사라짐 (임시)
+        judgeText.transform.localScale = Vector3.one * 1.5f;
+        CancelInvoke(nameof(HideJudge));
+        Invoke(nameof(HideJudge), 0.5f);
+    }
+    void HideJudge() => judgeText.gameObject.SetActive(false);
+
+    // 게이지 업데이트
+    public void UpdateGauge(float current, float max)
+    {
+        if (!gaugeSlider) return;
+        float ratio = Mathf.Clamp01(current / max);
+        gaugeSlider.value = ratio;
+        if (gaugeFill && gaugeColor != null) 
+            gaugeFill.color = gaugeColor.Evaluate(ratio);
+    }
+
+    // 가이드 끄기
+    public void SetGuides(bool showRadio, bool showHand)
+    {
+        if (radioGuide) radioGuide.SetActive(showRadio);
+        if (handTooltip) handTooltip.SetActive(showHand);
+    }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialController.cs (Assets/2_Stage1/Scripts/TutorialController.cs) ---
+using UnityEngine;
+using TMPro;
+using System.Text.RegularExpressions;
+
+public class TutorialController : MonoBehaviour
+    {
+    [Header("Refs")]
+    public RhythmConductor conductor;
+    public FeedbackSetSO feedbackSet;
+    public RadioClickable radio;
+    public MissionBoardUI missionBoard; 
+
+    [Header("UI Groups")]
+    public GameObject salesUIGroup; 
+
+    [Header("Monitor UI")]
+    public TextMeshProUGUI monitorText; 
+    public TextMeshProUGUI salesText;   
+
+    [Header("Final Result UI")]
+    public GameObject finalResultPanel;        
+    public TextMeshProUGUI finalTotalText;     
+    public TextMeshProUGUI finalCommentText;   
+
+    [Header("Tutorial Settings")]
+    public RhythmTriggerListSO tutorialTriggerList;
+    public int requiredSuccessCount = 1; 
+
+    [Header("Wage Settings")]
+    public int maxTotalWage = 100000; 
+    
+    [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
+    public string highlightTextColor = "#FF3333"; 
+
+    int _currentStepIndex = 0;
+    int _successCountThisStep = 0; 
+    bool _tutorialCompleted = false;
+    bool _isProcessingResult = false;    bool _waitForFinalInput = false; 
+
+    void OnEnable()
+    {
+        _currentStepIndex = 0;
+        _successCountThisStep = 0;
+        _tutorialCompleted = false;
+        _isProcessingResult = false;
+        _waitForFinalInput = false;
+
+        if (conductor) 
+        {
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
+            conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
+        }
+
+        // StartTutorial is triggered explicitly by StageModeSelector.
+
+    }
+
+    void OnDisable()
+    {
+        if (conductor) 
+        {
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
+            conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
+        }
+    }
+        void Update()
+    {
+        // Tutorial skip is disabled.
+        // Only listen for the final confirmation input when tutorial is completed.
+        if (_waitForFinalInput)
+        {
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+        {
+        _waitForFinalInput = false;
+        FinalizeAndStartGame();
+    }
+
+        }
+    }
+
+    public void StartTutorial()
+    {
+// Reset tutorial runtime state (since we no longer auto-start on OnEnable)
+_currentStepIndex = 0;
+_successCountThisStep = 0;
+_tutorialCompleted = false;
+_isProcessingResult = false;
+_waitForFinalInput = false;        // Mark tutorial state for global systems (e.g., Pause block)
+        var gf = FindObjectOfType<GameFlowManager>();
+        if (gf) gf.EnterTutorialState();
+
+        if (!conductor || !tutorialTriggerList) return;
+
+        if (salesUIGroup) salesUIGroup.SetActive(true);
+
+        conductor.isTutorialMode = true;
+        conductor.data = tutorialTriggerList;
+        
+        conductor.StartGame();
+        
+        // [중요] StartGame 호출 후에 Loop를 켜야 안전합니다.
+        if (missionBoard) missionBoard.InitializeUI();
+        if (finalResultPanel) finalResultPanel.SetActive(false);
+
+        UpdateSalesUI();
+        UpdateMissionUI(); 
+
+        ShowMonitorText("<size=60%>면접 실습 시작</size>", Color.green);
+        Invoke(nameof(StartFirstTrigger), 1.5f);
+    }
+
+    void StartFirstTrigger()
+    {
+        if (conductor)
+        {
+            conductor.AdvanceToNextTrigger();
+            UpdateMissionUI(); 
+            ShowMonitorText("", Color.white);
+        }
+    }
+
+    void HandleSliceSuccess(Vector3 pos, Vector3 normal, float speed)
+    {
+        UpdateMissionUI();
+    }
+
+    void HandleRoundResult(bool success)
+    {
+        if (_tutorialCompleted || _isProcessingResult) return;
+        _isProcessingResult = true;
+
+        if (success)
+        {
+            _successCountThisStep++;
+            ShowMonitorText("성공!", Color.green);
+            
+            if (_successCountThisStep >= requiredSuccessCount)
+            {
+                if (missionBoard) missionBoard.ShowSuccessStamp(true);
+                Invoke(nameof(ShowClearMessage), 1.0f);
+                
+                _currentStepIndex++;
+                _successCountThisStep = 0;
+
+                if (_currentStepIndex >= tutorialTriggerList.triggers.Length)
+                {
+                    Invoke(nameof(CompleteTutorial), 2.5f);
+                    return;
+                }
+                Invoke(nameof(MoveToNextStep), 2.5f);
+            }
+            else
+            {
+                Invoke(nameof(RetryCurrentStep), 1.5f);
+                Invoke(nameof(ClearMonitorText), 1.5f);
+            }
+        }
+        else
+        {
+            ShowMonitorText("다시!", Color.red);
+            Invoke(nameof(RetryCurrentStep), 1.5f);
+            Invoke(nameof(ClearMonitorText), 1.0f);
+        }
+    }
+
+    void MoveToNextStep()
+    {
+        if (conductor) { conductor.AdvanceToNextTrigger(); UpdateMissionUI(); }
+        _isProcessingResult = false;
+        ClearMonitorText();
+    }
+
+    void RetryCurrentStep()
+    {
+        if (conductor) { conductor.RetryCurrentTrigger(); UpdateMissionUI(); }
+        _isProcessingResult = false;
+    }
+
+    void UpdateMissionUI()
+    {
+        if (!missionBoard) return;
+        
+        missionBoard.ShowSuccessStamp(false);
+        missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
+
+        int targetSliceCount = 0;
+        if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
+            targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
+
+        int currentSlices = 0;
+        if (conductor != null && conductor.IsJudgingWindow())
+            currentSlices = conductor.SliceCount;
+        
+        int remainCount = Mathf.Max(0, targetSliceCount - currentSlices);
+        string icons = "";
+        for (int i = 0; i < remainCount; i++) icons += "@ "; 
+
+        string progressText = $"<color={highlightTextColor}>{currentSlices}</color> / {targetSliceCount}";
+
+        string guideText = "";
+        switch (_currentStepIndex)
+        {
+            case 0: guideText = "망설이지 말고\n[직접] 한번 썰어보게나!"; break;
+            case 1: guideText = "잘했네! 감이 좋군.\n이제 [비트]에 맞춰 썰어보자!"; break;
+            default: guideText = "박자에 맞춰\n[정확히] 썰어보게!"; break;
+        }
+
+        guideText = ApplyHighlightColor(guideText);
+        guideText += $"\n\n<size=120%>[ {progressText} ]</size>\n<size=150%>{icons}</size>";
+        
+        missionBoard.UpdateMission(guideText, 0, 0);
+    }
+    
+    string ApplyHighlightColor(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
+    }
+
+    void UpdateSalesUI() { if (salesText) salesText.text = "면접 실습\n[ 진행 중 ]"; }
+    void ShowClearMessage() { ShowMonitorText("통과!", Color.cyan); }
+
+    void SkipTutorial()
+    {
+        _tutorialCompleted = true;
+        Cleanup();
+        if (missionBoard) { missionBoard.UpdateText("< 알림 >", "교육 스킵됨", ""); missionBoard.ShowSuccessStamp(false); }
+        if (conductor.OnTutorialSkipped != null) conductor.OnTutorialSkipped.Invoke();
+    }
+
+    void CompleteTutorial()
+    {
+        _tutorialCompleted = true;
+
+        string bigTitle = "** 합 격 **"; 
+        string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
+        string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
+
+        if (missionBoard)
+        {
+            missionBoard.ShowSuccessStamp(true);
+            missionBoard.UpdateHeader("< 채용 결과 >");
+            missionBoard.UpdateText("< 채용 결과 >", "<size=180%><color=red>합격!</color></size>", "");
+        }
+        
+        if (finalResultPanel)
+        {
+            finalResultPanel.SetActive(true);
+            if (finalTotalText) finalTotalText.text = bigTitle;
+            if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
+        }
+        
+        ShowMonitorText(finalMessage, Color.cyan);
+        _waitForFinalInput = true;
+    }
+
+    void FinalizeAndStartGame()
+    {
+        Cleanup();
+        if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
+    }
+
+    void Cleanup()
+    {
+        if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
+        if (salesUIGroup) salesUIGroup.SetActive(false);
+        if (radio) { radio.SetTutorialCompleted(true); radio.SetClickable(true); }
+        
+        if (finalResultPanel) finalResultPanel.SetActive(false);
+        ClearMonitorText();
+    }
+
+    void ShowMonitorText(string text, Color color)
+    {
+        if (monitorText) { monitorText.text = text; monitorText.color = color; monitorText.gameObject.SetActive(true); }
+    }
+
+    void ClearMonitorText() { if (monitorText) monitorText.text = ""; }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialDialogueController.cs (Assets/2_Stage1/Scripts/TutorialDialogueController.cs) ---
+using UnityEngine;
+using System.Text.RegularExpressions;
+
+public enum DialogueConditionType
+{
+    None,                           // 조건 없음 (자동 진행)
+    RightTriggerButtonClick,        // (사용 안 함)
+    GazeAtKimbap,                   // 김밥 확인 -> 캔버스 클릭
+    GazeAtNote,                     // 노트 확인 -> 캔버스 클릭
+    HandMovement,                   // 손 움직임 감지
+    TimingBefore,                   // 타이밍 직전
+    RoundSuccess,                   // 라운드 성공
+    RoundFail,                      // 라운드 실패
+}
+
+[System.Serializable]
+public class TutorialDialogue
+{
+    [TextArea(2, 5)]
+    public string dialogueText;     
+    public DialogueConditionType conditionType; 
+    
+    [Tooltip("조건이 충족된 후 다음 대사로 넘어가기까지 대기 시간 (초)")]
+    public float waitAfterCondition = 0.5f;
+    
+    [Tooltip("조건 없을 때 자동 진행 시간 (초, 0이면 수동 진행)")]
+    public float autoAdvanceTime = 2f;
+}
+
+[DefaultExecutionOrder(-100)]
+public class TutorialDialogueController : MonoBehaviour
+{
+    [Header("Start")]
+    public bool autoStart = false; // Start flow only when explicitly called.
+
+    [Header("References")]
+    public TutorialDialogueUIController dialogueUI; 
+    public MissionBoardUI missionBoard;             
+    
+    public TutorialController tutorialController;
+    public RhythmConductor conductor;
+    public FeedbackSetSO feedbackSet;
+    
+    [Header("Target Objects")]
+    public GameObject kimbapPrefab;      
+    public GameObject kimbap010Prefab;   
+    public GameObject monitorCanvasObject; // 모니터 캔버스 연결
+    
+    [Header("Dialogue Data")]
+    public TutorialDialogue[] dialogues;
+    
+    [Header("Settings")]
+    public float gazeDetectionDistance = 10f; 
+    public float gazeAngleThreshold = 45f;    
+    public float handMovementThreshold = 0.1f; 
+    
+    [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
+    public string highlightTextColor = "#FFD700"; 
+    
+    // 힌트 텍스트 모음
+    private const string HINT_LOOK_KIMBAP = "김밥을 바라보세요";
+    private const string HINT_LOOK_NOTE = "왼쪽 주문서를 바라보세요";
+    
+    // 🔥 [변경됨] 요청하신 텍스트 포맷 적용
+    // {0} 위치에 "[오른손 트리거] 다음" 텍스트가 들어갑니다.
+    private const string HINT_CONFIRMED_FORMAT = "<color=#00FF00>V 확인완료</color>\n{0}"; 
+    private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음";
+
+    // 내부 변수
+    private int _currentDialogueIndex = 0;
+    private bool _isWaitingForCondition = false;
+    private bool _conditionMet = false;
+    private float _conditionMetTime = 0f;
+    private float _autoAdvanceTimer = 0f;    // 상태 추적
+    private bool _hasLookedAtTarget = false; 
+    
+    private bool _lastRoundResult = false;
+    private bool _roundResultProcessed = false;
+    private Vector3 _previousControllerPosition;
+    private bool _hasDetectedHandMovement = false;
+    private bool _controllerPositionInitialized = false;
+    
+    private bool _originalTutorialMode = false;
+    private GameObject _tutorialControllerGameObject;
+    private GameObject _conductorGameObject;
+    
+    void Awake()
+    {
+        DisableExistingSystems();
+    }
+    
+    void Start()
+{
+    if (autoStart)
+    {
+        BeginTutorialFlow();
+    }
+}
+
+    public void BeginTutorialFlow()
+    {
+        InitializeControllerPosition();
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+
+        // ✅ [수정됨] conductor 초기화 제거
+        // TutorialController.OnEnable()에서 자동으로 StartTutorial()이 호출되므로
+        // 여기서는 conductor를 건드리지 않음
+
+        if (missionBoard)
+        {
+            missionBoard.InitializeUI(); 
+            missionBoard.UpdateHeader("< 면 접 중 >");
+            missionBoard.UpdateMission("모니터를 보세요", 0, 1); 
+        }
+
+        if (dialogues != null && dialogues.Length > 0) ShowDialogue(0);
+        else StartMainTutorial();
+    
+    }
+
+    
+    void Update()
+    {
+        if (_currentDialogueIndex >= dialogues.Length) return;
+
+        var currentDialogue = dialogues[_currentDialogueIndex];
+        
+        // 조건 체크
+        if (_isWaitingForCondition)
+        {
+            bool isConditionFullfilled = false;
+
+            // 1. 시선 감지 타입
+            if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap || 
+                currentDialogue.conditionType == DialogueConditionType.GazeAtNote)
+            {
+                GameObject target = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? kimbapPrefab : missionBoard.gameObject;
+                
+                // 현재 쳐다보고 있는지 확인
+                bool isCurrentlyLooking = CheckGazeAtObject(target);
+                
+                if (isCurrentlyLooking) 
+                {
+                    _hasLookedAtTarget = true;
+                }
+
+                // 봤던 적이 있으면
+                if (_hasLookedAtTarget)
+                {
+                    // 🔥 [변경] 모니터 힌트 텍스트 업데이트 (리갈패드 건드리지 않음)
+                    // 예: 
+                    // V 확인완료
+                    // [오른손 트리거] 다음
+                    string nextAction = ApplyHighlightColor(ACTION_TRIGGER_NEXT);
+                    string finalHint = string.Format(HINT_CONFIRMED_FORMAT, nextAction);
+                    
+                    UpdateHintText(finalHint);
+                    
+                    // 모니터 캔버스 클릭 감지
+                    if (CheckMonitorClick())
+                    {
+                        isConditionFullfilled = true;
+                    }
+                }
+                else
+                {
+                    // 아직 안 봤으면 "쳐다보세요" 힌트
+                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
+                    UpdateHintText(originalHint);
+                }
+            }
+            // 2. 기타 조건들
+            else
+            {
+                if (CheckPassiveCondition(currentDialogue.conditionType))
+                    isConditionFullfilled = true;
+            }
+
+            // 조건 달성 시 처리
+            if (isConditionFullfilled)
+            {
+                _conditionMet = true;
+                _conditionMetTime = Time.time;
+                _isWaitingForCondition = false;
+                
+                if (missionBoard) missionBoard.ShowSuccessStamp(true);
+            }
+        }
+        
+        // 다음 진행
+        if (currentDialogue.conditionType == DialogueConditionType.None)
+        {
+            _autoAdvanceTimer += Time.deltaTime;
+            if (_autoAdvanceTimer >= currentDialogue.autoAdvanceTime) AdvanceToNextDialogue();
+        }
+        else if (_conditionMet && Time.time - _conditionMetTime >= currentDialogue.waitAfterCondition)
+        {
+            _conditionMet = false;
+            AdvanceToNextDialogue();
+        }
+    }
+    
+    // 모니터 캔버스 클릭 감지
+    bool CheckMonitorClick()
+    {
+        if (monitorCanvasObject == null) return false;
+
+        // 트리거 확인
+        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+            return false;
+
+        // 레이캐스트 확인
+        GameObject controller = GetControllerObject();
+        if (controller == null) return false;
+
+        Vector3 startPos = controller.transform.position;
+        Vector3 direction = controller.transform.forward;
+
+        RaycastHit hit;
+        if (Physics.Raycast(startPos, direction, out hit, 10f))
+        {
+            Transform hitTx = hit.transform;
+            while (hitTx != null)
+            {
+                if (hitTx.gameObject == monitorCanvasObject) return true;
+                if (hitTx.name.Contains("Monitor") || hitTx.name.Contains("Canvas")) return true;
+                hitTx = hitTx.parent;
+            }
+        }
+        return false;
+    }
+
+    bool CheckGazeAtObject(GameObject target)
+    {
+        if (target == null) return false;
+        GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
+        if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
+        if (centerEye == null) return false;
+        
+        Vector3 eyePos = centerEye.transform.position;
+        Vector3 forward = centerEye.transform.forward;
+        Vector3 dirToTarget = (target.transform.position - eyePos).normalized;
+        float angle = Vector3.Angle(forward, dirToTarget);
+        if (angle > gazeAngleThreshold) return false;
+
+        // SphereCast로 조금 두껍게 쏴서 인식률 높임
+        RaycastHit hit;
+        if (Physics.SphereCast(eyePos, 0.15f, forward, out hit, gazeDetectionDistance))
+        {
+            Transform hitTransform = hit.transform;
+            while (hitTransform != null)
+            {
+                if (hitTransform.gameObject == target) return true;
+                if (hitTransform.name.Contains("LegalPad") || hitTransform.name.Contains("Mission") || hitTransform.name.Contains("Kimbap")) return true;
+                hitTransform = hitTransform.parent;
+            }
+        }
+        return false;
+    }
+
+    bool CheckPassiveCondition(DialogueConditionType conditionType)
+    {
+        switch (conditionType)
+        {
+            case DialogueConditionType.HandMovement:
+                if (!_hasDetectedHandMovement && CheckControllerMovement()) { _hasDetectedHandMovement = true; return true; }
+                break;
+            case DialogueConditionType.TimingBefore:
+                if (conductor != null && conductor.State == RhythmConductor.RhythmState.Judging) return true;
+                break;
+            case DialogueConditionType.RoundSuccess:
+                if (!_roundResultProcessed && _lastRoundResult) { _roundResultProcessed = true; return true; }
+                break;
+            case DialogueConditionType.RoundFail:
+                if (!_roundResultProcessed && !_lastRoundResult) { _roundResultProcessed = true; return true; }
+                break;
+        }
+        return false;
+    }
+    
+    void ShowDialogue(int index)
+    {
+        if (index < 0 || index >= dialogues.Length) { StartMainTutorial(); return; }
+        
+        var dialogue = dialogues[index];
+        string initialHint = "";
+
+        switch (dialogue.conditionType)
+        {
+            case DialogueConditionType.GazeAtKimbap: initialHint = HINT_LOOK_KIMBAP; break;
+            case DialogueConditionType.GazeAtNote: initialHint = HINT_LOOK_NOTE; break;
+        }
+        
+        if (dialogueUI != null)
+        {
+            string coloredText = ApplyHighlightColor(dialogue.dialogueText);
+            dialogueUI.ShowDialogue(coloredText, initialHint);
+        }
+        
+        _autoAdvanceTimer = 0f;
+        _conditionMet = false;
+        _isWaitingForCondition = (dialogue.conditionType != DialogueConditionType.None);
+        
+        // 초기화
+        _hasLookedAtTarget = false; 
+        
+        // 새 대사 나오면 리갈패드 도장 초기화
+        if (_isWaitingForCondition && missionBoard) 
+        {
+            missionBoard.ShowSuccessStamp(false);
+        }
+    }
+
+    void UpdateHintText(string newHint)
+    {
+        if (dialogueUI != null && dialogueUI.hintText != null)
+        {
+            // "V 확인완료" 텍스트가 들어오면, 이미 색상 태그가 있으므로 ApplyHighlightColor를 거치지 않고 바로 넣거나
+            // ApplyHighlightColor 함수가 태그를 망치지 않게 주의해야 함.
+            
+            if (newHint.Contains("V 확인완료"))
+            {
+                 // 이미 색상 처리된 문자열 그대로 사용
+                 if (dialogueUI.hintText.text != newHint)
+                    dialogueUI.hintText.text = newHint;
+            }
+            else
+            {
+                 string colored = ApplyHighlightColor(newHint);
+                 if (dialogueUI.hintText.text != colored)
+                    dialogueUI.hintText.text = colored;
+            }
+            
+            dialogueUI.hintText.gameObject.SetActive(true);
+        }
+    }
+
+    string ApplyHighlightColor(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        return Regex.Replace(input, @"\[(.*?)\]", $"<color={highlightTextColor}>$0</color>");
+    }
+    
+    void SkipAllDialogues()
+    {
+        if (dialogueUI != null) dialogueUI.Hide();
+        StartMainTutorial();
+    }
+    
+    void InitializeControllerPosition()
+    {
+        GameObject controller = GetControllerObject();
+        if (controller != null) { _previousControllerPosition = controller.transform.position; _controllerPositionInitialized = true; }
+    }
+    
+    bool CheckControllerMovement()
+    {
+        if (!_controllerPositionInitialized) { InitializeControllerPosition(); return false; }
+        GameObject controller = GetControllerObject();
+        if (controller == null) return false;
+        Vector3 currentPos = controller.transform.position;
+        float movement = Vector3.Distance(currentPos, _previousControllerPosition);
+        _previousControllerPosition = currentPos;
+        return movement > handMovementThreshold;
+    }
+    
+    GameObject GetControllerObject()
+    {
+        GameObject controller = GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
+        if (controller == null) controller = GameObject.Find("RightControllerAnchor");
+        if (controller == null) controller = GameObject.Find("RightHandAnchor");
+        if (controller == null) controller = GameObject.Find("RightController");
+        return controller;
+    }
+
+    void AdvanceToNextDialogue()
+    {
+        _currentDialogueIndex++;
+        _roundResultProcessed = false;
+        if (_currentDialogueIndex < dialogues.Length) ShowDialogue(_currentDialogueIndex);
+        else StartMainTutorial();
+    }
+    
+    void DisableExistingSystems()
+    {
+        if (tutorialController != null) 
+        { 
+            _tutorialControllerGameObject = tutorialController.gameObject; 
+            tutorialController.enabled = false; 
+            _tutorialControllerGameObject.SetActive(false); 
+        }
+        
+        if (conductor != null) 
+        { 
+            _conductorGameObject = conductor.gameObject; 
+            _originalTutorialMode = conductor.isTutorialMode; 
+            conductor.enabled = false; 
+            _conductorGameObject.SetActive(false); 
+        }
+    }
+    
+    void StartMainTutorial()
+    {
+        if (dialogueUI != null) dialogueUI.Hide();
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
+        
+        if (_conductorGameObject != null && conductor != null)
+        {
+            _conductorGameObject.SetActive(true);
+            conductor.enabled = true;
+            conductor.isTutorialMode = _originalTutorialMode;
+            conductor.OnRoundResult.AddListener(OnRoundResult);
+        }
+        
+        if (_tutorialControllerGameObject != null && tutorialController != null)
+        {
+            _tutorialControllerGameObject.SetActive(true);
+            tutorialController.enabled = true;
+            // ✅ [수정됨] GameObject.SetActive(true)가 OnEnable()을 호출하므로
+            // 여기서 StartTutorial()을 다시 호출하지 않음
+        }
+        
+        this.enabled = false; 
+    }
+    
+    void OnEnable() { if (conductor != null && conductor.enabled) conductor.OnRoundResult.AddListener(OnRoundResult); }
+    void OnDisable() { if (conductor != null) conductor.OnRoundResult.RemoveListener(OnRoundResult); }
+    void OnRoundResult(bool success) { _lastRoundResult = success; _roundResultProcessed = false; }
+}
+
+--------------------------------------------------
+
+--- FILENAME: TutorialDialogueUIController.cs (Assets/2_Stage1/Scripts/TutorialDialogueUIController.cs) ---
+using UnityEngine;
+using TMPro;
+
+public class TutorialDialogueUIController : MonoBehaviour
+{
+    [Header("UI Root")]
+    // [수정됨] Canvas 대신 GameObject로 변경하여 패널을 직접 넣을 수 있게 함
+    public GameObject dialoguePanel; 
+
+    [Header("UI Elements")]
+    public TextMeshProUGUI dialogueText;  // 대사 텍스트
+    public TextMeshProUGUI hintText;      // 힌트 텍스트
+
+    [Header("Colors")]
+    public Color dialogueColor = Color.white;
+    public Color hintColor = Color.yellow;
+
+    [Header("Animation")]
+    public float fadeInDuration = 0.3f;
+    public float fadeOutDuration = 0.3f;
+
+    CanvasGroup _canvasGroup;
+    float _fadeTimer;
+    bool _isFading;
+    bool _targetVisible;
+
+    void Awake()
+    {
+        // dialoguePanel이 연결되어 있는지 확인
+        if (dialoguePanel != null)
+        {
+            // CanvasGroup 컴포넌트 가져오기 (없으면 자동 추가)
+            _canvasGroup = dialoguePanel.GetComponent<CanvasGroup>();
+            if (!_canvasGroup)
+            {
+                _canvasGroup = dialoguePanel.AddComponent<CanvasGroup>();
+            }
+
+            // 초기 상태: 투명하게 만들고 비활성화
+            _canvasGroup.alpha = 0f;
+            dialoguePanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("TutorialDialogueUIController: 대화창 패널(Dialogue Panel)이 연결되지 않았습니다!");
+        }
+    }
+
+    void Update()
+    {
+        HandleFade();
+    }
+
+    void HandleFade()
+    {
+        if (!_isFading || dialoguePanel == null) return;
+
+        _fadeTimer += Time.deltaTime;
+
+        if (_targetVisible)
+        {
+            // 페이드 인 (점점 나타남)
+            float t = Mathf.Clamp01(_fadeTimer / fadeInDuration);
+            _canvasGroup.alpha = t;
+
+            if (t >= 1f) _isFading = false;
+        }
+        else
+        {
+            // 페이드 아웃 (점점 사라짐)
+            float t = Mathf.Clamp01(_fadeTimer / fadeOutDuration);
+            _canvasGroup.alpha = 1f - t;
+
+            if (t >= 1f)
+            {
+                _isFading = false;
+                dialoguePanel.SetActive(false); // 다 사라지면 끄기
+            }
+        }
+    }
+
+    public void ShowDialogue(string text, string hint = "")
+    {
+        if (dialogueText != null)
+        {
+            dialogueText.text = text;
+            dialogueText.color = dialogueColor;
+        }
+
+        if (hintText != null)
+        {
+            if (!string.IsNullOrEmpty(hint))
+            {
+                hintText.text = hint;
+                hintText.color = hintColor;
+                hintText.gameObject.SetActive(true);
+            }
+            else
+            {
+                hintText.gameObject.SetActive(false);
+            }
+        }
+
+        FadeIn();
+    }
+
+    public void FadeIn()
+    {
+        if (dialoguePanel == null || _canvasGroup == null) return;
+
+        if (!dialoguePanel.activeSelf)
+        {
+            dialoguePanel.SetActive(true);
+        }
+
+        _targetVisible = true;
+        _isFading = true;
+        _fadeTimer = 0f;
+    }
+
+    public void FadeOut()
+    {
+        if (_canvasGroup == null) return;
+
+        _targetVisible = false;
+        _isFading = true;
+        _fadeTimer = 0f;
+    }
+
+    public void Hide()
+    {
+        if (hintText != null) hintText.gameObject.SetActive(false);
+        FadeOut();
+    }
+}
+
+--------------------------------------------------
+

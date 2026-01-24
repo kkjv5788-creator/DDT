@@ -180,6 +180,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kimbap.010
       objectReference: {fileID: 0}
+    - target: {fileID: 2189932122111784579, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.x
       value: 3
@@ -604,7 +608,7 @@ MonoBehaviour:
   conductor: {fileID: 463253587}
   resultManager: {fileID: 206060680}
   pauseManager: {fileID: 463253590}
-  toolSwitcher: {fileID: 0}
+  toolSwitcher: {fileID: 463253591}
   missionBoard: {fileID: 918129802}
   panelPlayGame: {fileID: 1978244644}
   panelDialogue: {fileID: 1596034594}
@@ -714,6 +718,11 @@ MonoBehaviour:
   tutorialGroup: {fileID: 1696699492}
   mainGameGroup: {fileID: 206060677}
   missionBoard: {fileID: 918129802}
+  gameFlowManager: {fileID: 206060681}
+  conductor: {fileID: 463253587}
+  mainGameData: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
+  tutorialDialogueController: {fileID: 0}
+  tutorialController: {fileID: 1696699493}
   ambientSource: {fileID: 275202590}
 --- !u!82 &275202590
 AudioSource:
@@ -1326,7 +1335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f36ef4dc6c3a4e478ef04f6a1f002a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
+  data: {fileID: 11400000, guid: 15fd669f2d396e64188f9d576dbf2437, type: 2}
   bgmSource: {fileID: 463253580}
   sfxSource: {fileID: 463253579}
   spawner: {fileID: 463253586}
@@ -4528,8 +4537,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conductor: {fileID: 463253587}
   feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
-  radio: {fileID: 1105228972}
   missionBoard: {fileID: 918129802}
+  modeSelector: {fileID: 275202589}
   salesUIGroup: {fileID: 268026783}
   monitorText: {fileID: 116851612}
   salesText: {fileID: 787213205}
@@ -4552,11 +4561,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a622d8762fa230843aac8f8eb3530839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoStart: 1
   dialogueUI: {fileID: 1696699495}
   missionBoard: {fileID: 918129802}
   tutorialController: {fileID: 1696699493}
   conductor: {fileID: 463253587}
-  feedbackSet: {fileID: 0}
+  feedbackSet: {fileID: 11400000, guid: fcb768101f879d54c9b9a20f321871a0, type: 2}
   kimbapPrefab: {fileID: 1326105553}
   kimbap010Prefab: {fileID: 1326105553}
   monitorCanvasObject: {fileID: 1605435825}

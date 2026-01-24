@@ -68,11 +68,13 @@ public class RhythmConductor : MonoBehaviour
             return;
         }
 
+        _offsetSec = (data ? data.timingOffsetMs : 0f) / 1000f;
+
         // 🔥 BGM 재생 (튜토리얼/메인 모두)
         if (data.bgm)
         {
             bgmSource.clip = data.bgm;
-            bgmSource.loop = true; // 튜토리얼은 반복 재생
+            bgmSource.loop = isTutorialMode; // 튜토리얼은 반복 재생
             bgmSource.Play();
             _bgmStarted = true;
             UnityEngine.Debug.Log($"[RhythmConductor] BGM started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
