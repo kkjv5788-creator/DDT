@@ -30,6 +30,7 @@ public class Stage2UIController_st2 : MonoBehaviour
     public Button btnResume;
     public Button btnPauseRestart;
     public Button btnPauseMain;  // 메인 씬 로드
+    public Button btnPauseQuit;  // ✅ 게임 종료 버튼 추가
 
     [Header("ClosingResult Buttons")]
     public Button btnResultRestart;
@@ -167,6 +168,11 @@ public class Stage2UIController_st2 : MonoBehaviour
             btnPauseRestart.onClick.RemoveAllListeners();
             btnPauseRestart.onClick.AddListener(() => GameFlowController_st2.Instance?.RestartToSelectMode());
         }
+        if (btnPauseQuit != null)
+        {
+            btnPauseQuit.onClick.RemoveAllListeners();
+            btnPauseQuit.onClick.AddListener(QuitGame);
+        }
 
         // ✅ 메인으로 = 메인 씬 로드
         if (btnPauseMain != null)
@@ -188,6 +194,18 @@ public class Stage2UIController_st2 : MonoBehaviour
             btnResultMain.onClick.RemoveAllListeners();
             btnResultMain.onClick.AddListener(() => GameFlowController_st2.Instance?.LoadMainScene());
         }
+    }
+
+    void QuitGame()
+    {
+        // 혹시 timeScale=0으로 멈춰둔 상태면 정상 종료 전 복구(선택)
+        Time.timeScale = 1f;
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // 에디터: 플레이 종료
+#else
+        Application.Quit(); // 빌드: 앱 종료(퀘스트면 홈으로 나감)
+#endif
     }
 
     // =========================
