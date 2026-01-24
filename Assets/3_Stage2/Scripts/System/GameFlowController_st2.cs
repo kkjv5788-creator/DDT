@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GameState_st2;
 
 /// <summary>
@@ -23,6 +24,12 @@ public class GameFlowController_st2 : MonoBehaviour
     public AudioSource bgmSource;
     public AudioClip bgmClip;
 
+    [Header("오디오(SelectMode BGM)")]
+    public AudioSource menuBgmSource;
+    public AudioClip menuBgmClip;
+    public bool menuBgmLoop = true;
+    [Range(0f, 1f)] public float menuBgmVolume = 0.6f;
+
     [Header("BGM 루프 설정")]
     public bool bgmLoopEnabled = true;
     [Min(1)] public int bgmLoopCount = 4;   // 18초 클립을 4번 재생 후 종료
@@ -43,9 +50,13 @@ public class GameFlowController_st2 : MonoBehaviour
     [Header("튜토리얼(옵션)")]
     public StandaloneTutorialController_st2 tutorialController;
 
-    [Header("Pause 시 상호작용 차단(선택)")]
-    [Tooltip("Pause 시 SetActive(false)로 꺼버릴 루트/오브젝트들(예: MainRoot, TutorialRoot, 상호작용 오브젝트들). PauseMenu는 넣지 마세요.")]
-    public GameObject[] pauseBlockObjects;
+    [Header("Pause: Disable these behaviours instead of SetActive")]
+    public Behaviour[] pauseDisableBehaviours;
+
+
+    [Header("Scene Load")]
+    public string mainSceneName = "MainScene"; // 너 메인 씬 이름으로 바꿔
+
 
     // 타이밍 (DSP 기반)
     private double songStartDspTime;
@@ -107,7 +118,24 @@ public class GameFlowController_st2 : MonoBehaviour
     // =========================
     // External UI Entry Points
     // =========================
+    void PlayMenuBgm()
+    {
+        if (menuBgmSource == null || menuBgmClip == null) return;
 
+        if (menuBgmSource.isPlaying && menuBgmSource.clip == menuBgmClip) return;
+
+        menuBgmSource.Stop();
+        menuBgmSource.clip = menuBgmClip;
+        menuBgmSource.loop = menuBgmLoop;
+        menuBgmSource.volume = menuBgmVolume;
+        menuBgmSource.Play();
+    }
+
+    void StopMenuBgm()
+    {
+        if (menuBgmSource == null) return;
+        if (menuBgmSource.isPlaying) menuBgmSource.Stop();
+    }
     public void StartTutorialFromMenu()
     {
         TransitionToTutorial();
@@ -135,6 +163,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
     public void TransitionToMainMenu()
     {
+        ForceUnpauseIfNeeded();
         // 예약 이벤트 정리
         if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
 
@@ -158,18 +187,21 @@ public class GameFlowController_st2 : MonoBehaviour
         SetMainGameActive(false);
         if (tutorialController != null) tutorialController.gameObject.SetActive(false);
 
+        PlayMenuBgm();
         // UI는 SelectMode
         SetState(GameStatest2.MainMenu);
     }
 
     public void TransitionToTutorial()
     {
+        ForceUnpauseIfNeeded();
         // 완전 초기화 후 튜토리얼 진입
         ResetGameState();
 
         // 메인 비활성화
         SetMainGameActive(false);
 
+        StopMenuBgm();
         // 튜토리얼 활성화
         if (tutorialController != null)
             tutorialController.gameObject.SetActive(true);
@@ -182,11 +214,13 @@ public class GameFlowController_st2 : MonoBehaviour
 
     public void TransitionToPlaying()
     {
+        ForceUnpauseIfNeeded();
         ResetGameState();
 
         // 튜토리얼 완전 비활성화
         if (tutorialController != null)
             tutorialController.gameObject.SetActive(false);
+        StopMenuBgm();
 
         // 메인 활성화 + 초기화
         SetMainGameActive(true);
@@ -242,18 +276,12 @@ public class GameFlowController_st2 : MonoBehaviour
         Time.timeScale = 0f;
         AudioListener.pause = true;
 
-        // 메인 BGM pause
         if (bgmSource != null) bgmSource.Pause();
-
-        // 튜토리얼 BGM pause
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.Pause();
 
-        // DSP 보정용
-        pauseStartDspTime = AudioSettings.dspTime;
-
-        // 상호작용 차단(옵션): 루트 꺼버리기
-        SetPauseBlockObjectsActive(false);
+        // ✅ SetActive(false) 대신 컴포넌트 disable
+        SetPauseBehavioursEnabled(false);
     }
 
     public void ResumeGame()
@@ -263,30 +291,44 @@ public class GameFlowController_st2 : MonoBehaviour
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        // BGM resume
         if (bgmSource != null) bgmSource.UnPause();
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.UnPause();
 
-        // Pause 동안 흐른 dspTime 누적 보정
-        pausedDspAccum += (AudioSettings.dspTime - pauseStartDspTime);
+        SetPauseBehavioursEnabled(true);
 
-        // 루트 복구
-        SetPauseBlockObjectsActive(true);
-
-        // 원래 상태로 복귀
         SetState(stateBeforePause);
     }
 
-    void SetPauseBlockObjectsActive(bool active)
+    void SetPauseBehavioursEnabled(bool enabled)
     {
-        if (pauseBlockObjects == null) return;
-        for (int i = 0; i < pauseBlockObjects.Length; i++)
+        if (pauseDisableBehaviours == null) return;
+        foreach (var b in pauseDisableBehaviours)
         {
-            var go = pauseBlockObjects[i];
-            if (go == null) continue;
-            go.SetActive(active);
+            if (b == null) continue;
+            b.enabled = enabled;
         }
+    }
+
+
+
+
+    void ForceUnpauseIfNeeded()
+    {
+        // timeScale / 오디오 복구
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+       
+
+
+        // BGM도 혹시 pause 걸려있으면 풀어줌(선택)
+        if (bgmSource != null) bgmSource.UnPause();
+        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+            tutorialController.tutorialBGMSource.UnPause();
+
+        // 상태가 Paused였다면 이전 상태로 복귀까지는 필요 없고,
+        // 여기서는 "오브젝트 복구"만 보장하면 됨.
     }
 
     // =========================
@@ -395,5 +437,30 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         if (economySystem != null)
             economySystem.ApplyJudgeResult(result);
+    }
+
+    public void LoadMainScene()
+    {
+        ForceUnpauseIfNeeded();
+        // 혹시 Pause/Result 상태에서 나갈 때 안전 정리
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        if (bgmSource != null) bgmSource.Stop();
+
+        // 튜토리얼 BGM도 정리
+        if (tutorialController != null && tutorialController.tutorialBGMSource != null)
+            tutorialController.tutorialBGMSource.Stop();
+        StopMenuBgm();
+
+        // 예약 이벤트/스폰 정리(선택이지만 추천)
+        if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
+        if (molds != null)
+        {
+            foreach (var mold in molds)
+                if (mold != null) mold.CancelAllScheduledSpawns();
+        }
+
+        SceneManager.LoadScene(mainSceneName);
     }
 }
