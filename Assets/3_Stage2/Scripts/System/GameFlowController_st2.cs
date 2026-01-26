@@ -30,6 +30,12 @@ public class GameFlowController_st2 : MonoBehaviour
     public bool menuBgmLoop = true;
     [Range(0f, 1f)] public float menuBgmVolume = 0.6f;
 
+    [Header("오디오(결과 화면 BGM)")]
+    public AudioSource resultBgmSource;   // 없으면 bgmSource 재사용해도 됨
+    public AudioClip resultBgmClip;
+    public bool resultBgmLoop = true;
+    [Range(0f, 1f)] public float resultBgmVolume = 1f;
+
     [Header("BGM 루프 설정")]
     public bool bgmLoopEnabled = true;
     [Min(1)] public int bgmLoopCount = 4;
@@ -154,6 +160,8 @@ public class GameFlowController_st2 : MonoBehaviour
         }
 
         if (bgmSource != null) bgmSource.Stop();
+
+        if (resultBgmSource != null && resultBgmSource.isPlaying) resultBgmSource.Stop();
 
         Time.timeScale = 1f;
         AudioListener.pause = false;
@@ -352,8 +360,29 @@ public class GameFlowController_st2 : MonoBehaviour
             _bestSavedThisRun = true;
         }
 
+        // ✅ 추가: 결과 화면 BGM 전환
+        PlayResultBGM();
+
         SetState(GameStatest2.Result);
     }
+
+    void PlayResultBGM()
+    {
+        // 다른 BGM 정리(메인/메뉴/튜토리얼 등)
+        if (bgmSource && bgmSource.isPlaying) bgmSource.Stop();
+        if (menuBgmSource && menuBgmSource.isPlaying) menuBgmSource.Stop();
+
+        // 결과 BGM 재생
+        var src = resultBgmSource ? resultBgmSource : bgmSource; // fallback
+        if (!src || !resultBgmClip) return;
+
+        if (src.clip != resultBgmClip) src.clip = resultBgmClip;
+        src.loop = resultBgmLoop;
+        src.volume = resultBgmVolume;
+
+        if (!src.isPlaying) src.Play();
+    }
+
 
     // =========================
     // Helpers

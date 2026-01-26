@@ -205,6 +205,10 @@ MonoBehaviour:
   menuBgmClip: {fileID: 8300000, guid: fe786dd9ca3aca1459b90fd4c4c31733, type: 3}
   menuBgmLoop: 1
   menuBgmVolume: 0.6
+  resultBgmSource: {fileID: 1183472829}
+  resultBgmClip: {fileID: 8300000, guid: fe786dd9ca3aca1459b90fd4c4c31733, type: 3}
+  resultBgmLoop: 1
+  resultBgmVolume: 1
   bgmLoopEnabled: 1
   bgmLoopCount: 4
   judgeSystem: {fileID: 873462218}
@@ -1447,7 +1451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1110384203851041796, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1488119654458249219, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1507,7 +1511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2640466017853675944, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441280793615170610, guid: b4e347e492fe36a4e95a2a03d8102f7a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3745,6 +3749,8 @@ MonoBehaviour:
   ignoreGroundMissAfterSuccessSeconds: 10
   judgedCacheSeconds: 0.8
   forceApplyInLateUpdate: 1
+  resetWhenEnterMainMenu: 1
+  resetOnEnable: 0
   currentSpeed: 0
   targetSpeed: 0
   successStreak: 0
