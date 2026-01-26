@@ -11,8 +11,8 @@ public class ResultManager : MonoBehaviour
     [Header("Monitor UI Elements")]
     public GameObject panelClosingResult; // Panel_ClosingResult
     public TextMeshProUGUI textTitle;      // Text_Title
-    public TextMeshProUGUI textFinalTotal;  // Text_FinalTotal
-    public TextMeshProUGUI textComment;     // Text_GradeComment
+    public TextMeshProUGUI textFinalTotal; // Text_FinalTotal
+    public TextMeshProUGUI textComment;    // Text_GradeComment
 
     [Header("Buttons")]
     public Button btnRestart;  // 인스펙터에서 연결
@@ -27,7 +27,11 @@ public class ResultManager : MonoBehaviour
         if (panelClosingResult) panelClosingResult.SetActive(false);
     }
 
-    public void StartTracking(int total) { _gameEnded = false; if (panelClosingResult) panelClosingResult.SetActive(false); }
+    public void StartTracking(int total)
+    {
+        _gameEnded = false;
+        if (panelClosingResult) panelClosingResult.SetActive(false);
+    }
 
     public void EndGame()
     {
@@ -41,24 +45,29 @@ public class ResultManager : MonoBehaviour
     void ShowResult()
     {
         if (panelClosingResult) panelClosingResult.SetActive(true);
+
         if (!gameFlowManager)
         {
             Debug.LogError("[ResultManager] gameFlowManager not assigned.");
             return;
         }
 
-        int totalSales = gameFlowManager.GetCurrentSales(); 
-        
+        int totalSales = gameFlowManager.GetCurrentSales();
+
+        // ✅ Stage1 최고기록(원) 갱신 (로컬 저장)
+        BestWageStore_st2.TryUpdateBest("stage1", totalSales);
+
         if (textTitle) textTitle.text = "< 영 업 정 산 >";
         if (textFinalTotal) textFinalTotal.text = $"{totalSales:N0} 원";
-        
+
         if (textComment)
         {
             if (totalSales >= 50000) textComment.text = "자네, 우리 가게의 보배구만!";
             else if (totalSales >= 10000) textComment.text = "나쁘지 않아. 조금 더 분발하게.";
             else textComment.text = "이래서 월세나 내겠나? 다시 해보게!";
         }
-        gameFlowManager.EnterFinalResult(0); 
+
+        gameFlowManager.EnterFinalResult(0);
     }
 
     void RestartGame()
@@ -79,7 +88,13 @@ public class ResultManager : MonoBehaviour
             Debug.LogError("[ResultManager] gameFlowManager not assigned.");
             return;
         }
+
         Time.timeScale = 1f;
+
+        // ✅ Stage1에서 Main으로 돌아감 → 다음 Main은 Lobby 스폰
+        if (MainEntryState_st2.Instance != null)
+            MainEntryState_st2.Instance.MarkReturnToMain();
+
         gameFlowManager.GoToMainMenu();
     }
 }

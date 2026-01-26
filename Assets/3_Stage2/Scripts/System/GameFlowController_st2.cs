@@ -32,7 +32,7 @@ public class GameFlowController_st2 : MonoBehaviour
 
     [Header("BGM 루프 설정")]
     public bool bgmLoopEnabled = true;
-    [Min(1)] public int bgmLoopCount = 4;   // 18초 클립을 4번 재생 후 종료
+    [Min(1)] public int bgmLoopCount = 4;
 
     [Header("시스템 참조")]
     public JudgeSystem_st2 judgeSystem;
@@ -53,10 +53,8 @@ public class GameFlowController_st2 : MonoBehaviour
     [Header("Pause: Disable these behaviours instead of SetActive")]
     public Behaviour[] pauseDisableBehaviours;
 
-
     [Header("Scene Load")]
-    public string mainSceneName = "MainScene"; // 너 메인 씬 이름으로 바꿔
-
+    public string mainSceneName = "MainScene";
 
     // 타이밍 (DSP 기반)
     private double songStartDspTime;
@@ -65,7 +63,10 @@ public class GameFlowController_st2 : MonoBehaviour
     private double pauseStartDspTime = 0.0;
 
     private GameStatest2 stateBeforePause = GameStatest2.MainMenu;
-    private bool pausedTimeScale = false; // ✅ 실제 게임 진행중일 때만 timeScale/audio를 멈출지
+    private bool pausedTimeScale = false;
+
+    // ✅ Stage2 최고기록 저장 중복 방지
+    private bool _bestSavedThisRun = false;
 
     void Awake()
     {
@@ -75,7 +76,6 @@ public class GameFlowController_st2 : MonoBehaviour
 
     void Start()
     {
-        // 시스템 초기화
         if (molds != null)
         {
             foreach (var mold in molds)
@@ -85,27 +85,23 @@ public class GameFlowController_st2 : MonoBehaviour
         if (uiController != null)
             uiController.Initialize(economySystem, bagManager, patternDirector, judgeSystem);
 
-        // 중앙 이벤트 연결
         if (judgeSystem != null)
             judgeSystem.OnJudgeResult += OnJudgeResult;
 
-        // 시작은 무조건 SelectMode(사용자 선택)
         TransitionToMainMenu();
     }
 
     void Update()
     {
-        // ✅ A 버튼(오큘러스 오른손 A = Button.One) → 결과 화면이 아닐 때 Pause 토글
-        // (튜토리얼 스킵은 B로 변경됨)
         if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
-            if (CurrentState == GameStatest2.Playing || CurrentState == GameStatest2.Tutorial || CurrentState == GameStatest2.Paused || CurrentState == GameStatest2.MainMenu)
+            if (CurrentState == GameStatest2.Playing || CurrentState == GameStatest2.Tutorial ||
+                CurrentState == GameStatest2.Paused || CurrentState == GameStatest2.MainMenu)
             {
                 TogglePause();
             }
         }
 
-        // 곡 종료 체크 (총 루프 횟수 기준 / Pause 보정 포함)
         if (CurrentState == GameStatest2.Playing && !isEndingTriggered)
         {
             if (GetSongProgress01(out double elapsed, out double total, out double _))
@@ -122,7 +118,6 @@ public class GameFlowController_st2 : MonoBehaviour
     void PlayMenuBgm()
     {
         if (menuBgmSource == null || menuBgmClip == null) return;
-
         if (menuBgmSource.isPlaying && menuBgmSource.clip == menuBgmClip) return;
 
         menuBgmSource.Stop();
@@ -137,77 +132,52 @@ public class GameFlowController_st2 : MonoBehaviour
         if (menuBgmSource == null) return;
         if (menuBgmSource.isPlaying) menuBgmSource.Stop();
     }
-    public void StartTutorialFromMenu()
-    {
-        TransitionToTutorial();
-    }
 
-    public void StartMainGameFromMenu()
-    {
-        TransitionToPlaying();
-    }
-
-    public void BackToSelectMode()
-    {
-        TransitionToMainMenu();
-    }
-
-    public void RestartToSelectMode()
-    {
-        // 게임을 "다시하기" 요구사항: SelectMode로 복귀 + 완전 초기화 + BGM도 초기화
-        TransitionToMainMenu();
-    }
+    public void StartTutorialFromMenu() => TransitionToTutorial();
+    public void StartMainGameFromMenu() => TransitionToPlaying();
+    public void BackToSelectMode() => TransitionToMainMenu();
+    public void RestartToSelectMode() => TransitionToMainMenu();
 
     // =========================
     // State Transitions
     // =========================
-
     public void TransitionToMainMenu()
     {
         ForceUnpauseIfNeeded();
-        // 예약 이벤트 정리
+
         if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
 
-        // Mold 스폰 취소
         if (molds != null)
         {
             foreach (var mold in molds)
                 if (mold != null) mold.CancelAllScheduledSpawns();
         }
 
-        // 오디오 정지
         if (bgmSource != null) bgmSource.Stop();
 
-        // 시간/오디오/플래그 초기화
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
         ResetGameState();
 
-        // 메인/튜토리얼 비활성화
         SetMainGameActive(false);
         if (tutorialController != null) tutorialController.gameObject.SetActive(false);
 
         PlayMenuBgm();
-        // UI는 SelectMode
         SetState(GameStatest2.MainMenu);
     }
 
     public void TransitionToTutorial()
     {
         ForceUnpauseIfNeeded();
-        // 완전 초기화 후 튜토리얼 진입
         ResetGameState();
 
-        // 메인 비활성화
         SetMainGameActive(false);
 
         StopMenuBgm();
-        // 튜토리얼 활성화
         if (tutorialController != null)
             tutorialController.gameObject.SetActive(true);
 
-        // BGM(메인)은 끔
         if (bgmSource != null) bgmSource.Stop();
 
         SetState(GameStatest2.Tutorial);
@@ -218,19 +188,16 @@ public class GameFlowController_st2 : MonoBehaviour
         ForceUnpauseIfNeeded();
         ResetGameState();
 
-        // 튜토리얼 완전 비활성화
         if (tutorialController != null)
             tutorialController.gameObject.SetActive(false);
         StopMenuBgm();
 
-        // 메인 활성화 + 초기화
         SetMainGameActive(true);
 
         if (judgeSystem != null) judgeSystem.ResetStats();
         if (economySystem != null) economySystem.Reset();
         if (bagManager != null) bagManager.Reset();
 
-        // ===== BGM 시작 (루프 N회 후 종료) =====
         songStartDspTime = AudioSettings.dspTime;
         pausedDspAccum = 0.0;
         pauseStartDspTime = 0.0;
@@ -260,7 +227,6 @@ public class GameFlowController_st2 : MonoBehaviour
     // =========================
     // Pause
     // =========================
-
     public void TogglePause()
     {
         if (CurrentState == GameStatest2.Paused) ResumeGame();
@@ -271,21 +237,14 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         if (CurrentState == GameStatest2.Result) return;
 
-        // ✅ 지금 상태 저장
         stateBeforePause = CurrentState;
-
-        // ✅ Playing/Tutorial일 때만 '진짜 정지' (메뉴에서는 UI 애니메이션 멈출 수 있어서)
         pausedTimeScale = (stateBeforePause == GameStatest2.Playing || stateBeforePause == GameStatest2.Tutorial);
 
-        // ✅ Pause 보정 시작점 기록 (Playing일 때만 의미있긴 하지만, 있어도 무해)
         pauseStartDspTime = AudioSettings.dspTime;
-
-        // ✅ 상태 먼저 Paused로
         SetState(GameStatest2.Paused);
 
         if (pausedTimeScale)
         {
-            // (선택) 예약 이벤트/스폰 정리
             if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
             if (molds != null)
             {
@@ -304,10 +263,7 @@ public class GameFlowController_st2 : MonoBehaviour
         }
         else
         {
-            // ✅ MainMenu에서 Pause 걸면: 메뉴 BGM만 멈추고 싶으면 이거 켜
             if (menuBgmSource != null) menuBgmSource.Pause();
-
-            // TimeScale/AudioListener는 건드리지 않음
         }
     }
 
@@ -315,7 +271,6 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         if (CurrentState != GameStatest2.Paused) return;
 
-        // ✅ Pause 보정 누적 (Playing/Tutorial에서만 실질적으로 의미)
         double now = AudioSettings.dspTime;
         if (pauseStartDspTime > 0.0)
             pausedDspAccum += (now - pauseStartDspTime);
@@ -334,13 +289,11 @@ public class GameFlowController_st2 : MonoBehaviour
         }
         else
         {
-            // ✅ MainMenu였다면 메뉴 BGM 다시 재생
             if (menuBgmSource != null) menuBgmSource.UnPause();
         }
 
         SetState(stateBeforePause);
     }
-
 
     void SetPauseBehavioursEnabled(bool enabled)
     {
@@ -352,46 +305,30 @@ public class GameFlowController_st2 : MonoBehaviour
         }
     }
 
-
-
-
     void ForceUnpauseIfNeeded()
     {
-        // timeScale / 오디오 복구
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-       
-
-
-        // BGM도 혹시 pause 걸려있으면 풀어줌(선택)
         if (bgmSource != null) bgmSource.UnPause();
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.UnPause();
-
-        // 상태가 Paused였다면 이전 상태로 복귀까지는 필요 없고,
-        // 여기서는 "오브젝트 복구"만 보장하면 됨.
     }
 
     // =========================
     // Ending / Result
     // =========================
-
     void TriggerEnding()
     {
         isEndingTriggered = true;
 
-        // Mold 스폰 취소
         if (molds != null)
         {
             foreach (var mold in molds)
                 if (mold != null) mold.CancelAllScheduledSpawns();
         }
 
-        // 남은 fish 강제 Miss 처리
         if (judgeSystem != null) judgeSystem.ForceResolveAll();
-
-        // 현재 봉투 완성
         if (bagManager != null) bagManager.FinalizeBag();
 
         StartCoroutine(TransitionToResultDelayed(0.5f));
@@ -399,16 +336,21 @@ public class GameFlowController_st2 : MonoBehaviour
 
     IEnumerator TransitionToResultDelayed(float delay)
     {
-        // TimeScale 0에 멈추지 않게 WaitForSecondsRealtime 사용
         yield return new WaitForSecondsRealtime(delay);
         TransitionToResult();
     }
 
     void TransitionToResult()
     {
-        // Result 진입 전 Pause 해제
         if (CurrentState == GameStatest2.Paused)
             ResumeGame();
+
+        // ✅ Stage2 최고기록(원) 갱신: 결과 진입 시 1회만
+        if (!_bestSavedThisRun && economySystem != null)
+        {
+            BestWageStore_st2.TryUpdateBest("stage2", economySystem.currentWage);
+            _bestSavedThisRun = true;
+        }
 
         SetState(GameStatest2.Result);
     }
@@ -416,7 +358,6 @@ public class GameFlowController_st2 : MonoBehaviour
     // =========================
     // Helpers
     // =========================
-
     void SetMainGameActive(bool active)
     {
         if (molds != null)
@@ -440,7 +381,9 @@ public class GameFlowController_st2 : MonoBehaviour
     {
         isEndingTriggered = false;
 
-        // 타이밍 초기화
+        // ✅ 최고기록 저장 플래그 초기화
+        _bestSavedThisRun = false;
+
         songStartDspTime = 0.0;
         songEndDspTime = 0.0;
         pausedDspAccum = 0.0;
@@ -457,9 +400,6 @@ public class GameFlowController_st2 : MonoBehaviour
         OnStateChanged?.Invoke(newState);
     }
 
-    /// <summary>
-    /// 메인 BGM의 "Pause 보정 포함" 진행시간/총시간/정규화 값을 얻는다.
-    /// </summary>
     public bool GetSongProgress01(out double effectiveElapsed, out double totalDuration, out double normalized01)
     {
         effectiveElapsed = 0;
@@ -474,28 +414,26 @@ public class GameFlowController_st2 : MonoBehaviour
         return true;
     }
 
-    // 중앙 이벤트 핸들러
     void OnJudgeResult(JudgeResult_st2 result, float delta)
     {
         if (economySystem != null)
             economySystem.ApplyJudgeResult(result);
     }
 
+    // ✅ Stage2에서 Main 씬으로 돌아가기
     public void LoadMainScene()
     {
         ForceUnpauseIfNeeded();
-        // 혹시 Pause/Result 상태에서 나갈 때 안전 정리
+
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
         if (bgmSource != null) bgmSource.Stop();
 
-        // 튜토리얼 BGM도 정리
         if (tutorialController != null && tutorialController.tutorialBGMSource != null)
             tutorialController.tutorialBGMSource.Stop();
         StopMenuBgm();
 
-        // 예약 이벤트/스폰 정리(선택이지만 추천)
         if (patternDirector != null) patternDirector.ClearAllScheduledEvents();
         if (molds != null)
         {
@@ -503,6 +441,11 @@ public class GameFlowController_st2 : MonoBehaviour
                 if (mold != null) mold.CancelAllScheduledSpawns();
         }
 
+        // ✅ Stage2 → Main 복귀 표시 (다음 Main은 Lobby 스폰)
+        if (MainEntryState_st2.Instance != null)
+            MainEntryState_st2.Instance.MarkReturnToMain();
+
         SceneManager.LoadScene(mainSceneName);
     }
 }
+
