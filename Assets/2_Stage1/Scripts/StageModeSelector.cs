@@ -24,12 +24,16 @@ public class StageModeSelector : MonoBehaviour
     public AudioSource ambientSource;
     public AudioClip menuBgmClip; 
 
-    void Start()
+// [수정] Start 대신 OnEnable 사용
+    // 이 오브젝트가 켜질 때마다(돌아올 때마다) 실행됨
+    void OnEnable()
     {
+        // 1. 패널 초기화
         if (selectionPanel) selectionPanel.SetActive(true);
         if (tutorialGroup) tutorialGroup.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(false);
 
+        // 2. 미션 보드 초기화
         if (missionBoard)
         {
             missionBoard.InitializeUI();
@@ -38,15 +42,23 @@ public class StageModeSelector : MonoBehaviour
             missionBoard.ShowSuccessStamp(false);
         }
 
+        // 3. [핵심] BGM 다시 재생하기
         if (ambientSource)
         {
             if (menuBgmClip != null) ambientSource.clip = menuBgmClip;
+            
+            // 이미 재생 중이 아니라면 재생!
             if (!ambientSource.isPlaying)
             {
-                ambientSource.loop = true;
                 ambientSource.Play();
             }
         }
+    }
+
+    // Start는 이제 비워두거나 다른 초기화 로직만 남깁니다.
+    void Start()
+    {
+        // (OnEnable에서 다 처리했으므로 여기는 비워도 됩니다)
     }
 
     public void OnClick_StartTutorial()
