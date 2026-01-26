@@ -121,16 +121,23 @@ void Start()
                     currentHitObject = hitObj;
                     PlayFeedback(); // 소리/진동
 
-                    // // 1. 아웃라인 켜기
+                    // 1. 아웃라인 켜기
                     var outline = hitObj.GetComponentInParent<Outline>();
                     if (outline != null)
                     {
-                        outline.enabled = true;
-                        outline.OutlineColor = hoverLaserColor;
-                        outline.OutlineWidth = 5f; // 두께 조절 가능
-                        currentOutline = outline;
-                    }
+                        // ▼▼▼ [수정] Door 레이어인지 확인 (맞은 놈 or 아웃라인 붙은 놈)
+                        int doorLayer = LayerMask.NameToLayer("Door");
+                        bool isDoor = (hitObj.layer == doorLayer || outline.gameObject.layer == doorLayer);
 
+                        // Door가 "아닐 때만" 아웃라인을 켭니다.
+                        if (!isDoor)
+                        {
+                            outline.enabled = true;
+                            outline.OutlineColor = hoverLaserColor;
+                            outline.OutlineWidth = 5f; 
+                            currentOutline = outline;
+                        }
+                    }
                     // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
                     var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
                     if (canvasGroup != null)
