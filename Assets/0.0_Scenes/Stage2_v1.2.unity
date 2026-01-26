@@ -747,7 +747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &68957827
 Transform:
   m_ObjectHideFlags: 0
@@ -5976,6 +5976,10 @@ PrefabInstance:
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1019599141247513461, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1177265420557587492, guid: cff23a4a45bfec240b1706c6aff4a213, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -7089,7 +7093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1957287228
 MonoBehaviour:
   m_ObjectHideFlags: 0
