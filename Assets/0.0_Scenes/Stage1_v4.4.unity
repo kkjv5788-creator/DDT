@@ -700,7 +700,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: baa10e22530d2894da66228abc09cb92, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -6129,7 +6129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &724250694761190295
 GameObject:
   m_ObjectHideFlags: 0
@@ -7050,10 +7050,10 @@ RectTransform:
   - {fileID: 7604226755592998849}
   m_Father: {fileID: 1890782977628354496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 465, y: -125}
+  m_SizeDelta: {x: 230, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!65 &2093147667751345906
 BoxCollider:
@@ -7446,6 +7446,7 @@ GameObject:
   - component: {fileID: 2472628103988460231}
   - component: {fileID: 4944186493207739309}
   - component: {fileID: 1736076267374520471}
+  - component: {fileID: 8844845108099338440}
   m_Layer: 5
   m_Name: Btn_Game
   m_TagString: Untagged
@@ -7914,10 +7915,10 @@ RectTransform:
   - {fileID: 8804836391226043839}
   m_Father: {fileID: 1890782977628354496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1005, y: -125}
+  m_SizeDelta: {x: 230, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3325866444208802393
 CanvasRenderer:
@@ -8261,10 +8262,10 @@ RectTransform:
   - {fileID: 1657736730168108755}
   m_Father: {fileID: 1890782977628354496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 735, y: -125}
+  m_SizeDelta: {x: 230, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4049869144305981509
 GameObject:
@@ -9545,10 +9546,10 @@ RectTransform:
   - {fileID: 103281961649591004}
   m_Father: {fileID: 1890782977628354496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 195, y: -125}
+  m_SizeDelta: {x: 230, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6601125893055917555
 GameObject:
@@ -9644,6 +9645,7 @@ GameObject:
   - component: {fileID: 6494648695258819336}
   - component: {fileID: 4390004509059082850}
   - component: {fileID: 6946488609975449944}
+  - component: {fileID: 6946488609975449945}
   m_Layer: 5
   m_Name: Btn_Tutorial
   m_TagString: Untagged
@@ -9958,6 +9960,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!65 &6946488609975449945
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6730340969324410021}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 700, y: 160, z: 1}
+  m_Center: {x: 0, y: 0, z: -0.1}
 --- !u!1 &6948357345810632207
 GameObject:
   m_ObjectHideFlags: 0
@@ -11685,6 +11708,27 @@ RectTransform:
   m_AnchoredPosition: {x: -0, y: -200}
   m_SizeDelta: {x: 700, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!65 &8844845108099338440
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2672837790280770922}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 700, y: 160, z: 1}
+  m_Center: {x: 0, y: 0, z: -0.1}
 --- !u!222 &8960230807202000882
 CanvasRenderer:
   m_ObjectHideFlags: 0
