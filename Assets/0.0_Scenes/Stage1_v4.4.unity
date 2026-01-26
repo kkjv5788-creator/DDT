@@ -175,19 +175,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.129
+      value: -2.221
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -195,7 +195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.692
+      value: 1.552
       objectReference: {fileID: 0}
     - target: {fileID: 7921251742114593978, guid: eeb5a99489d68a847a48e3f960e78ab7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -372,7 +372,7 @@ MonoBehaviour:
   visualResistance: {fileID: 166628889}
   rightHand: 1
   sfxSource: {fileID: 463253580}
-  sliceCooldown: 0.5
+  sliceCooldown: 0.3
   sameKimbapCooldown: 0.3
 --- !u!114 &166628889
 MonoBehaviour:
@@ -416,9 +416,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1465827305}
   rb: {fileID: 166628893}
-  positionLerp: 0.3
+  positionLerp: 0.5
   rotationLerp: 0.45
-  maxMoveSpeed: 8
+  maxMoveSpeed: 20
   maxTurnSpeed: 540
 --- !u!65 &166628892
 BoxCollider:
@@ -450,8 +450,8 @@ Rigidbody:
   m_GameObject: {fileID: 166628886}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 2
-  m_AngularDrag: 5
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -466,7 +466,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!4 &166628894
 Transform:
@@ -3046,7 +3046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 625271588722717707, guid: 0196eeedc311552429a011a24996afd4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3655,7 +3655,7 @@ Transform:
   m_GameObject: {fileID: 1447421702}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.8410001, y: -0.69000006, z: -3.912}
+  m_LocalPosition: {x: 0.8410001, y: -0.69000006, z: -4.046}
   m_LocalScale: {x: 60, y: 60, z: 106}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3762,7 +3762,7 @@ Transform:
   m_GameObject: {fileID: 1465827304}
   serializedVersion: 2
   m_LocalRotation: {x: -0.61152714, y: -0, z: 0, w: -0.7912235}
-  m_LocalPosition: {x: 0, y: 0, z: 0.64}
+  m_LocalPosition: {x: 0, y: 0, z: 0.54}
   m_LocalScale: {x: 0.70000005, y: 0.7000008, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4651,7 +4651,7 @@ Transform:
   m_GameObject: {fileID: 1738143753}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.8410001, y: -0.69000006, z: -3.82}
+  m_LocalPosition: {x: 0.8410001, y: -0.69000006, z: -4.046}
   m_LocalScale: {x: 60, y: 60, z: 106}
   m_ConstrainProportionsScale: 0
   m_Children: []

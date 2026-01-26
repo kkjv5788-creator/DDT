@@ -5,8 +5,8 @@ public enum DialogueConditionType
 {
     None,                           // 조건 없음 (자동 진행)
     RightTriggerButtonClick,        // (사용 안 함)
-    GazeAtKimbap,                   // 김밥 확인 -> 캔버스 클릭
-    GazeAtNote,                     // 노트 확인 -> 캔버스 클릭
+    GazeAtKimbap,                   // 김밥 확인 -> 트리거 클릭
+    GazeAtNote,                     // 노트 확인 -> 트리거 클릭
     HandMovement,                   // 손 움직임 감지
     TimingBefore,                   // 타이밍 직전
     RoundSuccess,                   // 라운드 성공
@@ -32,7 +32,6 @@ public class TutorialDialogueController : MonoBehaviour
     [Header("Start")]
     public bool autoStart = false; 
 
-    // ▼▼▼ [추가] 인스펙터에서 직접 음악 파일을 넣는 곳 ▼▼▼
     [Header("Audio Settings")]
     public AudioClip tutorialBgmClip; 
 
@@ -44,7 +43,6 @@ public class TutorialDialogueController : MonoBehaviour
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
 
-    // ▼▼▼ [필수] 시야 감지용 카메라 (인스펙터에서 OVRCameraRig의 CenterEyeAnchor 연결) ▼▼▼
     public Transform centerEyeAnchor; 
     
     [Header("Target Objects")]
@@ -56,22 +54,22 @@ public class TutorialDialogueController : MonoBehaviour
     public TutorialDialogue[] dialogues;
 
     [Header("Settings")]
-    public float gazeDetectionDistance = 20f; // 거리 넉넉하게 수정
-    public float gazeRadius = 0.15f;          // 시선 판정 두께 (지름 30cm)
+    public float gazeDetectionDistance = 20f; 
+    public float gazeRadius = 0.15f;          
     public float handMovementThreshold = 0.1f;
 
     [Tooltip("시선 감지 시 무시할 레이어 (칼 등)")]
-    public LayerMask gazeLayerMask = ~0;      // 기본값: 모든 레이어
+    public LayerMask gazeLayerMask = ~0;      
 
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FFD700";
 
-    // 힌트 텍스트 모음
+    // 힌트 텍스트
     private const string HINT_LOOK_KIMBAP = "김밥을 바라보세요";
     private const string HINT_LOOK_NOTE = "왼쪽 주문서를 바라보세요";
     
     private const string HINT_CONFIRMED_FORMAT = "<color=#00FF00>V 확인완료</color>\n{0}"; 
-    private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음";
+    private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음"; // 텍스트 유지
 
     // 내부 변수
     private int _currentDialogueIndex = 0;
@@ -100,7 +98,6 @@ public class TutorialDialogueController : MonoBehaviour
     
     void Start()
     {
-        // 카메라 자동 찾기 (안전장치)
         if (centerEyeAnchor == null)
         {
             var rig = FindObjectOfType<OVRCameraRig>();
@@ -118,7 +115,6 @@ public class TutorialDialogueController : MonoBehaviour
     {
         InitializeControllerPosition();
 
-        // 김밥과 모니터 켜기
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
         if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
 
@@ -132,17 +128,14 @@ public class TutorialDialogueController : MonoBehaviour
             missionBoard.UpdateMission("모니터를 보세요", 0, 1);
         }
 
-        // ▼▼▼ [수정] BGM 재생 로직 ▼▼▼
         if (conductor && conductor.bgmSource)
         {
-            // 1순위: 인스펙터에 넣은 클립
             if (tutorialBgmClip != null)
             {
                 conductor.bgmSource.clip = tutorialBgmClip;
                 conductor.bgmSource.loop = true;
                 conductor.bgmSource.Play();
             }
-            // 2순위: 데이터에 있는 클립
             else if (tutorialController && tutorialController.tutorialTriggerList)
             {
                 var bgm = tutorialController.tutorialTriggerList.bgm;
@@ -155,7 +148,6 @@ public class TutorialDialogueController : MonoBehaviour
             }
         }
 
-        // 대사 시작
         if (dialogues != null && dialogues.Length > 0)
         {
             if (dialogueUI == null)
@@ -164,7 +156,6 @@ public class TutorialDialogueController : MonoBehaviour
                 StartMainTutorial();
                 return;
             }
-
             ShowDialogue(0);
         }
         else
@@ -180,34 +171,30 @@ public class TutorialDialogueController : MonoBehaviour
 
         var currentDialogue = dialogues[_currentDialogueIndex];
         
-        // 조건 체크
         if (_isWaitingForCondition)
         {
             bool isConditionFullfilled = false;
 
-            // 1. 시선 감지 타입
             if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap || 
                 currentDialogue.conditionType == DialogueConditionType.GazeAtNote)
             {
                 GameObject target = null;
                 if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
-                    target = kimbapPrefab; // 혹은 kimbap010Prefab (상황에 맞춰 사용)
+                    target = kimbapPrefab; 
                 else if (missionBoard)
                     target = missionBoard.gameObject;
 
                 if (target == null && currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
-                     target = kimbap010Prefab; // 예비용
+                     target = kimbap010Prefab;
 
                 if (!target) return;
                 
-                // 현재 쳐다보고 있는지 확인 (개선된 함수 사용)
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
                 if (isCurrentlyLooking) 
                 {
                     _hasLookedAtTarget = true;
                 }
 
-                // 봤던 적이 있으면
                 if (_hasLookedAtTarget)
                 {
                     string nextAction = ApplyHighlightColor(ACTION_TRIGGER_NEXT);
@@ -215,7 +202,7 @@ public class TutorialDialogueController : MonoBehaviour
                     
                     UpdateHintText(finalHint);
                     
-                    // 모니터 캔버스 클릭 감지
+                    // ▼▼▼ [수정됨] 그냥 트리거 누르면 통과 (CheckMonitorClick 이름은 유지) ▼▼▼
                     if (CheckMonitorClick())
                     {
                         isConditionFullfilled = true;
@@ -223,20 +210,17 @@ public class TutorialDialogueController : MonoBehaviour
                 }
                 else
                 {
-                    // 아직 안 봤으면 "쳐다보세요" 힌트
                     string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ?
                         HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
                     UpdateHintText(originalHint);
                 }
             }
-            // 2. 기타 조건들
             else
             {
                 if (CheckPassiveCondition(currentDialogue.conditionType))
                     isConditionFullfilled = true;
             }
 
-            // 조건 달성 시 처리
             if (isConditionFullfilled)
             {
                 _conditionMet = true;
@@ -247,7 +231,6 @@ public class TutorialDialogueController : MonoBehaviour
             }
         }
         
-        // 다음 진행
         if (currentDialogue.conditionType == DialogueConditionType.None)
         {
             _autoAdvanceTimer += Time.deltaTime;
@@ -260,37 +243,18 @@ public class TutorialDialogueController : MonoBehaviour
         }
     }
     
-    // [수정됨] 모니터 클릭 감지 (SphereCast 적용으로 판정 개선)
+    // ▼▼▼ [핵심 수정] 조준(Raycast) 삭제 -> 단순 입력 체크로 변경 ▼▼▼
     bool CheckMonitorClick()
     {
-        if (monitorCanvasObject == null) return false;
-
-        // 오른쪽 트리거 버튼 클릭
-        if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
-            return false;
-
-        GameObject controller = GetControllerObject();
-        if (controller == null) return false;
-
-        Vector3 startPos = controller.transform.position;
-        Vector3 direction = controller.transform.forward;
-
-        RaycastHit hit;
-        // Raycast -> SphereCast (5cm 두께)
-        if (Physics.SphereCast(startPos, 0.05f, direction, out hit, 10f, gazeLayerMask))
+        // 어디를 보고 있든 상관없이 오른손 트리거만 누르면 OK
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
         {
-            Transform hitTx = hit.transform;
-            while (hitTx != null)
-            {
-                if (hitTx.gameObject == monitorCanvasObject) return true;
-                if (hitTx.name.Contains("Monitor") || hitTx.name.Contains("Canvas")) return true;
-                hitTx = hitTx.parent;
-            }
+            return true;
         }
         return false;
     }
 
-    // [핵심 수정됨] 시선 감지 (각도 계산 제거 + SphereCast + 계층 구조 확인)
+    // 시선 감지 (SphereCast + 계층 구조)
     bool CheckGazeAtObject(GameObject target)
     {
         if (target == null) return false;
@@ -299,32 +263,22 @@ public class TutorialDialogueController : MonoBehaviour
         Vector3 eyePos = centerEyeAnchor.position;
         Vector3 forward = centerEyeAnchor.forward;
 
-        // 디버깅용 시선 표시
         Debug.DrawRay(eyePos, forward * gazeDetectionDistance, Color.green);
 
         RaycastHit hit;
-        // SphereCast: 두꺼운 빔 발사 (gazeRadius: 기본 0.15f)
         if (Physics.SphereCast(eyePos, gazeRadius, forward, out hit, gazeDetectionDistance, gazeLayerMask))
         {
             Transform hitTransform = hit.transform;
-            
-            // 맞은 물체의 부모를 거슬러 올라가며 타겟 확인
             while (hitTransform != null)
             {
-                // 1. 타겟 오브젝트와 일치하는가?
                 if (hitTransform.gameObject == target) return true;
-                
-                // 2. 이름에 키워드가 포함되어 있는가? (유연한 처리)
                 if (hitTransform.name.Contains("LegalPad") || 
                     hitTransform.name.Contains("Mission") || 
                     hitTransform.name.Contains("Kimbap")) 
                 {
                     return true;
                 }
-
-                // 3. 타겟의 자식을 쳐다봤는가?
                 if (hitTransform.IsChildOf(target.transform)) return true;
-
                 hitTransform = hitTransform.parent;
             }
         }
@@ -462,21 +416,17 @@ public class TutorialDialogueController : MonoBehaviour
             _originalTutorialMode = conductor.isTutorialMode; 
             
             conductor.enabled = false; 
-            // 🔥 [중요 수정] 오디오 재생을 위해 Conductor 오브젝트는 끄지 않습니다.
-            // _conductorGameObject.SetActive(false); 
         }
     }
     
     void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
-        // 실습 단계로 넘어가면 대화용 김밥은 끕니다.
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
         
         if (_conductorGameObject != null && conductor != null)
         {
-            // _conductorGameObject.SetActive(true); // 이미 켜져 있음
-            conductor.enabled = true; // Update 다시 시작
+            conductor.enabled = true; 
             conductor.isTutorialMode = _originalTutorialMode;
             conductor.OnRoundResult.AddListener(OnRoundResult);
         }
