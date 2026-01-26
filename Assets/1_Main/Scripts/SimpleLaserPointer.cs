@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class SimpleLaserPointer : MonoBehaviour
 {
     [Header("1. 레이저 설정")]
-    public float maxDistance = 5.0f;
+    public float maxDistance = 10.0f;
     public float laserWidth = 0.005f;
 
     public LayerMask layerMask = ~0;
