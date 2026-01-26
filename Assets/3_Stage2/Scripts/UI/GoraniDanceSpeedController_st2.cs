@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static GameState_st2;
 
@@ -45,6 +46,13 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
     [Tooltip("다른 스크립트가 speed=1 덮어써도 이기려면 TRUE")]
     [SerializeField] private bool forceApplyInLateUpdate = true;
 
+    [Header("Reset")]
+    [Tooltip("게임 재시작으로 MainMenu 상태로 돌아가면 속도/연속/캐시를 초기화")]
+    [SerializeField] private bool resetWhenEnterMainMenu = true;
+
+    [Tooltip("이 컴포넌트가 Enable될 때도 초기화")]
+    [SerializeField] private bool resetOnEnable = false;
+
     [Header("Debug (Read Only)")]
     [SerializeField] private float currentSpeed;
     [SerializeField] private float targetSpeed;
@@ -58,6 +66,8 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
     private readonly Dictionary<int, float> _recentSuccess = new();
     private readonly List<int> _removeKeys = new();
 
+    private GameFlowController_st2 _flow;
+
     private void Reset()
     {
         if (!hub) hub = GetComponent<Stage2EventHub_st2>();
@@ -69,23 +79,36 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
         if (!hub) hub = GetComponent<Stage2EventHub_st2>();
         AutoCollectAnimators();
 
-        currentSpeed = ClampSpeed(startSpeed);
-        targetSpeed = currentSpeed;
-        ApplySpeed(currentSpeed);
+        ResetSpeedState(applyImmediately: true);
     }
 
     private void OnEnable()
     {
-        if (hub == null) return;
-        hub.JudgeResolved += OnJudgeResolved;
-        hub.FishConsumeRequested += OnFishConsumeRequested;
+        if (hub != null)
+        {
+            hub.JudgeResolved += OnJudgeResolved;
+            hub.FishConsumeRequested += OnFishConsumeRequested;
+        }
+
+        // ✅ 게임 재시작 감지(상태 MainMenu로 복귀)
+        _flow = GameFlowController_st2.Instance;
+        if (_flow != null)
+            _flow.OnStateChanged += OnGameStateChanged;
+
+        if (resetOnEnable)
+            ResetSpeedState(applyImmediately: true);
     }
 
     private void OnDisable()
     {
-        if (hub == null) return;
-        hub.JudgeResolved -= OnJudgeResolved;
-        hub.FishConsumeRequested -= OnFishConsumeRequested;
+        if (hub != null)
+        {
+            hub.JudgeResolved -= OnJudgeResolved;
+            hub.FishConsumeRequested -= OnFishConsumeRequested;
+        }
+
+        if (_flow != null)
+            _flow.OnStateChanged -= OnGameStateChanged;
     }
 
     private void Update()
@@ -107,6 +130,15 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
     {
         if (forceApplyInLateUpdate)
             ApplySpeed(currentSpeed);
+    }
+
+    private void OnGameStateChanged(GameStatest2 state)
+    {
+        if (!resetWhenEnterMainMenu) return;
+
+        // ✅ “다시하기/메인으로” 등으로 MainMenu 복귀 시 초기화
+        if (state == GameStatest2.MainMenu)
+            ResetSpeedState(applyImmediately: true);
     }
 
     private void OnJudgeResolved(FishCatchToken_st2 fish, JudgeResult_st2 result, OVRInput.Controller hand, float delta)
@@ -146,6 +178,30 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
             return;
 
         ApplyMiss();
+    }
+
+    // =========================
+    // ✅ Reset API
+    // =========================
+    public void ResetSpeedNow()
+    {
+        ResetSpeedState(applyImmediately: true);
+    }
+
+    private void ResetSpeedState(bool applyImmediately)
+    {
+        successStreak = 0;
+        missStreak = 0;
+
+        _recentJudged.Clear();
+        _recentSuccess.Clear();
+        _removeKeys.Clear();
+
+        currentSpeed = ClampSpeed(startSpeed);
+        targetSpeed = currentSpeed;
+
+        if (applyImmediately)
+            ApplySpeed(currentSpeed);
     }
 
     // =========================
@@ -203,7 +259,6 @@ public class GoraniDanceSpeedByJudge_st2 : MonoBehaviour
             var a = goraniAnimators[i];
             if (!a) continue;
 
-            // ✅ 너가 준 예시처럼 Animator.speed 직접 세팅
             a.speed = clamped;
         }
     }
