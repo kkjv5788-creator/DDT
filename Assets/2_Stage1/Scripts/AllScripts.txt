@@ -91,6 +91,77 @@ public class DebugHUD : MonoBehaviour
 
 
 ========================================
+ FILE: DebugStatus.cs 
+========================================
+using UnityEngine;
+
+public class DebugStatus : MonoBehaviour
+{
+    public RhythmConductor conductor;
+
+    void OnGUI()
+    {
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 35;
+        style.normal.textColor = Color.white;
+        style.fontStyle = FontStyle.Bold;
+
+        // 배경 박스
+        GUI.Box(new Rect(10, 10, 900, 400), "");
+
+        if (!conductor)
+        {
+            GUI.Label(new Rect(20, 20, 800, 50), "🚨 Conductor 연결 안됨! 인스펙터 확인 필요", style);
+            return;
+        }
+
+        float currentTime = 0f;
+        bool isPlaying = false;
+        if (conductor.bgmSource)
+        {
+            currentTime = conductor.bgmSource.time;
+            isPlaying = conductor.bgmSource.isPlaying;
+        }
+
+        string musicStatus = isPlaying ? "<color=lime>재생 중</color>" : "<color=red>멈춤</color>";
+        string timeScaleStatus = (Time.timeScale > 0) ? "정상(1.0)" : "<color=red>정지(0.0)</color>";
+        
+        // 🔥 여기가 핵심 확인 포인트
+        string tutorialStatus = conductor.isTutorialMode ? "<color=red>켜짐 (문제!)</color>" : "<color=lime>꺼짐 (정상)</color>";
+
+        GUI.Label(new Rect(20, 20, 880, 50), $"BGM: {musicStatus} / 시간: {timeScaleStatus}", style);
+        GUI.Label(new Rect(20, 70, 880, 50), $"튜토리얼 모드: {tutorialStatus}", style);
+        GUI.Label(new Rect(20, 120, 880, 50), $"현재 음악 시간: {currentTime:F2} 초", style);
+        
+        string nextTrigger = "없음";
+        if (conductor.data && conductor.data.triggers != null)
+        {
+            int nextIdx = conductor.CurrentTriggerIndex + 1;
+            if (nextIdx < conductor.data.triggers.Length)
+            {
+                float targetTime = conductor.data.triggers[nextIdx].triggerTime;
+                nextTrigger = $"{targetTime:F2} 초 (Wait)";
+                
+                if (currentTime > targetTime) 
+                    nextTrigger += " <color=red><- 지연 발생!</color>";
+            }
+            else
+            {
+                nextTrigger = "종료됨";
+            }
+        }
+
+        GUI.Label(new Rect(20, 170, 880, 50), $"다음 노트: {nextTrigger}", style);
+        GUI.Label(new Rect(20, 220, 880, 50), $"상태: {conductor.State}", style);
+        
+        if (GUI.Button(new Rect(20, 300, 300, 80), "13.5초로 점프"))
+        {
+            if(conductor.bgmSource) conductor.bgmSource.time = 13.5f;
+        }
+    }
+}
+
+========================================
  FILE: DiscoLightController.cs 
 ========================================
 using UnityEngine;
@@ -427,50 +498,56 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Monitor Panels")]
     public GameObject panelPlayGame;   
-    public GameObject panelDialogue;   // 튜토리얼 대화창 (Panel_Dialogue)
-    public GameObject panelResult;     // 결과창 (Panel_ClosingResult)
+    public GameObject panelDialogue; 
+    public GameObject panelResult;   
 
     [Header("Play Game UI")]
     public Slider songProgressSlider;       
-    public TextMeshProUGUI textRemainingTime; 
+    public TextMeshProUGUI textRemainingTime;
     
     [Header("Sales UI")]
     public GameObject salesInfoGroup;         
     public TextMeshProUGUI textRealtimeSales; 
-    public TextMeshProUGUI textFeedback;      
-
+    public TextMeshProUGUI textFeedback;
+    
     [Header("Settings")]
-    public int pricePerSlice = 5000; // 성공 시 5,000원 고정
-    public int mainMenuSceneIndex = 0; 
+    public int pricePerLine = 5000; 
+    public int mainMenuSceneIndex = 0;
+    public AudioClip resultBgmClip; 
 
     public GameState CurrentState { get; private set; } = GameState.Intro;
 
-// Explicit state setter (CurrentState has a restricted setter)
-public void SetState(GameState state)
-{
-    CurrentState = state;
-}
-
-public void EnterTutorialState()
-{
-    SetState(GameState.Tutorial);
-}
-
-GameState _stateBeforePause;
+    GameState _stateBeforePause;
     int _currentSales = 0;
     bool _isGameEnding = false;
     RhythmConductor.RhythmState _lastConductorState;
-
+    
+    void Awake()
+    {
+        if (!conductor) conductor = FindObjectOfType<RhythmConductor>();
+        // UI 자동 찾기
+        if (!salesInfoGroup || !textRealtimeSales)
+        {
+            GameObject canvas = GameObject.Find("Monitor_Canvas");
+            if (canvas)
+            {
+                if (!salesInfoGroup) { Transform t = canvas.transform.Find("Sales_Info_Group"); if (t) salesInfoGroup = t.gameObject; }
+                if (!textRealtimeSales) { var texts = canvas.GetComponentsInChildren<TextMeshProUGUI>(true); foreach (var tx in texts) if (tx.name == "Text_RealtimeSales") { textRealtimeSales = tx; break; } }
+                if (!textFeedback) { var texts = canvas.GetComponentsInChildren<TextMeshProUGUI>(true); foreach (var tx in texts) if (tx.name == "Text_Feedback") { textFeedback = tx; break; } }
+            }
+        }
+    }
+    
     void OnEnable()
     {
-        CurrentState = GameState.Intro; 
+        CurrentState = GameState.Intro;
         if (conductor)
         {
             conductor.OnSliceSuccess.AddListener(OnSliceSuccess);
             conductor.OnSliceFail.AddListener(OnSliceFail);
+            conductor.OnRoundResult.AddListener(HandleRoundResult);
         }
-        // StartMainGame() is called explicitly by StageModeSelector/StageManager.
-}
+    }
 
     void OnDisable()
     {
@@ -478,12 +555,21 @@ GameState _stateBeforePause;
         {
             conductor.OnSliceSuccess.RemoveListener(OnSliceSuccess);
             conductor.OnSliceFail.RemoveListener(OnSliceFail);
+            conductor.OnRoundResult.RemoveListener(HandleRoundResult);
         }
     }
 
     void Update()
     {
         if (CurrentState != GameState.PlayingMain || !conductor) return;
+
+        // 좀비 튜토리얼 모드 방지
+        if (conductor.isTutorialMode)
+        {
+            conductor.isTutorialMode = false;
+            if (conductor.bgmSource && conductor.bgmSource.loop) 
+                conductor.bgmSource.loop = false;
+        }
 
         if (conductor.bgmSource && conductor.bgmSource.clip)
         {
@@ -517,133 +603,143 @@ GameState _stateBeforePause;
     {
         if (!missionBoard) return;
         if (conductor.State == RhythmConductor.RhythmState.Waiting)
+        {
             missionBoard.UpdateMission("주문 대기 중...", 0, 0);
+            missionBoard.ShowSuccessStamp(false);
+        }
         else if (conductor.State == RhythmConductor.RhythmState.Guiding || conductor.State == RhythmConductor.RhythmState.Judging)
+        {
             UpdateSliceCountUI();
+            missionBoard.ShowSuccessStamp(false);
+        }
     }
 
-    void OnSliceSuccess(Vector3 pos, Vector3 normal, float speed)
+    void OnSliceSuccess(Vector3 pos, Vector3 normal, float speed) { UpdateSliceCountUI(); }
+
+    void HandleRoundResult(bool success)
     {
-        _currentSales += pricePerSlice; // 단순 가산 방식
-        UpdateSalesUI();
-        ShowFeedbackText($"+ {pricePerSlice:N0} 원");
-        UpdateSliceCountUI();
+        if (CurrentState != GameState.PlayingMain) return;
+        if (success)
+        {
+            int earnedMoney = pricePerLine;
+            _currentSales += earnedMoney;
+            UpdateSalesUI();
+            string msg = $"<color=#00FF00>판매 완료</color>\n+ {earnedMoney:N0} 원";
+            ShowFeedbackText(msg);
+            if (missionBoard) missionBoard.ShowSuccessStamp(true);
+        }
+        else
+        {
+            string msg = "<color=#FF0000>판매 실패</color>";
+            ShowFeedbackText(msg);
+            if (missionBoard) missionBoard.ShowSuccessStamp(false);
+        }
     }
 
     void OnSliceFail(Vector3 pos, string reason) => UpdateSliceCountUI();
     void UpdateSalesUI() { if (textRealtimeSales) textRealtimeSales.text = $"{_currentSales:N0} 원"; }
-
-    void ShowFeedbackText(string msg)
-    {
-        if (textFeedback)
-        {
-            textFeedback.text = msg;
-            textFeedback.gameObject.SetActive(true);
-            CancelInvoke(nameof(HideFeedback));
-            Invoke(nameof(HideFeedback), 1.0f);
-        }
-    }
+    void ShowFeedbackText(string msg) { if (textFeedback) { textFeedback.text = msg; textFeedback.gameObject.SetActive(true); CancelInvoke(nameof(HideFeedback)); Invoke(nameof(HideFeedback), 2.0f); } }
     void HideFeedback() { if (textFeedback) textFeedback.gameObject.SetActive(false); }
-
-    void UpdateSliceCountUI()
-    {
-        if (!missionBoard || !conductor || conductor.State == RhythmConductor.RhythmState.Waiting) return;
-        missionBoard.UpdateMission($"주문 폭주 중!\n<size=120%>[ <color=red><b>{conductor.SliceCount}</b></color> / {conductor.RequiredSliceCount} ]</size>", conductor.SliceCount, conductor.RequiredSliceCount);
-    }
-
+    void UpdateSliceCountUI() { if (!missionBoard || !conductor || conductor.State == RhythmConductor.RhythmState.Waiting) return; missionBoard.UpdateMission($"주문 폭주 중!\n<size=120%>[ <color=red><b>{conductor.SliceCount}</b></color> / {conductor.RequiredSliceCount} ]</size>", conductor.SliceCount, conductor.RequiredSliceCount); }
     public int GetCurrentSales() => _currentSales;
+    public void SetState(GameState state) { CurrentState = state; }
+    public void EnterTutorialState() { SetState(GameState.Tutorial); }
 
     public void StartMainGame()
     {
-        // Safety guards
-        if (!conductor || conductor.data == null || conductor.data.triggers == null)
-        {
-            Debug.LogError("[GameFlowManager] Cannot start main game: RhythmConductor or data/triggers not assigned.");
-            return;
-        }
+        Time.timeScale = 1f;
+
+        if (!conductor) conductor = FindObjectOfType<RhythmConductor>();
+        if (!conductor || conductor.data == null || conductor.data.triggers == null) { Debug.LogError("Cannot start main game"); return; }
+        
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
 
         CurrentState = GameState.PlayingMain;
         _isGameEnding = false;
         _currentSales = 0;
-        UpdateSalesUI();
+        
+        UpdateSalesUI(); 
 
         if (salesInfoGroup) salesInfoGroup.SetActive(true);
         if (panelPlayGame) panelPlayGame.SetActive(true);
         if (panelDialogue) panelDialogue.SetActive(false);
         if (panelResult) panelResult.SetActive(false);
+        
+        if (textFeedback) textFeedback.gameObject.SetActive(false);
 
-        if (missionBoard) { missionBoard.InitializeUI(); missionBoard.UpdateHeader("*** 주문서 ***"); }
+        if (missionBoard) 
+        { 
+            missionBoard.InitializeUI(); 
+            missionBoard.UpdateHeader("*** 주문서 ***"); 
+            missionBoard.UpdateMission("주문 대기 중...", 0, 0); 
+            missionBoard.ShowSuccessStamp(false);
+        }
 
         if (conductor)
         {
+            // 🔥 [핵심] 꺼진 컨덕터를 켜줍니다.
+            conductor.enabled = true;
+            
             conductor.isTutorialMode = false;
             conductor.StartGame();
-}
+        }
         if (resultManager) resultManager.StartTracking(conductor.data.triggers.Length);
     }
 
     public void PauseGame()
-{
-    _stateBeforePause = CurrentState;
-    CurrentState = GameState.Paused;
+    {
+        _stateBeforePause = CurrentState;
+        CurrentState = GameState.Paused;
+        Time.timeScale = 0f;
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Pause();
+        if (toolSwitcher) toolSwitcher.SwitchToController();
+        if (pauseManager) pauseManager.ShowPauseMenu();
+    }
 
-    Time.timeScale = 0f;
-
-    if (toolSwitcher) toolSwitcher.SwitchToController();
-    if (pauseManager) pauseManager.ShowPauseMenu();
-}
     public void ResumeGame()
-{
-    Time.timeScale = 1f;
-
-    // Restore prior state (e.g., PlayingMain / WaitForRadio)
-    CurrentState = _stateBeforePause;
-
-    if (toolSwitcher) toolSwitcher.SwitchToKnife();
-    if (pauseManager) pauseManager.HidePauseMenu();
-}
+    {
+        Time.timeScale = 1f;
+        CurrentState = _stateBeforePause;
+        if (conductor && conductor.bgmSource) conductor.bgmSource.UnPause();
+        if (toolSwitcher) toolSwitcher.SwitchToKnife();
+        if (pauseManager) pauseManager.HidePauseMenu();
+    }
 
     public void EnterFinalResult(float successRate)
     {
-        Time.timeScale = 1f; // ensure result is not paused
+        Time.timeScale = 1f;
         CurrentState = GameState.FinalResult;
         if (toolSwitcher) toolSwitcher.SwitchToController();
         if (panelPlayGame) panelPlayGame.SetActive(false);
-        if (panelDialogue) panelDialogue.SetActive(false); // 튜토리얼 UI 강제 종료
+        if (panelDialogue) panelDialogue.SetActive(false); 
         if (panelResult) panelResult.SetActive(true);
-        if (missionBoard) { missionBoard.UpdateHeader("< 영 업 종 료 >"); missionBoard.ShowSuccessStamp(true); }
+        
+        if (missionBoard) { missionBoard.UpdateHeader("< 영 업 종 료 >"); missionBoard.UpdateText("", "", ""); missionBoard.ShowSuccessStamp(false); }
+        if (conductor && conductor.bgmSource && resultBgmClip != null) { conductor.bgmSource.Stop(); conductor.bgmSource.clip = resultBgmClip; conductor.bgmSource.loop = true; conductor.bgmSource.Play(); }
     }
 
-    
-public void ResetAndRestartMainGame()
-{
-    Time.timeScale = 1f;
+    public void ResetAndRestartMainGame()
+    {
+        Time.timeScale = 1f;
+        _currentSales = 0;
+        _isGameEnding = false;
+        _lastConductorState = default;
+        CurrentState = GameState.PlayingMain;
+        _stateBeforePause = GameState.PlayingMain;
 
-    // Core state reset
-    _currentSales = 0;
-    _isGameEnding = false;
-    _lastConductorState = default;
+        if (panelResult) panelResult.SetActive(false);
+        if (panelDialogue) panelDialogue.SetActive(false);
+        if (panelPlayGame) panelPlayGame.SetActive(true);
+        if (textFeedback) textFeedback.gameObject.SetActive(false);
+        
+        if (songProgressSlider) songProgressSlider.value = 0f;
+        if (textRemainingTime) textRemainingTime.text = "00:00";
+        UpdateSalesUI();
+        if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
+        StartMainGame();
+    }
 
-    CurrentState = GameState.PlayingMain;
-    _stateBeforePause = GameState.PlayingMain;
-
-    // UI reset
-    if (panelResult) panelResult.SetActive(false);
-    if (panelDialogue) panelDialogue.SetActive(false);
-    if (panelPlayGame) panelPlayGame.SetActive(true);
-
-    if (textFeedback) textFeedback.gameObject.SetActive(false);
-    if (songProgressSlider) songProgressSlider.value = 0f;
-    if (textRemainingTime) textRemainingTime.text = "00:00";
-
-    UpdateSalesUI();
-
-    // Prevent BGM overlap
-    if (conductor && conductor.bgmSource) conductor.bgmSource.Stop();
-
-    StartMainGame();
-}
-public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
+    public void GoToMainMenu() { Time.timeScale = 1f; SceneManager.LoadScene(mainMenuSceneIndex); }
 }
 
 ========================================
@@ -1169,15 +1265,10 @@ public class KnifeSlicer : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource sfxSource;
-
-    [Header("Slice Prevention (중복 방지)")]
-    [Tooltip("자르기 후 다음 자르기까지 최소 대기 시간 (초)")]
+    [Header("Slice Prevention")]
     public float sliceCooldown = 0.15f;
-
-    [Tooltip("연속으로 같은 김밥을 자를 수 있는 최소 간격 (초)")]
     public float sameKimbapCooldown = 0.1f;
 
-    // attempt lock
     bool _canSlice = true;
     float _contactMs;
     float _lastSliceTime = -999f;
@@ -1185,24 +1276,24 @@ public class KnifeSlicer : MonoBehaviour
     KimbapController _currentKimbap;
     KimbapController _lastSlicedKimbap;
     float _lastKimbapSliceTime = -999f;
-
     int _sliceIndexThisTrigger;
-
-    // 🔥 실패 피드백 쿨다운
     float _lastFailFeedbackTime = -999f;
     const float FAIL_FEEDBACK_COOLDOWN = 0.2f;
 
     void Awake()
     {
         if (!sfxSource) sfxSource = gameObject.AddComponent<AudioSource>();
+        
+        // ▼▼▼ [추가] 칼이 Conductor를 모르면 스스로 찾습니다.
+        if (!conductor)
+        {
+            conductor = FindObjectOfType<RhythmConductor>();
+        }
     }
 
     void Update()
     {
-        // Reset per-trigger index when trigger changes
         if (!conductor) return;
-
-        // If not judging, allow slice again but don't keep old target
         if (!conductor.IsJudgingWindow())
         {
             _canSlice = true;
@@ -1224,94 +1315,60 @@ public class KnifeSlicer : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (!conductor || !conductor.IsJudgingWindow()) return;
-
-        // 🔥 쿨다운 체크 (중복 방지)
-        if (Time.time - _lastSliceTime < sliceCooldown)
-        {
-            return;
-        }
-
+        if (!conductor) return; // 안전장치
+        
+        if (!conductor.IsJudgingWindow()) return;
+        
+        if (Time.time - _lastSliceTime < sliceCooldown) return;
         if (!_canSlice) return;
 
         var trigger = conductor.GetCurrentTrigger();
         if (trigger == null) return;
-
+        
         var target = other.GetComponentInParent<KimbapSliceTarget>();
         if (!target || !target.controller) return;
 
-        // 🔥 같은 김밥 연속 자르기 방지
         if (target.controller == _lastSlicedKimbap)
         {
-            if (Time.time - _lastKimbapSliceTime < sameKimbapCooldown)
-            {
-                return;
-            }
+            if (Time.time - _lastKimbapSliceTime < sameKimbapCooldown) return;
         }
 
-        // Must be sliceable state
         if (!target.controller.sliceable) return;
-
-        // Contact time
+        
         _contactMs += Time.deltaTime * 1000f;
-        if (_contactMs < trigger.minContactMs)
-        {
-            // 🔥 접촉 시간 부족 - 피드백 없이 그냥 리턴
-            return;
-        }
+        if (_contactMs < trigger.minContactMs) return;
 
-        // 🔥 Speed check (핵심!)
         float speed = velocityEstimator ? velocityEstimator.speed : 0f;
 
         if (speed < trigger.minKnifeSpeed)
         {
-            // 🔥 속도 부족 - 실패 피드백 (spam 방지)
             if (Time.time - _lastFailFeedbackTime >= FAIL_FEEDBACK_COOLDOWN)
             {
                 _lastFailFeedbackTime = Time.time;
-
-                // 디버그 로그
-                UnityEngine.Debug.Log($"[KnifeSlicer] Speed too low: {speed:F2} < {trigger.minKnifeSpeed:F2}");
-
-                if (conductor)
-                {
-                    conductor.NotifySliceFail(transform.position, "SpeedTooLow");
-                }
+                if (conductor) conductor.NotifySliceFail(transform.position, "SpeedTooLow");
             }
             return;
         }
-
-        // 🔥 속도 충분! - VALID SLICE!
-        UnityEngine.Debug.Log($"[KnifeSlicer] Valid slice! Speed: {speed:F2} >= {trigger.minKnifeSpeed:F2}");
 
         _canSlice = false;
         _lastSliceTime = Time.time;
         _lastSlicedKimbap = target.controller;
         _lastKimbapSliceTime = Time.time;
-
-        // 1) register count
+        
         conductor.RegisterValidSlice();
-
-        // 2) feedback
-        float amp = Mathf.Lerp(trigger.hapticHitBase, trigger.hapticHitMax,
-            Mathf.Clamp01(speed / (trigger.minKnifeSpeed * 2f)));
+        
+        float amp = Mathf.Lerp(trigger.hapticHitBase, trigger.hapticHitMax, Mathf.Clamp01(speed / (trigger.minKnifeSpeed * 2f)));
         XRHaptics.SendHaptic(rightHand, amp, trigger.hapticDurationMs / 1000f);
-        // second tap
         XRHaptics.SendHaptic(rightHand, amp * 0.85f, Mathf.Max(0.01f, trigger.hapticDurationMs / 1600f));
-
         if (trigger.impactSound) sfxSource.PlayOneShot(trigger.impactSound);
 
-        if (visualResistance)
-            visualResistance.Play(trigger.visualResistanceMs, trigger.visualResistanceStrength);
-
+        if (visualResistance) visualResistance.Play(trigger.visualResistanceMs, trigger.visualResistanceStrength);
         if (trigger.cutVfxPrefab)
         {
-            // spawn at contact approx (knife trigger position)
             var vfx = GameObject.Instantiate(trigger.cutVfxPrefab, transform.position, Quaternion.identity);
             GameObject.Destroy(vfx, 1.5f);
         }
 
-        // 3) RightThin slice (EzySlice)
         if (_currentKimbap)
         {
             int idx0 = _sliceIndexThisTrigger;
@@ -1319,14 +1376,12 @@ public class KnifeSlicer : MonoBehaviour
             _currentKimbap.ExecuteRightThinSlice(idx0);
         }
 
-        // 🔥 4) 성공 이벤트 발행
+        // 성공 알림
         if (conductor)
         {
-            // 법선은 위쪽(김밥 단면)으로 가정
             conductor.NotifySliceSuccess(transform.position, Vector3.up, speed);
         }
 
-        // Unlock after short cooldown (prevents multi-count in same swing)
         Invoke(nameof(UnlockSlice), sliceCooldown);
     }
 
@@ -1334,17 +1389,10 @@ public class KnifeSlicer : MonoBehaviour
     {
         var target = other.GetComponentInParent<KimbapSliceTarget>();
         if (!target) return;
-
         _contactMs = 0f;
-
-        // exit allows next slice sooner (but still respects cooldown)
         if (conductor && conductor.IsJudgingWindow())
         {
-            // 쿨다운이 지났으면 바로 허용
-            if (Time.time - _lastSliceTime >= sliceCooldown)
-            {
-                _canSlice = true;
-            }
+            if (Time.time - _lastSliceTime >= sliceCooldown) _canSlice = true;
         }
     }
 
@@ -1534,12 +1582,14 @@ public class PauseManager : MonoBehaviour
 {
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
-    public GameObject pauseMenuPanel; // Monitor_Canvas/Panel_Pause
+    public GameObject pauseMenuPanel;
 
-    [Header("Buttons")]
-    public Button resumeButton;  // Btn_ResumePause
-    public Button restartButton; // Btn_RestartPause
-    public Button mainMenuButton;// Btn_MainPause
+    [Header("Buttons (인스펙터 연결 필수)")]
+    public Button btnResume;        // 계속하기
+    public Button btnRestart;       // 다시하기
+    public Button btnGoToSelect;    // 영업준비
+    public Button btnGoToLobby;     // 메인으로
+    public Button btnQuit;          // 끝내기
 
     [Header("Settings")]
     public int mainMenuSceneIndex = 0; 
@@ -1550,9 +1600,13 @@ public class PauseManager : MonoBehaviour
 
     void Start()
     {
-        if (resumeButton) resumeButton.onClick.AddListener(Resume);
-        if (restartButton) restartButton.onClick.AddListener(Restart);
-        if (mainMenuButton) mainMenuButton.onClick.AddListener(GoToMainMenu);
+        // 버튼 리스너 자동 연결
+        if (btnResume) btnResume.onClick.AddListener(Resume);
+        if (btnRestart) btnRestart.onClick.AddListener(Restart);
+        if (btnGoToSelect) btnGoToSelect.onClick.AddListener(GoToSelectMode);
+        if (btnGoToLobby) btnGoToLobby.onClick.AddListener(GoToMainMenu);
+        if (btnQuit) btnQuit.onClick.AddListener(QuitGame);
+
         if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
     }
 
@@ -1560,24 +1614,79 @@ public class PauseManager : MonoBehaviour
     {
         if (Time.unscaledTime - _lastPauseInputTime < inputCooldown) return;
 
-        // [수정] 오른손 A 버튼(One) 또는 ESC 키
-                bool inputPause = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch);
-        if (inputPause && gameFlowManager != null)
+        // 🔥 [복구] 오른손 A버튼 (Button.One) + 에디터용 ESC 키
+        bool inputPause = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch) 
+                       || Input.GetKeyDown(KeyCode.Escape);
+        
+        if (inputPause)
         {
-            _lastPauseInputTime = Time.unscaledTime;
-            TogglePause();
+            if (gameFlowManager != null)
+            {
+                Debug.Log(">>> 일시정지 버튼(A버튼/ESC) 입력됨!");
+                _lastPauseInputTime = Time.unscaledTime;
+                TogglePause();
+            }
+            else
+            {
+                Debug.LogError("PauseManager에 GameFlowManager가 연결되지 않았습니다!");
+            }
         }
     }
 
     public void TogglePause() { if (_isPaused) Resume(); else Pause(); }
-    public void Pause() { if (_isPaused) return; _isPaused = true; if (pauseMenuPanel) pauseMenuPanel.SetActive(true); if (gameFlowManager) gameFlowManager.PauseGame(); }
-    public void Resume() { if (!_isPaused) return; _isPaused = false; if (pauseMenuPanel) pauseMenuPanel.SetActive(false); if (gameFlowManager) gameFlowManager.ResumeGame(); }
-        public void Restart() { Time.timeScale = 1f; if (gameFlowManager) gameFlowManager.ResetAndRestartMainGame(); }
-        public void GoToMainMenu() { Time.timeScale = 1f; if (gameFlowManager) gameFlowManager.GoToMainMenu(); }
+
+    public void Pause() 
+    { 
+        if (_isPaused) return; 
+        _isPaused = true; 
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(true); 
+        if (gameFlowManager) gameFlowManager.PauseGame(); 
+    }
+
+    public void Resume() 
+    { 
+        if (!_isPaused) return; 
+        _isPaused = false; 
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false); 
+        if (gameFlowManager) gameFlowManager.ResumeGame(); 
+    }
+
+    public void Restart() 
+    { 
+        Time.timeScale = 1f; 
+        _isPaused = false;
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+        if (gameFlowManager) gameFlowManager.ResetAndRestartMainGame(); 
+    }
+
+    public void GoToSelectMode()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoToMainMenu() 
+    { 
+        Time.timeScale = 1f; 
+        _isPaused = false;
+        
+        if (gameFlowManager && gameFlowManager.conductor && gameFlowManager.conductor.bgmSource)
+            gameFlowManager.conductor.bgmSource.Stop();
+
+        Debug.Log($"메인 메뉴(Index {mainMenuSceneIndex})로 돌아갑니다.");
+        SceneManager.LoadScene(mainMenuSceneIndex);
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Game Quit!");
+        Application.Quit();
+    }
+
+    // 에러 방지용 함수들 (GameFlowManager에서 호출)
     public void ShowPauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(true); }
     public void HidePauseMenu() { if (pauseMenuPanel) pauseMenuPanel.SetActive(false); }
 }
-
 
 ========================================
  FILE: PlateController.cs 
@@ -2317,14 +2426,12 @@ public class RhythmConductor : MonoBehaviour
 
     [Header("Data")]
     public RhythmTriggerListSO data;
-
     [Header("Refs")]
     public AudioSource bgmSource;
     public AudioSource sfxSource;
     public KimbapSpawner spawner;
     public DebugHUD hud;
     public PlateController plateController;
-
     [Header("Events")]
     public UnityEvent<Vector3, Vector3, float> OnSliceSuccess;
     public UnityEvent<Vector3, string> OnSliceFail;
@@ -2337,7 +2444,6 @@ public class RhythmConductor : MonoBehaviour
     public float resultDisplayDuration = 0.5f;
     [Tooltip("가이드 비트 사운드 재생 간격 (초)")]
     public float guideBeatInterval = 0.15f;
-
     [Header("Tutorial Mode")]
     public bool isTutorialMode = false;
 
@@ -2364,8 +2470,7 @@ public class RhythmConductor : MonoBehaviour
 
     void Start()
     {
-        // GameFlowManager에서 호출하도록 변경
-        // StartGame();
+        // StartGame() is called externally
     }
 
     public void StartGame()
@@ -2377,19 +2482,30 @@ public class RhythmConductor : MonoBehaviour
         }
 
         _offsetSec = (data ? data.timingOffsetMs : 0f) / 1000f;
-
-        // 🔥 BGM 재생 (튜토리얼/메인 모두)
+        
+        // ▼▼▼ [수정] BGM 재생 로직 분기 ▼▼▼
         if (data.bgm)
         {
             bgmSource.clip = data.bgm;
-            bgmSource.loop = isTutorialMode; // 튜토리얼은 반복 재생
-            bgmSource.Play();
+            bgmSource.loop = isTutorialMode; 
+
+            // 1. 튜토리얼: 대화 흐름을 위해 이미 켜져 있으면 끊지 않음
+            if (isTutorialMode)
+            {
+                if (!bgmSource.isPlaying) bgmSource.Play();
+            }
+            // 2. 실전(메인 게임): 무조건 처음부터 다시 재생 (박자 싱크 맞춤)
+            else
+            {
+                bgmSource.Stop();
+                bgmSource.time = 0f;
+                bgmSource.Play();
+            }
+
             _bgmStarted = true;
-            UnityEngine.Debug.Log($"[RhythmConductor] BGM started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
         }
         else
         {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] No BGM assigned!");
             _bgmStarted = false;
         }
 
@@ -2399,31 +2515,29 @@ public class RhythmConductor : MonoBehaviour
         RequiredSliceCount = 0;
         _waitingForManualAdvance = false;
 
+        // 게임 시작 시 소리 정리
+        StopAllGuideBeats();
+
         if (spawner) spawner.EnsureKimbapExists();
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (hud) hud.Log($"Game Started - Mode: {(isTutorialMode ? "Tutorial" : "Main")}");
     }
 
     void Update()
     {
-        // 🔥 튜토리얼 모드에서는 시간 기반 진행 완전 차단
         if (isTutorialMode)
         {
-            // BGM 시간 업데이트만 (디버그용)
             if (_bgmStarted && bgmSource.isPlaying)
             {
                 BgmTime = bgmSource.time + _offsetSec;
             }
-
-            // 상태 머신만 작동 (트리거 자동 진행 X)
             TickStateMachine();
             return;
         }
 
-        // 메인 게임 모드: 기존 로직
+        // 메인 게임
         if (!_bgmStarted) return;
-
+        
+        // AudioSettings.dspTime을 쓰면 더 정확하지만 일단 time 사용
         BgmTime = bgmSource.time + _offsetSec;
 
         AdvanceTriggerIfNeeded();
@@ -2432,14 +2546,13 @@ public class RhythmConductor : MonoBehaviour
 
     void AdvanceTriggerIfNeeded()
     {
-        // 🔥 튜토리얼 모드에서는 절대 호출되지 않음
         if (isTutorialMode) return;
-
         if (data.triggers == null || data.triggers.Length == 0) return;
 
         int nextIndex = CurrentTriggerIndex + 1;
         if (nextIndex >= data.triggers.Length) return;
-
+        
+        // 다음 트리거 시간이 되면 진입
         if (BgmTime >= data.triggers[nextIndex].triggerTime)
         {
             EnterTrigger(nextIndex);
@@ -2453,10 +2566,8 @@ public class RhythmConductor : MonoBehaviour
 
         SliceCount = 0;
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
-
-        // 빈 접시로 초기화
+        
         if (plateController) plateController.ResetToEmptyPlate();
-
         if (spawner && spawner.CurrentKimbap)
         {
             spawner.CurrentKimbap.BeginTrigger(t);
@@ -2464,14 +2575,12 @@ public class RhythmConductor : MonoBehaviour
 
         State = RhythmState.Guiding;
         _stateEndTime = BgmTime + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
+        // 가이드 비트 재생
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Enter Trigger #{idx} (req={RequiredSliceCount}) - State: Guiding");
     }
 
     void TickStateMachine()
@@ -2479,10 +2588,6 @@ public class RhythmConductor : MonoBehaviour
         if (CurrentTriggerIndex < 0) return;
         var t = data.triggers[CurrentTriggerIndex];
 
-        // 🔥 튜토리얼 모드: 수동 진행 대기 중이면 Result 이후 Cleanup만 차단
-        // Guiding -> Judging 전환은 정상 작동해야 함!
-
-        // 🔥 튜토리얼 모드: Time.time 기준으로 상태 전환
         float currentTime = isTutorialMode ? Time.time : BgmTime;
 
         if (State == RhythmState.Guiding && currentTime >= _stateEndTime)
@@ -2492,130 +2597,75 @@ public class RhythmConductor : MonoBehaviour
 
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.SetSliceable(true);
-
-            if (hud) hud.Log("State -> Judging");
         }
         else if (State == RhythmState.Judging && currentTime >= _stateEndTime)
         {
             State = RhythmState.Result;
-
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.SetSliceable(false);
-
+            
             bool success = (SliceCount == RequiredSliceCount);
             if (spawner && spawner.CurrentKimbap)
                 spawner.CurrentKimbap.OnTriggerResult(success);
 
-            if (hud) hud.Log($"State -> Result (success={success})");
-
             OnRoundResult?.Invoke(success);
 
-            // 튜토리얼 모드: 결과 후 수동 진행 대기
-            if (isTutorialMode)
-            {
-                _waitingForManualAdvance = true;
-            }
-
+            if (isTutorialMode) _waitingForManualAdvance = true;
             _stateEndTime = currentTime + resultDisplayDuration;
         }
         else if (State == RhythmState.Result && currentTime >= _stateEndTime)
         {
-            // 🔥 튜토리얼 모드: Result 이후 즉시 Cleanup 실행 (김밥 교체)
             State = RhythmState.Cleanup;
-            if (hud) hud.Log("State -> Cleanup");
-
             if (spawner)
             {
                 spawner.DestroyCurrentKimbap();
                 spawner.EnsureKimbapExists();
-                if (hud) hud.Log("New kimbap spawned after Result");
             }
 
-            // 🔥 튜토리얼 모드: Cleanup 이후 수동 진행 대기
             if (isTutorialMode)
             {
                 State = RhythmState.Waiting;
-                // _waitingForManualAdvance는 이미 Result에서 true로 설정됨
                 return;
             }
 
-            // 메인 게임: 바로 다음 Waiting으로
             State = RhythmState.Waiting;
         }
     }
 
+    // 튜토리얼용 수동 조작 함수들
     public void RetryCurrentTrigger()
     {
-        if (!isTutorialMode)
-        {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] RetryCurrentTrigger called but not in tutorial mode!");
-            return;
-        }
-
+        if (!isTutorialMode) return;
         if (CurrentTriggerIndex < 0) return;
 
-        UnityEngine.Debug.Log($"[RhythmConductor] Retrying trigger #{CurrentTriggerIndex}");
-
         _waitingForManualAdvance = false;
+        if (spawner && !spawner.CurrentKimbap) spawner.EnsureKimbapExists();
 
-        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
-        // 대신 현재 김밥이 없으면 생성
-        if (spawner && !spawner.CurrentKimbap)
-        {
-            spawner.EnsureKimbapExists();
-        }
-
-        // 🔥 Time.time 기준으로 상태 시간 설정
         var t = data.triggers[CurrentTriggerIndex];
-
         SliceCount = 0;
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
 
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (spawner && spawner.CurrentKimbap)
-        {
-            spawner.CurrentKimbap.BeginTrigger(t);
-        }
+        if (spawner && spawner.CurrentKimbap) spawner.CurrentKimbap.BeginTrigger(t);
 
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Retry Trigger #{CurrentTriggerIndex} - State: Guiding");
     }
 
     public void AdvanceToNextTrigger()
     {
-        if (!isTutorialMode)
-        {
-            UnityEngine.Debug.LogWarning("[RhythmConductor] AdvanceToNextTrigger called but not in tutorial mode!");
-            return;
-        }
+        if (!isTutorialMode) return;
 
         _waitingForManualAdvance = false;
-
         int nextIndex = CurrentTriggerIndex + 1;
+        if (nextIndex >= data.triggers.Length) return;
 
-        if (nextIndex >= data.triggers.Length)
-        {
-            UnityEngine.Debug.Log("[RhythmConductor] Tutorial completed - no more triggers");
-            return;
-        }
-
-        UnityEngine.Debug.Log($"[RhythmConductor] Advancing to next trigger #{nextIndex}");
-
-        // 🔥 김밥은 이미 Result -> Cleanup에서 교체되었으므로 재생성 불필요
-        // 대신 현재 김밥이 없으면 생성
-        if (spawner && !spawner.CurrentKimbap)
-        {
-            spawner.EnsureKimbapExists();
-        }
+        if (spawner && !spawner.CurrentKimbap) spawner.EnsureKimbapExists();
 
         CurrentTriggerIndex = nextIndex;
         var t = data.triggers[nextIndex];
@@ -2624,22 +2674,15 @@ public class RhythmConductor : MonoBehaviour
         RequiredSliceCount = Mathf.Max(1, t.requiredSliceCount);
 
         if (plateController) plateController.ResetToEmptyPlate();
-
-        if (spawner && spawner.CurrentKimbap)
-        {
-            spawner.CurrentKimbap.BeginTrigger(t);
-        }
+        if (spawner && spawner.CurrentKimbap) spawner.CurrentKimbap.BeginTrigger(t);
 
         State = RhythmState.Guiding;
         _stateEndTime = Time.time + Mathf.Max(0.01f, t.guideDuration);
-
-        // requiredSliceCount에 따라 가이드 비트 사운드 반복 재생
+        
         if (t.guideBeatSound && sfxSource)
         {
             StartCoroutine(PlayGuideBeatSoundRepeatedly(t.guideBeatSound, RequiredSliceCount));
         }
-
-        if (hud) hud.Log($"Enter Trigger #{nextIndex} (req={RequiredSliceCount}) - State: Guiding");
     }
 
     public bool IsJudgingWindow()
@@ -2656,11 +2699,7 @@ public class RhythmConductor : MonoBehaviour
 
     public void RegisterValidSlice()
     {
-        var t = GetCurrentTrigger();
-        if (t == null) return;
-
         SliceCount++;
-        if (hud) hud.Log($"ValidSlice! ({SliceCount}/{RequiredSliceCount})");
     }
 
     public void NotifySliceSuccess(Vector3 hitPos, Vector3 hitNormal, float knifeSpeed)
@@ -2678,45 +2717,22 @@ public class RhythmConductor : MonoBehaviour
         OnWrongCut?.Invoke(hitPos);
     }
 
-    /// <summary>
-    /// 가이드 비트 사운드를 requiredSliceCount만큼 반복 재생하는 코루틴
-    /// </summary>
     IEnumerator PlayGuideBeatSoundRepeatedly(AudioClip clip, int count)
     {
-        if (clip == null || sfxSource == null || count <= 0)
-            yield break;
-
+        if (clip == null || sfxSource == null || count <= 0) yield break;
         for (int i = 0; i < count; i++)
         {
             sfxSource.PlayOneShot(clip);
-            
-            // 마지막 재생이 아니면 간격 대기
-            if (i < count - 1)
-            {
-                yield return new WaitForSeconds(guideBeatInterval);
-            }
+            if (i < count - 1) yield return new WaitForSeconds(guideBeatInterval);
         }
-
-        if (hud) hud.Log($"Guide beat sound played {count} times");
     }
 
-    /// <summary>
-    /// 모든 가이드 비트 사운드 코루틴을 정지하고 SFX를 정리합니다.
-    /// 튜토리얼 스킵/완료 시 호출하여 중복 재생을 방지합니다.
-    /// </summary>
     public void StopAllGuideBeats()
     {
-        // 이 스크립트에서 돌리는 모든 코루틴(가이드 비트 포함) 정지
         StopAllCoroutines();
-
-        // 남아 있는 SFX 한 번 정리
-        if (sfxSource)
-            sfxSource.Stop();
-
-        if (hud) hud.Log("All guide beat sounds stopped");
+        if (sfxSource) sfxSource.Stop();
     }
 }
-
 
 ========================================
  FILE: RhythmTriggerListSO.cs 
@@ -2815,25 +2831,25 @@ public class StageModeSelector : MonoBehaviour
 {
     [Header("UI Panels")]
     public GameObject selectionPanel;
-
     [Header("Game Modes")]
     public GameObject tutorialGroup;
     public GameObject mainGameGroup;
 
     [Header("Shared UI")]
     public MissionBoardUI missionBoard;
-
+    
     [Header("Refs")]
     public GameFlowManager gameFlowManager;
     public RhythmConductor conductor;
     public RhythmTriggerListSO mainGameData;
-
-    [Header("Tutorial Refs (one of these)")]
+    
+    [Header("Tutorial Refs")]
     public TutorialDialogueController tutorialDialogueController;
     public TutorialController tutorialController;
-
-    [Header("Ambience")]
+    
+    [Header("Audio")]
     public AudioSource ambientSource;
+    public AudioClip menuBgmClip; 
 
     void Start()
     {
@@ -2849,10 +2865,14 @@ public class StageModeSelector : MonoBehaviour
             missionBoard.ShowSuccessStamp(false);
         }
 
-        if (ambientSource && !ambientSource.isPlaying)
+        if (ambientSource)
         {
-            ambientSource.loop = true;
-            ambientSource.Play();
+            if (menuBgmClip != null) ambientSource.clip = menuBgmClip;
+            if (!ambientSource.isPlaying)
+            {
+                ambientSource.loop = true;
+                ambientSource.Play();
+            }
         }
     }
 
@@ -2864,25 +2884,24 @@ public class StageModeSelector : MonoBehaviour
         if (selectionPanel) selectionPanel.SetActive(false);
         if (mainGameGroup) mainGameGroup.SetActive(false);
         if (tutorialGroup) tutorialGroup.SetActive(true);
-
-        // (optional) keep state consistent
+        
         if (gameFlowManager) gameFlowManager.EnterTutorialState();
-
-        // Auto-find if not wired
+        
+        // 자동 찾기
         if (!tutorialDialogueController && tutorialGroup)
             tutorialDialogueController = tutorialGroup.GetComponentInChildren<TutorialDialogueController>(true);
         if (!tutorialController && tutorialGroup)
             tutorialController = tutorialGroup.GetComponentInChildren<TutorialController>(true);
-
-        // Start dialogue first; if no dialogue controller, start tutorial directly
+        
         if (tutorialDialogueController)
             tutorialDialogueController.BeginTutorialFlow();
         else if (tutorialController)
             tutorialController.StartTutorial();
         else
-            Debug.LogError("[StageModeSelector] TutorialDialogueController/TutorialController not assigned or found.");
+            Debug.LogError("[StageModeSelector] Tutorial Controllers not found.");
     }
 
+    // ▼▼▼ [핵심 수정] 순서가 바뀐 StartGame 함수 ▼▼▼
     public void OnClick_StartGame()
     {
         Debug.Log(">> 실전 게임 시작");
@@ -2890,18 +2909,43 @@ public class StageModeSelector : MonoBehaviour
 
         if (selectionPanel) selectionPanel.SetActive(false);
         if (tutorialGroup) tutorialGroup.SetActive(false);
-        if (mainGameGroup) mainGameGroup.SetActive(true);
-
-        if (conductor && mainGameData)
-            conductor.data = mainGameData;
-
+        
+        // 1. 매니저 먼저 찾기 (비활성 상태에서도 찾기)
         if (!gameFlowManager && mainGameGroup)
             gameFlowManager = mainGameGroup.GetComponentInChildren<GameFlowManager>(true);
 
+        // 2. [중요] 게임을 켜기 전에 데이터를 먼저 셋팅!
+        if (conductor)
+        {
+            if (gameFlowManager) gameFlowManager.conductor = conductor;
+            
+            // 🔥 [절대 필수] 튜토리얼 모드 강제 해제
+            conductor.isTutorialMode = false; 
+
+            // 데이터 주입
+            if (mainGameData)
+            {
+                conductor.data = mainGameData;
+                Debug.Log($"[Selector] 데이터 주입 완료: {mainGameData.name}");
+            }
+            else
+            {
+                Debug.LogError("[Selector] MainGameData가 연결되지 않았습니다!");
+            }
+        }
+
+        // 3. 이제 게임 오브젝트를 켭니다. (데이터가 들어간 상태로 깨어남)
+        if (mainGameGroup) mainGameGroup.SetActive(true);
+
+        // 4. 게임 시작
         if (gameFlowManager)
+        {
             gameFlowManager.StartMainGame();
+        }
         else
-            Debug.LogError("[StageModeSelector] gameFlowManager not assigned/found.");
+        {
+            Debug.LogError("[StageModeSelector] gameFlowManager not found.");
+        }
     }
 
     void StopAmbience()
@@ -2909,7 +2953,6 @@ public class StageModeSelector : MonoBehaviour
         if (ambientSource) ambientSource.Stop();
     }
 }
-
 
 ========================================
  FILE: StageUIManager.cs 
@@ -3036,7 +3079,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 
 public class TutorialController : MonoBehaviour
-    {
+{
     [Header("Refs")]
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
@@ -3044,24 +3087,30 @@ public class TutorialController : MonoBehaviour
     public StageModeSelector modeSelector;
 
     [Header("UI Groups")]
-    public GameObject salesUIGroup; 
+    public GameObject salesUIGroup;
 
     [Header("Monitor UI")]
     public TextMeshProUGUI monitorText; 
     public TextMeshProUGUI salesText;   
 
     [Header("Final Result UI")]
-    public GameObject finalResultPanel;        
+    public GameObject finalResultPanel;
+    
+    // ▼▼▼ [추가] 제목 변경 및 버튼 숨기기용 변수 ▼▼▼
+    public TextMeshProUGUI finalTitleText; // "영업 종료" -> "채용 결과"
+    public GameObject btnRestartObj;       // 다시하기 버튼
+    public GameObject btnMainMenuObj;      // 메인으로 버튼
+
     public TextMeshProUGUI finalTotalText;     
-    public TextMeshProUGUI finalCommentText;   
+    public TextMeshProUGUI finalCommentText;
 
     [Header("Tutorial Settings")]
     public RhythmTriggerListSO tutorialTriggerList;
-    public int requiredSuccessCount = 1; 
+    public int requiredSuccessCount = 1;
 
     [Header("Wage Settings")]
-    public int maxTotalWage = 100000; 
-    
+    public int maxTotalWage = 100000;
+
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FF3333"; 
 
@@ -3082,9 +3131,6 @@ public class TutorialController : MonoBehaviour
             conductor.OnRoundResult.AddListener(HandleRoundResult);
             conductor.OnSliceSuccess.AddListener(HandleSliceSuccess);
         }
-
-        // StartTutorial is triggered explicitly by StageModeSelector.
-
     }
 
     void OnDisable()
@@ -3095,14 +3141,26 @@ public class TutorialController : MonoBehaviour
             conductor.OnSliceSuccess.RemoveListener(HandleSliceSuccess);
         }
     }
+
+    void Update()
+    {
+        // 튜토리얼 완료 후 입력 대기
+        if (_tutorialCompleted && finalResultPanel != null && finalResultPanel.activeSelf)
+        {
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+            {
+                FinalizeAndStartGame();
+            }
+        }
+    }
+
     public void StartTutorial()
     {
-// Reset tutorial runtime state (since we no longer auto-start on OnEnable)
-_currentStepIndex = 0;
-_successCountThisStep = 0;
-_tutorialCompleted = false;
-_isProcessingResult = false;
-        // Mark tutorial state for global systems (e.g., Pause block)
+        _currentStepIndex = 0;
+        _successCountThisStep = 0;
+        _tutorialCompleted = false;
+        _isProcessingResult = false;
+        
         var gf = FindObjectOfType<GameFlowManager>();
         if (gf) gf.EnterTutorialState();
 
@@ -3114,8 +3172,7 @@ _isProcessingResult = false;
         conductor.data = tutorialTriggerList;
         
         conductor.StartGame();
-        
-        // [중요] StartGame 호출 후에 Loop를 켜야 안전합니다.
+
         if (missionBoard) missionBoard.InitializeUI();
         if (finalResultPanel) finalResultPanel.SetActive(false);
 
@@ -3196,14 +3253,13 @@ _isProcessingResult = false;
     void UpdateMissionUI()
     {
         if (!missionBoard) return;
-        
         missionBoard.ShowSuccessStamp(false);
         missionBoard.UpdateHeader($"< 실습 {_currentStepIndex + 1} 단계 >");
 
         int targetSliceCount = 0;
         if (tutorialTriggerList != null && _currentStepIndex < tutorialTriggerList.triggers.Length)
             targetSliceCount = tutorialTriggerList.triggers[_currentStepIndex].requiredSliceCount;
-
+        
         int currentSlices = 0;
         if (conductor != null && conductor.IsJudgingWindow())
             currentSlices = conductor.SliceCount;
@@ -3213,7 +3269,6 @@ _isProcessingResult = false;
         for (int i = 0; i < remainCount; i++) icons += "@ "; 
 
         string progressText = $"<color={highlightTextColor}>{currentSlices}</color> / {targetSliceCount}";
-
         string guideText = "";
         switch (_currentStepIndex)
         {
@@ -3248,7 +3303,6 @@ _isProcessingResult = false;
     void CompleteTutorial()
     {
         _tutorialCompleted = true;
-
         string bigTitle = "** 합 격 **"; 
         string finalMessage = "<color=#505050>합격이네.\n자 이제 영업을 시작하자.</color>";
         string startHint = "\n<color=#FF8000><b>[오른손 트리거] 영업 시작!</b></color>";
@@ -3262,13 +3316,22 @@ _isProcessingResult = false;
         
         if (finalResultPanel)
         {
-            finalResultPanel.SetActive(false);
+            finalResultPanel.SetActive(true);
+            
+            // ▼▼▼ [수정] 텍스트 변경 및 버튼 숨기기
+            if (finalTitleText) finalTitleText.text = "채용 결과";
+            if (btnRestartObj) btnRestartObj.SetActive(false);
+            if (btnMainMenuObj) btnMainMenuObj.SetActive(false);
+
             if (finalTotalText) finalTotalText.text = bigTitle;
-            if (finalCommentText) { finalCommentText.text = finalMessage + startHint; finalCommentText.color = Color.white; }
+            if (finalCommentText) 
+            { 
+                finalCommentText.text = finalMessage + startHint; 
+                finalCommentText.color = Color.white;
+            }
         }
         
         ShowMonitorText(finalMessage, Color.cyan);
-        Invoke(nameof(FinalizeAndStartGame), 1.0f);
     }
 
     void FinalizeAndStartGame()
@@ -3276,6 +3339,7 @@ _isProcessingResult = false;
         Cleanup();
         if (conductor.OnTutorialCompleted != null) conductor.OnTutorialCompleted.Invoke();
         if (!modeSelector) modeSelector = FindObjectOfType<StageModeSelector>();
+        
         if (modeSelector)
         {
             modeSelector.OnClick_StartGame();
@@ -3291,6 +3355,10 @@ _isProcessingResult = false;
         if (conductor) { conductor.isTutorialMode = false; conductor.StopAllGuideBeats(); }
         if (salesUIGroup) salesUIGroup.SetActive(false);
         
+        // ▼▼▼ [수정] 버튼 복구
+        if (btnRestartObj) btnRestartObj.SetActive(true);
+        if (btnMainMenuObj) btnMainMenuObj.SetActive(true);
+
         if (finalResultPanel) finalResultPanel.SetActive(false);
         ClearMonitorText();
     }
@@ -3303,11 +3371,10 @@ _isProcessingResult = false;
     void ClearMonitorText() { if (monitorText) monitorText.text = ""; }
 }
 
-
 ========================================
  FILE: TutorialDialogueController.cs 
 ========================================
-﻿using UnityEngine;
+using UnityEngine;
 using System.Text.RegularExpressions;
 
 public enum DialogueConditionType
@@ -3326,12 +3393,11 @@ public enum DialogueConditionType
 public class TutorialDialogue
 {
     [TextArea(2, 5)]
-    public string dialogueText;     
+    public string dialogueText;
     public DialogueConditionType conditionType; 
     
     [Tooltip("조건이 충족된 후 다음 대사로 넘어가기까지 대기 시간 (초)")]
     public float waitAfterCondition = 0.5f;
-    
     [Tooltip("조건 없을 때 자동 진행 시간 (초, 0이면 수동 진행)")]
     public float autoAdvanceTime = 2f;
 }
@@ -3340,7 +3406,11 @@ public class TutorialDialogue
 public class TutorialDialogueController : MonoBehaviour
 {
     [Header("Start")]
-    public bool autoStart = false; // Start flow only when explicitly called.
+    public bool autoStart = false; 
+
+    // ▼▼▼ [추가] 인스펙터에서 직접 음악 파일을 넣는 곳 ▼▼▼
+    [Header("Audio Settings")]
+    public AudioClip tutorialBgmClip; 
 
     [Header("References")]
     public TutorialDialogueUIController dialogueUI; 
@@ -3353,25 +3423,23 @@ public class TutorialDialogueController : MonoBehaviour
     [Header("Target Objects")]
     public GameObject kimbapPrefab;      
     public GameObject kimbap010Prefab;   
-    public GameObject monitorCanvasObject; // 모니터 캔버스 연결
+    public GameObject monitorCanvasObject; 
     
     [Header("Dialogue Data")]
     public TutorialDialogue[] dialogues;
-    
+
     [Header("Settings")]
     public float gazeDetectionDistance = 10f; 
     public float gazeAngleThreshold = 45f;    
-    public float handMovementThreshold = 0.1f; 
-    
+    public float handMovementThreshold = 0.1f;
+
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
-    public string highlightTextColor = "#FFD700"; 
-    
+    public string highlightTextColor = "#FFD700";
+
     // 힌트 텍스트 모음
     private const string HINT_LOOK_KIMBAP = "김밥을 바라보세요";
     private const string HINT_LOOK_NOTE = "왼쪽 주문서를 바라보세요";
     
-    // 🔥 [변경됨] 요청하신 텍스트 포맷 적용
-    // {0} 위치에 "[오른손 트리거] 다음" 텍스트가 들어갑니다.
     private const string HINT_CONFIRMED_FORMAT = "<color=#00FF00>V 확인완료</color>\n{0}"; 
     private const string ACTION_TRIGGER_NEXT = "[오른손 트리거] 다음";
 
@@ -3380,7 +3448,9 @@ public class TutorialDialogueController : MonoBehaviour
     private bool _isWaitingForCondition = false;
     private bool _conditionMet = false;
     private float _conditionMetTime = 0f;
-    private float _autoAdvanceTimer = 0f;    // 상태 추적
+    private float _autoAdvanceTimer = 0f;
+
+    // 상태 추적
     private bool _hasLookedAtTarget = false; 
     
     private bool _lastRoundResult = false;
@@ -3388,66 +3458,82 @@ public class TutorialDialogueController : MonoBehaviour
     private Vector3 _previousControllerPosition;
     private bool _hasDetectedHandMovement = false;
     private bool _controllerPositionInitialized = false;
-    
+
     private bool _originalTutorialMode = false;
     private GameObject _tutorialControllerGameObject;
     private GameObject _conductorGameObject;
-    
+
     void Awake()
     {
         DisableExistingSystems();
     }
     
-void Start()
-{
-    // 자동 시작 금지: StageModeSelector에서만 시작
-    if (autoStart)
+    void Start()
     {
-        BeginTutorialFlow();
-    }
-}
-
-
-public void BeginTutorialFlow()
-{
-    InitializeControllerPosition();
-
-    // 씬에서 꺼둔 튜토리얼 김밥을 다시 켜지 않음(중복/겹침 방지)
-    if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false);
-
-    // 모니터 캔버스가 꺼져있으면 켬
-    if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
-
-    // dialogueUI 자동 탐색
-    if (dialogueUI == null)
-        dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
-
-    if (missionBoard)
-    {
-        missionBoard.InitializeUI();
-        missionBoard.UpdateHeader("< 면 접 중 >");
-        missionBoard.UpdateMission("모니터를 보세요", 0, 1);
-    }
-
-    // 대사부터 시작
-    if (dialogues != null && dialogues.Length > 0)
-    {
-        if (dialogueUI == null)
+        if (autoStart)
         {
-            Debug.LogError("[TutorialDialogueController] dialogueUI not assigned/found. Falling back to StartMainTutorial().");
-            StartMainTutorial();
-            return;
+            BeginTutorialFlow();
+        }
+    }
+
+    public void BeginTutorialFlow()
+    {
+        InitializeControllerPosition();
+
+        // 김밥과 모니터 켜기
+        if (kimbap010Prefab != null) kimbap010Prefab.SetActive(true);
+        if (monitorCanvasObject != null) monitorCanvasObject.SetActive(true);
+
+        if (dialogueUI == null)
+            dialogueUI = GetComponentInChildren<TutorialDialogueUIController>(true);
+
+        if (missionBoard)
+        {
+            missionBoard.InitializeUI();
+            missionBoard.UpdateHeader("< 면 접 중 >");
+            missionBoard.UpdateMission("모니터를 보세요", 0, 1);
         }
 
-        ShowDialogue(0);
-    }
-    else
-    {
-        StartMainTutorial();
-    }
-}
+        // ▼▼▼ [수정] BGM 재생 로직 ▼▼▼
+        if (conductor && conductor.bgmSource)
+        {
+            // 1순위: 인스펙터에 넣은 클립
+            if (tutorialBgmClip != null)
+            {
+                conductor.bgmSource.clip = tutorialBgmClip;
+                conductor.bgmSource.loop = true;
+                conductor.bgmSource.Play();
+            }
+            // 2순위: 데이터에 있는 클립
+            else if (tutorialController && tutorialController.tutorialTriggerList)
+            {
+                var bgm = tutorialController.tutorialTriggerList.bgm;
+                if (bgm)
+                {
+                    conductor.bgmSource.clip = bgm;
+                    conductor.bgmSource.loop = true;
+                    conductor.bgmSource.Play();
+                }
+            }
+        }
 
+        // 대사 시작
+        if (dialogues != null && dialogues.Length > 0)
+        {
+            if (dialogueUI == null)
+            {
+                Debug.LogError("[TutorialDialogueController] dialogueUI missing. Skip to main tutorial.");
+                StartMainTutorial();
+                return;
+            }
 
+            ShowDialogue(0);
+        }
+        else
+        {
+            StartMainTutorial();
+        }
+    }
     
     void Update()
     {
@@ -3475,7 +3561,6 @@ public void BeginTutorialFlow()
                 
                 // 현재 쳐다보고 있는지 확인
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
-                
                 if (isCurrentlyLooking) 
                 {
                     _hasLookedAtTarget = true;
@@ -3484,10 +3569,6 @@ public void BeginTutorialFlow()
                 // 봤던 적이 있으면
                 if (_hasLookedAtTarget)
                 {
-                    // 🔥 [변경] 모니터 힌트 텍스트 업데이트 (리갈패드 건드리지 않음)
-                    // 예: 
-                    // V 확인완료
-                    // [오른손 트리거] 다음
                     string nextAction = ApplyHighlightColor(ACTION_TRIGGER_NEXT);
                     string finalHint = string.Format(HINT_CONFIRMED_FORMAT, nextAction);
                     
@@ -3502,7 +3583,8 @@ public void BeginTutorialFlow()
                 else
                 {
                     // 아직 안 봤으면 "쳐다보세요" 힌트
-                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ? HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
+                    string originalHint = (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap) ?
+                        HINT_LOOK_KIMBAP : HINT_LOOK_NOTE;
                     UpdateHintText(originalHint);
                 }
             }
@@ -3537,16 +3619,13 @@ public void BeginTutorialFlow()
         }
     }
     
-    // 모니터 캔버스 클릭 감지
     bool CheckMonitorClick()
     {
         if (monitorCanvasObject == null) return false;
 
-        // 트리거 확인
         if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             return false;
 
-        // 레이캐스트 확인
         GameObject controller = GetControllerObject();
         if (controller == null) return false;
 
@@ -3570,17 +3649,17 @@ public void BeginTutorialFlow()
     bool CheckGazeAtObject(GameObject target)
     {
         if (target == null) return false;
+
         GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
         if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
         if (centerEye == null) return false;
-        
+
         Vector3 eyePos = centerEye.transform.position;
         Vector3 forward = centerEye.transform.forward;
         Vector3 dirToTarget = (target.transform.position - eyePos).normalized;
         float angle = Vector3.Angle(forward, dirToTarget);
         if (angle > gazeAngleThreshold) return false;
 
-        // SphereCast로 조금 두껍게 쏴서 인식률 높임
         RaycastHit hit;
         if (Physics.SphereCast(eyePos, 0.15f, forward, out hit, gazeDetectionDistance))
         {
@@ -3638,10 +3717,7 @@ public void BeginTutorialFlow()
         _conditionMet = false;
         _isWaitingForCondition = (dialogue.conditionType != DialogueConditionType.None);
         
-        // 초기화
-        _hasLookedAtTarget = false; 
-        
-        // 새 대사 나오면 리갈패드 도장 초기화
+        _hasLookedAtTarget = false;
         if (_isWaitingForCondition && missionBoard) 
         {
             missionBoard.ShowSuccessStamp(false);
@@ -3652,12 +3728,8 @@ public void BeginTutorialFlow()
     {
         if (dialogueUI != null && dialogueUI.hintText != null)
         {
-            // "V 확인완료" 텍스트가 들어오면, 이미 색상 태그가 있으므로 ApplyHighlightColor를 거치지 않고 바로 넣거나
-            // ApplyHighlightColor 함수가 태그를 망치지 않게 주의해야 함.
-            
             if (newHint.Contains("V 확인완료"))
             {
-                 // 이미 색상 처리된 문자열 그대로 사용
                  if (dialogueUI.hintText.text != newHint)
                     dialogueUI.hintText.text = newHint;
             }
@@ -3667,7 +3739,6 @@ public void BeginTutorialFlow()
                  if (dialogueUI.hintText.text != colored)
                     dialogueUI.hintText.text = colored;
             }
-            
             dialogueUI.hintText.gameObject.SetActive(true);
         }
     }
@@ -3695,6 +3766,7 @@ public void BeginTutorialFlow()
         if (!_controllerPositionInitialized) { InitializeControllerPosition(); return false; }
         GameObject controller = GetControllerObject();
         if (controller == null) return false;
+
         Vector3 currentPos = controller.transform.position;
         float movement = Vector3.Distance(currentPos, _previousControllerPosition);
         _previousControllerPosition = currentPos;
@@ -3722,51 +3794,50 @@ public void BeginTutorialFlow()
     {
         if (tutorialController != null) 
         { 
-            _tutorialControllerGameObject = tutorialController.gameObject; 
+            _tutorialControllerGameObject = tutorialController.gameObject;
             tutorialController.enabled = false; 
             _tutorialControllerGameObject.SetActive(false); 
         }
         
         if (conductor != null) 
         { 
-            _conductorGameObject = conductor.gameObject; 
+            _conductorGameObject = conductor.gameObject;
             _originalTutorialMode = conductor.isTutorialMode; 
+            
             conductor.enabled = false; 
-            _conductorGameObject.SetActive(false); 
+            // 🔥 [중요 수정] 오디오 재생을 위해 Conductor 오브젝트는 끄지 않습니다.
+            // _conductorGameObject.SetActive(false); 
         }
     }
     
     void StartMainTutorial()
     {
         if (dialogueUI != null) dialogueUI.Hide();
+        // 실습 단계로 넘어가면 대화용 김밥은 끕니다.
         if (kimbap010Prefab != null) kimbap010Prefab.SetActive(false); 
         
         if (_conductorGameObject != null && conductor != null)
         {
-            _conductorGameObject.SetActive(true);
-            conductor.enabled = true;
+            // _conductorGameObject.SetActive(true); // 이미 켜져 있음
+            conductor.enabled = true; // Update 다시 시작
             conductor.isTutorialMode = _originalTutorialMode;
             conductor.OnRoundResult.AddListener(OnRoundResult);
         }
         
-if (_tutorialControllerGameObject != null && tutorialController != null)
-{
-    _tutorialControllerGameObject.SetActive(true);
-    tutorialController.enabled = true;
-
-    // 자동 시작( OnEnable )에 의존하지 않음: 명시 호출
-    tutorialController.StartTutorial();
-}
-
+        if (_tutorialControllerGameObject != null && tutorialController != null)
+        {
+            _tutorialControllerGameObject.SetActive(true);
+            tutorialController.enabled = true;
+            tutorialController.StartTutorial();
+        }
         
-        this.enabled = false; 
+        this.enabled = false;
     }
     
     void OnEnable() { if (conductor != null && conductor.enabled) conductor.OnRoundResult.AddListener(OnRoundResult); }
     void OnDisable() { if (conductor != null) conductor.OnRoundResult.RemoveListener(OnRoundResult); }
     void OnRoundResult(bool success) { _lastRoundResult = success; _roundResultProcessed = false; }
 }
-
 
 ========================================
  FILE: TutorialDialogueUIController.cs 

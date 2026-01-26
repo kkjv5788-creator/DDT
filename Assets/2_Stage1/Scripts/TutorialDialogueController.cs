@@ -43,6 +43,9 @@ public class TutorialDialogueController : MonoBehaviour
     public TutorialController tutorialController;
     public RhythmConductor conductor;
     public FeedbackSetSO feedbackSet;
+
+    // ▼▼▼ [필수] 시야 감지용 카메라 (인스펙터에서 OVRCameraRig의 CenterEyeAnchor 연결) ▼▼▼
+    public Transform centerEyeAnchor; 
     
     [Header("Target Objects")]
     public GameObject kimbapPrefab;      
@@ -53,9 +56,12 @@ public class TutorialDialogueController : MonoBehaviour
     public TutorialDialogue[] dialogues;
 
     [Header("Settings")]
-    public float gazeDetectionDistance = 10f; 
-    public float gazeAngleThreshold = 45f;    
+    public float gazeDetectionDistance = 20f; // 거리 넉넉하게 수정
+    public float gazeRadius = 0.15f;          // 시선 판정 두께 (지름 30cm)
     public float handMovementThreshold = 0.1f;
+
+    [Tooltip("시선 감지 시 무시할 레이어 (칼 등)")]
+    public LayerMask gazeLayerMask = ~0;      // 기본값: 모든 레이어
 
     [Tooltip("대괄호 [ ] 안의 텍스트 색상")]
     public string highlightTextColor = "#FFD700";
@@ -94,6 +100,14 @@ public class TutorialDialogueController : MonoBehaviour
     
     void Start()
     {
+        // 카메라 자동 찾기 (안전장치)
+        if (centerEyeAnchor == null)
+        {
+            var rig = FindObjectOfType<OVRCameraRig>();
+            if (rig != null) centerEyeAnchor = rig.centerEyeAnchor;
+            else if (Camera.main != null) centerEyeAnchor = Camera.main.transform;
+        }
+
         if (autoStart)
         {
             BeginTutorialFlow();
@@ -177,13 +191,16 @@ public class TutorialDialogueController : MonoBehaviour
             {
                 GameObject target = null;
                 if (currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
-                    target = kimbapPrefab;
+                    target = kimbapPrefab; // 혹은 kimbap010Prefab (상황에 맞춰 사용)
                 else if (missionBoard)
                     target = missionBoard.gameObject;
 
+                if (target == null && currentDialogue.conditionType == DialogueConditionType.GazeAtKimbap)
+                     target = kimbap010Prefab; // 예비용
+
                 if (!target) return;
                 
-                // 현재 쳐다보고 있는지 확인
+                // 현재 쳐다보고 있는지 확인 (개선된 함수 사용)
                 bool isCurrentlyLooking = CheckGazeAtObject(target);
                 if (isCurrentlyLooking) 
                 {
@@ -243,10 +260,12 @@ public class TutorialDialogueController : MonoBehaviour
         }
     }
     
+    // [수정됨] 모니터 클릭 감지 (SphereCast 적용으로 판정 개선)
     bool CheckMonitorClick()
     {
         if (monitorCanvasObject == null) return false;
 
+        // 오른쪽 트리거 버튼 클릭
         if (!OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             return false;
 
@@ -257,7 +276,8 @@ public class TutorialDialogueController : MonoBehaviour
         Vector3 direction = controller.transform.forward;
 
         RaycastHit hit;
-        if (Physics.Raycast(startPos, direction, out hit, 10f))
+        // Raycast -> SphereCast (5cm 두께)
+        if (Physics.SphereCast(startPos, 0.05f, direction, out hit, 10f, gazeLayerMask))
         {
             Transform hitTx = hit.transform;
             while (hitTx != null)
@@ -270,28 +290,41 @@ public class TutorialDialogueController : MonoBehaviour
         return false;
     }
 
+    // [핵심 수정됨] 시선 감지 (각도 계산 제거 + SphereCast + 계층 구조 확인)
     bool CheckGazeAtObject(GameObject target)
     {
         if (target == null) return false;
+        if (centerEyeAnchor == null) return false;
 
-        GameObject centerEye = GameObject.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
-        if (centerEye == null) centerEye = GameObject.Find("CenterEyeAnchor");
-        if (centerEye == null) return false;
+        Vector3 eyePos = centerEyeAnchor.position;
+        Vector3 forward = centerEyeAnchor.forward;
 
-        Vector3 eyePos = centerEye.transform.position;
-        Vector3 forward = centerEye.transform.forward;
-        Vector3 dirToTarget = (target.transform.position - eyePos).normalized;
-        float angle = Vector3.Angle(forward, dirToTarget);
-        if (angle > gazeAngleThreshold) return false;
+        // 디버깅용 시선 표시
+        Debug.DrawRay(eyePos, forward * gazeDetectionDistance, Color.green);
 
         RaycastHit hit;
-        if (Physics.SphereCast(eyePos, 0.15f, forward, out hit, gazeDetectionDistance))
+        // SphereCast: 두꺼운 빔 발사 (gazeRadius: 기본 0.15f)
+        if (Physics.SphereCast(eyePos, gazeRadius, forward, out hit, gazeDetectionDistance, gazeLayerMask))
         {
             Transform hitTransform = hit.transform;
+            
+            // 맞은 물체의 부모를 거슬러 올라가며 타겟 확인
             while (hitTransform != null)
             {
+                // 1. 타겟 오브젝트와 일치하는가?
                 if (hitTransform.gameObject == target) return true;
-                if (hitTransform.name.Contains("LegalPad") || hitTransform.name.Contains("Mission") || hitTransform.name.Contains("Kimbap")) return true;
+                
+                // 2. 이름에 키워드가 포함되어 있는가? (유연한 처리)
+                if (hitTransform.name.Contains("LegalPad") || 
+                    hitTransform.name.Contains("Mission") || 
+                    hitTransform.name.Contains("Kimbap")) 
+                {
+                    return true;
+                }
+
+                // 3. 타겟의 자식을 쳐다봤는가?
+                if (hitTransform.IsChildOf(target.transform)) return true;
+
                 hitTransform = hitTransform.parent;
             }
         }

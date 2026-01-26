@@ -10,9 +10,11 @@ public class SimpleLaserPointer : MonoBehaviour
     public float maxDistance = 5.0f;
     public float laserWidth = 0.005f;
 
+    public LayerMask layerMask = ~0;
+
     [Header("2. 색상 설정")]
     public Color normalLaserColor = Color.white; // 평소 레이저 색 (흰색)
-    public Color hoverLaserColor = Color.green;  // 닿았을 때 레이저/아웃라인 색 (초록)
+    public Color hoverLaserColor = Color.cyan;  // 닿았을 때 레이저/아웃라인 색 (초록)
 
     [Header("3. 사운드 & 진동")]
     public AudioClip hoverSound;
@@ -28,6 +30,8 @@ public class SimpleLaserPointer : MonoBehaviour
     private GameObject currentHitObject; // 현재 가리키고 있는 오브젝트
     private Outline currentOutline;      // 현재 켜진 아웃라인
     private CanvasGroup currentCanvas;   // 현재 켜진 정보창
+
+    
 
     void Start()
     {
@@ -84,7 +88,7 @@ public class SimpleLaserPointer : MonoBehaviour
         RaycastHit hit;
 
         // 충돌 감지
-        if (Physics.Raycast(ray, out hit, maxDistance))
+        if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
         {
             lr.SetPosition(1, hit.point); // 끝점은 닿은 곳
             GameObject hitObj = hit.collider.gameObject;
@@ -104,14 +108,14 @@ public class SimpleLaserPointer : MonoBehaviour
                     PlayFeedback(); // 소리/진동
 
                     // // 1. 아웃라인 켜기
-                    // var outline = hitObj.GetComponentInParent<Outline>();
-                    // if (outline != null)
-                    // {
-                    //     outline.enabled = true;
-                    //     outline.OutlineColor = hoverLaserColor;
-                    //     outline.OutlineWidth = 5f; // 두께 조절 가능
-                    //     currentOutline = outline;
-                    // }
+                    var outline = hitObj.GetComponentInParent<Outline>();
+                    if (outline != null)
+                    {
+                        outline.enabled = true;
+                        outline.OutlineColor = hoverLaserColor;
+                        outline.OutlineWidth = 5f; // 두께 조절 가능
+                        currentOutline = outline;
+                    }
 
                     // 2. 정보창(Canvas) 켜기 (자식 오브젝트 검색)
                     var canvasGroup = hitObj.GetComponentInChildren<CanvasGroup>();
