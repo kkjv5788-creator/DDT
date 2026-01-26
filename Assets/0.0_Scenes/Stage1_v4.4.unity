@@ -8016,6 +8016,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8605410897491213556, guid: 129fed0001c535343942ab9bd058c603, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8964711901659671947, guid: 129fed0001c535343942ab9bd058c603, type: 3}
       propertyPath: m_Name
       value: Panel_PostIt
