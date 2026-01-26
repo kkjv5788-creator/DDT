@@ -31,9 +31,11 @@ public class SimpleLaserPointer : MonoBehaviour
     private Outline currentOutline;      // 현재 켜진 아웃라인
     private CanvasGroup currentCanvas;   // 현재 켜진 정보창
 
+    private SimpleLaserPointer otherPointer;
+
     
 
-    void Start()
+void Start()
     {
         lr = GetComponent<LineRenderer>();
         audioSource = GetComponent<AudioSource>();
@@ -48,12 +50,24 @@ public class SimpleLaserPointer : MonoBehaviour
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0.5f;
 
-        DisableLaser(); // 시작 시 끄기
+        DisableLaser(); 
 
+        // 왼손/오른손 구분
         if (transform.name.Contains("Left") || transform.parent.name.Contains("Left"))
             controllerType = OVRInput.Controller.LTouch;
         else
             controllerType = OVRInput.Controller.RTouch;
+
+        // ▼▼▼ [추가] 나 말고 다른(반대쪽) 레이저 포인터를 찾아서 기억해둠
+        SimpleLaserPointer[] allPointers = FindObjectsOfType<SimpleLaserPointer>();
+        foreach (var p in allPointers)
+        {
+            if (p != this) // 내가 아니면 -> 반대쪽 손이다!
+            {
+                otherPointer = p;
+                break;
+            }
+        }
     }
 
     private void OnDisable()
@@ -147,19 +161,34 @@ public class SimpleLaserPointer : MonoBehaviour
 
     // --- 기능 함수들 ---
 
-    void ResetPreviousEffects()
+void ResetPreviousEffects()
     {
         // 아웃라인 끄기
         if (currentOutline != null)
         {
-            currentOutline.enabled = false;
+            // [추가] 반대쪽 손도 같은 아웃라인을 보고 있다면, 끄지 않음
+            bool otherIsLooking = (otherPointer != null && otherPointer.currentOutline == currentOutline);
+            
+            if (!otherIsLooking)
+            {
+                currentOutline.enabled = false;
+            }
             currentOutline = null;
         }
 
         // 정보창 숨기기
         if (currentCanvas != null)
         {
-            currentCanvas.alpha = 0f; // 투명하게
+            // ▼▼▼ [핵심 수정] 반대쪽 손이 같은 UI를 보고 있는지 확인!
+            bool otherIsLooking = (otherPointer != null && otherPointer.currentCanvas == currentCanvas);
+
+            // 반대쪽 손도 안 보고 있을 때만 끈다 (Alpha = 0)
+            if (!otherIsLooking)
+            {
+                currentCanvas.alpha = 0f; 
+            }
+            
+            // 내 참조는 끊음
             currentCanvas = null;
         }
 
