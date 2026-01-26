@@ -18,6 +18,8 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         WaitBeforeMain
     }
 
+    [Header("Haptics (Tutorial)")]
+    [SerializeField] private TutorialCatchHaptics_st2 tutorialHaptics;
     [Serializable]
     public class StageDialogueBlock
     {
@@ -120,6 +122,36 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     public float specialAttemptTimeout = 3.0f;
     public float specialRetryDelay = 0.5f;
 
+    // =========================================================
+    // ✅ 스테이지별 전환 딜레이 (성공 직후 잠깐 기다렸다가 After 대사/다음으로)
+    // =========================================================
+    [Serializable]
+    public class StageClearDelay
+    {
+        public TutorialStage stage;
+        [Min(0f)] public float delay;
+    }
+
+    [Header("Stage Transition Delay (Per Stage)")]
+    [Tooltip("여기에 스테이지별 딜레이를 넣으면, 성공 직후 그 시간만큼 기다린 뒤 After 대사로 넘어감")]
+    public List<StageClearDelay> perStageClearDelays = new List<StageClearDelay>()
+    {
+        new StageClearDelay{ stage = TutorialStage.T0_Telegraph, delay = 0.20f },
+        new StageClearDelay{ stage = TutorialStage.T1_Pop,      delay = 0.35f },
+        new StageClearDelay{ stage = TutorialStage.T2_Catch,    delay = 0.25f },
+        new StageClearDelay{ stage = TutorialStage.T4_Sync2,    delay = 0.35f },
+        new StageClearDelay{ stage = TutorialStage.T5_Run3,     delay = 0.35f },
+    };
+
+    [Tooltip("리스트에 해당 스테이지가 없을 때 사용할 기본 딜레이")]
+    [Min(0f)] public float defaultStageClearDelay = 0.30f;
+
+    [Tooltip("Time.timeScale 영향 없이 기다릴지(추천: true)")]
+    public bool stageClearDelayUseRealtime = true;
+
+    private Coroutine _stageClearRoutine;
+    private bool _interactionLocked = false;
+
     // 진행 카운터
     private int telegraphCount = 0;
     private int popCount = 0;
@@ -167,6 +199,12 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             return;
         }
 
+        // ✅ 성공 직후 딜레이(전환 대기) 동안 입력/상호작용 차단
+        if (_interactionLocked)
+        {
+            return;
+        }
+
         // ✅ 상호작용 진행 중 UI 반영(네가 정한 duringText/duringHintText)
         ApplyDuringUI(currentStage);
 
@@ -208,6 +246,12 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             _bgmRoutine = null;
         }
 
+        if (_stageClearRoutine != null)
+        {
+            StopCoroutine(_stageClearRoutine);
+            _stageClearRoutine = null;
+        }
+
         StopAllCoroutines();
         StopTutorialBGM();
         CleanupAllTutorialFish();
@@ -235,6 +279,13 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         _lastDuringDialogue = null;
         _lastDuringHint = null;
 
+        _interactionLocked = false;
+        if (_stageClearRoutine != null)
+        {
+            StopCoroutine(_stageClearRoutine);
+            _stageClearRoutine = null;
+        }
+
         if (stageCompleteText != null) stageCompleteText.gameObject.SetActive(false);
         if (progressText != null) progressText.text = "";
         if (dialogueText != null) dialogueText.text = "";
@@ -253,6 +304,7 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     bool IsCatchingEnabled()
     {
         if (_dialogueWaiting) return false;
+        if (_interactionLocked) return false;
 
         return currentStage == TutorialStage.T2_Catch
             || currentStage == TutorialStage.T4_Sync2
@@ -301,6 +353,13 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
         // during UI 캐시 초기화 (스테이지 바뀌면 즉시 갱신되게)
         _lastDuringDialogue = null;
         _lastDuringHint = null;
+
+        _interactionLocked = false;
+        if (_stageClearRoutine != null)
+        {
+            StopCoroutine(_stageClearRoutine);
+            _stageClearRoutine = null;
+        }
 
         BeginStageDialogue(stage, DialoguePhase.BeforeStage, () =>
         {
@@ -357,6 +416,16 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
             StopCoroutine(autoPatternRoutine);
             autoPatternRoutine = null;
         }
+    }
+
+    float GetStageClearDelay(TutorialStage stage)
+    {
+        for (int i = 0; i < perStageClearDelays.Count; i++)
+        {
+            if (perStageClearDelays[i] != null && perStageClearDelays[i].stage == stage)
+                return Mathf.Max(0f, perStageClearDelays[i].delay);
+        }
+        return Mathf.Max(0f, defaultStageClearDelay);
     }
 
     // =========================================================
@@ -683,6 +752,9 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
 
         if (result != JudgeResult_st2.Miss)
         {
+            // ✅ Good/Perfect일 때만, 손별로 햅틱
+            if (tutorialHaptics != null)
+                tutorialHaptics.TriggerForResult(result, controller);
             target.isResolved = true;
 
             target.OnCaught();
@@ -769,26 +841,49 @@ public class StandaloneTutorialController_st2 : MonoBehaviour
     void OnCatchMiss()
     {
         // 필요하면 Miss 피드백 추가 가능
-        // miss가 UI에 반영되길 원하면 여기서도 ApplyDuringUI(currentStage, true) 호출하면 됨.
     }
 
     // =========================================================
-    // Stage Completion -> AFTER 대사 -> 다음 스테이지 진입
+    // Stage Completion -> (딜레이) -> AFTER 대사 -> 다음 스테이지 진입
     // =========================================================
     void CompleteStageAndWaitNextTrigger(TutorialStage stage)
     {
         if (currentStage != stage) return;
 
+        // 이미 전환 중이면 중복 방지
+        if (_stageClearRoutine != null) return;
+
+        _stageClearRoutine = StartCoroutine(CoCompleteStageWithDelay(stage));
+    }
+
+    IEnumerator CoCompleteStageWithDelay(TutorialStage stage)
+    {
+        _interactionLocked = true;
+
+        // 추가 스폰/루프 중단(연출 마무리 시간 확보)
         StopAutoRoutine();
+
+        float d = GetStageClearDelay(stage);
+        if (d > 0f)
+        {
+            if (stageClearDelayUseRealtime) yield return new WaitForSecondsRealtime(d);
+            else yield return new WaitForSeconds(d);
+        }
+
+        // 정리 후 After 대사
         CleanupAllTutorialFish();
 
         BeginStageDialogue(stage, DialoguePhase.AfterStage, () =>
         {
+            _interactionLocked = false;
+
             if (stage == TutorialStage.T5_Run3)
                 StartStage(TutorialStage.Complete);
             else
                 StartStage(stage + 1);
         });
+
+        _stageClearRoutine = null;
     }
 
     // =========================================================
