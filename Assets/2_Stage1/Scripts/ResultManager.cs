@@ -62,7 +62,7 @@ public class ResultManager : MonoBehaviour
 
         if (textComment)
         {
-            if (totalSales >= 50000) textComment.text = "자네, 우리 가게의 보배구만!";
+            if (totalSales >= 40000) textComment.text = "자네, 우리 가게의 보배구만!";
             else if (totalSales >= 10000) textComment.text = "나쁘지 않아. 조금 더 분발하게.";
             else textComment.text = "이래서 월세나 내겠나? 다시 해보게!";
         }
