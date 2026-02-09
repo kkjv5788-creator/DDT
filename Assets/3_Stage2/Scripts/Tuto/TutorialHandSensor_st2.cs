@@ -45,6 +45,13 @@ public class TutorialHandSensor_st2 : MonoBehaviour
 
     void SetupLineRenderer()
     {
+        // 이미 있는 LineRenderer 확인
+        if (lineRenderer == null)
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+        }
+
+        // 없으면 추가
         if (lineRenderer == null)
         {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -55,9 +62,30 @@ public class TutorialHandSensor_st2 : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
 
-        if (lineRenderer.material == null || lineRenderer.material.shader.name != "Unlit/Color")
+        // Material 설정 - 안전하게
+        try
         {
-            lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+            if (lineRenderer.material == null || lineRenderer.sharedMaterial == null)
+            {
+                Shader shader = Shader.Find("Sprites/Default");
+                if (shader == null)
+                    shader = Shader.Find("UI/Default");
+                if (shader == null)
+                    shader = Shader.Find("Hidden/Internal-Colored");
+
+                if (shader != null)
+                {
+                    lineRenderer.material = new Material(shader);
+                }
+                else
+                {
+                    Debug.LogWarning("[TutorialHandSensor] No shader found, using default LineRenderer material");
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("[TutorialHandSensor] Material setup error (non-critical): " + e.Message);
         }
 
         lineRenderer.startColor = noTargetColor;
